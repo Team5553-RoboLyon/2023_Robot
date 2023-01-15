@@ -5,9 +5,13 @@
 #pragma once
 
 #include <frc/TimedRobot.h>
+#include <ctre/Phoenix/motorcontrol/can/TalonFX.h>
+#include <frc/Joystick.h>
+#include <Drivetrain.h>
 
-class Robot : public frc::TimedRobot {
- public:
+class Robot : public frc::TimedRobot
+{
+public:
   void RobotInit() override;
   void RobotPeriodic() override;
 
@@ -25,4 +29,10 @@ class Robot : public frc::TimedRobot {
 
   void SimulationInit() override;
   void SimulationPeriodic() override;
+
+private:
+  Drivetrain m_Drivetrain;
+  frc::Joystick m_JoystickRight{0};
+  frc::Joystick m_JoystickLeft{1};
 };
+

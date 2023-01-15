@@ -3,16 +3,34 @@
 // the WPILib BSD license file in the root directory of this project.
 
 #include "Robot.h"
-//cc
 
 void Robot::RobotInit() {}
-void Robot::RobotPeriodic() {}
+void Robot::RobotPeriodic()
+{
+  frc2::CommandScheduler::GetInstance().Run();
+}
 
 void Robot::AutonomousInit() {}
 void Robot::AutonomousPeriodic() {}
 
-void Robot::TeleopInit() {}
-void Robot::TeleopPeriodic() {}
+void Robot::TeleopInit()
+{
+}
+
+void Robot::TeleopPeriodic()
+{
+  
+  if (m_JoystickLeft.GetRawButtonPressed(1))
+  {
+    m_Drivetrain.ActiveBallShifterV1();
+  }
+  
+  if (m_JoystickRight.GetRawButtonPressed(1))
+  {
+    m_Drivetrain.ActiveBallShifterV2();
+  }
+  m_Drivetrain.Drive(-m_JoystickRight.GetY(), m_JoystickLeft.GetZ());
+}
 
 void Robot::DisabledInit() {}
 void Robot::DisabledPeriodic() {}
@@ -24,7 +42,9 @@ void Robot::SimulationInit() {}
 void Robot::SimulationPeriodic() {}
 
 #ifndef RUNNING_FRC_TESTS
-int main() {
+int main()
+{
   return frc::StartRobot<Robot>();
 }
 #endif
+
