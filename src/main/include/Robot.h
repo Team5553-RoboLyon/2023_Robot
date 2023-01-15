@@ -5,6 +5,15 @@
 #pragma once
 
 #include <frc/TimedRobot.h>
+#include <frc/Joystick.h>
+#include <rev/CANSparkMax.h>
+#include <ctre/phoenix/motorcontrol/can/TalonFX.h>
+#include <frc/controller/PIDController.h>
+#include <frc/smartdashboard/SmartDashboard.h>
+#include <frc/shuffleboard/Shuffleboard.h>
+#include <frc/BuiltInAccelerometer.h>
+//gyro
+// #include <frc/ADXRS450_Gyro.h>
 
 class Robot : public frc::TimedRobot {
  public:
@@ -23,6 +32,21 @@ class Robot : public frc::TimedRobot {
   void TestInit() override;
   void TestPeriodic() override;
 
-  void SimulationInit() override;
-  void SimulationPeriodic() override;
+
+  double signe(double x);
+
+ private:
+
+  frc::Joystick m_joystick{0};
+  frc::BuiltInAccelerometer m_accelerometer{};
+  // frc::ADXRS450_Gyro m_gyro{};
+  frc::PIDController m_pidController{frc::SmartDashboard::GetNumber("P",0.5), 0, 0};
+
+  ctre::phoenix::motorcontrol::can::TalonFX m_MotorRight{1};
+  ctre::phoenix::motorcontrol::can::TalonFX m_MotorRightFollower{2};
+  ctre::phoenix::motorcontrol::can::TalonFX m_MotorRightFollower2{3};
+  ctre::phoenix::motorcontrol::can::TalonFX m_MotorLeft{4};
+  ctre::phoenix::motorcontrol::can::TalonFX m_MotorLeftFollower{5};
+  ctre::phoenix::motorcontrol::can::TalonFX m_MotorLeftFollower2{6};
+
 };
