@@ -6,13 +6,18 @@
 //cc
 
 void Robot::RobotInit() {}
-void Robot::RobotPeriodic() {}
+void Robot::RobotPeriodic() {
+  frc2::CommandScheduler::GetInstance().Run();
+}
 
 void Robot::AutonomousInit() {}
 void Robot::AutonomousPeriodic() {}
 
-void Robot::TeleopInit() {}
-void Robot::TeleopPeriodic() {}
+void Robot::TeleopInit() {  frc::SmartDashboard::PutNumber(" speed", 0);
+}
+void Robot::TeleopPeriodic() {
+  m_motor.Set(frc::SmartDashboard::GetNumber("speed", 0));
+}
 
 void Robot::DisabledInit() {}
 void Robot::DisabledPeriodic() {}

@@ -4,7 +4,11 @@
 
 #pragma once
 
+#include <frc2/command/Command.h>
 #include <frc/TimedRobot.h>
+#include <frc/smartdashboard/SmartDashboard.h>
+#include <frc/Joystick.h>
+#include <rev/CANSparkMax.h>
 
 class Robot : public frc::TimedRobot {
  public:
@@ -25,4 +29,8 @@ class Robot : public frc::TimedRobot {
 
   void SimulationInit() override;
   void SimulationPeriodic() override;
+
+  private:
+    frc::Joystick m_stick{0};
+    rev::CANSparkMax m_motor{1, rev::CANSparkMax::MotorType::kBrushless};
 };
