@@ -22,13 +22,9 @@ void Robot::TeleopPeriodic()
   
   if (m_JoystickLeft.GetRawButtonPressed(1))
   {
-    m_Drivetrain.ActiveBallShifterV1();
+    m_Drivetrain.InvertBallShifter();
   }
   
-  if (m_JoystickRight.GetRawButtonPressed(1))
-  {
-    m_Drivetrain.ActiveBallShifterV2();
-  }
   m_Drivetrain.Drive(-m_JoystickRight.GetY(), m_JoystickLeft.GetZ());
 }
 

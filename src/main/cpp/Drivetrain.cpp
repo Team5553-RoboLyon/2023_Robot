@@ -6,6 +6,7 @@
 #define MAX_RPM_V2 (MAX_RPM_MOTEUR / REDUC_V2) * COEFF_JVN // rendement de 80% sortie de boite avec reduc de 8.8
 #define MULTIPLICATEUR_PM 50 * 60                          // pour passer des pulses à une minute (SetDistancePerPulse)
 #define voltageRef 12.0                                    // tension de référence
+#define hop_plus_de_frottements 0.01                       // hop plus de frottements
 
 #define TRACKWIDTH 0.61f
 #define HALF_TRACKWIDTH (TRACKWIDTH / 2.0f)
@@ -54,14 +55,18 @@ Drivetrain::Drivetrain()
     m_MotorGearboxLeft2.ConfigOpenloopRamp(0.5);
     m_MotorGearboxLeft3.ConfigOpenloopRamp(0.5);
 
-    m_MotorGearboxRight1.ConfigOpenloopRamp(0.0);
-    m_MotorGearboxRight2.ConfigOpenloopRamp(0.0);
-    m_MotorGearboxRight3.ConfigOpenloopRamp(0.0);
+    m_MotorGearboxRight1.ConfigOpenloopRamp(0.5);
+    m_MotorGearboxRight2.ConfigOpenloopRamp(0.5);
+    m_MotorGearboxRight3.ConfigOpenloopRamp(0.5);
 
 
     m_MotorGearboxRight1.ConfigVoltageCompSaturation(voltageRef);
     m_MotorGearboxRight2.ConfigVoltageCompSaturation(voltageRef);
     m_MotorGearboxRight3.ConfigVoltageCompSaturation(voltageRef);
+
+    m_MotorGearboxLeft1.ConfigVoltageCompSaturation(voltageRef);
+    m_MotorGearboxLeft2.ConfigVoltageCompSaturation(voltageRef);
+    m_MotorGearboxLeft3.ConfigVoltageCompSaturation(voltageRef);
 
     m_MotorGearboxLeft2.Follow(m_MotorGearboxLeft1);
     m_MotorGearboxLeft3.Follow(m_MotorGearboxLeft1);
@@ -107,7 +112,7 @@ void Drivetrain::InvertBallShifter()
 
 double Drivetrain::GetSwitchGearVoltageRight(double w, double voltageReference, double reduction, double finalReduction)
 {
-    double switchGearVoltage = (std::abs(w) + wfRef * 0.06) * (voltageReference / wfRef);//TODO changer le 0.8
+    double switchGearVoltage = (std::abs(w) + wfRef * hop_plus_de_frottements) * (voltageReference / wfRef);//TODO changer le 0.8
     double percentVoltage = switchGearVoltage / voltageReference ;
     return percentVoltage;
 
@@ -115,7 +120,7 @@ double Drivetrain::GetSwitchGearVoltageRight(double w, double voltageReference, 
 
 double Drivetrain::GetSwitchGearVoltageLeft(double w, double voltageReference, double reduction, double finalReduction)
 {
-    double switchGearVoltage = (std::abs(w) + wfRef * 0.06) * (voltageReference / wfRef);//TODO changer le 0.8
+    double switchGearVoltage = (std::abs(w) + wfRef * hop_plus_de_frottements) * (voltageReference / wfRef);//TODO changer le 0.8
     double percentVoltage = switchGearVoltage / voltageReference * 100;
     return percentVoltage;
 }
