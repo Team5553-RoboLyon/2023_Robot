@@ -30,7 +30,13 @@ class Robot : public frc::TimedRobot {
   void SimulationInit() override;
   void SimulationPeriodic() override;
 
+  bool IsFollower();
+
   private:
     frc::Joystick m_stick{0};
-    rev::CANSparkMax m_motor{1, rev::CANSparkMax::MotorType::kBrushless};
+    rev::CANSparkMax m_motorRight{1, rev::CANSparkMax::MotorType::kBrushless};
+    rev::CANSparkMax m_motorLeft{2, rev::CANSparkMax::MotorType::kBrushless};
+
+    double last_invert1 = false;
+    double last_invert2 = false;
 };
