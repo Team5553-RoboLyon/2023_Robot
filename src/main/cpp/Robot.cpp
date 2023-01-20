@@ -24,22 +24,23 @@ void Robot::TeleopInit() {
   frc::SmartDashboard::PutNumber("P", 0.5);
   frc::SmartDashboard::PutNumber("I", 0);
   frc::SmartDashboard::PutNumber("D", 0);
+  frc::SmartDashboard::PutNumber("Setpoint", 1);
 }
 void Robot::TeleopPeriodic() {
-
-  
-  frc::SmartDashboard::PutNumber("Setpoint", 1);
+  m_pidController.SetP(frc::SmartDashboard::GetNumber("P", 0.5));
+  m_pidController.SetI(frc::SmartDashboard::GetNumber("I", 0));
+  m_pidController.SetD(frc::SmartDashboard::GetNumber("D", 0));
   double z = std::abs(m_accelerometer.GetZ()); // -1/1
   double y =m_accelerometer.GetY();
 
-  double output = m_pidController.Calculate(z, 1);
+  double output = m_pidController.Calculate(z, frc::SmartDashboard::GetNumber("Setpoint", 1));
 
-  // double angle = m_gyro.GetAngle();
+  double angle = m_gyro.GetAngle();
 
   frc::SmartDashboard::PutNumber("Z", z);
   frc::SmartDashboard::PutNumber("Y", y);
   frc::SmartDashboard::PutNumber("Output", output);
-  frc::SmartDashboard::PutNumber("Angle", 0);
+  frc::SmartDashboard::PutNumber("Angle", angle);
 
   double speed = signe(y)*output;
   frc::SmartDashboard::PutNumber("speed",speed);
