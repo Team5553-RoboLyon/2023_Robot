@@ -5,6 +5,11 @@
 #pragma once
 
 #include <frc/TimedRobot.h>
+#include <frc/smartdashboard/SmartDashboard.h>
+#include <frc/Joystick.h>
+#include <photonlib/PhotonCamera.h>
+#include <photonlib/PhotonUtils.h>
+
 
 class Robot : public frc::TimedRobot {
  public:
@@ -25,4 +30,12 @@ class Robot : public frc::TimedRobot {
 
   void SimulationInit() override;
   void SimulationPeriodic() override;
+
+  void DisableLED();
+  void EnableLED();
+  int IdAprilTag();
+
+ private:
+  frc::Joystick m_stick{0};
+  photonlib::PhotonCamera m_camera{"photonvision"}; 
 };
