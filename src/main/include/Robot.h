@@ -40,8 +40,7 @@ class Robot : public frc::TimedRobot {
   frc::Joystick m_joystick{0};
   frc::BuiltInAccelerometer m_accelerometer{};
   // frc::ADXRS450_Gyro m_gyro{};
-  frc::PIDController m_pidController{frc::SmartDashboard::GetNumber("P",0.5), 0, 0};
-
+  frc::PIDController m_pidController{(frc::SmartDashboard::PutNumber("P", frc::SmartDashboard::GetNumber("P", 0.0))), (frc::SmartDashboard::PutNumber("I", frc::SmartDashboard::GetNumber("I", 0.0))), (frc::SmartDashboard::PutNumber("D", frc::SmartDashboard::GetNumber("D", 0.0))) };
   ctre::phoenix::motorcontrol::can::TalonFX m_MotorRight{1};
   ctre::phoenix::motorcontrol::can::TalonFX m_MotorRightFollower{2};
   ctre::phoenix::motorcontrol::can::TalonFX m_MotorRightFollower2{3};
