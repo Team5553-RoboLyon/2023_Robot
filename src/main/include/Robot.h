@@ -40,3 +40,4 @@ class Robot : public frc::TimedRobot {
     double last_invert1 = false;
     double last_invert2 = false;
 };
+
