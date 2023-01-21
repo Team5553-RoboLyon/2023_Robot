@@ -5,6 +5,8 @@
 #include <frc/Doublesolenoid.h>
 #include <ctre/Phoenix/motorcontrol/can/TalonFX.h>
 #include <frc/Compressor.h>
+#include <ostream>
+#include <fstream>
 
 class Drivetrain : public frc2::SubsystemBase
 {
@@ -15,7 +17,7 @@ public:
   double GetSwitchGearVoltageLeft(double w, double voltageReference, double reduction, double finalReduction);  // voir avec JM                                                                // ok
   void InvertBallShifter();
   void ActiveBallShifterV1();                                                   // ok
-  void ActiveBallShifterV2();                                                   // ok                                                                                    // ok
+  void ActiveBallShifterV2();               
   void EnableBrakeMode(bool Change);                                            // ok
   void Drive(double joystickLeft, double joystickRight);                        // ok
   double Calcul_De_Notre_Brave_JM(double forward, double turn, bool wheelSide); // Si wheelSide 0: roue droite / Si wheelSide 1: roue gauche
@@ -26,6 +28,8 @@ public:
   double wfRef = 6380;
   double m_count = 0;
   double m_coun = 0;
+  double encoder_RightLast=0.0;
+  double encoder_LeftLast=0.0;
 
   enum State
   {
@@ -47,8 +51,8 @@ private:
   ctre::phoenix::motorcontrol::can::TalonFX m_MotorGearboxLeft2{5};
   ctre::phoenix::motorcontrol::can::TalonFX m_MotorGearboxLeft3{6};
 
-  // frc::Encoder m_EncoderRight{0, 1};
-  // frc::Encoder m_EncoderLeft{2, 3};
+  frc::Encoder m_EncoderRight{0, 1,true};
+  frc::Encoder m_EncoderLeft{2, 3,true};
 
   frc::DoubleSolenoid m_BallShifterSolenoidLeft{frc::PneumaticsModuleType::REVPH, 0, 1};
 };
