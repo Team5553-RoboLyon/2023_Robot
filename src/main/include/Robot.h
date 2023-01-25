@@ -30,7 +30,6 @@ class Robot : public frc::TimedRobot {
   void SimulationInit() override;
   void SimulationPeriodic() override;
 
-  bool IsFollower();
 
   private:
     frc::Joystick m_stick{0};
