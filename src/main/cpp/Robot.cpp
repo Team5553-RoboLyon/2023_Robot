@@ -14,7 +14,11 @@ double Robot::signe(double x) {
   }
 }
 
-void Robot::RobotInit() {}
+void Robot::RobotInit() {
+  // frc::ADXRS450_Gyro(frc::SPI::Port::kOnboardCS0);
+  m_gyro.Reset();
+  m_gyro.Calibrate();
+}
 void Robot::RobotPeriodic() {}
 
 void Robot::AutonomousInit() {}
@@ -40,35 +44,37 @@ void Robot::TeleopPeriodic() {
   frc::SmartDashboard::PutNumber("Y", y);
   frc::SmartDashboard::PutNumber("Output", output);
   frc::SmartDashboard::PutNumber("Angle", y);
-  // double angle = m_gyro.GetAngle();
-  // frc::SmartDashboard::PutNumber("Angle", angle);
+  double angle = m_gyro.GetAngle();
+  frc::SmartDashboard::PutNumber("Angle", angle);
   // frc::SmartDashboard::PutNumber("arcos accélé",std::acos(y)/3.14159265*180.0);
 
   double speed = signe(y)*output;
   frc::SmartDashboard::PutNumber("speed",speed);
-  if (m_joystick.GetRawButton(1))
-  {
-    m_MotorRight.Set(ctre::phoenix::motorcontrol::ControlMode::PercentOutput, speed);
-    m_MotorRightFollower.Set(ctre::phoenix::motorcontrol::ControlMode::PercentOutput, speed);
-    m_MotorRightFollower2.Set(ctre::phoenix::motorcontrol::ControlMode::PercentOutput, speed);
-    m_MotorLeft.Set(ctre::phoenix::motorcontrol::ControlMode::PercentOutput, speed);
-    m_MotorLeftFollower.Set(ctre::phoenix::motorcontrol::ControlMode::PercentOutput, speed);
-    m_MotorLeftFollower2.Set(ctre::phoenix::motorcontrol::ControlMode::PercentOutput, speed);
-  }
-  else
-  {
-    m_MotorRight.Set(ctre::phoenix::motorcontrol::ControlMode::PercentOutput, 0.0);
-    m_MotorRightFollower.Set(ctre::phoenix::motorcontrol::ControlMode::PercentOutput, 0.0);
-    m_MotorRightFollower2.Set(ctre::phoenix::motorcontrol::ControlMode::PercentOutput, 0.0);
-    m_MotorLeft.Set(ctre::phoenix::motorcontrol::ControlMode::PercentOutput, 0.0);
-    m_MotorLeftFollower.Set(ctre::phoenix::motorcontrol::ControlMode::PercentOutput, 0.0);
-    m_MotorLeftFollower2.Set(ctre::phoenix::motorcontrol::ControlMode::PercentOutput, 0.0);
-  }
+  // if (m_joystick.GetRawButton(1))
+  // {
+  //   m_MotorRight.Set(ctre::phoenix::motorcontrol::ControlMode::PercentOutput, speed);
+  //   m_MotorRightFollower.Set(ctre::phoenix::motorcontrol::ControlMode::PercentOutput, speed);
+  //   m_MotorRightFollower2.Set(ctre::phoenix::motorcontrol::ControlMode::PercentOutput, speed);
+  //   m_MotorLeft.Set(ctre::phoenix::motorcontrol::ControlMode::PercentOutput, speed);
+  //   m_MotorLeftFollower.Set(ctre::phoenix::motorcontrol::ControlMode::PercentOutput, speed);
+  //   m_MotorLeftFollower2.Set(ctre::phoenix::motorcontrol::ControlMode::PercentOutput, speed);
+  // }
+  // else
+  // {
+  //   m_MotorRight.Set(ctre::phoenix::motorcontrol::ControlMode::PercentOutput, 0.0);
+  //   m_MotorRightFollower.Set(ctre::phoenix::motorcontrol::ControlMode::PercentOutput, 0.0);
+  //   m_MotorRightFollower2.Set(ctre::phoenix::motorcontrol::ControlMode::PercentOutput, 0.0);
+  //   m_MotorLeft.Set(ctre::phoenix::motorcontrol::ControlMode::PercentOutput, 0.0);
+  //   m_MotorLeftFollower.Set(ctre::phoenix::motorcontrol::ControlMode::PercentOutput, 0.0);
+  //   m_MotorLeftFollower2.Set(ctre::phoenix::motorcontrol::ControlMode::PercentOutput, 0.0);
+  // }
   
 
 }
 
-void Robot::DisabledInit() {}
+void Robot::DisabledInit() {
+  m_gyro.Reset();
+}
 void Robot::DisabledPeriodic() {}
 
 void Robot::TestInit() {}
