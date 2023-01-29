@@ -4,7 +4,7 @@
 
 #include "Robot.h"
 // cc
-
+// cc
 void Robot::RobotInit() {}
 void Robot::RobotPeriodic() {}
 // on fait
