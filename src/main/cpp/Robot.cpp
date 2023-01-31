@@ -15,6 +15,7 @@ void Robot::AutonomousPeriodic() {}
 
 void Robot::TeleopInit()
 {
+  
 }
 
 void Robot::TeleopPeriodic()

@@ -52,7 +52,7 @@ private:
   ctre::phoenix::motorcontrol::can::TalonFX m_MotorGearboxLeft3{6};
 
   frc::Encoder m_EncoderRight{0, 1,true};
-  frc::Encoder m_EncoderLeft{2, 3,true};
+  frc::Encoder m_EncoderLeft{2, 3,false};
 
   frc::DoubleSolenoid m_BallShifterSolenoidLeft{frc::PneumaticsModuleType::REVPH, 0, 1};
 };
