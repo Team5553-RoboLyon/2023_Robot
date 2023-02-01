@@ -3,8 +3,11 @@
 // the WPILib BSD license file in the root directory of this project.
 
 #include "Robot.h"
+#include <iostream>
 
-void Robot::RobotInit() {}
+void Robot::RobotInit() {
+  m_Drivetrain.m_logCSV.open("/home/lvuser/",true);
+}
 void Robot::RobotPeriodic()
 {
   frc2::CommandScheduler::GetInstance().Run();
@@ -27,9 +30,15 @@ void Robot::TeleopPeriodic()
   }
   
   m_Drivetrain.Drive(-m_JoystickRight.GetY(), m_JoystickLeft.GetZ());
+  m_Drivetrain.m_logCSV.write();
+  std::cout<<"periodic"<<std::endl;
+
+
 }
 
-void Robot::DisabledInit() {}
+void Robot::DisabledInit() {
+  m_Drivetrain.m_logCSV.close();
+}
 void Robot::DisabledPeriodic() {}
 
 void Robot::TestInit() {}

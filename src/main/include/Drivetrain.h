@@ -5,6 +5,7 @@
 #include <frc/Doublesolenoid.h>
 #include <ctre/Phoenix/motorcontrol/can/TalonFX.h>
 #include <frc/Compressor.h>
+#include <lib/NLCsv.h>
 #include <ostream>
 #include <fstream>
 
@@ -30,6 +31,13 @@ public:
   double m_coun = 0;
   double encoder_RightLast=0.0;
   double encoder_LeftLast=0.0;
+  double m_difRight=0.0;
+  double m_difLeft=0.0;
+  double m_encoderRightMotor=0.0;
+  double m_encoderLeftMotor=0.0;
+  double m_getSwitchGearVoltageRight=0.0;
+  double m_getSwitchGearVoltageLeft=0.0;
+  double m_vitesse=0.0;
 
   enum State
   {
@@ -41,6 +49,8 @@ public:
     Auto_V2toV1_Inter
   };
   Drivetrain::State m_state = Drivetrain::State::Pilote_V1;
+  NLCSV m_logCSV{7};
+
 
 private:
   ctre::phoenix::motorcontrol::can::TalonFX m_MotorGearboxRight1{1};
