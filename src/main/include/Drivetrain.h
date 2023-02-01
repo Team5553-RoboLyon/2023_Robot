@@ -22,9 +22,9 @@ public:
   void Drive(double joystickLeft, double joystickRight);                        // ok
   double Calcul_De_Notre_Brave_JM(double forward, double turn, bool wheelSide); // Si wheelSide 0: roue droite / Si wheelSide 1: roue gauche
   bool General(double switchTimeLock,double w);
-  bool Up(double speedRobot, double accelerationRobot, double joystick);
-  bool CoastDown();
-  bool KickDown();
+  bool Up(double speedRobot, double accelerationRobot, double joystick, double deltaJoystick);
+  bool KickDown(double speedRobot, double accelerationRobot, double joystick);
+  bool CoastDown(double speedRobot);
   void SetVoltageTarget(double voltageTarget,double state);
 
   double m_SpeedEncoderRight;
@@ -41,7 +41,7 @@ public:
 
   double m_joyAcceleration;
 
-
+  double wfRef=6380;
 
 private:
   ctre::phoenix::motorcontrol::can::TalonFX m_MotorGearboxRight1{1};

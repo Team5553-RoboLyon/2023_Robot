@@ -199,7 +199,7 @@ bool Drivetrain::General(double switchTimeLock,double w)
     }
 }
 
-bool Drivetrain::Up(double speedRobot, double accelerationRobot, double joystick)
+bool Drivetrain::Up(double speedRobot, double accelerationRobot, double joystick,double deltaJoystick)
 {
     if (speedRobot > 0 and accelerationRobot > 0 and joystick > 0)
     {
@@ -211,6 +211,29 @@ bool Drivetrain::Up(double speedRobot, double accelerationRobot, double joystick
     }
 }
 
+bool Drivetrain::KickDown(double speedRobot, double accelerationRobot, double joystick)
+{
+    if (speedRobot < 0 and accelerationRobot < 0 and joystick < 0)
+    {
+        return true;
+    }
+    else
+    {
+        return false;
+    }
+}
+
+bool Drivetrain::CoastDown(double speedRobot)
+{
+    if (speedRobot < 0)
+    {
+        return true;
+    }
+    else
+    {
+        return false;
+    }
+}
 
 
 void Drivetrain::Drive(double joystickRight, double joystickLeft)
@@ -222,12 +245,12 @@ void Drivetrain::Drive(double joystickRight, double joystickLeft)
 
     double encoder_Right=m_EncoderRight.GetDistance();
     double encoder_Left=m_EncoderLeft.GetDistance();
-    double dif_Right=((encoder_Right-encoder_RightLast)/0.02*60)+((encoder_Left-encoder_LeftLast)/0.02*60)/2;
-    double dif_Left=(encoder_Left-encoder_LeftLast)/0.02*60;
-    double dif_Rightvrai=(encoder_Right-encoder_RightLast)/0.02*60;
+    double dif_Right=((encoder_Right-0)/0.02*60)+((encoder_Left-0)/0.02*60)/2;
+    double dif_Left=(encoder_Left-0)/0.02*60;
+    double dif_Rightvrai=(encoder_Right-0)/0.02*60;
 
-    encoder_RightLast=encoder_Right;
-    encoder_LeftLast=encoder_Left;
+    double encoder_RightLast=encoder_Right;
+    double encoder_LeftLast=encoder_Left;
 
     double signe=dif_Right>0 ? 1 : -1;
 
