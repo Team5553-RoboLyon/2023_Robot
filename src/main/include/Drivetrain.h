@@ -21,26 +21,27 @@ public:
   void EnableBrakeMode(bool Change);                                            // ok
   void Drive(double joystickLeft, double joystickRight);                        // ok
   double Calcul_De_Notre_Brave_JM(double forward, double turn, bool wheelSide); // Si wheelSide 0: roue droite / Si wheelSide 1: roue gauche
+  bool General(double switchTimeLock,double w);
+  bool Up(double speedRobot, double accelerationRobot, double joystick);
+  bool CoastDown();
+  bool KickDown();
+  void SetVoltageTarget(double voltageTarget,double state);
 
-  double w;
-  double T;
-  double Ts = 4.69;
-  double wfRef = 6380;
-  double m_count = 0;
-  double m_coun = 0;
-  double encoder_RightLast=0.0;
-  double encoder_LeftLast=0.0;
+  double m_SpeedEncoderRight;
+  double m_SpeedEncoderLeft;
 
-  enum State
-  {
-    Pilote_V1,
-    Auto_V1toV2,
-    Auto_V1toV2_Inter,
-    Pilote_V2,
-    Auto_V2toV1,
-    Auto_V2toV1_Inter
-  };
-  Drivetrain::State m_state = Drivetrain::State::Pilote_V1;
+  double m_AccelerationRight;
+  double m_AccelerationLeft;
+
+  double m_SpeedRobot;
+  double m_AccelerationRobot;
+
+  double m_SwitchTimeLock;
+  double m_W;
+
+  double m_joyAcceleration;
+
+
 
 private:
   ctre::phoenix::motorcontrol::can::TalonFX m_MotorGearboxRight1{1};

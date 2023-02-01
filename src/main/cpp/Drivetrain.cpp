@@ -1,4 +1,4 @@
-#define REDUC_V1 13.3                                      // valeur de réduction de la vitesse 1
+#define REDUC_V1 13.8                                      // valeur de réduction de la vitesse 1
 #define REDUC_V2 8.4                                       // valeur de réduction de la vitesse 2
 #define MAX_RPM_MOTEUR 6380                                // a définir
 #define COEFF_JVN 0.80                                     // tiré de JVN/a définir
@@ -7,7 +7,7 @@
 #define MULTIPLICATEUR_PM 50 * 60                          // pour passer des pulses à une minute (SetDistancePerPulse)
 #define voltageRef 12.0                                    // tension de référence
 #define hop_plus_de_frottements 0.013                    // hop plus de frottements
-
+#define MAXSWITCHTIMELOCK 0.5                              // temps max pour le switch de vitesse
 #define TRACKWIDTH 0.61f
 #define HALF_TRACKWIDTH (TRACKWIDTH / 2.0f)
 
@@ -186,6 +186,32 @@ double Drivetrain::Calcul_De_Notre_Brave_JM(double forward, double turn, bool wh
         return left_wheel;
 }
 
+bool Drivetrain::General(double switchTimeLock,double w)
+{
+     
+    if (switchTimeLock > MAXSWITCHTIMELOCK and std::abs(w) >30)
+    {
+        return true;
+    }
+    else
+    {
+        return false;
+    }
+}
+
+bool Drivetrain::Up(double speedRobot, double accelerationRobot, double joystick)
+{
+    if (speedRobot > 0 and accelerationRobot > 0 and joystick > 0)
+    {
+        return true;
+    }
+    else
+    {
+        return false;
+    }
+}
+
+
 
 void Drivetrain::Drive(double joystickRight, double joystickLeft)
 {
@@ -205,86 +231,4 @@ void Drivetrain::Drive(double joystickRight, double joystickLeft)
 
     double signe=dif_Right>0 ? 1 : -1;
 
-    frc::SmartDashboard::PutNumber("rapport",dif_Rightvrai);
-    frc::SmartDashboard::PutNumber("encodeur right", dif_Rightvrai);
-    frc::SmartDashboard::PutNumber("encodeur left", dif_Left);
-    frc::SmartDashboard::PutNumber("ratio" , dif_Left/dif_Rightvrai);
-
-
-    switch (m_state)
-    {
-
-    case State::Pilote_V1:
-
-        std::cout << "Pilot V1" << std::endl;
-        EnableBrakeMode(true);
-        m_MotorGearboxLeft1.Set(ctre::phoenix::motorcontrol::ControlMode::PercentOutput, Calcul_De_Notre_Brave_JM(joystickRight, joystickLeft, 1));
-        m_MotorGearboxRight1.Set(ctre::phoenix::motorcontrol::ControlMode::PercentOutput, Calcul_De_Notre_Brave_JM(joystickRight, joystickLeft, 0));
-        std::cout << "getswitch " << signe*GetSwitchGearVoltageRight(dif_Right*REDUC_V1, voltageRef, REDUC_V1, REDUC_V2) << std::endl;
-        if (std::abs(dif_Right)>=wfRef/REDUC_V1 *0.6) // avant 0.9       odométrie && encodeLeft >= MAX_RPM_V1 -50 encoderRight_RPM>=5500
-        {
-            m_state = State::Auto_V1toV2_Inter;
-            std::cout << "on passe vers V2" << std::endl;
-        }
-        break;
-
-    case State::Auto_V1toV2_Inter:
-        std::cout << "Auto V1 to V2 Inter" << std::endl;
-        EnableBrakeMode(false);
-        ActiveBallShifterV2();
-        m_state = State::Auto_V1toV2;
-        break;
-
-    case State::Auto_V1toV2:
-        std::cout << "Auto V1 to V2" << std::endl;
-        std::cout << "getswitch " << signe*GetSwitchGearVoltageRight(dif_Right*REDUC_V1, voltageRef, REDUC_V1, REDUC_V2) << std::endl;
-        m_MotorGearboxLeft1.Set(ctre::phoenix::motorcontrol::ControlMode::PercentOutput, signe*GetSwitchGearVoltageLeft(dif_Right*REDUC_V1, voltageRef, REDUC_V1, REDUC_V2));
-        m_MotorGearboxRight1.Set(ctre::phoenix::motorcontrol::ControlMode::PercentOutput, signe*GetSwitchGearVoltageRight(dif_Right*REDUC_V1, voltageRef, REDUC_V1, REDUC_V2));
-        m_count++;
-
-        if (m_count >= 5)
-        {
-            m_count = 0;
-            m_state = State::Pilote_V2;
-            std::cout << "on passe vers V2" << std::endl;
-        }
-        break;
-
-    case State::Pilote_V2:
-        std::cout << "Pilot V2" << std::endl;
-        std::cout << "getswitch " << signe*GetSwitchGearVoltageRight(dif_Right, voltageRef, REDUC_V1, REDUC_V2) << std::endl;
-        if (std::abs(dif_Right)>=wfRef/REDUC_V2*0.2) // avant 0.7 or encodeLeft >= MAX_RPM_V1 - 50 encoderRight_RPM>=4000
-        {
-            std::cout << "on passe ds V2" << std::endl;
-            EnableBrakeMode(true);
-            m_MotorGearboxLeft1.Set(ctre::phoenix::motorcontrol::ControlMode::PercentOutput, Calcul_De_Notre_Brave_JM(joystickRight, joystickLeft, 1));
-            m_MotorGearboxRight1.Set(ctre::phoenix::motorcontrol::ControlMode::PercentOutput, Calcul_De_Notre_Brave_JM(joystickRight, joystickLeft, 0));
-        }
-        else
-        {
-             m_state = State::Auto_V2toV1_Inter;
-             std::cout << "cc" << std::endl;
-        }
-        break;
-    case State::Auto_V2toV1_Inter:
-        std::cout << "Auto V2 to V1 Inter" << std::endl;
-        EnableBrakeMode(false);
-        ActiveBallShifterV1();
-        m_state = State::Auto_V2toV1;
-        break;
-
-    case State::Auto_V2toV1:
-        std::cout << "Auto V2 to V1" << std::endl;
-        std::cout << "getswitch " << signe*GetSwitchGearVoltageRight(dif_Right*REDUC_V2, voltageRef, REDUC_V2, REDUC_V1) << std::endl;
-        m_MotorGearboxLeft1.Set(ctre::phoenix::motorcontrol::ControlMode::PercentOutput, signe *GetSwitchGearVoltageRight(dif_Right*REDUC_V2, voltageRef, REDUC_V1, REDUC_V2));
-        m_MotorGearboxRight1.Set(ctre::phoenix::motorcontrol::ControlMode::PercentOutput, signe * GetSwitchGearVoltageRight(dif_Right*REDUC_V2, voltageRef, REDUC_V1, REDUC_V2) );
-        m_count++;
-        if (m_count >= 5)
-        {
-            m_count = 0;
-            m_state = State::Pilote_V1;
-            std::cout << "on passe vers V1" << std::endl;
-        }
-        break;
-    }
 }
