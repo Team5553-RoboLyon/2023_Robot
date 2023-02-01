@@ -6,6 +6,7 @@
 #include <string.h>
 #include <time.h>
 #include <assert.h>
+#include <iostream>
 
 #define NLCSVITEM_LABEL_MAXSIZE		32
 #define NLCSVITEM_FORMAT_MAXSIZE	8

@@ -99,7 +99,8 @@ Drivetrain::Drivetrain()
     m_logCSV.setItem(3,"encoderRightMotor",5,&m_encoderRightMotor);
     m_logCSV.setItem(4,"GetswitchgearvoltageLeft",5,&m_getSwitchGearVoltageLeft);
     m_logCSV.setItem(5,"GetswitchgearvoltageRight",5,&m_getSwitchGearVoltageRight);
-    m_logCSV.setItem(6,"état",5,&m_vitesse);
+    m_logCSV.setItem(6,"voltageCourant",5,&m_speed);
+    m_logCSV.setItem(7,"état",5,&m_vitesse);
     
 
 
@@ -221,6 +222,9 @@ void Drivetrain::Drive(double joystickRight, double joystickLeft)
     frc::SmartDashboard::PutNumber("encodeur left", m_difLeft);
     frc::SmartDashboard::PutNumber("ratio" , m_difLeft/dif_Rightvrai);
 
+    m_getSwitchGearVoltageLeft = signe*GetSwitchGearVoltageLeft(m_difRight*REDUC_V1, voltageRef, REDUC_V1, REDUC_V2);
+    m_getSwitchGearVoltageRight = signe*GetSwitchGearVoltageRight(m_difRight*REDUC_V1, voltageRef, REDUC_V1, REDUC_V2);
+
 
     switch (m_state)
     {
@@ -229,10 +233,11 @@ void Drivetrain::Drive(double joystickRight, double joystickLeft)
         m_vitesse = 1;
         std::cout << "Pilot V1" << std::endl;
         EnableBrakeMode(true);
+        m_speed=Calcul_De_Notre_Brave_JM(joystickRight, joystickLeft, 1);
         m_MotorGearboxLeft1.Set(ctre::phoenix::motorcontrol::ControlMode::PercentOutput, Calcul_De_Notre_Brave_JM(joystickRight, joystickLeft, 1));
         m_MotorGearboxRight1.Set(ctre::phoenix::motorcontrol::ControlMode::PercentOutput, Calcul_De_Notre_Brave_JM(joystickRight, joystickLeft, 0));
         std::cout << "getswitch " << signe*GetSwitchGearVoltageRight(m_difRight*REDUC_V1, voltageRef, REDUC_V1, REDUC_V2) << std::endl;
-        if (std::abs(m_difRight)>=wfRef/REDUC_V1 *0.6) // avant 0.9       odométrie && encodeLeft >= MAX_RPM_V1 -50 encoderRight_RPM>=5500
+        if (std::abs(m_difRight)>=wfRef/REDUC_V1 *0.15) // avant 0.9       odométrie && encodeLeft >= MAX_RPM_V1 -50 encoderRight_RPM>=5500
         {
             m_state = State::Auto_V1toV2_Inter;
             std::cout << "on passe vers V2" << std::endl;
@@ -249,8 +254,6 @@ void Drivetrain::Drive(double joystickRight, double joystickLeft)
     case State::Auto_V1toV2:
         std::cout << "Auto V1 to V2" << std::endl;
         std::cout << "getswitch " << signe*GetSwitchGearVoltageRight(m_difRight*REDUC_V1, voltageRef, REDUC_V1, REDUC_V2) << std::endl;
-        m_getSwitchGearVoltageLeft = signe*GetSwitchGearVoltageLeft(m_difRight*REDUC_V1, voltageRef, REDUC_V1, REDUC_V2);
-        m_getSwitchGearVoltageRight = signe*GetSwitchGearVoltageRight(m_difRight*REDUC_V1, voltageRef, REDUC_V1, REDUC_V2);
         m_MotorGearboxLeft1.Set(ctre::phoenix::motorcontrol::ControlMode::PercentOutput, signe*GetSwitchGearVoltageLeft(m_difRight*REDUC_V1, voltageRef, REDUC_V1, REDUC_V2));
         m_MotorGearboxRight1.Set(ctre::phoenix::motorcontrol::ControlMode::PercentOutput, signe*GetSwitchGearVoltageRight(m_difRight*REDUC_V1, voltageRef, REDUC_V1, REDUC_V2));
         m_count++;
@@ -265,9 +268,10 @@ void Drivetrain::Drive(double joystickRight, double joystickLeft)
 
     case State::Pilote_V2:
         m_vitesse = 2;
+        m_speed=Calcul_De_Notre_Brave_JM(joystickRight, joystickLeft, 1);
         std::cout << "Pilot V2" << std::endl;
         std::cout << "getswitch " << signe*GetSwitchGearVoltageRight(m_difRight, voltageRef, REDUC_V1, REDUC_V2) << std::endl;
-        if (std::abs(m_difRight)>=wfRef/REDUC_V2*0.2) // avant 0.7 or encodeLeft >= MAX_RPM_V1 - 50 encoderRight_RPM>=4000
+        if (std::abs(m_difRight)>=wfRef/REDUC_V2*0.05) // avant 0.7 or encodeLeft >= MAX_RPM_V1 - 50 encoderRight_RPM>=4000
         {
             std::cout << "on passe ds V2" << std::endl;
             EnableBrakeMode(true);
@@ -290,8 +294,6 @@ void Drivetrain::Drive(double joystickRight, double joystickLeft)
     case State::Auto_V2toV1:
         std::cout << "Auto V2 to V1" << std::endl;
         std::cout << "getswitch " << signe*GetSwitchGearVoltageRight(m_difRight*REDUC_V2, voltageRef, REDUC_V2, REDUC_V1) << std::endl;
-        m_getSwitchGearVoltageLeft = signe*GetSwitchGearVoltageLeft(m_difRight*REDUC_V1, voltageRef, REDUC_V1, REDUC_V2);
-        m_getSwitchGearVoltageRight = signe*GetSwitchGearVoltageRight(m_difRight*REDUC_V1, voltageRef, REDUC_V1, REDUC_V2);
         m_MotorGearboxLeft1.Set(ctre::phoenix::motorcontrol::ControlMode::PercentOutput, signe *GetSwitchGearVoltageRight(m_difRight*REDUC_V2, voltageRef, REDUC_V1, REDUC_V2));
         m_MotorGearboxRight1.Set(ctre::phoenix::motorcontrol::ControlMode::PercentOutput, signe * GetSwitchGearVoltageRight(m_difRight*REDUC_V2, voltageRef, REDUC_V1, REDUC_V2) );
         m_count++;

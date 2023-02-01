@@ -6,7 +6,6 @@
 #include <iostream>
 
 void Robot::RobotInit() {
-  m_Drivetrain.m_logCSV.open("/home/lvuser/",true);
 }
 void Robot::RobotPeriodic()
 {
@@ -18,7 +17,8 @@ void Robot::AutonomousPeriodic() {}
 
 void Robot::TeleopInit()
 {
-  
+    m_Drivetrain.m_logCSV.open("/home/lvuser/",true);
+
 }
 
 void Robot::TeleopPeriodic()

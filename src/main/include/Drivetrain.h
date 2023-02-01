@@ -38,6 +38,7 @@ public:
   double m_getSwitchGearVoltageRight=0.0;
   double m_getSwitchGearVoltageLeft=0.0;
   double m_vitesse=0.0;
+  double m_speed=0.0;
 
   enum State
   {
@@ -49,7 +50,7 @@ public:
     Auto_V2toV1_Inter
   };
   Drivetrain::State m_state = Drivetrain::State::Pilote_V1;
-  NLCSV m_logCSV{7};
+  NLCSV m_logCSV{8};
 
 
 private:
