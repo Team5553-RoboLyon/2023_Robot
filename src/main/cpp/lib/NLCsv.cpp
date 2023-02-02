@@ -74,12 +74,10 @@ bool NLCSV::open(const char* logname)
 	time_t	t;
 
 	time(&t);
-	char*strt = ctime(&t);
-	if (strt[strlen(strt) - 1] == '\n') strt[strlen(strt) - 1] = '\0';
 
 	if (logname)
 	{
-		sprintf(filename, "%s", logname, strt);
+		sprintf(filename, "%s", logname);
 		strftime(&filename[strlen(logname)], NLCSVITEM_FILENAME_MAXSIZE - strlen(logname), "log[%d_%m_%Y__%H_%M_%S].csv", localtime(&t));
 	}
 	else
