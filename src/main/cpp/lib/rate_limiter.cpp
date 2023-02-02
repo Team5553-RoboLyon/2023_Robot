@@ -42,7 +42,7 @@ void RateLimiter::SetCurrent(double current) { // on set le current
   m_current = current;
 }
 
-void RateLimiter::SetSpeed(double speed) { // on set la vitesse
+void RateLimiter::SetSpeed (double speed) { // on set la vitesse
   m_speed = speed;
 }
 

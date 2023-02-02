@@ -4,6 +4,8 @@
 #include <frc/Encoder.h>
 #include <frc/Doublesolenoid.h>
 #include <ctre/Phoenix/motorcontrol/can/TalonFX.h>
+#include <lib/NRollingAverage.h>
+#include <lib/rate_limiter.h>
 #include <frc/Compressor.h>
 #include <ostream>
 #include <fstream>
@@ -27,15 +29,35 @@ public:
   bool CoastDown(double speedRobot);
   void SetSwitchTimeLock(double switchTimeLock);
   void SetVoltageTarget(double voltageTarget,double state);
-  double SwitchUp(double coeff, double target,double w);
-  double SwitchDown(double coeff, double target,double w);
+  double SwitchUpRight(double coeff, double target,double w);
+  double SwitchUpLeft(double coeff, double target,double w);
+  double SwitchDownRight(double coeff, double target,double w);
+  double SwitchDownLeft(double coeff, double target,double w);
 
 
   double m_SpeedEncoderRight;
   double m_SpeedEncoderLeft;
 
-  double m_AccelerationRight;
-  double m_AccelerationLeft;
+  double m_SpeedEncoderRightLast;
+  double m_SpeedEncoderLeftLast;
+
+  double m_SpeedMotorRight;
+  double m_SpeedMotorLeft;
+
+  double m_SpeedMotorRightLast;
+  double m_SpeedMotorLeftLast;
+
+  double m_SpeedRobotRight;
+  double m_SpeedRobotLeft;
+
+  double m_AccelerationMotorRight;
+  double m_AccelerationMotorLeft;
+
+  double m_AccelerationEncoderRight;
+  double m_AccelerationEncoderLeft;
+
+  double m_AccelerationRobotRight;
+  double m_AccelerationRobotLeft;
 
   double m_SpeedRobot;
   double m_AccelerationRobot;
@@ -43,12 +65,20 @@ public:
   double m_SwitchTimeLock;
   double m_W;
 
-  double m_joyAcceleration;
+  double m_JoystickRightLast;
+  
+  double m_Joystick_V_Acceleration;
 
   double m_SwitchGearVoltageRight;
   double m_SwitchGearVoltageLeft;
 
-  double wfRef=6380;
+  double m_Joystick_V_Limited;
+  double m_Joystick_W_Limited;
+
+  double m_Joystick_V_Pure;
+  double m_Joystick_W_Pure;
+
+
 
   enum class State
   {
@@ -57,6 +87,10 @@ public:
   };
 
   State m_State;
+
+  RateLimiter m_rateLimiterFast;
+  RateLimiter m_rateLimiterSlow;
+
 private:
   ctre::phoenix::motorcontrol::can::TalonFX m_MotorGearboxRight1{1};
   ctre::phoenix::motorcontrol::can::TalonFX m_MotorGearboxRight2{2};
