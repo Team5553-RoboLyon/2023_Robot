@@ -13,8 +13,8 @@ class Drivetrain : public frc2::SubsystemBase
 public:
   Drivetrain();
   void Set(double speed);                                                                                       // faire autre chose y a moyen
-  double GetSwitchGearVoltageRight(double w, double voltageReference, double reduction, double finalReduction); // voir avec JM
-  double GetSwitchGearVoltageLeft(double w, double voltageReference, double reduction, double finalReduction);  // voir avec JM                                                                // ok
+  double GetSwitchGearVoltageRight(double w); // voir avec JM
+  double GetSwitchGearVoltageLeft(double w);  // voir avec JM                                                                // ok
   void InvertBallShifter();
   void ActiveBallShifterV1();                                                   // ok
   void ActiveBallShifterV2();               
@@ -25,7 +25,11 @@ public:
   bool Up(double speedRobot, double accelerationRobot, double joystick, double deltaJoystick);
   bool KickDown(double speedRobot, double accelerationRobot, double joystick);
   bool CoastDown(double speedRobot);
+  void SetSwitchTimeLock(double switchTimeLock);
   void SetVoltageTarget(double voltageTarget,double state);
+  double SwitchUp(double coeff, double target,double w);
+  double SwitchDown(double coeff, double target,double w);
+
 
   double m_SpeedEncoderRight;
   double m_SpeedEncoderLeft;
@@ -41,8 +45,18 @@ public:
 
   double m_joyAcceleration;
 
+  double m_SwitchGearVoltageRight;
+  double m_SwitchGearVoltageLeft;
+
   double wfRef=6380;
 
+  enum class State
+  {
+    lowGear,
+    highGear
+  };
+
+  State m_State;
 private:
   ctre::phoenix::motorcontrol::can::TalonFX m_MotorGearboxRight1{1};
   ctre::phoenix::motorcontrol::can::TalonFX m_MotorGearboxRight2{2};

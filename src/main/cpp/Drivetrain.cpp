@@ -125,18 +125,18 @@ void Drivetrain::InvertBallShifter()
     }
 }
 
-double Drivetrain::GetSwitchGearVoltageRight(double w, double voltageReference, double reduction, double finalReduction)
+double Drivetrain::GetSwitchGearVoltageRight(double w)
 {
-    double switchGearVoltage = (std::abs(w) + wfRef * hop_plus_de_frottements) * (voltageReference / wfRef);//TODO changer le 0.8
-    double percentVoltage = switchGearVoltage / voltageReference ;
+    double switchGearVoltage = (std::abs(w) + wfRef * hop_plus_de_frottements) * (voltageRef / wfRef);//TODO changer le 0.8
+    double percentVoltage = switchGearVoltage / voltageRef ;
     return percentVoltage;
 
 }
 
-double Drivetrain::GetSwitchGearVoltageLeft(double w, double voltageReference, double reduction, double finalReduction)
+double Drivetrain::GetSwitchGearVoltageLeft(double w)
 {
-    double switchGearVoltage = (std::abs(w) + wfRef * hop_plus_de_frottements) * (voltageReference / wfRef);//TODO changer le 0.8
-    double percentVoltage = switchGearVoltage / voltageReference;
+    double switchGearVoltage = (std::abs(w) + wfRef * hop_plus_de_frottements) * (voltageRef / wfRef);//TODO changer le 0.8
+    double percentVoltage = switchGearVoltage / voltageRef;
     return percentVoltage;
 }
 
@@ -235,6 +235,27 @@ bool Drivetrain::CoastDown(double speedRobot)
     }
 }
 
+void Drivetrain::SetSwitchTimeLock(double switchTimeLock)
+{
+    m_SwitchTimeLock = switchTimeLock;
+}
+
+double Drivetrain::SwitchUp(double coeff, double target,double w)
+{
+    double Usn = GetSwitchGearVoltageRight(w);
+    double U=target*coeff +(1-coeff)*Usn;
+    ActiveBallShifterV2();
+    return U;
+}
+
+double Drivetrain::SwitchDown(double coeff, double target,double w)
+{
+    double Usn = GetSwitchGearVoltageLeft(w);
+    double U=target*coeff +(1-coeff)*Usn;
+    ActiveBallShifterV1();
+    return U;
+}
+
 
 void Drivetrain::Drive(double joystickRight, double joystickLeft)
 {
@@ -254,4 +275,40 @@ void Drivetrain::Drive(double joystickRight, double joystickLeft)
 
     double signe=dif_Right>0 ? 1 : -1;
 
+    switch (m_State)
+    {
+        case State::lowGear:
+        {
+            if (General(m_SwitchTimeLock,m_W))
+            {
+                if (Up(m_SpeedRobot,m_AccelerationRobot,joystickRight,m_joyAcceleration))
+                {
+                    m_SwitchGearVoltageRight = SwitchUp(0.5, joystickRight,m_SpeedRobot);
+                    SetSwitchTimeLock(0);
+                    m_State = State::highGear;
+                }
+            }
+        }
+        break;
+
+        case State::highGear:
+        {
+            if (CoastDown(m_SpeedRobot))
+            {
+                m_SwitchGearVoltageRight = SwitchDown(0.5, joystickRight,m_SpeedRobot);
+                SetSwitchTimeLock(0);
+                m_State = State::lowGear;
+            }
+            
+            if (General(m_SwitchTimeLock,m_W))
+            {
+                if (KickDown(m_SpeedRobot,m_AccelerationRobot,joystickRight))
+                {
+                    m_SwitchGearVoltageRight = SwitchDown(0.5, joystickRight,m_SpeedRobot);
+                    SetSwitchTimeLock(0);
+                    m_State = State::lowGear;
+                }
+            }
+        }
+    }
 }
