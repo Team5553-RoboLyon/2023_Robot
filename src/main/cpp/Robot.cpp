@@ -15,7 +15,8 @@ void Robot::AutonomousPeriodic() {}
 
 void Robot::TeleopInit()
 {
-  
+  m_Drivetrain.m_logCSV.open("/home/lvuser/",true);
+
 }
 
 void Robot::TeleopPeriodic()
@@ -27,9 +28,14 @@ void Robot::TeleopPeriodic()
   }
   
   m_Drivetrain.Drive(-m_JoystickRight.GetY(), m_JoystickLeft.GetZ());
+  m_Drivetrain.m_logCSV.write();
+
 }
 
-void Robot::DisabledInit() {}
+void Robot::DisabledInit() {
+  m_Drivetrain.m_logCSV.close();
+
+}
 void Robot::DisabledPeriodic() {}
 
 void Robot::TestInit() {}

@@ -35,8 +35,6 @@ Drivetrain::Drivetrain()
     m_MotorGearboxRight2.ConfigFactoryDefault();
     m_MotorGearboxRight3.ConfigFactoryDefault();
 
-    // m_MotorGearboxLeft1.ConfigSupplyCurrentLimit(ctre::phoenix::motorcontrol::SupplyCurrentLimitConfiguration 40);
-
     m_MotorGearboxLeft1.ConfigSupplyCurrentLimit(ctre::phoenix::motorcontrol::SupplyCurrentLimitConfiguration(true, 40, 40, 0));      
     m_MotorGearboxLeft2.ConfigSupplyCurrentLimit(ctre::phoenix::motorcontrol::SupplyCurrentLimitConfiguration(true, 40, 40, 0));
     m_MotorGearboxLeft3.ConfigSupplyCurrentLimit(ctre::phoenix::motorcontrol::SupplyCurrentLimitConfiguration(true, 40, 40, 0));
@@ -60,15 +58,6 @@ Drivetrain::Drivetrain()
     m_MotorGearboxRight1.SetNeutralMode(ctre::phoenix::motorcontrol::NeutralMode::Brake);
     m_MotorGearboxRight2.SetNeutralMode(ctre::phoenix::motorcontrol::NeutralMode::Brake);
     m_MotorGearboxRight3.SetNeutralMode(ctre::phoenix::motorcontrol::NeutralMode::Brake);
-
-    m_MotorGearboxLeft1.ConfigOpenloopRamp(0.5);
-    m_MotorGearboxLeft2.ConfigOpenloopRamp(0.5);
-    m_MotorGearboxLeft3.ConfigOpenloopRamp(0.5);
-
-    m_MotorGearboxRight1.ConfigOpenloopRamp(0.5);
-    m_MotorGearboxRight2.ConfigOpenloopRamp(0.5);
-    m_MotorGearboxRight3.ConfigOpenloopRamp(0.5);
-
 
     m_MotorGearboxRight1.ConfigVoltageCompSaturation(VOLTAGE_REF);
     m_MotorGearboxRight2.ConfigVoltageCompSaturation(VOLTAGE_REF);
@@ -96,6 +85,15 @@ Drivetrain::Drivetrain()
 
     m_rateLimiter_W_Fast.Reset(0.0,0.0,0.0);
     m_rateLimiter_W_Slow.Reset(0.0,0.0,0.0);
+
+    m_logCSV.setItem(0,"joystick_V",5,&m_Joystick_V_Pure);
+    m_logCSV.setItem(1,"joystick_W",5,&m_Joystick_W_Pure);
+    m_logCSV.setItem(2,"SpeedRobot",5,&m_Robot_W);
+    m_logCSV.setItem(3,"état",5,&m_Vitesse);
+    m_logCSV.setItem(4,"rate_limiter_Fast_V",5,&m_rateLimiter_V_Fast.m_current);
+    m_logCSV.setItem(5,"rate_limiter_Slow_V",5,&m_rateLimiter_V_Slow.m_current);
+    m_logCSV.setItem(6,"rate_limiter_Fast_W",5,&m_rateLimiter_W_Fast.m_current);
+    m_logCSV.setItem(7,"rate_limiter_Slow_W",5,&m_rateLimiter_W_Slow.m_current);
 
     ActiveBallShifterV1();
 }
@@ -130,13 +128,7 @@ void Drivetrain::InvertBallShifter()
     }
 }
 
-double Drivetrain::GetSwitchGearVoltageRight(double w)
-{
-    return (std::abs(w) + WF_REF * ANNULE_FROTTEMENTS) / WF_REF;
-
-}
-
-double Drivetrain::GetSwitchGearVoltageLeft(double w)
+double Drivetrain::GetSwitchGearVoltage(double w)
 {
     return (std::abs(w) + WF_REF * ANNULE_FROTTEMENTS) / WF_REF;
 }
@@ -190,7 +182,7 @@ double Drivetrain::Calcul_De_Notre_Brave_JM(double forward, double turn, bool wh
 bool Drivetrain::General(double switchTimeLock,double w)
 {
      
-    if (switchTimeLock > MAXSWITCHTIMELOCK and std::abs(w) >30)
+    if (switchTimeLock <= 0 and std::abs(w) <300)//à définir
     {
         return true;
     }
@@ -202,7 +194,7 @@ bool Drivetrain::General(double switchTimeLock,double w)
 
 bool Drivetrain::Up(double speedRobot, double accelerationRobot, double joystick,double deltaJoystick)
 {
-    if (speedRobot > 0 and accelerationRobot > 0 and joystick > 0 and deltaJoystick >= 0)
+    if (speedRobot > 125 and accelerationRobot > 0 and joystick > 0.4 and deltaJoystick >= 0)
     {
         return true;
     }
@@ -214,7 +206,7 @@ bool Drivetrain::Up(double speedRobot, double accelerationRobot, double joystick
 
 bool Drivetrain::KickDown(double speedRobot, double accelerationRobot, double joystick)
 {
-    if (speedRobot < 100  and accelerationRobot < 0 and joystick > 111110)
+    if (speedRobot < 50  and accelerationRobot < 0 and joystick > 0.2)
     {
         return true;
     }
@@ -226,7 +218,7 @@ bool Drivetrain::KickDown(double speedRobot, double accelerationRobot, double jo
 
 bool Drivetrain::CoastDown(double speedRobot)
 {
-    if (speedRobot < 0.0000001)
+    if (speedRobot < 10)
     {
         return true;
     }
@@ -241,37 +233,24 @@ void Drivetrain::SetSwitchTimeLock(double switchTimeLock)
     m_SwitchTimeLock = switchTimeLock;
 }
 
-double Drivetrain::SwitchUpRight(double coeff, double target,double w)
+
+void Drivetrain::SwitchUp(double w)
 {
-    double Usn = GetSwitchGearVoltageRight(w);
-    double U=target*coeff +(1-coeff)*Usn;
+    m_SwitchSpeed = GetSwitchGearVoltage(w);
+    m_Recul = ((m_rateLimiter_V_Slow.m_current - m_SwitchSpeed)/m_rateLimiter_V_Slow.m_speed )*m_rateLimiter_V_Fast.m_speed;
+    m_rateLimiter_V_Fast.m_current=m_SwitchSpeed-m_Recul;
     ActiveBallShifterV2();
-    return U;
 }
 
-double Drivetrain::SwitchUpLeft(double coeff, double target,double w)
+void Drivetrain::SwitchDown(double w)
 {
-    double Usn = GetSwitchGearVoltageLeft(w);
-    double U=target*coeff +(1-coeff)*Usn;
-    ActiveBallShifterV2();
-    return U;
-}
-
-double Drivetrain::SwitchDownRight(double coeff, double target,double w)
-{
-    double Usn = GetSwitchGearVoltageRight(w);
-    double U=target*coeff +(1-coeff)*Usn;
+    m_SwitchSpeed = GetSwitchGearVoltage(w);
+    m_Recul = ((m_rateLimiter_V_Slow.m_current - m_SwitchSpeed)/m_rateLimiter_V_Slow.m_speed )*m_rateLimiter_V_Fast.m_speed;
+    m_rateLimiter_V_Fast.m_current=m_SwitchSpeed-m_Recul;
     ActiveBallShifterV1();
-    return U;
 }
 
-double Drivetrain::SwitchDownLeft(double coeff, double target,double w)
-{
-    double Usn = GetSwitchGearVoltageLeft(w);
-    double U=target*coeff +(1-coeff)*Usn;
-    ActiveBallShifterV1();
-    return U;
-}
+
 
 
 void Drivetrain::Drive(double joystick_V, double joystick_W)
@@ -281,8 +260,8 @@ void Drivetrain::Drive(double joystick_V, double joystick_W)
 
     double encoder_Gear_Right_Distance = m_EncoderRight.GetDistance(); // nombre de tours de l''axe de sortie de boite droite
     double encoder_Gear_Left_Distance = m_EncoderLeft.GetDistance();  // nombre de tours de l'axe de sortie de boite gauche
-    double encoder_Motor_Right_Distance = m_MotorGearboxRight1.GetSensorCollection().GetIntegratedSensorVelocity()* 600 / (2048*coef);// RPM axe du moteur 1 de la boite droite
-    double encoder_Motor_Left_Distance = m_MotorGearboxLeft1.GetSensorCollection().GetIntegratedSensorVelocity()* 600 / (2048*coef);// RPM axe du moteur 1 de la boite de gauche
+    double encoder_Motor_Right_Distance = m_MotorGearboxRight1.GetSensorCollection().GetIntegratedSensorVelocity()* 600 / (2048*coef);// RPM axe du moteur 1 de la boite droite / par le coef de réduction
+    double encoder_Motor_Left_Distance = m_MotorGearboxLeft1.GetSensorCollection().GetIntegratedSensorVelocity()* 600 / (2048*coef);// RPM axe du moteur 1 de la boite de gauche / par le coef de réduction
 
     m_EncoderLeft_V = (encoder_Gear_Left_Distance-m_EncoderLeftLast_V)/0.02*60;
     m_EncoderRight_V = (encoder_Gear_Right_Distance-m_EncoderRightLast_V)/0.02*60;
@@ -310,7 +289,7 @@ void Drivetrain::Drive(double joystick_V, double joystick_W)
 
     m_RobotAcceleration = (m_RobotAccelerationLeft + m_RobotAccelerationRight) / 2;
 
-    m_Robot_W=(m_RobotRight_W-m_RobotLeft_W)/AXLETRACK;
+    m_Robot_Angular_Rotate=(m_RobotRight_W-m_RobotLeft_W)/AXLETRACK;
 
     m_Joystick_V_Pure = joystick_V;
     m_Joystick_W_Pure = joystick_W;
@@ -325,6 +304,14 @@ void Drivetrain::Drive(double joystick_V, double joystick_W)
     m_rateLimiter_W_Fast.Update(m_Joystick_W_Pure);
     m_rateLimiter_W_Slow.Update(m_rateLimiter_W_Fast.m_current);
 
+    frc::SmartDashboard::PutNumber("m_rateLimiter_V_Fast.m_current", m_rateLimiter_V_Fast.m_current);
+    frc::SmartDashboard::PutNumber("m_rateLimiter_V_Slow.m_current", m_rateLimiter_V_Slow.m_current);
+
+    frc::SmartDashboard::PutNumber("m_rateLimiter_W_Fast.m_current", m_rateLimiter_W_Fast.m_current);
+    frc::SmartDashboard::PutNumber("m_rateLimiter_W_Slow.m_current", m_rateLimiter_W_Slow.m_current);
+
+    frc::SmartDashboard::PutNumber("m_Joystick_V_Pure", m_Joystick_V_Pure);
+    frc::SmartDashboard::PutNumber("m_Joystick_W_Pure", m_Joystick_W_Pure);
 
 
 
@@ -332,17 +319,17 @@ void Drivetrain::Drive(double joystick_V, double joystick_W)
     {
         case State::lowGear:
         {
+            m_Vitesse=1;
             m_MotorGearboxLeft1.Set(ctre::phoenix::motorcontrol::ControlMode::PercentOutput, Calcul_De_Notre_Brave_JM(m_rateLimiter_V_Slow.m_current, m_rateLimiter_W_Slow.m_current, 0));
             m_MotorGearboxRight1.Set(ctre::phoenix::motorcontrol::ControlMode::PercentOutput, Calcul_De_Notre_Brave_JM(m_rateLimiter_V_Slow.m_current, m_rateLimiter_W_Slow.m_current, 1));
-            if (General(m_SwitchTimeLock,m_W))
+            if (General(m_SwitchTimeLock,m_Robot_Angular_Rotate))
             {
                 if (Up(m_Robot_W,m_RobotAcceleration,m_Joystick_V_Pure,m_Joystick_V_Acceleration))
                 {
-                    m_SwitchGearVoltageRight = SwitchUpRight(T_SWITCH, m_rateLimiter_V_Slow.m_current,m_RobotRight_W);
-                    m_SwitchGearVoltageLeft = SwitchUpLeft(T_SWITCH, m_rateLimiter_V_Slow.m_current,m_RobotLeft_W);
-                    m_MotorGearboxLeft1.Set(ctre::phoenix::motorcontrol::ControlMode::PercentOutput, m_SwitchGearVoltageLeft);
-                    m_MotorGearboxRight1.Set(ctre::phoenix::motorcontrol::ControlMode::PercentOutput, m_SwitchGearVoltageRight);
-                    SetSwitchTimeLock(0);
+                    SwitchUp(m_Robot_W);
+                    m_MotorGearboxLeft1.Set(ctre::phoenix::motorcontrol::ControlMode::PercentOutput, Calcul_De_Notre_Brave_JM(m_rateLimiter_V_Slow.m_current, m_rateLimiter_W_Slow.m_current, 0));
+                    m_MotorGearboxRight1.Set(ctre::phoenix::motorcontrol::ControlMode::PercentOutput, Calcul_De_Notre_Brave_JM(m_rateLimiter_V_Slow.m_current, m_rateLimiter_W_Slow.m_current, 1));
+                    SetSwitchTimeLock(0.5);
                     m_State = State::highGear;
                 }
             }
@@ -351,27 +338,26 @@ void Drivetrain::Drive(double joystick_V, double joystick_W)
 
         case State::highGear:
         {
+            m_Vitesse=2;
             m_MotorGearboxLeft1.Set(ctre::phoenix::motorcontrol::ControlMode::PercentOutput, Calcul_De_Notre_Brave_JM(m_rateLimiter_V_Slow.m_current, m_rateLimiter_W_Slow.m_current, 0));
             m_MotorGearboxRight1.Set(ctre::phoenix::motorcontrol::ControlMode::PercentOutput, Calcul_De_Notre_Brave_JM(m_rateLimiter_V_Slow.m_current, m_rateLimiter_W_Slow.m_current, 1));
             if (CoastDown(m_Robot_W))
             {
-                m_SwitchGearVoltageRight = SwitchDownRight(T_SWITCH, m_rateLimiter_V_Slow.m_current,m_RobotRight_W);
-                m_SwitchGearVoltageLeft = SwitchDownLeft(T_SWITCH, m_rateLimiter_V_Slow.m_current,m_RobotLeft_W);
-                m_MotorGearboxLeft1.Set(ctre::phoenix::motorcontrol::ControlMode::PercentOutput, m_SwitchGearVoltageLeft);
-                m_MotorGearboxRight1.Set(ctre::phoenix::motorcontrol::ControlMode::PercentOutput, m_SwitchGearVoltageRight);
-                SetSwitchTimeLock(0);
+                SwitchDown(m_Robot_W);
+                m_MotorGearboxLeft1.Set(ctre::phoenix::motorcontrol::ControlMode::PercentOutput, Calcul_De_Notre_Brave_JM(m_rateLimiter_V_Slow.m_current, m_rateLimiter_W_Slow.m_current, 0));
+                m_MotorGearboxRight1.Set(ctre::phoenix::motorcontrol::ControlMode::PercentOutput, Calcul_De_Notre_Brave_JM(m_rateLimiter_V_Slow.m_current, m_rateLimiter_W_Slow.m_current, 1));
+                SetSwitchTimeLock(0.5);
                 m_State = State::lowGear;
             }
             
-            if (General(m_SwitchTimeLock,m_W))
+            if (General(m_SwitchTimeLock,m_Robot_Angular_Rotate))
             {
                 if (KickDown(m_Robot_W,m_RobotAcceleration,m_Joystick_V_Pure))
                 {
-                    m_SwitchGearVoltageRight = SwitchDownRight(T_SWITCH, m_rateLimiter_V_Slow.m_current,m_RobotRight_W);
-                    m_SwitchGearVoltageLeft = SwitchDownLeft(T_SWITCH, m_rateLimiter_V_Slow.m_current,m_RobotLeft_W);
-                    m_MotorGearboxLeft1.Set(ctre::phoenix::motorcontrol::ControlMode::PercentOutput, m_SwitchGearVoltageLeft);
-                    m_MotorGearboxRight1.Set(ctre::phoenix::motorcontrol::ControlMode::PercentOutput, m_SwitchGearVoltageRight);
-                    SetSwitchTimeLock(0);
+                    SwitchDown(m_Robot_W);
+                    m_MotorGearboxLeft1.Set(ctre::phoenix::motorcontrol::ControlMode::PercentOutput, Calcul_De_Notre_Brave_JM(m_rateLimiter_V_Slow.m_current, m_rateLimiter_W_Slow.m_current, 0));
+                    m_MotorGearboxRight1.Set(ctre::phoenix::motorcontrol::ControlMode::PercentOutput, Calcul_De_Notre_Brave_JM(m_rateLimiter_V_Slow.m_current, m_rateLimiter_W_Slow.m_current, 1));
+                    SetSwitchTimeLock(0.5);
                     m_State = State::lowGear;
                 }
             }

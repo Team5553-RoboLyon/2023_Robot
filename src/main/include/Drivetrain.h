@@ -6,6 +6,7 @@
 #include <ctre/Phoenix/motorcontrol/can/TalonFX.h>
 #include <lib/NRollingAverage.h>
 #include <lib/rate_limiter.h>
+#include <lib/NLCsv.h>
 #include <frc/Compressor.h>
 #include <ostream>
 #include <fstream>
@@ -15,8 +16,7 @@ class Drivetrain : public frc2::SubsystemBase
 public:
   Drivetrain();
   void Set(double speed);                                                                                       // faire autre chose y a moyen
-  double GetSwitchGearVoltageRight(double w); // voir avec JM
-  double GetSwitchGearVoltageLeft(double w);  // voir avec JM                                                                // ok
+  double GetSwitchGearVoltage(double w); // voir avec JM                                                              // ok
   void InvertBallShifter();
   void ActiveBallShifterV1();                                                   // ok
   void ActiveBallShifterV2();               
@@ -29,10 +29,8 @@ public:
   bool CoastDown(double speedRobot);
   void SetSwitchTimeLock(double switchTimeLock);
   void SetVoltageTarget(double voltageTarget,double state);
-  double SwitchUpRight(double coeff, double target,double w);
-  double SwitchUpLeft(double coeff, double target,double w);
-  double SwitchDownRight(double coeff, double target,double w);
-  double SwitchDownLeft(double coeff, double target,double w);
+  void SwitchUp(double w);
+  void SwitchDown(double w);
 
 
   double m_EncoderRight_V;
@@ -63,20 +61,22 @@ public:
   double m_RobotAcceleration;
 
   double m_SwitchTimeLock;
-  double m_W;
+  double m_Robot_Angular_Rotate;
 
   double m_Joystick_V_Last;
   
   double m_Joystick_V_Acceleration;
-
-  double m_SwitchGearVoltageRight;
-  double m_SwitchGearVoltageLeft;
 
   double m_Joystick_V_Limited;
   double m_Joystick_W_Limited;
 
   double m_Joystick_V_Pure;
   double m_Joystick_W_Pure;
+
+  double m_SwitchSpeed;
+  double m_Recul;
+
+  double m_Vitesse;
 
 
 
@@ -93,6 +93,9 @@ public:
 
   RateLimiter m_rateLimiter_W_Fast;
   RateLimiter m_rateLimiter_W_Slow;
+
+  NLCSV m_logCSV{8};
+
 
 
 private:
