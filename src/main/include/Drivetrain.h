@@ -35,37 +35,37 @@ public:
   double SwitchDownLeft(double coeff, double target,double w);
 
 
-  double m_SpeedEncoderRight;
-  double m_SpeedEncoderLeft;
+  double m_EncoderRight_V;
+  double m_EncoderLeft_V;
 
-  double m_SpeedEncoderRightLast;
-  double m_SpeedEncoderLeftLast;
+  double m_EncoderRightLast_V;
+  double m_EncoderLeftLast_V;
 
-  double m_SpeedMotorRight;
-  double m_SpeedMotorLeft;
+  double m_MotorRight_V;
+  double m_MotorLeft_V;
 
-  double m_SpeedMotorRightLast;
-  double m_SpeedMotorLeftLast;
+  double m_MotorRightLast_V;
+  double m_MotorLeftLast_V;
 
-  double m_SpeedRobotRight;
-  double m_SpeedRobotLeft;
+  double m_RobotRight_W;
+  double m_RobotLeft_W;
 
-  double m_AccelerationMotorRight;
-  double m_AccelerationMotorLeft;
+  double m_MotorAccelerationRight;
+  double m_MotorAccelerationLeft;
 
-  double m_AccelerationEncoderRight;
-  double m_AccelerationEncoderLeft;
+  double m_EncoderAccelerationRight;
+  double m_EncoderAccelerationLeft;
 
-  double m_AccelerationRobotRight;
-  double m_AccelerationRobotLeft;
+  double m_RobotAccelerationRight;
+  double m_RobotAccelerationLeft;
 
-  double m_SpeedRobot;
-  double m_AccelerationRobot;
+  double m_Robot_W;
+  double m_RobotAcceleration;
 
   double m_SwitchTimeLock;
   double m_W;
 
-  double m_JoystickRightLast;
+  double m_Joystick_V_Last;
   
   double m_Joystick_V_Acceleration;
 
@@ -88,8 +88,12 @@ public:
 
   State m_State;
 
-  RateLimiter m_rateLimiterFast;
-  RateLimiter m_rateLimiterSlow;
+  RateLimiter m_rateLimiter_V_Fast;
+  RateLimiter m_rateLimiter_V_Slow;
+
+  RateLimiter m_rateLimiter_W_Fast;
+  RateLimiter m_rateLimiter_W_Slow;
+
 
 private:
   ctre::phoenix::motorcontrol::can::TalonFX m_MotorGearboxRight1{1};
