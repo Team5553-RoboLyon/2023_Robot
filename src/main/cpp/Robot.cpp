@@ -12,8 +12,27 @@ void Robot::RobotPeriodic() {}
 void Robot::AutonomousInit() {}
 void Robot::AutonomousPeriodic() {}
 
-void Robot::TeleopInit() {}
-void Robot::TeleopPeriodic() {}
+void Robot::TeleopInit() {
+  frc::SmartDashboard::PutNumber("P", 0);
+  frc::SmartDashboard::PutNumber("I", 0);
+  frc::SmartDashboard::PutNumber("D", 0);
+  frc::SmartDashboard::PutNumber("Setpoint", 0);
+  m_encoder.Reset();
+  m_encoder.SetDistancePerPulse((90/22)*360);//conversion de la distance en degré en théorie
+}
+void Robot::TeleopPeriodic() {
+  m_pidController.SetP(frc::SmartDashboard::GetNumber("P", 0));
+  m_pidController.SetI(frc::SmartDashboard::GetNumber("I", 0));
+  m_pidController.SetD(frc::SmartDashboard::GetNumber("D", 0));
+  m_pidController.SetSetpoint(frc::SmartDashboard::GetNumber("Setpoint", 1));
+
+
+  if (m_joystick.GetRawButton(1)) {
+    m_motor.Set(m_pidController.Calculate(m_encoder.GetDistance()));
+  } else {
+    m_motor.Set(0);
+  }
+}
 
 void Robot::DisabledInit() {}
 void Robot::DisabledPeriodic() {}
