@@ -33,20 +33,20 @@ public:
   void SwitchDown(double w);
 
 
-  double m_EncoderRight_V; // vitesses encodeur droit 
-  double m_EncoderLeft_V; // vitesses encodeur gauche
+  double m_encoder_Gearbox_Right_W; // vitesses encodeur droit 
+  double m_encoder_Gearbox_Left_W; // vitesses encodeur gauche
 
-  double m_EncoderRightLast_V; // ancienne vitesses encodeur droit
-  double m_EncoderLeftLast_V; // ancienne vitesses encodeur gauche
+  double m_Encoder_Gearbox_Right_Previous_Distance; // ancienne vitesses encodeur droit
+  double m_Encoder_Gearbox_Left_Previous_Distance; // ancienne vitesses encodeur gauche
 
-  double m_MotorRight_V; // vitesses moteur droit 
-  double m_MotorLeft_V; // vitesses moteur gauche 
+  double m_encoder_Motor_Right_W; // vitesses moteur droit 
+  double m_encoder_Motor_Left_W; // vitesses moteur gauche 
  
-  double m_MotorRightLast_V; // ancienne vitesses moteur droit 
-  double m_MotorLeftLast_V;  // ancienne vitesses moteur gauche 
+  double m_Encoder_Motor_Right_Previous_Distance; // ancienne vitesses moteur droit 
+  double m_Encoder_Motor_Left_Previous_Distance;  // ancienne vitesses moteur gauche 
 
-  double m_RobotRight_W; // vitesses droit mixé entre encodeur moteur et axe
-  double m_RobotLeft_W; // vitesses gauche mixé entre encodeur moteur et axe
+  double m_Gearbox_Right_W_RPM; // vitesses droit mixé entre encodeur moteur et axe
+  double m_Gearbox_Left_W_RPM; // vitesses gauche mixé entre encodeur moteur et axe
 
   double m_MotorAccelerationRight; // accélération moteur droit
   double m_MotorAccelerationLeft; // accélération moteur gauche
@@ -57,11 +57,11 @@ public:
   double m_RobotAccelerationRight; // accélération robot droit mixé entre encodeur moteur et axe
   double m_RobotAccelerationLeft; // accélération robot gauche mixé entre encodeur moteur et axe
 
-  double m_Robot_W; // vitesse robot moyenne entre les deux cotés
-  double m_RobotAcceleration; // accélération robot moyenne entre les deux cotés
+  double m_Gearboxes_W_average_RPM; // vitesse robot moyenne entre les deux cotés
+  double m_Gearboxes_Acceleration; // accélération robot moyenne entre les deux cotés
 
   double m_SwitchTimeLock; // temps de blocage du changement de vitesse
-  double m_Robot_Angular_Rotate; // vitesse angulaire du robot
+  double m_Robot_W; // vitesse angulaire du robot
 
   double m_Joystick_V_Last; // ancienne valeur joystick V
   

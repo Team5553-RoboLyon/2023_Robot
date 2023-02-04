@@ -9,7 +9,7 @@
 #define T_ACCEL 0.5 
 #define T_SPEED  0.5 
 #define WF_MOTOR_RPM 6380     // vitesse de rotation théorique du moteur
-#define SIGMA 0.1             // sigma pour le rate limiter
+#define SIGMA 0.5          // sigma pour le rate limiter
 
 #define AMAX 5.1 // Acceleration Max  au PIF .. à définir aux encodeurs
 #define VMAX 3.4 // vitesse Max  théorique (3,395472 sur JVN-DT) .. à vérifier aux encodeurs
@@ -81,15 +81,15 @@ Drivetrain::Drivetrain()
     m_EncoderLeft.Reset(); // reset des encodeurs
     m_EncoderRight.Reset(); 
 
-    m_rateLimiter_V_Fast.Reset(0.0,0.0,0.0); // reset des rate limiters
-    m_rateLimiter_V_Slow.Reset(0.0,0.0,0.0);
+    m_rateLimiter_V_Fast.Reset(0.0,0.0,2.0); // reset des rate limiters
+    m_rateLimiter_V_Slow.Reset(0.0,0.0,0.05);
 
-    m_rateLimiter_W_Fast.Reset(0.0,0.0,0.0);
-    m_rateLimiter_W_Slow.Reset(0.0,0.0,0.0);
+    m_rateLimiter_W_Fast.Reset(0.0,0.0,2.0);
+    m_rateLimiter_W_Slow.Reset(0.0,0.0,0.05);
 
     m_logCSV.setItem(0,"joystick_V",5,&m_Joystick_V_Pure);
     m_logCSV.setItem(1,"joystick_W",5,&m_Joystick_W_Pure);
-    m_logCSV.setItem(2,"SpeedRobot",5,&m_Robot_W);
+    m_logCSV.setItem(2,"SpeedRobot",5,&m_Gearboxes_W_average_RPM);
     m_logCSV.setItem(3,"état",5,&m_Etat);
     m_logCSV.setItem(4,"rate_limiter_Fast_V",5,&m_rateLimiter_V_Fast.m_current);
     m_logCSV.setItem(5,"rate_limiter_Slow_V",5,&m_rateLimiter_V_Slow.m_current);
@@ -97,6 +97,7 @@ Drivetrain::Drivetrain()
     m_logCSV.setItem(7,"rate_limiter_Slow_W",5,&m_rateLimiter_W_Slow.m_current);
 
     ActiveBallShifterV1(); // init ball shifter
+    m_State =State::lowGear;
 }
 
 void Drivetrain::Set(double v_motor) // set des moteurs
@@ -198,7 +199,7 @@ double Drivetrain::Calcul_De_Notre_Brave_JM(double forward, double turn, bool wh
 
 bool Drivetrain::General(double switchTimeLock,double w) // mode général, détermine si on peut passer une vitesse
 {
-     
+    return false;
     if (switchTimeLock <= 0 and std::abs(w) <300)//à définir
     {
         return true;
@@ -274,39 +275,40 @@ void Drivetrain::Drive(double joystick_V, double joystick_W) //
 {
     // double signe=dif_Right>0 ? 1 : -1;
     double coef = m_State == State::lowGear ? REDUC_V1 : REDUC_V2;
-
-    double encoder_Gear_Right_Distance = m_EncoderRight.GetDistance(); // nombre de tours de l''axe de sortie de boite droite
-    double encoder_Gear_Left_Distance = m_EncoderLeft.GetDistance();  // nombre de tours de l'axe de sortie de boite gauche
+    //distance sortie de boite en nombre de tour
+    double encoder_Gearbox_Right_Distance = m_EncoderRight.GetDistance(); // nombre de tours de l''axe de sortie de boite droite
+    double encoder_Gearbox_Left_Distance = m_EncoderLeft.GetDistance();  // nombre de tours de l'axe de sortie de boite gauche
+    // vitesse angulaire en sortie de boite basé sur les encodeurs motors
     double encoder_Motor_Right_Distance = m_MotorGearboxRight1.GetSensorCollection().GetIntegratedSensorVelocity()* 600 / (2048*coef);// RPM axe du moteur 1 de la boite droite / par le coef de réduction
     double encoder_Motor_Left_Distance = m_MotorGearboxLeft1.GetSensorCollection().GetIntegratedSensorVelocity()* 600 / (2048*coef);// RPM axe du moteur 1 de la boite de gauche / par le coef de réduction
 
-    m_EncoderLeft_V = (encoder_Gear_Left_Distance-m_EncoderLeftLast_V)/0.02*60; // vitesse de l'axe de sortie de boite gauche en RPM
-    m_EncoderRight_V = (encoder_Gear_Right_Distance-m_EncoderRightLast_V)/0.02*60; // vitesse de l'axe de sortie de boite droite en RPM
-    m_MotorLeft_V = (encoder_Motor_Left_Distance-m_MotorLeftLast_V)/0.02*60; // vitesse de l'axe du moteur 1 de la boite gauche en RPM
-    m_MotorRight_V = (encoder_Motor_Right_Distance-m_MotorRightLast_V)/0.02*60; // vitesse de l'axe du moteur 1 de la boite droite en RPM
+    m_encoder_Gearbox_Left_W = (encoder_Gearbox_Left_Distance-m_Encoder_Gearbox_Left_Previous_Distance)/0.02*60; // vitesse de l'axe de sortie de boite gauche en RPM
+    m_encoder_Gearbox_Right_W = (encoder_Gearbox_Right_Distance-m_Encoder_Gearbox_Right_Previous_Distance)/0.02*60; // vitesse de l'axe de sortie de boite droite en RPM
+    m_encoder_Motor_Left_W = (encoder_Motor_Left_Distance-m_Encoder_Motor_Left_Previous_Distance)/0.02*60; // vitesse de l'axe du moteur 1 de la boite gauche en RPM
+    m_encoder_Motor_Right_W = (encoder_Motor_Right_Distance-m_Encoder_Motor_Right_Previous_Distance)/0.02*60; // vitesse de l'axe du moteur 1 de la boite droite en RPM
 
-    m_EncoderLeftLast_V = encoder_Gear_Left_Distance; // sauvegarde de la vitesse de l'axe de sortie de boite gauche
-    m_EncoderRightLast_V = encoder_Gear_Right_Distance; // sauvegarde de la vitesse de l'axe de sortie de boite droite
-    m_MotorLeftLast_V = encoder_Motor_Left_Distance;    // sauvegarde de la vitesse de l'axe du moteur 1 de la boite gauche
-    m_MotorRightLast_V = encoder_Motor_Right_Distance;  // sauvegarde de la vitesse de l'axe du moteur 1 de la boite droite
+    m_Encoder_Gearbox_Left_Previous_Distance = encoder_Gearbox_Left_Distance; // sauvegarde de la vitesse de l'axe de sortie de boite gauche
+    m_Encoder_Gearbox_Right_Previous_Distance = encoder_Gearbox_Right_Distance; // sauvegarde de la vitesse de l'axe de sortie de boite droite
+    m_Encoder_Motor_Left_Previous_Distance = encoder_Motor_Left_Distance;    // sauvegarde de la vitesse de l'axe du moteur 1 de la boite gauche
+    m_Encoder_Motor_Right_Previous_Distance = encoder_Motor_Right_Distance;  // sauvegarde de la vitesse de l'axe du moteur 1 de la boite droite
 
-    m_RobotRight_W = (m_EncoderRight_V*T_SPEED +m_MotorRight_V*(1-T_SPEED )) ;  // vitesse du robot partie droite en RPM
-    m_RobotLeft_W = (m_EncoderLeft_V*T_SPEED +m_MotorLeft_V*(1-T_SPEED )) ; // vitesse du robot partie gauche en RPM
+    m_Gearbox_Right_W_RPM = (m_encoder_Gearbox_Right_W*T_SPEED +m_encoder_Motor_Right_W*(1-T_SPEED )) ;  // vitesse du robot partie droite en RPM
+    m_Gearbox_Left_W_RPM = (m_encoder_Gearbox_Left_W*T_SPEED +m_encoder_Motor_Left_W*(1-T_SPEED )) ; // vitesse du robot partie gauche en RPM
 
-    m_Robot_W = (m_RobotRight_W + m_RobotLeft_W) / 2;   // vitesse du robot en RPM
+    m_Gearboxes_W_average_RPM = (m_Gearbox_Right_W_RPM + m_Gearbox_Left_W_RPM) / 2;   // vitesse angulaire moyenne des boites du robot en RPM
 
 
-    m_MotorAccelerationRight = m_MotorRight_V - m_MotorRightLast_V; // accélération moteur partie droite
-    m_MotorAccelerationLeft = m_MotorLeft_V - m_MotorLeftLast_V; // accélération moteur partie gauche
-    m_EncoderAccelerationRight = m_EncoderRight_V - m_EncoderRightLast_V; // accélération axe de sortie de boite partie droite
-    m_EncoderAccelerationLeft = m_EncoderLeft_V - m_EncoderLeftLast_V; // accélération axe de sortie de boite partie gauche
+    m_MotorAccelerationRight = encoder_Motor_Right_Distance - m_Encoder_Motor_Right_Previous_Distance; // accélération moteur partie droite
+    m_MotorAccelerationLeft = encoder_Motor_Left_Distance - m_Encoder_Motor_Left_Previous_Distance; // accélération moteur partie gauche
+    m_EncoderAccelerationRight = encoder_Gearbox_Right_Distance - m_Encoder_Gearbox_Right_Previous_Distance; // accélération axe de sortie de boite partie droite
+    m_EncoderAccelerationLeft = encoder_Gearbox_Left_Distance - m_Encoder_Gearbox_Left_Previous_Distance; // accélération axe de sortie de boite partie gauche
 
     m_RobotAccelerationLeft = (m_EncoderAccelerationLeft*T_ACCEL+m_MotorAccelerationLeft*(1-T_ACCEL)) ; // accélération partie gauche
     m_RobotAccelerationRight = (m_EncoderAccelerationRight*T_ACCEL+m_MotorAccelerationRight*(1-T_ACCEL)); // accélération partie droite
 
-    m_RobotAcceleration = (m_RobotAccelerationLeft + m_RobotAccelerationRight) / 2; // accélération du robot
+    m_Gearboxes_Acceleration = (m_RobotAccelerationLeft + m_RobotAccelerationRight) / 2; // accélération du robot
 
-    m_Robot_Angular_Rotate=(m_RobotRight_W-m_RobotLeft_W)/AXLETRACK; // vitesse angulaire du robot en RPM
+    m_Robot_W=(m_Gearbox_Right_W_RPM-m_Gearbox_Left_W_RPM)/AXLETRACK; // vitesse angulaire du robot en RPM
 
     m_Joystick_V_Pure = joystick_V; 
     m_Joystick_W_Pure = joystick_W;
@@ -342,11 +344,11 @@ void Drivetrain::Drive(double joystick_V, double joystick_W) //
             m_Etat=1;
             // m_MotorGearboxLeft1.Set(ctre::phoenix::motorcontrol::ControlMode::PercentOutput, Calcul_De_Notre_Brave_JM(m_rateLimiter_V_Slow.m_current, m_rateLimiter_W_Slow.m_current, 0));
             // m_MotorGearboxRight1.Set(ctre::phoenix::motorcontrol::ControlMode::PercentOutput, Calcul_De_Notre_Brave_JM(m_rateLimiter_V_Slow.m_current, m_rateLimiter_W_Slow.m_current, 1));
-            if (General(m_SwitchTimeLock,m_Robot_Angular_Rotate))
+            if (General(m_SwitchTimeLock,m_Robot_W))
             {
-                if (Up(m_Robot_W,m_RobotAcceleration,m_Joystick_V_Pure,m_Joystick_V_Acceleration))
+                if (Up(m_Gearboxes_W_average_RPM,m_Gearboxes_Acceleration,m_Joystick_V_Pure,m_Joystick_V_Acceleration))
                 {
-                    SwitchUp(m_Robot_W*REDUC_V1);
+                    SwitchUp(m_Gearboxes_W_average_RPM*REDUC_V1);
                     // m_MotorGearboxLeft1.Set(ctre::phoenix::motorcontrol::ControlMode::PercentOutput, Calcul_De_Notre_Brave_JM(m_rateLimiter_V_Slow.m_current, m_rateLimiter_W_Slow.m_current, 0));
                     // m_MotorGearboxRight1.Set(ctre::phoenix::motorcontrol::ControlMode::PercentOutput, Calcul_De_Notre_Brave_JM(m_rateLimiter_V_Slow.m_current, m_rateLimiter_W_Slow.m_current, 1));
                     SetSwitchTimeLock(0.5);
@@ -361,20 +363,20 @@ void Drivetrain::Drive(double joystick_V, double joystick_W) //
             m_Etat=2;
             // m_MotorGearboxLeft1.Set(ctre::phoenix::motorcontrol::ControlMode::PercentOutput, Calcul_De_Notre_Brave_JM(m_rateLimiter_V_Slow.m_current, m_rateLimiter_W_Slow.m_current, 0));
             // m_MotorGearboxRight1.Set(ctre::phoenix::motorcontrol::ControlMode::PercentOutput, Calcul_De_Notre_Brave_JM(m_rateLimiter_V_Slow.m_current, m_rateLimiter_W_Slow.m_current, 1));
-            if (CoastDown(m_Robot_W))
+            if (CoastDown(m_Gearboxes_W_average_RPM))
             {
-                SwitchDown(m_Robot_W*REDUC_V2);
+                SwitchDown(m_Gearboxes_W_average_RPM*REDUC_V2);
                 // m_MotorGearboxLeft1.Set(ctre::phoenix::motorcontrol::ControlMode::PercentOutput, Calcul_De_Notre_Brave_JM(m_rateLimiter_V_Slow.m_current, m_rateLimiter_W_Slow.m_current, 0));
                 // m_MotorGearboxRight1.Set(ctre::phoenix::motorcontrol::ControlMode::PercentOutput, Calcul_De_Notre_Brave_JM(m_rateLimiter_V_Slow.m_current, m_rateLimiter_W_Slow.m_current, 1));
                 SetSwitchTimeLock(0.5);
                 m_State = State::lowGear;
             }
             
-            if (General(m_SwitchTimeLock,m_Robot_Angular_Rotate))
+            if (General(m_SwitchTimeLock,m_Robot_W))
             {
-                if (KickDown(m_Robot_W,m_RobotAcceleration,m_Joystick_V_Pure))
+                if (KickDown(m_Gearboxes_W_average_RPM,m_Gearboxes_Acceleration,m_Joystick_V_Pure))
                 {
-                    SwitchDown(m_Robot_W*REDUC_V2);
+                    SwitchDown(m_Gearboxes_W_average_RPM*REDUC_V2);
                     // m_MotorGearboxLeft1.Set(ctre::phoenix::motorcontrol::ControlMode::PercentOutput, Calcul_De_Notre_Brave_JM(m_rateLimiter_V_Slow.m_current, m_rateLimiter_W_Slow.m_current, 0));
                     // m_MotorGearboxRight1.Set(ctre::phoenix::motorcontrol::ControlMode::PercentOutput, Calcul_De_Notre_Brave_JM(m_rateLimiter_V_Slow.m_current, m_rateLimiter_W_Slow.m_current, 1));
                     SetSwitchTimeLock(0.5);
