@@ -37,4 +37,5 @@ class Robot : public frc::TimedRobot {
   frc::Joystick m_joystick{0};
   frc::PIDController m_pidController{0, 0, 0};
   rev::CANSparkMax m_motor{1, rev::CANSparkMax::MotorType::kBrushless};
+  double m_clamp;
 };

@@ -19,19 +19,23 @@ void Robot::TeleopInit() {
   frc::SmartDashboard::PutNumber("Setpoint", 0);
   m_encoder.Reset();
   m_encoder.SetDistancePerPulse((90/22)*360);//conversion de la distance en degré en théorie
+
+  m_motor.SetInverted(true);
+  m_motor.SetSmartCurrentLimit(40);
+  m_motor.SetOpenLoopRampRate(0.5);
+
+  frc::SmartDashboard::PutNumber("coef",0.2);
+
 }
 void Robot::TeleopPeriodic() {
+  m_clamp = frc::SmartDashboard::GetNumber("coef",0.2);
   m_pidController.SetP(frc::SmartDashboard::GetNumber("P", 0));
   m_pidController.SetI(frc::SmartDashboard::GetNumber("I", 0));
   m_pidController.SetD(frc::SmartDashboard::GetNumber("D", 0));
   m_pidController.SetSetpoint(frc::SmartDashboard::GetNumber("Setpoint", 1));
 
 
-  if (m_joystick.GetRawButton(1)) {
-    m_motor.Set(m_pidController.Calculate(m_encoder.GetDistance()));
-  } else {
-    m_motor.Set(0);
-  }
+  m_motor.Set(std::clamp(m_joystick.GetZ(), -m_clamp, m_clamp));
 }
 
 void Robot::DisabledInit() {}
