@@ -33,50 +33,50 @@ public:
   void SwitchDown(double w);
 
 
-  double m_EncoderRight_V;
-  double m_EncoderLeft_V;
+  double m_EncoderRight_V; // vitesses encodeur droit 
+  double m_EncoderLeft_V; // vitesses encodeur gauche
 
-  double m_EncoderRightLast_V;
-  double m_EncoderLeftLast_V;
+  double m_EncoderRightLast_V; // ancienne vitesses encodeur droit
+  double m_EncoderLeftLast_V; // ancienne vitesses encodeur gauche
 
-  double m_MotorRight_V;
-  double m_MotorLeft_V;
+  double m_MotorRight_V; // vitesses moteur droit 
+  double m_MotorLeft_V; // vitesses moteur gauche 
+ 
+  double m_MotorRightLast_V; // ancienne vitesses moteur droit 
+  double m_MotorLeftLast_V;  // ancienne vitesses moteur gauche 
 
-  double m_MotorRightLast_V;
-  double m_MotorLeftLast_V;
+  double m_RobotRight_W; // vitesses droit mixé entre encodeur moteur et axe
+  double m_RobotLeft_W; // vitesses gauche mixé entre encodeur moteur et axe
 
-  double m_RobotRight_W;
-  double m_RobotLeft_W;
+  double m_MotorAccelerationRight; // accélération moteur droit
+  double m_MotorAccelerationLeft; // accélération moteur gauche
 
-  double m_MotorAccelerationRight;
-  double m_MotorAccelerationLeft;
+  double m_EncoderAccelerationRight; // accélération encodeur droit
+  double m_EncoderAccelerationLeft; // accélération encodeur gauche
 
-  double m_EncoderAccelerationRight;
-  double m_EncoderAccelerationLeft;
+  double m_RobotAccelerationRight; // accélération robot droit mixé entre encodeur moteur et axe
+  double m_RobotAccelerationLeft; // accélération robot gauche mixé entre encodeur moteur et axe
 
-  double m_RobotAccelerationRight;
-  double m_RobotAccelerationLeft;
+  double m_Robot_W; // vitesse robot moyenne entre les deux cotés
+  double m_RobotAcceleration; // accélération robot moyenne entre les deux cotés
 
-  double m_Robot_W;
-  double m_RobotAcceleration;
+  double m_SwitchTimeLock; // temps de blocage du changement de vitesse
+  double m_Robot_Angular_Rotate; // vitesse angulaire du robot
 
-  double m_SwitchTimeLock;
-  double m_Robot_Angular_Rotate;
-
-  double m_Joystick_V_Last;
+  double m_Joystick_V_Last; // ancienne valeur joystick V
   
-  double m_Joystick_V_Acceleration;
+  double m_Joystick_V_Acceleration; // accélération joystick V
 
-  double m_Joystick_V_Limited;
-  double m_Joystick_W_Limited;
+  double m_Joystick_V_Limited; // joystick V limité
+  double m_Joystick_W_Limited; // joystick W limité
 
-  double m_Joystick_V_Pure;
-  double m_Joystick_W_Pure;
+  double m_Joystick_V_Pure; // joystick V pur
+  double m_Joystick_W_Pure; // joystick W pur
 
-  double m_SwitchSpeed;
-  double m_Recul;
+  double m_SwitchSpeed; // vitesse de changement de vitesse
+  double m_Recul; // recul du robot
 
-  double m_Vitesse;
+  double m_Etat; // état du robot
 
 
 
@@ -88,13 +88,13 @@ public:
 
   State m_State;
 
-  RateLimiter m_rateLimiter_V_Fast;
-  RateLimiter m_rateLimiter_V_Slow;
+  RateLimiter m_rateLimiter_V_Fast; // rate limiter joystick V
+  RateLimiter m_rateLimiter_V_Slow; // rate limiter du rate limiter joystick V
 
-  RateLimiter m_rateLimiter_W_Fast;
-  RateLimiter m_rateLimiter_W_Slow;
+  RateLimiter m_rateLimiter_W_Fast; // rate limiter joystick W
+  RateLimiter m_rateLimiter_W_Slow; // rate limiter du rate limiter joystick W
 
-  NLCSV m_logCSV{8};
+  NLCSV m_logCSV{8}; // log csv
 
 
 
