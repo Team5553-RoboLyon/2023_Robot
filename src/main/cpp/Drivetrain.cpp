@@ -22,6 +22,7 @@
 #define NMIN(a, b) (((a) < (b)) ? (a) : (b)) // Min
 
 #include "Drivetrain.h"
+#include "lib/MoveData.h"
 #include "lib/utils.h"
 #include <iostream>
 #include <frc/smartdashboard/SmartDashboard.h>
@@ -97,14 +98,14 @@ Drivetrain::Drivetrain()
     m_rateLimiter_W_Fast.Reset(0.0,0.0,2.0);
     m_rateLimiter_W_Slow.Reset(0.0,0.0,0.05);
 
-    m_logCSV.setItem(0,"joystick_V",5,&m_Joystick_V_Pure);
-    m_logCSV.setItem(1,"joystick_W",5,&m_Joystick_W_Pure);
-    m_logCSV.setItem(2,"SpeedRobot",5,&m_Gearboxes_W_average_RPM);
-    m_logCSV.setItem(3,"état",5,&m_Etat);
-    m_logCSV.setItem(4,"rate_limiter_Fast_V",5,&m_rateLimiter_V_Fast.m_current);
-    m_logCSV.setItem(5,"rate_limiter_Slow_V",5,&m_rateLimiter_V_Slow.m_current);
-    m_logCSV.setItem(6,"rate_limiter_Fast_W",5,&m_rateLimiter_W_Fast.m_current);
-    m_logCSV.setItem(7,"rate_limiter_Slow_W",5,&m_rateLimiter_W_Slow.m_current);
+    // m_logCSV.setItem(0,"joystick_V",5,&m_Joystick_V_Pure);
+    // m_logCSV.setItem(1,"joystick_W",5,&m_Joystick_W_Pure);
+    // m_logCSV.setItem(2,"SpeedRobot",5,&m_Gearboxes_W_average_RPM);
+    // m_logCSV.setItem(3,"état",5,&m_Etat);
+    // m_logCSV.setItem(4,"rate_limiter_Fast_V",5,&m_rateLimiter_V_Fast.m_current);
+    // m_logCSV.setItem(5,"rate_limiter_Slow_V",5,&m_rateLimiter_V_Slow.m_current);
+    // m_logCSV.setItem(6,"rate_limiter_Fast_W",5,&m_rateLimiter_W_Fast.m_current);
+    // m_logCSV.setItem(7,"rate_limiter_Slow_W",5,&m_rateLimiter_W_Slow.m_current);
 
     ActiveBallShifterV1(); // init ball shifter
     m_State =State::lowGear;
@@ -286,35 +287,41 @@ void Drivetrain::Drive(double joystick_V, double joystick_W) //
     // double signe=dif_Right>0 ? 1 : -1;
     double coef = m_State == State::lowGear ? REDUC_V1 : REDUC_V2;
     //distance sortie de boite en nombre de tour
-    double encoder_Gearbox_Right_Distance = m_EncoderRight.GetDistance(); // nombre de tours de l''axe de sortie de boite droite
-    double encoder_Gearbox_Left_Distance = m_EncoderLeft.GetDistance();  // nombre de tours de l'axe de sortie de boite gauche
+    // double encoder_Gearbox_Right_Distance = m_EncoderRight.GetDistance(); // nombre de tours de l''axe de sortie de boite droite
+    // double encoder_Gearbox_Left_Distance = m_EncoderLeft.GetDistance();  // nombre de tours de l'axe de sortie de boite gauche
     // vitesse angulaire en sortie de boite basé sur les encodeurs motors
-    double encoder_Motor_Right_Distance = m_MotorGearboxRight1.GetSensorCollection().GetIntegratedSensorVelocity()* 600 / (2048*coef);// RPM axe du moteur 1 de la boite droite / par le coef de réduction
-    double encoder_Motor_Left_Distance = m_MotorGearboxLeft1.GetSensorCollection().GetIntegratedSensorVelocity()* 600 / (2048*coef);// RPM axe du moteur 1 de la boite de gauche / par le coef de réduction
+    // double encoder_Motor_Right_Distance = m_MotorGearboxRight1.GetSensorCollection().GetIntegratedSensorVelocity()* 600 / (2048*coef);// RPM axe du moteur 1 de la boite droite / par le coef de réduction
+    // double encoder_Motor_Left_Distance = m_MotorGearboxLeft1.GetSensorCollection().GetIntegratedSensorVelocity()* 600 / (2048*coef);// RPM axe du moteur 1 de la boite de gauche / par le coef de réduction
 
-    m_encoder_Gearbox_Left_W = (encoder_Gearbox_Left_Distance-m_Encoder_Gearbox_Left_Previous_Distance)/0.02*60; // vitesse de l'axe de sortie de boite gauche en RPM
-    m_encoder_Gearbox_Right_W = (encoder_Gearbox_Right_Distance-m_Encoder_Gearbox_Right_Previous_Distance)/0.02*60; // vitesse de l'axe de sortie de boite droite en RPM
-    m_encoder_Motor_Left_W = (encoder_Motor_Left_Distance-m_Encoder_Motor_Left_Previous_Distance)/0.02*60; // vitesse de l'axe du moteur 1 de la boite gauche en RPM
-    m_encoder_Motor_Right_W = (encoder_Motor_Right_Distance-m_Encoder_Motor_Right_Previous_Distance)/0.02*60; // vitesse de l'axe du moteur 1 de la boite droite en RPM
+    m_Gearbox_encoder_Right.setPos(m_MotorGearboxRight1.GetSensorCollection().GetIntegratedSensorVelocity()* 600 / (2048*coef)); 
+    m_Gearbox_encoder_Left.setPos(m_MotorGearboxLeft1.GetSensorCollection().GetIntegratedSensorVelocity()* 600 / (2048*coef));
 
-    m_Encoder_Gearbox_Left_Previous_Distance = encoder_Gearbox_Left_Distance; // sauvegarde de la vitesse de l'axe de sortie de boite gauche
-    m_Encoder_Gearbox_Right_Previous_Distance = encoder_Gearbox_Right_Distance; // sauvegarde de la vitesse de l'axe de sortie de boite droite
-    m_Encoder_Motor_Left_Previous_Distance = encoder_Motor_Left_Distance;    // sauvegarde de la vitesse de l'axe du moteur 1 de la boite gauche
-    m_Encoder_Motor_Right_Previous_Distance = encoder_Motor_Right_Distance;  // sauvegarde de la vitesse de l'axe du moteur 1 de la boite droite
+    m_Motor_encoder_Left.setPos(m_EncoderLeft.GetDistance());
+    m_Motor_encoder_Right.setPos(m_EncoderRight.GetDistance());
 
-    m_Gearbox_Right_W_RPM = (m_encoder_Gearbox_Right_W*T_SPEED +m_encoder_Motor_Right_W*(1-T_SPEED )) ;  // vitesse du robot partie droite en RPM
-    m_Gearbox_Left_W_RPM = (m_encoder_Gearbox_Left_W*T_SPEED +m_encoder_Motor_Left_W*(1-T_SPEED )) ; // vitesse du robot partie gauche en RPM
+    // m_encoder_Gearbox_Left_W = (encoder_Gearbox_Left_Distance-m_Encoder_Gearbox_Left_Previous_Distance)/0.02*60; // vitesse de l'axe de sortie de boite gauche en RPM
+    // m_encoder_Gearbox_Right_W = (encoder_Gearbox_Right_Distance-m_Encoder_Gearbox_Right_Previous_Distance)/0.02*60; // vitesse de l'axe de sortie de boite droite en RPM
+    // m_encoder_Motor_Left_W = (encoder_Motor_Left_Distance-m_Encoder_Motor_Left_Previous_Distance)/0.02*60; // vitesse de l'axe du moteur 1 de la boite gauche en RPM
+    // m_encoder_Motor_Right_W = (encoder_Motor_Right_Distance-m_Encoder_Motor_Right_Previous_Distance)/0.02*60; // vitesse de l'axe du moteur 1 de la boite droite en RPM
+
+    // m_Encoder_Gearbox_Left_Previous_Distance = encoder_Gearbox_Left_Distance; // sauvegarde de la vitesse de l'axe de sortie de boite gauche
+    // m_Encoder_Gearbox_Right_Previous_Distance = encoder_Gearbox_Right_Distance; // sauvegarde de la vitesse de l'axe de sortie de boite droite
+    // m_Encoder_Motor_Left_Previous_Distance = encoder_Motor_Left_Distance;    // sauvegarde de la vitesse de l'axe du moteur 1 de la boite gauche
+    // m_Encoder_Motor_Right_Previous_Distance = encoder_Motor_Right_Distance;  // sauvegarde de la vitesse de l'axe du moteur 1 de la boite droite
+
+    m_Gearbox_Right_W_RPM = (m_Gearbox_encoder_Right.m_velocity*T_SPEED +m_Motor_encoder_Right.m_velocity*(1-T_SPEED )) ;  // vitesse du robot partie droite en RPM
+    m_Gearbox_Left_W_RPM = (m_Gearbox_encoder_Left.m_velocity*T_SPEED +m_Motor_encoder_Left.m_velocity*(1-T_SPEED )) ; // vitesse du robot partie gauche en RPM
 
     m_Gearboxes_W_average_RPM = (m_Gearbox_Right_W_RPM + m_Gearbox_Left_W_RPM) / 2;   // vitesse angulaire moyenne des boites du robot en RPM
 
 
-    m_MotorAccelerationRight = encoder_Motor_Right_Distance - m_Encoder_Motor_Right_Previous_Distance; // accélération moteur partie droite
-    m_MotorAccelerationLeft = encoder_Motor_Left_Distance - m_Encoder_Motor_Left_Previous_Distance; // accélération moteur partie gauche
-    m_EncoderAccelerationRight = encoder_Gearbox_Right_Distance - m_Encoder_Gearbox_Right_Previous_Distance; // accélération axe de sortie de boite partie droite
-    m_EncoderAccelerationLeft = encoder_Gearbox_Left_Distance - m_Encoder_Gearbox_Left_Previous_Distance; // accélération axe de sortie de boite partie gauche
+    // m_MotorAccelerationRight = encoder_Motor_Right_Distance - m_Encoder_Motor_Right_Previous_Distance; // accélération moteur partie droite
+    // m_MotorAccelerationLeft = encoder_Motor_Left_Distance - m_Encoder_Motor_Left_Previous_Distance; // accélération moteur partie gauche
+    // m_EncoderAccelerationRight = encoder_Gearbox_Right_Distance - m_Encoder_Gearbox_Right_Previous_Distance; // accélération axe de sortie de boite partie droite
+    // m_EncoderAccelerationLeft = encoder_Gearbox_Left_Distance - m_Encoder_Gearbox_Left_Previous_Distance; // accélération axe de sortie de boite partie gauche
 
-    m_RobotAccelerationLeft = (m_EncoderAccelerationLeft*T_ACCEL+m_MotorAccelerationLeft*(1-T_ACCEL)) ; // accélération partie gauche
-    m_RobotAccelerationRight = (m_EncoderAccelerationRight*T_ACCEL+m_MotorAccelerationRight*(1-T_ACCEL)); // accélération partie droite
+    m_RobotAccelerationLeft = (m_Gearbox_encoder_Left.m_acceleration*T_ACCEL+m_Motor_encoder_Left.m_acceleration*(1-T_ACCEL)) ; // accélération partie gauche
+    m_RobotAccelerationRight = (m_Gearbox_encoder_Right.m_acceleration*T_ACCEL+m_Motor_encoder_Right.m_acceleration*(1-T_ACCEL)); // accélération partie droite
 
     m_Gearboxes_Acceleration = (m_RobotAccelerationLeft + m_RobotAccelerationRight) / 2; // accélération du robot
 
@@ -344,6 +351,8 @@ void Drivetrain::Drive(double joystick_V, double joystick_W) //
 
     frc::SmartDashboard::PutNumber("m_Joystick_V_Pure", m_Joystick_V_Pure);
     frc::SmartDashboard::PutNumber("m_Joystick_W_Pure", m_Joystick_W_Pure);
+
+    frc::SmartDashboard::PutNumber("W", m_Robot_W);
 
 
 

@@ -10,6 +10,7 @@
 #include <frc/Compressor.h>
 #include <ostream>
 #include <fstream>
+#include <lib/MoveData.h>
 
 class Drivetrain : public frc2::SubsystemBase
 {
@@ -33,29 +34,41 @@ public:
   void SwitchDown(double w);
 
 
-  double m_encoder_Gearbox_Right_W; // vitesses encodeur droit 
-  double m_encoder_Gearbox_Left_W; // vitesses encodeur gauche
+  // double m_encoder_Gearbox_Right_W; // vitesses encodeur droit 
+  // double m_encoder_Gearbox_Left_W; // vitesses encodeur gauche
 
-  double m_Encoder_Gearbox_Right_Previous_Distance; // ancienne vitesses encodeur droit
-  double m_Encoder_Gearbox_Left_Previous_Distance; // ancienne vitesses encodeur gauche
+  // double m_Encoder_Gearbox_Right_Previous_Distance; // ancienne vitesses encodeur droit
+  // double m_Encoder_Gearbox_Left_Previous_Distance; // ancienne vitesses encodeur gauche
 
-  double m_encoder_Motor_Right_W; // vitesses moteur droit 
-  double m_encoder_Motor_Left_W; // vitesses moteur gauche 
+  // double m_EncoderAccelerationRight; // accélération encodeur droit
+  // double m_EncoderAccelerationLeft; // accélération encodeur gauche
+
+  MoveData m_Gearbox_encoder_Right; // encodeur droit
+  MoveData m_Gearbox_encoder_Left; // encodeur gauche
+
+  // double m_encoder_Motor_Right_W; // vitesses moteur droit 
+  // double m_encoder_Motor_Left_W; // vitesses moteur gauche 
  
-  double m_Encoder_Motor_Right_Previous_Distance; // ancienne vitesses moteur droit 
-  double m_Encoder_Motor_Left_Previous_Distance;  // ancienne vitesses moteur gauche 
+  // double m_Encoder_Motor_Right_Previous_Distance; // ancienne vitesses moteur droit 
+  // double m_Encoder_Motor_Left_Previous_Distance;  // ancienne vitesses moteur gauche 
+
+  // double m_MotorAccelerationRight; // accélération moteur droit
+  // double m_MotorAccelerationLeft; // accélération moteur gauche
+
+  MoveData m_Motor_encoder_Right; // moteur droit
+  MoveData m_Motor_encoder_Left; // moteur gauche
+
+
 
   double m_Gearbox_Right_W_RPM; // vitesses droit mixé entre encodeur moteur et axe
   double m_Gearbox_Left_W_RPM; // vitesses gauche mixé entre encodeur moteur et axe
 
-  double m_MotorAccelerationRight; // accélération moteur droit
-  double m_MotorAccelerationLeft; // accélération moteur gauche
 
-  double m_EncoderAccelerationRight; // accélération encodeur droit
-  double m_EncoderAccelerationLeft; // accélération encodeur gauche
 
   double m_RobotAccelerationRight; // accélération robot droit mixé entre encodeur moteur et axe
   double m_RobotAccelerationLeft; // accélération robot gauche mixé entre encodeur moteur et axe
+
+
 
   double m_Gearboxes_W_average_RPM; // vitesse robot moyenne entre les deux cotés
   double m_Gearboxes_Acceleration; // accélération robot moyenne entre les deux cotés
@@ -94,7 +107,7 @@ public:
   RateLimiter m_rateLimiter_W_Fast; // rate limiter joystick W
   RateLimiter m_rateLimiter_W_Slow; // rate limiter du rate limiter joystick W
 
-  NLCSV m_logCSV{8}; // log csv
+  //NLCSV m_logCSV{8}; // log csv
 
 
 

@@ -1,4 +1,4 @@
-
+/*
 #include "lib/NLCsv.h"
 
 NLCSV::NLCSV(unsigned long itemlistsize)
@@ -166,3 +166,4 @@ void NLCSV::write()
 		fprintf(m_pFile, "\n");
 	}
 }
+*/

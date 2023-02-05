@@ -1,8 +1,8 @@
 #include <lib/rate_limiter.h>
 
 
-double RateLimiter::Update(double target) {
-  m_target = target;
+double RateLimiter::Update(double target) { // on update le current
+   m_target = target; 
 
    if(m_current < m_target - m_speed) // si le current est plus petit que le target - la vitesse
    {
