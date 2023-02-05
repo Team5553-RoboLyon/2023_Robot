@@ -1,16 +1,3 @@
-#define REDUC_V1 13.3
-#define REDUC_V2 8.8
-#define T_SWITCH 0.5
-#define VOLTAGE_REF 12.0                                    // tension de référence
-#define RESIST_TORQUE_NM 0.013                    // hop plus de frottements
-#define MAXSWITCHTIMELOCK 0.5                              // temps max pour le switch de vitesse
-#define AXLETRACK 0.5098 // distance entre les roues
-#define HALF_TRACKWIDTH (AXLETRACK / 2.0f)
-#define T_ACCEL 0.5 
-#define T_SPEED  0.5 
-#define WF_MOTOR_RPM 6380     // vitesse de rotation théorique du moteur
-#define SIGMA 0.5          // sigma pour le rate limiter
-
 #define AMAX 5.1 // Acceleration Max  au PIF .. à définir aux encodeurs
 #define VMAX 3.4 // vitesse Max  théorique (3,395472 sur JVN-DT) .. à vérifier aux encodeurs
 #define WMAX                       \
@@ -27,63 +14,53 @@
 #include <iostream>
 #include <frc/smartdashboard/SmartDashboard.h>
 
-typedef struct DYN DYN;
-struct DYN
+Drivetrain::Drivetrain() : m_GearboxRightAveragedRpm(AVERAGE_SAMPLES_NUMBER), m_GearboxLeftAveragedRpm(AVERAGE_SAMPLES_NUMBER), m_SuperMotorLeftAveragedRpm(AVERAGE_SAMPLES_NUMBER), m_SuperMotorRightAveragedRpm(AVERAGE_SAMPLES_NUMBER)
 {
-    double m_pose;
-    double m_prevPose;
-    double m_speed;
-    double m_prevSpeed;
-    double m_accel;
-};
+    m_MotorLeft1.ConfigFactoryDefault(); // reset des paramètres du moteur
+    m_MotorLeft2.ConfigFactoryDefault();
+    m_MotorLeft3.ConfigFactoryDefault();
 
-Drivetrain::Drivetrain()
-{
-    m_MotorGearboxLeft1.ConfigFactoryDefault(); // reset des paramètres du moteur
-    m_MotorGearboxLeft2.ConfigFactoryDefault();
-    m_MotorGearboxLeft3.ConfigFactoryDefault();
+    m_MotorRight1.ConfigFactoryDefault();
+    m_MotorRight2.ConfigFactoryDefault();
+    m_MotorRight3.ConfigFactoryDefault();
 
-    m_MotorGearboxRight1.ConfigFactoryDefault();
-    m_MotorGearboxRight2.ConfigFactoryDefault();
-    m_MotorGearboxRight3.ConfigFactoryDefault();
-
-    m_MotorGearboxLeft1.ConfigSupplyCurrentLimit(ctre::phoenix::motorcontrol::SupplyCurrentLimitConfiguration(true, 40, 40, 0)); // limite de courant   
-    m_MotorGearboxLeft2.ConfigSupplyCurrentLimit(ctre::phoenix::motorcontrol::SupplyCurrentLimitConfiguration(true, 40, 40, 0));
-    m_MotorGearboxLeft3.ConfigSupplyCurrentLimit(ctre::phoenix::motorcontrol::SupplyCurrentLimitConfiguration(true, 40, 40, 0));
+    m_MotorLeft1.ConfigSupplyCurrentLimit(ctre::phoenix::motorcontrol::SupplyCurrentLimitConfiguration(true, 40, 40, 0)); // limite de courant   
+    m_MotorLeft2.ConfigSupplyCurrentLimit(ctre::phoenix::motorcontrol::SupplyCurrentLimitConfiguration(true, 40, 40, 0));
+    m_MotorLeft3.ConfigSupplyCurrentLimit(ctre::phoenix::motorcontrol::SupplyCurrentLimitConfiguration(true, 40, 40, 0));
     
-    m_MotorGearboxRight1.ConfigSupplyCurrentLimit(ctre::phoenix::motorcontrol::SupplyCurrentLimitConfiguration(true, 40, 40, 0));
-    m_MotorGearboxRight2.ConfigSupplyCurrentLimit(ctre::phoenix::motorcontrol::SupplyCurrentLimitConfiguration(true, 40, 40, 0));
-    m_MotorGearboxRight3.ConfigSupplyCurrentLimit(ctre::phoenix::motorcontrol::SupplyCurrentLimitConfiguration(true, 40, 40, 0));
+    m_MotorRight1.ConfigSupplyCurrentLimit(ctre::phoenix::motorcontrol::SupplyCurrentLimitConfiguration(true, 40, 40, 0));
+    m_MotorRight2.ConfigSupplyCurrentLimit(ctre::phoenix::motorcontrol::SupplyCurrentLimitConfiguration(true, 40, 40, 0));
+    m_MotorRight3.ConfigSupplyCurrentLimit(ctre::phoenix::motorcontrol::SupplyCurrentLimitConfiguration(true, 40, 40, 0));
 
-    m_MotorGearboxLeft1.SetInverted(true); // inversion des moteurs
-    m_MotorGearboxLeft2.SetInverted(true);
-    m_MotorGearboxLeft3.SetInverted(true);
+    m_MotorLeft1.SetInverted(true); // inversion des moteurs
+    m_MotorLeft2.SetInverted(true);
+    m_MotorLeft3.SetInverted(true);
 
-    m_MotorGearboxRight1.SetInverted(false);
-    m_MotorGearboxRight2.SetInverted(false);
-    m_MotorGearboxRight3.SetInverted(false);
+    m_MotorRight1.SetInverted(false);
+    m_MotorRight2.SetInverted(false);
+    m_MotorRight3.SetInverted(false);
 
-    m_MotorGearboxLeft1.SetNeutralMode(ctre::phoenix::motorcontrol::NeutralMode::Brake); // init brake mode moteur
-    m_MotorGearboxLeft2.SetNeutralMode(ctre::phoenix::motorcontrol::NeutralMode::Brake);
-    m_MotorGearboxLeft3.SetNeutralMode(ctre::phoenix::motorcontrol::NeutralMode::Brake);
+    m_MotorLeft1.SetNeutralMode(ctre::phoenix::motorcontrol::NeutralMode::Brake); // init brake mode moteur
+    m_MotorLeft2.SetNeutralMode(ctre::phoenix::motorcontrol::NeutralMode::Brake);
+    m_MotorLeft3.SetNeutralMode(ctre::phoenix::motorcontrol::NeutralMode::Brake);
 
-    m_MotorGearboxRight1.SetNeutralMode(ctre::phoenix::motorcontrol::NeutralMode::Brake);
-    m_MotorGearboxRight2.SetNeutralMode(ctre::phoenix::motorcontrol::NeutralMode::Brake);
-    m_MotorGearboxRight3.SetNeutralMode(ctre::phoenix::motorcontrol::NeutralMode::Brake);
+    m_MotorRight1.SetNeutralMode(ctre::phoenix::motorcontrol::NeutralMode::Brake);
+    m_MotorRight2.SetNeutralMode(ctre::phoenix::motorcontrol::NeutralMode::Brake);
+    m_MotorRight3.SetNeutralMode(ctre::phoenix::motorcontrol::NeutralMode::Brake);
 
-    m_MotorGearboxRight1.ConfigVoltageCompSaturation(VOLTAGE_REF); // init tension de référence
-    m_MotorGearboxRight2.ConfigVoltageCompSaturation(VOLTAGE_REF);
-    m_MotorGearboxRight3.ConfigVoltageCompSaturation(VOLTAGE_REF);
+    m_MotorRight1.ConfigVoltageCompSaturation(VOLTAGE_REF); // init tension de référence
+    m_MotorRight2.ConfigVoltageCompSaturation(VOLTAGE_REF);
+    m_MotorRight3.ConfigVoltageCompSaturation(VOLTAGE_REF);
 
-    m_MotorGearboxLeft1.ConfigVoltageCompSaturation(VOLTAGE_REF);
-    m_MotorGearboxLeft2.ConfigVoltageCompSaturation(VOLTAGE_REF);
-    m_MotorGearboxLeft3.ConfigVoltageCompSaturation(VOLTAGE_REF);
+    m_MotorLeft1.ConfigVoltageCompSaturation(VOLTAGE_REF);
+    m_MotorLeft2.ConfigVoltageCompSaturation(VOLTAGE_REF);
+    m_MotorLeft3.ConfigVoltageCompSaturation(VOLTAGE_REF);
 
-    m_MotorGearboxLeft2.Follow(m_MotorGearboxLeft1); // init follower moteurs
-    m_MotorGearboxLeft3.Follow(m_MotorGearboxLeft1);
+    m_MotorLeft2.Follow(m_MotorLeft1); // init follower moteurs
+    m_MotorLeft3.Follow(m_MotorLeft1);
 
-    m_MotorGearboxRight2.Follow(m_MotorGearboxRight1);
-    m_MotorGearboxRight3.Follow(m_MotorGearboxRight1);
+    m_MotorRight2.Follow(m_MotorRight1);
+    m_MotorRight3.Follow(m_MotorRight1);
     
 
     m_EncoderRight.SetDistancePerPulse(1.0/2048.0); // 1 tour correspond à 2048 ticks
@@ -107,14 +84,18 @@ Drivetrain::Drivetrain()
     // m_logCSV.setItem(6,"rate_limiter_Fast_W",5,&m_rateLimiter_W_Fast.m_current);
     // m_logCSV.setItem(7,"rate_limiter_Slow_W",5,&m_rateLimiter_W_Slow.m_current);
 
-    ActiveBallShifterV1(); // init ball shifter
+    // Règle le ball shifter, le State et la Reduction en V1 lors de l'initialisation du robot
+    ActiveBallShifterV1(); 
     m_State =State::lowGear;
+    m_CurrentGearboxReductionFactor = REDUC_V1; 
+
+
 }
 
 void Drivetrain::Set(double v_motor) // set des moteurs
 {
-    m_MotorGearboxLeft1.Set(ctre::phoenix::motorcontrol::ControlMode::PercentOutput, v_motor);
-    m_MotorGearboxRight1.Set(ctre::phoenix::motorcontrol::ControlMode::PercentOutput, v_motor);
+    m_MotorLeft1.Set(ctre::phoenix::motorcontrol::ControlMode::PercentOutput, v_motor);
+    m_MotorRight1.Set(ctre::phoenix::motorcontrol::ControlMode::PercentOutput, v_motor);
 }
 
 void Drivetrain::ActiveBallShifterV1() // active ball shifter V1
@@ -150,23 +131,23 @@ void Drivetrain::EnableBrakeMode(bool change) // active/ désactive le breakMode
 {
     if (change)
     {
-        m_MotorGearboxLeft1.SetNeutralMode(ctre::phoenix::motorcontrol::NeutralMode::Brake);
-        m_MotorGearboxLeft2.SetNeutralMode(ctre::phoenix::motorcontrol::NeutralMode::Brake);
-        m_MotorGearboxLeft3.SetNeutralMode(ctre::phoenix::motorcontrol::NeutralMode::Brake);
+        m_MotorLeft1.SetNeutralMode(ctre::phoenix::motorcontrol::NeutralMode::Brake);
+        m_MotorLeft2.SetNeutralMode(ctre::phoenix::motorcontrol::NeutralMode::Brake);
+        m_MotorLeft3.SetNeutralMode(ctre::phoenix::motorcontrol::NeutralMode::Brake);
 
-        m_MotorGearboxRight1.SetNeutralMode(ctre::phoenix::motorcontrol::NeutralMode::Brake);
-        m_MotorGearboxRight2.SetNeutralMode(ctre::phoenix::motorcontrol::NeutralMode::Brake);
-        m_MotorGearboxRight3.SetNeutralMode(ctre::phoenix::motorcontrol::NeutralMode::Brake);
+        m_MotorRight1.SetNeutralMode(ctre::phoenix::motorcontrol::NeutralMode::Brake);
+        m_MotorRight2.SetNeutralMode(ctre::phoenix::motorcontrol::NeutralMode::Brake);
+        m_MotorRight3.SetNeutralMode(ctre::phoenix::motorcontrol::NeutralMode::Brake);
     }
     else
     {
-        m_MotorGearboxLeft1.SetNeutralMode(ctre::phoenix::motorcontrol::NeutralMode::Coast);
-        m_MotorGearboxLeft2.SetNeutralMode(ctre::phoenix::motorcontrol::NeutralMode::Coast);
-        m_MotorGearboxLeft3.SetNeutralMode(ctre::phoenix::motorcontrol::NeutralMode::Coast);
+        m_MotorLeft1.SetNeutralMode(ctre::phoenix::motorcontrol::NeutralMode::Coast);
+        m_MotorLeft2.SetNeutralMode(ctre::phoenix::motorcontrol::NeutralMode::Coast);
+        m_MotorLeft3.SetNeutralMode(ctre::phoenix::motorcontrol::NeutralMode::Coast);
 
-        m_MotorGearboxRight1.SetNeutralMode(ctre::phoenix::motorcontrol::NeutralMode::Coast);
-        m_MotorGearboxRight2.SetNeutralMode(ctre::phoenix::motorcontrol::NeutralMode::Coast);
-        m_MotorGearboxRight3.SetNeutralMode(ctre::phoenix::motorcontrol::NeutralMode::Coast);
+        m_MotorRight1.SetNeutralMode(ctre::phoenix::motorcontrol::NeutralMode::Coast);
+        m_MotorRight2.SetNeutralMode(ctre::phoenix::motorcontrol::NeutralMode::Coast);
+        m_MotorRight3.SetNeutralMode(ctre::phoenix::motorcontrol::NeutralMode::Coast);
     }
 }
 
@@ -208,10 +189,10 @@ double Drivetrain::Calcul_De_Notre_Brave_JM(double forward, double turn, bool wh
         return left_wheel;
 }
 
-bool Drivetrain::General(double switchTimeLock,double w) // mode général, détermine si on peut passer une vitesse
+bool Drivetrain::General(double switchTimeLock, double GearboxRightRpm, double GearboxLeftRpm) // mode général, détermine si on peut passer une vitesse
 {
     return false;
-    if (switchTimeLock <= 0 and std::abs(w) <300)//à définir
+    if (switchTimeLock <= 0 and (GearboxLeftRpm/GearboxRightRpm) > 0.95//à définir
     {
         return true;
     }
@@ -285,43 +266,41 @@ void Drivetrain::SwitchDown(double w_motor_rpm) // passage de la vitesse en V1
 void Drivetrain::Drive(double joystick_V, double joystick_W) // 
 {
     // double signe=dif_Right>0 ? 1 : -1;
-    double coef = m_State == State::lowGear ? REDUC_V1 : REDUC_V2;
     //distance sortie de boite en nombre de tour
     // double encoder_Gearbox_Right_Distance = m_EncoderRight.GetDistance(); // nombre de tours de l''axe de sortie de boite droite
     // double encoder_Gearbox_Left_Distance = m_EncoderLeft.GetDistance();  // nombre de tours de l'axe de sortie de boite gauche
     // vitesse angulaire en sortie de boite basé sur les encodeurs motors
-    // double encoder_Motor_Right_Distance = m_MotorGearboxRight1.GetSensorCollection().GetIntegratedSensorVelocity()* 600 / (2048*coef);// RPM axe du moteur 1 de la boite droite / par le coef de réduction
-    // double encoder_Motor_Left_Distance = m_MotorGearboxLeft1.GetSensorCollection().GetIntegratedSensorVelocity()* 600 / (2048*coef);// RPM axe du moteur 1 de la boite de gauche / par le coef de réduction
+    // double encoder_Motor_Right_Distance = m_MotorRight1.GetSensorCollection().GetIntegratedSensorVelocity()* 600 / (2048*reduction_factor);// RPM axe du moteur 1 de la boite droite / par le reduction_factor de réduction
+    // double encoder_Motor_Left_Distance = m_MotorLeft1.GetSensorCollection().GetIntegratedSensorVelocity()* 600 / (2048*reduction_factor);// RPM axe du moteur 1 de la boite de gauche / par le reduction_factor de réduction
 
-    m_Gearbox_encoder_Right.setPos(m_MotorGearboxRight1.GetSensorCollection().GetIntegratedSensorVelocity()* 600 / (2048*coef)); 
-    m_Gearbox_encoder_Left.setPos(m_MotorGearboxLeft1.GetSensorCollection().GetIntegratedSensorVelocity()* 600 / (2048*coef));
+    // calcul de la vitesse moyenne des deux encodeurs de sortie de boite. (GetDistance renvoie un nombre de tours car setup fait dans le constructeur)(.SetDistancePerPulse(1.0/2048.0)
+    // les valeurs sont en tours/tick
+    m_GearboxRightOutRpt.setPos(m_EncoderRight.GetDistance() ); 
+    m_GearboxLeftOutRpt.setPos(m_EncoderLeft.GetDistance() );
+    m_GearboxRightAveragedRpt.add(m_GearboxRightOutRpt.m_deltaPos);
+    m_GearboxLeftAveragedRpt.add(m_GearboxLeftOutRpt.m_deltaPos);
 
-    m_Motor_encoder_Left.setPos(m_EncoderLeft.GetDistance());
-    m_Motor_encoder_Right.setPos(m_EncoderRight.GetDistance());
+    // calcul de la vitesse moyenne des 3 moteurs de la boite gauche et droite avec les encodeurs des talon srx qui retourne des valeurs en ticks/100ms
+    // les moyennes sont converties ( * 600 / 2048 ) et stockées en RPM
+    double average_left = (m_MotorLeft1.GetSensorCollection().GetIntegratedSensorVelocity() + m_MotorLeft2.GetSensorCollection().GetIntegratedSensorVelocity() + m_MotorLeft3.GetSensorCollection().GetIntegratedSensorVelocity())/3;
+    double average_right = (m_MotorRight1.GetSensorCollection().GetIntegratedSensorVelocity() + m_MotorRight2.GetSensorCollection().GetIntegratedSensorVelocity() + m_MotorRight3.GetSensorCollection().GetIntegratedSensorVelocity())/3;
+    m_SuperMotorLeftRpm.setPos(average_left * 600 / 2048);    
+    m_SuperMotorRightRpm.setPos(average_right * 600 / 2048); 
+    m_SuperMotorLeftAveragedRpm.add(m_SuperMotorLeftRpm.m_deltaPos);
+    m_SuperMotorRightAveragedRpm.add(m_SuperMotorRightRpm.m_deltaPos);
 
-    // m_encoder_Gearbox_Left_W = (encoder_Gearbox_Left_Distance-m_Encoder_Gearbox_Left_Previous_Distance)/0.02*60; // vitesse de l'axe de sortie de boite gauche en RPM
-    // m_encoder_Gearbox_Right_W = (encoder_Gearbox_Right_Distance-m_Encoder_Gearbox_Right_Previous_Distance)/0.02*60; // vitesse de l'axe de sortie de boite droite en RPM
-    // m_encoder_Motor_Left_W = (encoder_Motor_Left_Distance-m_Encoder_Motor_Left_Previous_Distance)/0.02*60; // vitesse de l'axe du moteur 1 de la boite gauche en RPM
-    // m_encoder_Motor_Right_W = (encoder_Motor_Right_Distance-m_Encoder_Motor_Right_Previous_Distance)/0.02*60; // vitesse de l'axe du moteur 1 de la boite droite en RPM
-
-    // m_Encoder_Gearbox_Left_Previous_Distance = encoder_Gearbox_Left_Distance; // sauvegarde de la vitesse de l'axe de sortie de boite gauche
-    // m_Encoder_Gearbox_Right_Previous_Distance = encoder_Gearbox_Right_Distance; // sauvegarde de la vitesse de l'axe de sortie de boite droite
-    // m_Encoder_Motor_Left_Previous_Distance = encoder_Motor_Left_Distance;    // sauvegarde de la vitesse de l'axe du moteur 1 de la boite gauche
-    // m_Encoder_Motor_Right_Previous_Distance = encoder_Motor_Right_Distance;  // sauvegarde de la vitesse de l'axe du moteur 1 de la boite droite
-
-    m_Gearbox_Right_W_RPM = (m_Gearbox_encoder_Right.m_velocity*T_SPEED +m_Motor_encoder_Right.m_velocity*(1-T_SPEED )) ;  // vitesse du robot partie droite en RPM
-    m_Gearbox_Left_W_RPM = (m_Gearbox_encoder_Left.m_velocity*T_SPEED +m_Motor_encoder_Left.m_velocity*(1-T_SPEED )) ; // vitesse du robot partie gauche en RPM
-
-    m_Gearboxes_W_average_RPM = (m_Gearbox_Right_W_RPM + m_Gearbox_Left_W_RPM) / 2;   // vitesse angulaire moyenne des boites du robot en RPM
+    // Vitesses des boites en RPM construitent en combinant les valeurs encodeurs moteurs et through bore 
+    // TRUST_GEARBOX_OUT_ENCODER représente le coeff de confiance qu'on a dans les encodeurs de sortie de boite et (1-TRUST_GEARBOX_OUT_ENCODER) représente la confiance des encodeurs moteurs
+    // m_SuperMotorLeftRpm et m_SuperMotorRightRpm sont déjà exprimé en RPM et m_GearboxRightOutRpt et m_GearboxLeftOutRpt sont en tours/tick (RPT), 
+    // il faut donc les convertir en RPM ( * (60/TICK_DT) ) 
+    // Les m_SuperMotorLeftRpm et m_SuperMotorRightRpm sont les valeurs avant réduction, il faut appliquer le facteur de réduction de boite enclenché pour obtenir une valeur RPM "sortie de boite" (m_CurrentGearboxReductionFactor)
+    m_GearboxOutRightRpm = (m_GearboxRightAveragedRpt.get() * (60 / TICK_DT) * TRUST_GEARBOX_OUT_ENCODER + m_SuperMotorRightAveragedRpm.get() * m_CurrentGearboxReductionFactor *(1-TRUST_GEARBOX_OUT_ENCODER )) ;  
+    m_GearboxOutLeftRpm = (m_GearboxLeftAveragedRpt.get() * (60 / TICK_DT) * TRUST_GEARBOX_OUT_ENCODER + m_SuperMotorLeftAveragedRpm.get() * m_CurrentGearboxReductionFactor *(1-TRUST_GEARBOX_OUT_ENCODER )) ; 
 
 
-    // m_MotorAccelerationRight = encoder_Motor_Right_Distance - m_Encoder_Motor_Right_Previous_Distance; // accélération moteur partie droite
-    // m_MotorAccelerationLeft = encoder_Motor_Left_Distance - m_Encoder_Motor_Left_Previous_Distance; // accélération moteur partie gauche
-    // m_EncoderAccelerationRight = encoder_Gearbox_Right_Distance - m_Encoder_Gearbox_Right_Previous_Distance; // accélération axe de sortie de boite partie droite
-    // m_EncoderAccelerationLeft = encoder_Gearbox_Left_Distance - m_Encoder_Gearbox_Left_Previous_Distance; // accélération axe de sortie de boite partie gauche
-
-    m_RobotAccelerationLeft = (m_Gearbox_encoder_Left.m_acceleration*T_ACCEL+m_Motor_encoder_Left.m_acceleration*(1-T_ACCEL)) ; // accélération partie gauche
-    m_RobotAccelerationRight = (m_Gearbox_encoder_Right.m_acceleration*T_ACCEL+m_Motor_encoder_Right.m_acceleration*(1-T_ACCEL)); // accélération partie droite
+    m_RobotAccelerationRight = (m_GearboxRightOutRpt.m_acceleration*TRUST_GEARBOX_OUT_ENCODER+m_SuperMotorRightRpm.m_acceleration*(1-TRUST_GEARBOX_OUT_ENCODER)); // accélération partie droite
+    m_RobotAccelerationLeft = (m_GearboxLeftOutRpt.m_acceleration*TRUST_GEARBOX_OUT_ENCODER+m_SuperMotorLeftRpm.m_acceleration*(1-TRUST_GEARBOX_OUT_ENCODER)) ; // accélération partie gauche
+   
 
     m_Gearboxes_Acceleration = (m_RobotAccelerationLeft + m_RobotAccelerationRight) / 2; // accélération du robot
 
@@ -340,8 +319,8 @@ void Drivetrain::Drive(double joystick_V, double joystick_W) //
     m_rateLimiter_W_Fast.Update(m_Joystick_W_Pure);
     m_rateLimiter_W_Slow.Update(m_rateLimiter_W_Fast.m_current);
 
-    m_MotorGearboxLeft1.Set(ctre::phoenix::motorcontrol::ControlMode::PercentOutput, Calcul_De_Notre_Brave_JM(m_rateLimiter_V_Slow.m_current, m_rateLimiter_W_Slow.m_current, 0));
-    m_MotorGearboxRight1.Set(ctre::phoenix::motorcontrol::ControlMode::PercentOutput, Calcul_De_Notre_Brave_JM(m_rateLimiter_V_Slow.m_current, m_rateLimiter_W_Slow.m_current, 1));
+    m_MotorLeft1.Set(ctre::phoenix::motorcontrol::ControlMode::PercentOutput, Calcul_De_Notre_Brave_JM(m_rateLimiter_V_Slow.m_current, m_rateLimiter_W_Slow.m_current, 0));
+    m_MotorRight1.Set(ctre::phoenix::motorcontrol::ControlMode::PercentOutput, Calcul_De_Notre_Brave_JM(m_rateLimiter_V_Slow.m_current, m_rateLimiter_W_Slow.m_current, 1));
 
     frc::SmartDashboard::PutNumber("m_rateLimiter_V_Fast.m_current", m_rateLimiter_V_Fast.m_current);
     frc::SmartDashboard::PutNumber("m_rateLimiter_V_Slow.m_current", m_rateLimiter_V_Slow.m_current);
@@ -352,7 +331,7 @@ void Drivetrain::Drive(double joystick_V, double joystick_W) //
     frc::SmartDashboard::PutNumber("m_Joystick_V_Pure", m_Joystick_V_Pure);
     frc::SmartDashboard::PutNumber("m_Joystick_W_Pure", m_Joystick_W_Pure);
 
-    frc::SmartDashboard::PutNumber("W", m_Robot_W);
+    frc::SmartDashboard::PutNumber("W", );
 
 
 
@@ -360,17 +339,18 @@ void Drivetrain::Drive(double joystick_V, double joystick_W) //
     {
         case State::lowGear:
         {
-            m_Etat=1;
-            // m_MotorGearboxLeft1.Set(ctre::phoenix::motorcontrol::ControlMode::PercentOutput, Calcul_De_Notre_Brave_JM(m_rateLimiter_V_Slow.m_current, m_rateLimiter_W_Slow.m_current, 0));
-            // m_MotorGearboxRight1.Set(ctre::phoenix::motorcontrol::ControlMode::PercentOutput, Calcul_De_Notre_Brave_JM(m_rateLimiter_V_Slow.m_current, m_rateLimiter_W_Slow.m_current, 1));
-            if (General(m_SwitchTimeLock,m_Robot_W))
+            
+            // m_MotorLeft1.Set(ctre::phoenix::motorcontrol::ControlMode::PercentOutput, Calcul_De_Notre_Brave_JM(m_rateLimiter_V_Slow.m_current, m_rateLimiter_W_Slow.m_current, 0));
+            // m_MotorRight1.Set(ctre::phoenix::motorcontrol::ControlMode::PercentOutput, Calcul_De_Notre_Brave_JM(m_rateLimiter_V_Slow.m_current, m_rateLimiter_W_Slow.m_current, 1));
+            if (General(m_SwitchTimeLock,m_GearboxOutRightRpm, m_GearboxOutLeftRpm))
             {
                 if (Up(m_Gearboxes_W_average_RPM,m_Gearboxes_Acceleration,m_Joystick_V_Pure,m_Joystick_V_Acceleration))
                 {
                     SwitchUp(m_Gearboxes_W_average_RPM*REDUC_V1);
-                    // m_MotorGearboxLeft1.Set(ctre::phoenix::motorcontrol::ControlMode::PercentOutput, Calcul_De_Notre_Brave_JM(m_rateLimiter_V_Slow.m_current, m_rateLimiter_W_Slow.m_current, 0));
-                    // m_MotorGearboxRight1.Set(ctre::phoenix::motorcontrol::ControlMode::PercentOutput, Calcul_De_Notre_Brave_JM(m_rateLimiter_V_Slow.m_current, m_rateLimiter_W_Slow.m_current, 1));
+                    // m_MotorLeft1.Set(ctre::phoenix::motorcontrol::ControlMode::PercentOutput, Calcul_De_Notre_Brave_JM(m_rateLimiter_V_Slow.m_current, m_rateLimiter_W_Slow.m_current, 0));
+                    // m_MotorRight1.Set(ctre::phoenix::motorcontrol::ControlMode::PercentOutput, Calcul_De_Notre_Brave_JM(m_rateLimiter_V_Slow.m_current, m_rateLimiter_W_Slow.m_current, 1));
                     SetSwitchTimeLock(0.5);
+                    m_CurrentGearboxReductionFactor = REDUC_V2;
                     m_State = State::highGear;
                 }
             }
@@ -379,15 +359,15 @@ void Drivetrain::Drive(double joystick_V, double joystick_W) //
 
         case State::highGear:
         {
-            m_Etat=2;
-            // m_MotorGearboxLeft1.Set(ctre::phoenix::motorcontrol::ControlMode::PercentOutput, Calcul_De_Notre_Brave_JM(m_rateLimiter_V_Slow.m_current, m_rateLimiter_W_Slow.m_current, 0));
-            // m_MotorGearboxRight1.Set(ctre::phoenix::motorcontrol::ControlMode::PercentOutput, Calcul_De_Notre_Brave_JM(m_rateLimiter_V_Slow.m_current, m_rateLimiter_W_Slow.m_current, 1));
+            // m_MotorLeft1.Set(ctre::phoenix::motorcontrol::ControlMode::PercentOutput, Calcul_De_Notre_Brave_JM(m_rateLimiter_V_Slow.m_current, m_rateLimiter_W_Slow.m_current, 0));
+            // m_MotorRight1.Set(ctre::phoenix::motorcontrol::ControlMode::PercentOutput, Calcul_De_Notre_Brave_JM(m_rateLimiter_V_Slow.m_current, m_rateLimiter_W_Slow.m_current, 1));
             if (CoastDown(m_Gearboxes_W_average_RPM))
             {
                 SwitchDown(m_Gearboxes_W_average_RPM*REDUC_V2);
-                // m_MotorGearboxLeft1.Set(ctre::phoenix::motorcontrol::ControlMode::PercentOutput, Calcul_De_Notre_Brave_JM(m_rateLimiter_V_Slow.m_current, m_rateLimiter_W_Slow.m_current, 0));
-                // m_MotorGearboxRight1.Set(ctre::phoenix::motorcontrol::ControlMode::PercentOutput, Calcul_De_Notre_Brave_JM(m_rateLimiter_V_Slow.m_current, m_rateLimiter_W_Slow.m_current, 1));
+                // m_MotorLeft1.Set(ctre::phoenix::motorcontrol::ControlMode::PercentOutput, Calcul_De_Notre_Brave_JM(m_rateLimiter_V_Slow.m_current, m_rateLimiter_W_Slow.m_current, 0));
+                // m_MotorRight1.Set(ctre::phoenix::motorcontrol::ControlMode::PercentOutput, Calcul_De_Notre_Brave_JM(m_rateLimiter_V_Slow.m_current, m_rateLimiter_W_Slow.m_current, 1));
                 SetSwitchTimeLock(0.5);
+                m_CurrentGearboxReductionFactor = REDUC_V1;
                 m_State = State::lowGear;
             }
             
@@ -396,9 +376,10 @@ void Drivetrain::Drive(double joystick_V, double joystick_W) //
                 if (KickDown(m_Gearboxes_W_average_RPM,m_Gearboxes_Acceleration,m_Joystick_V_Pure))
                 {
                     SwitchDown(m_Gearboxes_W_average_RPM*REDUC_V2);
-                    // m_MotorGearboxLeft1.Set(ctre::phoenix::motorcontrol::ControlMode::PercentOutput, Calcul_De_Notre_Brave_JM(m_rateLimiter_V_Slow.m_current, m_rateLimiter_W_Slow.m_current, 0));
-                    // m_MotorGearboxRight1.Set(ctre::phoenix::motorcontrol::ControlMode::PercentOutput, Calcul_De_Notre_Brave_JM(m_rateLimiter_V_Slow.m_current, m_rateLimiter_W_Slow.m_current, 1));
+                    // m_MotorLeft1.Set(ctre::phoenix::motorcontrol::ControlMode::PercentOutput, Calcul_De_Notre_Brave_JM(m_rateLimiter_V_Slow.m_current, m_rateLimiter_W_Slow.m_current, 0));
+                    // m_MotorRight1.Set(ctre::phoenix::motorcontrol::ControlMode::PercentOutput, Calcul_De_Notre_Brave_JM(m_rateLimiter_V_Slow.m_current, m_rateLimiter_W_Slow.m_current, 1));
                     SetSwitchTimeLock(0.5);
+                    m_CurrentGearboxReductionFactor = REDUC_V1;
                     m_State = State::lowGear;
                 }
             }

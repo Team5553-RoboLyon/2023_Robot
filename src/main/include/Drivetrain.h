@@ -12,6 +12,22 @@
 #include <fstream>
 #include <lib/MoveData.h>
 
+#define REDUC_V1 13.3
+#define REDUC_V2 8.8
+#define T_SWITCH 0.5
+#define VOLTAGE_REF 12.0                                    // tension de référence
+#define RESIST_TORQUE_NM 0.013   // hop plus de frottements
+#define MAXSWITCHTIMELOCK 0.5                              // temps max pour le switch de vitesse
+#define AXLETRACK 0.5098 // distance entre les roues
+#define HALF_TRACKWIDTH (AXLETRACK / 2.0f)
+#define TRUST_GEARBOX_OUT_ENCODER 0.7
+#define WF_MOTOR_RPM 6380     // vitesse de rotation théorique du moteur
+#define TICK_DT 0.02 // durée d'un tick en seconde
+#define SIGMA 0.5          // sigma pour le rate limiter
+#define AVERAGE_SAMPLES_NUMBER 5 // nombre de samples pour la moyenne
+
+
+
 class Drivetrain : public frc2::SubsystemBase
 {
 public:
@@ -24,7 +40,7 @@ public:
   void EnableBrakeMode(bool Change);                                            // ok
   void Drive(double joystickLeft, double joystickRight);                        // ok
   double Calcul_De_Notre_Brave_JM(double forward, double turn, bool wheelSide); // Si wheelSide 0: roue droite / Si wheelSide 1: roue gauche
-  bool General(double switchTimeLock,double w);
+  bool General(double switchTimeLock,double GearboxRightRpm, double GearboxLeftRpm);
   bool Up(double speedRobot, double accelerationRobot, double joystick, double deltaJoystick);
   bool KickDown(double speedRobot, double accelerationRobot, double joystick);
   bool CoastDown(double speedRobot);
@@ -34,43 +50,25 @@ public:
   void SwitchDown(double w);
 
 
-  // double m_encoder_Gearbox_Right_W; // vitesses encodeur droit 
-  // double m_encoder_Gearbox_Left_W; // vitesses encodeur gauche
 
-  // double m_Encoder_Gearbox_Right_Previous_Distance; // ancienne vitesses encodeur droit
-  // double m_Encoder_Gearbox_Left_Previous_Distance; // ancienne vitesses encodeur gauche
+  MoveData m_GearboxRightOutRpt; // encodeur droit en en tours/tick (RPT)
+  MoveData m_GearboxLeftOutRpt; // encodeur gauche
 
-  // double m_EncoderAccelerationRight; // accélération encodeur droit
-  // double m_EncoderAccelerationLeft; // accélération encodeur gauche
+  MoveData m_SuperMotorRightRpm; // moteur droit
+  MoveData m_SuperMotorLeftRpm; // moteur gauche
 
-  MoveData m_Gearbox_encoder_Right; // encodeur droit
-  MoveData m_Gearbox_encoder_Left; // encodeur gauche
+  NdoubleRollingAverage m_GearboxRightAveragedRpt; 
+  NdoubleRollingAverage m_GearboxLeftAveragedRpt;
 
-  // double m_encoder_Motor_Right_W; // vitesses moteur droit 
-  // double m_encoder_Motor_Left_W; // vitesses moteur gauche 
- 
-  // double m_Encoder_Motor_Right_Previous_Distance; // ancienne vitesses moteur droit 
-  // double m_Encoder_Motor_Left_Previous_Distance;  // ancienne vitesses moteur gauche 
+  NdoubleRollingAverage m_SuperMotorLeftAveragedRpm;
+  NdoubleRollingAverage m_SuperMotorRightAveragedRpm;
 
-  // double m_MotorAccelerationRight; // accélération moteur droit
-  // double m_MotorAccelerationLeft; // accélération moteur gauche
-
-  MoveData m_Motor_encoder_Right; // moteur droit
-  MoveData m_Motor_encoder_Left; // moteur gauche
-
-
-
-  double m_Gearbox_Right_W_RPM; // vitesses droit mixé entre encodeur moteur et axe
-  double m_Gearbox_Left_W_RPM; // vitesses gauche mixé entre encodeur moteur et axe
-
-
+  double m_GearboxOutRightRpm; // vitesses droit mixé entre encodeur moteur et axe
+  double m_GearboxOutLeftRpm; // vitesses gauche mixé entre encodeur moteur et axe
 
   double m_RobotAccelerationRight; // accélération robot droit mixé entre encodeur moteur et axe
   double m_RobotAccelerationLeft; // accélération robot gauche mixé entre encodeur moteur et axe
 
-
-
-  double m_Gearboxes_W_average_RPM; // vitesse robot moyenne entre les deux cotés
   double m_Gearboxes_Acceleration; // accélération robot moyenne entre les deux cotés
 
   double m_SwitchTimeLock; // temps de blocage du changement de vitesse
@@ -89,7 +87,7 @@ public:
   double m_SwitchSpeed; // vitesse de changement de vitesse
   double m_Recul; // recul du robot
 
-  double m_Etat; // état du robot
+  double m_CurrentGearboxReductionFactor; // Reduction de la vitesse engagée dans la  boite (V1 ou V2)
 
 
 
@@ -112,13 +110,13 @@ public:
 
 
 private:
-  ctre::phoenix::motorcontrol::can::TalonFX m_MotorGearboxRight1{1};
-  ctre::phoenix::motorcontrol::can::TalonFX m_MotorGearboxRight2{2};
-  ctre::phoenix::motorcontrol::can::TalonFX m_MotorGearboxRight3{3};
+  ctre::phoenix::motorcontrol::can::TalonFX m_MotorRight1{1};
+  ctre::phoenix::motorcontrol::can::TalonFX m_MotorRight2{2};
+  ctre::phoenix::motorcontrol::can::TalonFX m_MotorRight3{3};
 
-  ctre::phoenix::motorcontrol::can::TalonFX m_MotorGearboxLeft1{4};
-  ctre::phoenix::motorcontrol::can::TalonFX m_MotorGearboxLeft2{5};
-  ctre::phoenix::motorcontrol::can::TalonFX m_MotorGearboxLeft3{6};
+  ctre::phoenix::motorcontrol::can::TalonFX m_MotorLeft1{4};
+  ctre::phoenix::motorcontrol::can::TalonFX m_MotorLeft2{5};
+  ctre::phoenix::motorcontrol::can::TalonFX m_MotorLeft3{6};
 
   frc::Encoder m_EncoderRight{0, 1,true};
   frc::Encoder m_EncoderLeft{2, 3,false};
