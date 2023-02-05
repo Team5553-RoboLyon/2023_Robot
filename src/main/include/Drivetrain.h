@@ -12,16 +12,24 @@
 #include <fstream>
 #include <lib/MoveData.h>
 
+#define VOLTAGE_REF   12.0     // tension de référence
+#define MOTOR_WF_RPM  6380     // Free Speed théorique du moteur à la tension de reference (12V)
+#define MOTOR_TS_NM   4.69     // Stall Torque théorique du moteur à la tension de reference (12V)
+
 #define REDUC_V1 13.3
 #define REDUC_V2 8.8
+
+#define TRUST_GEARBOX_OUT_ENCODER 0.7
+
 #define T_SWITCH 0.5
-#define VOLTAGE_REF 12.0                                    // tension de référence
+
 #define RESIST_TORQUE_NM 0.013   // hop plus de frottements
 #define MAXSWITCHTIMELOCK 0.5                              // temps max pour le switch de vitesse
+
 #define AXLETRACK 0.5098 // distance entre les roues
-#define HALF_TRACKWIDTH (AXLETRACK / 2.0f)
-#define TRUST_GEARBOX_OUT_ENCODER 0.7
-#define WF_MOTOR_RPM 6380     // vitesse de rotation théorique du moteur
+#define HALF_TRACKWIDTH (AXLETRACK / 2.0)
+
+
 #define TICK_DT 0.02 // durée d'un tick en seconde
 #define SIGMA 0.5          // sigma pour le rate limiter
 #define AVERAGE_SAMPLES_NUMBER 5 // nombre de samples pour la moyenne
@@ -51,11 +59,11 @@ public:
 
 
 
-  MoveData m_GearboxRightOutRpt; // encodeur droit en en tours/tick (RPT)
-  MoveData m_GearboxLeftOutRpt; // encodeur gauche
+  MoveData m_GearboxRightOutRawRpt; // encodeur droit en en tours/tick (RPT)
+  MoveData m_GearboxLeftOutRawRpt; // encodeur gauche
 
-  MoveData m_SuperMotorRightRpm; // moteur droit
-  MoveData m_SuperMotorLeftRpm; // moteur gauche
+  MoveData m_SuperMotorRightRawRpm; // moteur droit
+  MoveData m_SuperMotorLeftRawRpm; // moteur gauche
 
   NdoubleRollingAverage m_GearboxRightAveragedRpt; 
   NdoubleRollingAverage m_GearboxLeftAveragedRpt;
@@ -63,8 +71,8 @@ public:
   NdoubleRollingAverage m_SuperMotorLeftAveragedRpm;
   NdoubleRollingAverage m_SuperMotorRightAveragedRpm;
 
-  double m_GearboxOutRightRpm; // vitesses droit mixé entre encodeur moteur et axe
-  double m_GearboxOutLeftRpm; // vitesses gauche mixé entre encodeur moteur et axe
+  double m_GearboxRightOutAdjustedRpm; // vitesses droit mixé entre encodeur moteur et axe
+  double m_GearboxLeftOutAdjustedRpm; // vitesses gauche mixé entre encodeur moteur et axe
 
   double m_RobotAccelerationRight; // accélération robot droit mixé entre encodeur moteur et axe
   double m_RobotAccelerationLeft; // accélération robot gauche mixé entre encodeur moteur et axe

@@ -124,7 +124,8 @@ void Drivetrain::InvertBallShifter() // inverse ball shifter
 
 double Drivetrain::GetSwitchGearVoltage(double w_motor_rpm) // calcule la tension de référence en fonction de la vitesse du robot
 {
-    return (std::abs(w_motor_rpm) + WF_MOTOR_RPM * RESIST_TORQUE_NM) / WF_MOTOR_RPM;
+    return     (std::abs(w_motor_rpm)/WF_MOTOR_RPM + RESIST_TORQUE_NM/WF_MOTOR_RPM) ;
+    //return (std::abs(w_motor_rpm) + WF_MOTOR_RPM * RESIST_TORQUE_NM) / WF_MOTOR_RPM;
 }
 
 void Drivetrain::EnableBrakeMode(bool change) // active/ désactive le breakMode 
@@ -192,7 +193,7 @@ double Drivetrain::Calcul_De_Notre_Brave_JM(double forward, double turn, bool wh
 bool Drivetrain::General(double switchTimeLock, double GearboxRightRpm, double GearboxLeftRpm) // mode général, détermine si on peut passer une vitesse
 {
     return false;
-    if (switchTimeLock <= 0 and (GearboxLeftRpm/GearboxRightRpm) > 0.95//à définir
+    if (switchTimeLock <= 0 and (GearboxLeftRpm/GearboxRightRpm) > 0.95)//à définir
     {
         return true;
     }
@@ -275,27 +276,27 @@ void Drivetrain::Drive(double joystick_V, double joystick_W) //
 
     // calcul de la vitesse moyenne des deux encodeurs de sortie de boite. (GetDistance renvoie un nombre de tours car setup fait dans le constructeur)(.SetDistancePerPulse(1.0/2048.0)
     // les valeurs sont en tours/tick
-    m_GearboxRightOutRpt.setPos(m_EncoderRight.GetDistance() ); 
-    m_GearboxLeftOutRpt.setPos(m_EncoderLeft.GetDistance() );
-    m_GearboxRightAveragedRpt.add(m_GearboxRightOutRpt.m_deltaPos);
-    m_GearboxLeftAveragedRpt.add(m_GearboxLeftOutRpt.m_deltaPos);
+    m_GearboxRightOutRawRpt.setPos(m_EncoderRight.GetDistance() ); 
+    m_GearboxLeftOutRawRpt.setPos(m_EncoderLeft.GetDistance() );
+    m_GearboxRightAveragedRpt.add(m_GearboxRightOutRawRpt.m_deltaPos);
+    m_GearboxLeftAveragedRpt.add(m_GearboxLeftOutRawRpt.m_deltaPos);
 
     // calcul de la vitesse moyenne des 3 moteurs de la boite gauche et droite avec les encodeurs des talon srx qui retourne des valeurs en ticks/100ms
     // les moyennes sont converties ( * 600 / 2048 ) et stockées en RPM
     double average_left = (m_MotorLeft1.GetSensorCollection().GetIntegratedSensorVelocity() + m_MotorLeft2.GetSensorCollection().GetIntegratedSensorVelocity() + m_MotorLeft3.GetSensorCollection().GetIntegratedSensorVelocity())/3;
     double average_right = (m_MotorRight1.GetSensorCollection().GetIntegratedSensorVelocity() + m_MotorRight2.GetSensorCollection().GetIntegratedSensorVelocity() + m_MotorRight3.GetSensorCollection().GetIntegratedSensorVelocity())/3;
-    m_SuperMotorLeftRpm.setPos(average_left * 600 / 2048);    
-    m_SuperMotorRightRpm.setPos(average_right * 600 / 2048); 
-    m_SuperMotorLeftAveragedRpm.add(m_SuperMotorLeftRpm.m_deltaPos);
-    m_SuperMotorRightAveragedRpm.add(m_SuperMotorRightRpm.m_deltaPos);
+    m_SuperMotorLeftRawRpm.setPos(average_left * 600 / 2048);    
+    m_SuperMotorRightRawRpm.setPos(average_right * 600 / 2048); 
+    m_SuperMotorLeftAveragedRpm.add(m_SuperMotorLeftRawRpm.m_deltaPos);
+    m_SuperMotorRightAveragedRpm.add(m_SuperMotorRightRawRpm.m_deltaPos);
 
     // Vitesses des boites en RPM construitent en combinant les valeurs encodeurs moteurs et through bore 
     // TRUST_GEARBOX_OUT_ENCODER représente le coeff de confiance qu'on a dans les encodeurs de sortie de boite et (1-TRUST_GEARBOX_OUT_ENCODER) représente la confiance des encodeurs moteurs
     // m_SuperMotorLeftRpm et m_SuperMotorRightRpm sont déjà exprimé en RPM et m_GearboxRightOutRpt et m_GearboxLeftOutRpt sont en tours/tick (RPT), 
     // il faut donc les convertir en RPM ( * (60/TICK_DT) ) 
     // Les m_SuperMotorLeftRpm et m_SuperMotorRightRpm sont les valeurs avant réduction, il faut appliquer le facteur de réduction de boite enclenché pour obtenir une valeur RPM "sortie de boite" (m_CurrentGearboxReductionFactor)
-    m_GearboxOutRightRpm = (m_GearboxRightAveragedRpt.get() * (60 / TICK_DT) * TRUST_GEARBOX_OUT_ENCODER + m_SuperMotorRightAveragedRpm.get() * m_CurrentGearboxReductionFactor *(1-TRUST_GEARBOX_OUT_ENCODER )) ;  
-    m_GearboxOutLeftRpm = (m_GearboxLeftAveragedRpt.get() * (60 / TICK_DT) * TRUST_GEARBOX_OUT_ENCODER + m_SuperMotorLeftAveragedRpm.get() * m_CurrentGearboxReductionFactor *(1-TRUST_GEARBOX_OUT_ENCODER )) ; 
+    m_GearboxRightOutAdjustedRpm = (m_GearboxRightAveragedRpt.get() * (60 / TICK_DT) * TRUST_GEARBOX_OUT_ENCODER + m_SuperMotorRightAveragedRpm.get() * m_CurrentGearboxReductionFactor *(1-TRUST_GEARBOX_OUT_ENCODER )) ;  
+    m_GearboxLeftOutAdjustedRpm = (m_GearboxLeftAveragedRpt.get() * (60 / TICK_DT) * TRUST_GEARBOX_OUT_ENCODER + m_SuperMotorLeftAveragedRpm.get() * m_CurrentGearboxReductionFactor *(1-TRUST_GEARBOX_OUT_ENCODER )) ; 
 
 
     m_RobotAccelerationRight = (m_GearboxRightOutRpt.m_acceleration*TRUST_GEARBOX_OUT_ENCODER+m_SuperMotorRightRpm.m_acceleration*(1-TRUST_GEARBOX_OUT_ENCODER)); // accélération partie droite
@@ -311,8 +312,12 @@ void Drivetrain::Drive(double joystick_V, double joystick_W) //
     m_Joystick_V_Acceleration = (m_Joystick_V_Pure - m_Joystick_V_Last) / 0.02;//pourquoi par 0.02 ??
     m_Joystick_V_Last = m_Joystick_V_Pure;
 
-    m_SwitchTimeLock = m_SwitchTimeLock - 0.02; // décrémentation du temps de verrouillage de la vitesse
-
+    // décrémentation du temps de verrouillage de la vitesse    
+    if(m_SwitchTimeLock >= 0.02)
+        m_SwitchTimeLock -= 0.02; 
+    else
+        m_SwitchTimeLock = 0.0;
+    
     m_rateLimiter_V_Fast.Update(m_Joystick_V_Pure); 
     m_rateLimiter_V_Slow.Update(m_rateLimiter_V_Fast.m_current);
 
@@ -342,16 +347,16 @@ void Drivetrain::Drive(double joystick_V, double joystick_W) //
             
             // m_MotorLeft1.Set(ctre::phoenix::motorcontrol::ControlMode::PercentOutput, Calcul_De_Notre_Brave_JM(m_rateLimiter_V_Slow.m_current, m_rateLimiter_W_Slow.m_current, 0));
             // m_MotorRight1.Set(ctre::phoenix::motorcontrol::ControlMode::PercentOutput, Calcul_De_Notre_Brave_JM(m_rateLimiter_V_Slow.m_current, m_rateLimiter_W_Slow.m_current, 1));
-            if (General(m_SwitchTimeLock,m_GearboxOutRightRpm, m_GearboxOutLeftRpm))
+            if (General(m_SwitchTimeLock,m_GearboxRightOutAdjustedRpm, m_GearboxLeftOutAdjustedRpm))
             {
                 if (Up(m_Gearboxes_W_average_RPM,m_Gearboxes_Acceleration,m_Joystick_V_Pure,m_Joystick_V_Acceleration))
                 {
                     SwitchUp(m_Gearboxes_W_average_RPM*REDUC_V1);
                     // m_MotorLeft1.Set(ctre::phoenix::motorcontrol::ControlMode::PercentOutput, Calcul_De_Notre_Brave_JM(m_rateLimiter_V_Slow.m_current, m_rateLimiter_W_Slow.m_current, 0));
                     // m_MotorRight1.Set(ctre::phoenix::motorcontrol::ControlMode::PercentOutput, Calcul_De_Notre_Brave_JM(m_rateLimiter_V_Slow.m_current, m_rateLimiter_W_Slow.m_current, 1));
-                    SetSwitchTimeLock(0.5);
+                    m_SwitchTimeLock                = 0.5;
                     m_CurrentGearboxReductionFactor = REDUC_V2;
-                    m_State = State::highGear;
+                    m_State                         = State::highGear;
                 }
             }
         }
@@ -366,9 +371,9 @@ void Drivetrain::Drive(double joystick_V, double joystick_W) //
                 SwitchDown(m_Gearboxes_W_average_RPM*REDUC_V2);
                 // m_MotorLeft1.Set(ctre::phoenix::motorcontrol::ControlMode::PercentOutput, Calcul_De_Notre_Brave_JM(m_rateLimiter_V_Slow.m_current, m_rateLimiter_W_Slow.m_current, 0));
                 // m_MotorRight1.Set(ctre::phoenix::motorcontrol::ControlMode::PercentOutput, Calcul_De_Notre_Brave_JM(m_rateLimiter_V_Slow.m_current, m_rateLimiter_W_Slow.m_current, 1));
-                SetSwitchTimeLock(0.5);
+                m_SwitchTimeLock                = 0.5;
                 m_CurrentGearboxReductionFactor = REDUC_V1;
-                m_State = State::lowGear;
+                m_State                         = State::lowGear;
             }
             
             if (General(m_SwitchTimeLock,m_Robot_W))
