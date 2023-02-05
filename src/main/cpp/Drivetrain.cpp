@@ -14,7 +14,7 @@
 #include <iostream>
 #include <frc/smartdashboard/SmartDashboard.h>
 
-Drivetrain::Drivetrain() : m_GearboxRightAveragedRpm(AVERAGE_SAMPLES_NUMBER), m_GearboxLeftAveragedRpm(AVERAGE_SAMPLES_NUMBER), m_SuperMotorLeftAveragedRpm(AVERAGE_SAMPLES_NUMBER), m_SuperMotorRightAveragedRpm(AVERAGE_SAMPLES_NUMBER)
+Drivetrain::Drivetrain() : m_GearboxRightAveragedRpt(AVERAGE_SAMPLES_NUMBER), m_GearboxLeftAveragedRpt(AVERAGE_SAMPLES_NUMBER), m_SuperMotorLeftAveragedRpm(AVERAGE_SAMPLES_NUMBER), m_SuperMotorRightAveragedRpm(AVERAGE_SAMPLES_NUMBER)
 {
     m_MotorLeft1.ConfigFactoryDefault(); // reset des paramètres du moteur
     m_MotorLeft2.ConfigFactoryDefault();
