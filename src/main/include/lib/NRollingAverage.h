@@ -9,6 +9,24 @@
 // **																					**
 // ***************************************************************************************
 // ***************************************************************************************
+class NdoubleRollingAverage
+{
+public:
+	NdoubleRollingAverage();
+	NdoubleRollingAverage(const int table_size, const double initial_average = 0.0 );
+	~NdoubleRollingAverage();
+
+	void reset(const double initial_average = 0.0);
+	const double add(const double value);
+	inline const double get(){return m_average;}
+	
+	int	m_last;
+	int	m_index;
+	double			m_average;
+	double			m_sum;
+	double*			m_pdouble;
+};
+
 class NfloatRollingAverage
 {
 public:
@@ -42,6 +60,8 @@ public:
 	long			m_sum;
 	long		   *m_plong;
 };
+
+
 
 
 

@@ -1,5 +1,68 @@
 #include "lib/NRollingAverage.h"
 
+NdoubleRollingAverage::NdoubleRollingAverage()
+{
+	m_last			= 0;
+	m_pdouble		= NULL;
+	m_sum			= 0.0;
+	m_average		= 0.0;	
+	m_index			= 0;
+}
+
+NdoubleRollingAverage::NdoubleRollingAverage(const int table_size, const double initial_average)
+{
+	m_last			= table_size - 1;
+	m_pdouble		= (double*)malloc(sizeof(double)*table_size);
+	m_sum			= initial_average*table_size;
+	m_average		= initial_average;	
+	m_index			= 0;
+
+	double *pd = m_pdouble;
+	for(int i= 0;i<table_size;i++,pd++)
+		*pd = initial_average;
+}
+
+NdoubleRollingAverage::~NdoubleRollingAverage()
+{
+	m_pdouble -= m_index;	// replace le pointeur en position initiale
+	free(m_pdouble);			// lib�re la m�moire
+}
+
+const double NdoubleRollingAverage::add(const double value)
+{
+	m_sum += (value - *m_pdouble);
+	m_average = m_sum/(m_last+1);
+	*m_pdouble  = value;
+	
+	if(m_index == m_last)
+	{
+		m_pdouble -= m_last;
+		m_index	  = 0;
+	}
+	else
+	{
+		m_pdouble ++;
+		m_index	 ++;
+	}
+
+	return m_average;
+}
+
+void NdoubleRollingAverage::reset(const double initial_average)
+{
+	m_sum	  = initial_average*(m_last+1);
+	m_average = initial_average;
+	m_pdouble -= m_index;	// replace le pointeur en position initiale
+	m_index	  = 0;
+	double *pd = m_pdouble;
+	for(int i= 0;i<=m_last;i++,pd++)
+		*pd = initial_average;
+}
+
+// 
+
+
+
 NfloatRollingAverage::NfloatRollingAverage(const unsigned short table_size, const float initial_average)
 {
 	m_last			= table_size - 1;
