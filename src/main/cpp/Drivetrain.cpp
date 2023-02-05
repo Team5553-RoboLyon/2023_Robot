@@ -283,11 +283,11 @@ void Drivetrain::Drive(double joystick_V, double joystick_W) //
     // double encoder_Motor_Right_Distance = m_MotorGearboxRight1.GetSensorCollection().GetIntegratedSensorVelocity()* 600 / (2048*coef);// RPM axe du moteur 1 de la boite droite / par le coef de réduction
     // double encoder_Motor_Left_Distance = m_MotorGearboxLeft1.GetSensorCollection().GetIntegratedSensorVelocity()* 600 / (2048*coef);// RPM axe du moteur 1 de la boite de gauche / par le coef de réduction
 
-    m_Gearbox_motor_Right.Update(m_MotorGearboxRight1.GetSensorCollection().GetIntegratedSensorVelocity()* 600 / (2048*coef)); 
-    m_Gearbox_motor_Left.Update(m_MotorGearboxLeft1.GetSensorCollection().GetIntegratedSensorVelocity()* 600 / (2048*coef));
+    m_Gearbox_encoder_Right.setPos(m_MotorGearboxRight1.GetSensorCollection().GetIntegratedSensorVelocity()* 600 / (2048*coef)); 
+    m_Gearbox_encoder_Left.setPos(m_MotorGearboxLeft1.GetSensorCollection().GetIntegratedSensorVelocity()* 600 / (2048*coef));
 
-    m_Motor_encoder_Left.Update(m_EncoderLeft.GetDistance());
-    m_Motor_encoder_Right.Update(m_EncoderRight.GetDistance());
+    m_Motor_encoder_Left.setPos(m_EncoderLeft.GetDistance());
+    m_Motor_encoder_Right.setPos(m_EncoderRight.GetDistance());
 
     // m_encoder_Gearbox_Left_W = (encoder_Gearbox_Left_Distance-m_Encoder_Gearbox_Left_Previous_Distance)/0.02*60; // vitesse de l'axe de sortie de boite gauche en RPM
     // m_encoder_Gearbox_Right_W = (encoder_Gearbox_Right_Distance-m_Encoder_Gearbox_Right_Previous_Distance)/0.02*60; // vitesse de l'axe de sortie de boite droite en RPM

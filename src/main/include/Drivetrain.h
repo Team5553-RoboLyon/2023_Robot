@@ -10,7 +10,7 @@
 #include <frc/Compressor.h>
 #include <ostream>
 #include <fstream>
-#include <MoveData.h>
+#include <lib/MoveData.h>
 
 class Drivetrain : public frc2::SubsystemBase
 {
