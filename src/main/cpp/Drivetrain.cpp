@@ -26,6 +26,16 @@
 #include <iostream>
 #include <frc/smartdashboard/SmartDashboard.h>
 
+typedef struct DYN DYN;
+struct DYN
+{
+    double m_pose;
+    double m_prevPose;
+    double m_speed;
+    double m_prevSpeed;
+    double m_accel;
+};
+
 Drivetrain::Drivetrain()
 {
     m_MotorGearboxLeft1.ConfigFactoryDefault(); // reset des paramètres du moteur
