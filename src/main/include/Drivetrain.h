@@ -107,7 +107,7 @@ public:
   RateLimiter m_rateLimiter_W_Fast; // rate limiter joystick W
   RateLimiter m_rateLimiter_W_Slow; // rate limiter du rate limiter joystick W
 
-  NLCSV m_logCSV{8}; // log csv
+  //NLCSV m_logCSV{8}; // log csv
 
 
 
