@@ -13,7 +13,7 @@
 #define NLERP(a,b,t)	( a + (b - a)*t )
 
 #include "Drivetrain.h"
-#include "lib/MoveData.h"
+#include "lib/DynamicData.h"
 #include "lib/utils.h"
 #include <iostream>
 #include <frc/smartdashboard/SmartDashboard.h>
@@ -196,34 +196,31 @@ double Drivetrain::Calcul_De_Notre_Brave_JM(double forward, double turn, bool wh
         return left_wheel;
 }
 
-bool Drivetrain::isGearSwitchAvailable() // mode général, détermine si on peut passer une vitesse
-{
-   return ((m_SwitchTimeLock <= 0.0) and (m_GearboxRightOutAdjustedRpm) and (m_GearboxLeftOutAdjustedRpm/m_GearboxRightOutAdjustedRpm > 0.95)) ? true:false;
-}
-
 bool Drivetrain::isUpshiftingAllowed() // mode up, détermine si on peut passer en V2
 {
-    // Le Gear shifting précédent est-il suffisamment "ancien" ?  (m_SwitchTimeLock doit être  null )
+    // Le Gear shifting précédent est-il suffisamment "ancien" ?  (m_GearShiftingTimeLock doit être  null )
     // Le robot est-il en train de rouler tout droit, sans tourner ?  (m_GearboxLeftOutAdjustedRpm/m_GearboxRightOutAdjustedRpm doit être proche de 1 )
-    if ((m_SwitchTimeLock == 0.0) and (m_GearboxRightOutAdjustedRpm) and (m_GearboxLeftOutAdjustedRpm/m_GearboxRightOutAdjustedRpm > 0.95))
+    if ((m_GearShiftingTimeLock == 0.0) and (m_GearboxRightOutAdjustedRpm) and (m_GearboxLeftOutAdjustedRpm/m_GearboxRightOutAdjustedRpm > 0.95))
     {
-        double rpm = (m_GearboxLeftOutAdjustedRpm + m_GearboxRightOutAdjustedRpm)/2.0;
-        if (speedRobot > 125 and accelerationRobot > 0 and joystick > 0.4 and deltaJoystick >= 0)
+        if (  m_GearboxesOutAdjustedRpm           > UP_SHIFTING_POINT_GEARBOXES_OUT_RPM  and 
+              m_GearboxesOutAccelerationRpm2.get()> UP_SHIFTING_POINT_GEARBOXES_OUT_RPM2 and 
+              m_JoystickRaw_V.m_current           > UP_SHIFTING_POINT_JOYSTICK_V and 
+              m_JoystickRaw_V.m_delta             >=UP_SHIFTING_POINT_JOYSTICK_V_VARIATION )
             return true;
     }
     return false;
 }
 
-bool Drivetrain::KickDown(double speedRobot, double accelerationRobot, double joystick) // mode kickdown, détermine si on peut passer en V1
+bool Drivetrain::isKickdownShiftingAllowed() // mode kickdown, détermine si on peut passer en V1
 {
-    if (speedRobot < 50  and accelerationRobot < 0 and joystick > 0.2)
-    {
+    //double speedRobot, double accelerationRobot, double joystick
+    if (    m_GearboxesOutAdjustedRpm           < KICKDOWN_SHIFTING_POINT_GEARBOXES_OUT_RPM  and
+            m_GearboxesOutAccelerationRpm2.get()< 0.0 and
+            m_JoystickRaw_V.m_current           > KICKDOWN_SHIFTING_POINT_JOYSTICK_V and 
+            m_JoystickRaw_V.m_delta             >=KICKDOWN_SHIFTING_POINT_JOYSTICK_V_VARIATION )
         return true;
-    }
     else
-    {
         return false;
-    }
 }
 
 bool Drivetrain::CoastDown(double speedRobot) // mode coastdown, détermine si on peut passer en V1
@@ -275,16 +272,16 @@ void Drivetrain::Drive(double joystick_V, double joystick_W) //
 
     // calcul de la vitesse moyenne des deux encodeurs de sortie de boite. (GetDistance renvoie un nombre de tours car setup fait dans le constructeur)(.SetDistancePerPulse(1.0/2048.0)
     // les valeurs sont en tours/tick
-    m_GearboxRightOutRawRpt.setPos(m_EncoderRight.GetDistance() ); 
-    m_GearboxLeftOutRawRpt.setPos(m_EncoderLeft.GetDistance() );
-    m_GearboxRightOutAveragedRpt.add(m_GearboxRightOutRawRpt.m_deltaPos);
-    m_GearboxLeftOutAveragedRpt.add(m_GearboxLeftOutRawRpt.m_deltaPos);
+    m_GearboxRightOutRawRpt.set(m_EncoderRight.GetDistance() ); 
+    m_GearboxRightOutAveragedRpt.add(m_GearboxRightOutRawRpt.m_delta);
+    m_GearboxLeftOutRawRpt.set(m_EncoderLeft.GetDistance() );
+    m_GearboxLeftOutAveragedRpt.add(m_GearboxLeftOutRawRpt.m_delta);
 
     // calcul de la vitesse moyenne des 3 moteurs de la boite gauche et droite avec les encodeurs des talon srx qui retourne des valeurs en ticks/100ms
     // les moyennes sont converties ( * 600 / 2048 ) et stockées en RPM
     m_SuperMotorLeftRawRpm = (m_MotorLeft1.GetSensorCollection().GetIntegratedSensorVelocity() + m_MotorLeft2.GetSensorCollection().GetIntegratedSensorVelocity() + m_MotorLeft3.GetSensorCollection().GetIntegratedSensorVelocity())*600/(3*2048);
-    m_SuperMotorRightRawRpm = (m_MotorRight1.GetSensorCollection().GetIntegratedSensorVelocity() + m_MotorRight2.GetSensorCollection().GetIntegratedSensorVelocity() + m_MotorRight3.GetSensorCollection().GetIntegratedSensorVelocity())*600/(3*2048);
     m_SuperMotorLeftAveragedRpm.add(m_SuperMotorLeftRawRpm);
+    m_SuperMotorRightRawRpm = (m_MotorRight1.GetSensorCollection().GetIntegratedSensorVelocity() + m_MotorRight2.GetSensorCollection().GetIntegratedSensorVelocity() + m_MotorRight3.GetSensorCollection().GetIntegratedSensorVelocity())*600/(3*2048);
     m_SuperMotorRightAveragedRpm.add(m_SuperMotorRightRawRpm);
 
     // Vitesses des boites en RPM construitent en combinant les valeurs encodeurs moteurs et through bore 
@@ -297,12 +294,7 @@ void Drivetrain::Drive(double joystick_V, double joystick_W) //
     m_GearboxLeftOutAdjustedRpm = (m_GearboxLeftOutAveragedRpt.get() * (60 / TICK_DT) * TRUST_GEARBOX_OUT_ENCODER + m_SuperMotorLeftAveragedRpm.get() * m_CurrentGearboxReductionFactor *(1-TRUST_GEARBOX_OUT_ENCODER )) ; 
 
     m_GearboxesOutAdjustedRpm = ( m_GearboxRightOutAdjustedRpm + m_GearboxLeftOutAdjustedRpm )/2.0;
-    m_GearboxesOutAccelerationRpm.add(m_GearboxesOutAdjustedRpm);
-
- 
-    m_Gearboxes_Acceleration = (m_RobotAccelerationLeft + m_RobotAccelerationRight) / 2; // accélération du robot
-
-    m_Robot_W=(m_Gearbox_Right_W_RPM-m_Gearbox_Left_W_RPM)/AXLETRACK; // vitesse angulaire du robot en RPM
+    m_GearboxesOutAccelerationRpm2.add(m_GearboxesOutAdjustedRpm);
 
     m_Joystick_V_Pure = joystick_V; 
     m_Joystick_W_Pure = joystick_W;
@@ -310,10 +302,10 @@ void Drivetrain::Drive(double joystick_V, double joystick_W) //
     m_Joystick_V_Last = m_Joystick_V_Pure;
 
     // décrémentation du temps de verrouillage de la vitesse    
-    if(m_SwitchTimeLock >= 0.02)
-        m_SwitchTimeLock -= 0.02; 
+    if(m_GearShiftingTimeLock >= TICK_DT)
+        m_GearShiftingTimeLock -= TICK_DT; 
     else
-        m_SwitchTimeLock = 0.0;
+        m_GearShiftingTimeLock = 0.0;
     
     m_rateLimiter_V_Fast.Update(m_Joystick_V_Pure); 
     m_rateLimiter_V_Slow.Update(m_rateLimiter_V_Fast.m_current);

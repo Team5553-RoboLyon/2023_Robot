@@ -10,10 +10,10 @@
 #include <frc/Compressor.h>
 #include <ostream>
 #include <fstream>
-#include <lib/MoveData.h>
+#include <lib/DynamicData.h>
 
 #define VOLTAGE_REF   12.0     // tension de référence
-#define MOTOR_WF_RPM  6380     // Free Speed théorique du moteur à la tension de reference (12V)
+#define MOTOR_WF_RPM  6380.0   // Free Speed théorique du moteur à la tension de reference (12V)
 #define MOTOR_TS_NM   4.69     // Stall Torque théorique du moteur à la tension de reference (12V)
 
 #define REDUC_V1 13.3
@@ -21,6 +21,14 @@
 
 #define TRUST_GEARBOX_OUT_ENCODER 0.7
 
+#define UP_SHIFTING_POINT_JOYSTICK_V                  0.8                     // Valeur minimum du joystick V pour passer en vitesse 2
+#define UP_SHIFTING_POINT_JOYSTICK_V_VARIATION        0.0                     // Valeur minimum de la variation (=delta) du joystick V pour passer en vitesse 2
+#define UP_SHIFTING_POINT_GEARBOXES_OUT_RPM           (6380.0*0.8/REDUC_V1)   // Valeur minimum de la vitesse de sortie de boites pour passer en vitesse 2
+#define UP_SHIFTING_POINT_GEARBOXES_OUT_RPM2          0.0                     // Valeur minimum de l'accel.  de sortie de boites pour passer en vitesse 2
+
+#define KICKDOWN_SHIFTING_POINT_GEARBOXES_OUT_RPM     (6380.0*0.4/REDUC_V1)   // Valeur max de la vitesse de sortie de boites pour retrograder en vitesse 1
+#define KICKDOWN_SHIFTING_POINT_JOYSTICK_V            0.6                     // Valeur minimum du joystick V pour retrograder en vitesse 1 afin de re-accelerer fort
+#define KICKDOWN_SHIFTING_POINT_JOYSTICK_V_VARIATION  0.2                     // Valeur minimum de la variation (=delta) du joystick V pour retrograder en vitesse 1
 #define T_SWITCH 0.5
 
 #define RESIST_TORQUE_NM 0.013   // hop plus de frottements
@@ -47,51 +55,52 @@ public:
   void ActiveBallShifterV2();               
   void EnableBrakeMode(bool Change);                                            // ok
   void Drive(double joystickLeft, double joystickRight);                        // ok
+
   double Calcul_De_Notre_Brave_JM(double forward, double turn, bool wheelSide); // Si wheelSide 0: roue droite / Si wheelSide 1: roue gauche
   
-  bool isUpshiftingAllowed(double speedRobot, double accelerationRobot, double joystick, double deltaJoystick);
-  bool isKickdownShiftingAllowed(double speedRobot, double accelerationRobot, double joystick);
-  bool isCoastdownShifting(double speedRobot);
-  
-  void SetSwitchTimeLock(double switchTimeLock);
+  bool isUpshiftingAllowed();
+  bool isKickdownShiftingAllowed();
+  bool isCoastdownShiftingAllowed();
+ 
+
   void SetVoltageTarget(double voltageTarget,double state);
   void SwitchUp(double w);
   void SwitchDown(double w);
 
 
   // Côté gauche
-  MoveData              m_GearboxLeftOutRawRpt;         // Vitesse instantanée de sortie de boite ( mesurée par le TroughBore Encoder )
+  DynamicData           m_GearboxLeftOutRawRpt;         // Vitesse instantanée de sortie de boite ( mesurée par le TroughBore Encoder )
   NdoubleRollingAverage m_GearboxLeftOutAveragedRpt;    // Vitesse moyenne de sortie de boite (Moyenne glissante)
   double                m_SuperMotorLeftRawRpm;         // Vitesse instantannée du supermoteur d'entrée de boite ( = Moyenne des vitesses en ticks / 100 ms mesurées par les 3 Encodeurs moteurs de la boite )
   NdoubleRollingAverage m_SuperMotorLeftAveragedRpm;    // Vitesse Moyenne du supermoteur d'entrée de boite (Moyenne glissante)
   double                m_GearboxLeftOutAdjustedRpm;    // Vitesse de la gearbox gauche en RPM ( combinaison linéaire de la vitesse moyenne de sortie de boite et de la vitesse moyenne du supermoteur en entrée de boite)
 
   // Côté droit
-  MoveData              m_GearboxRightOutRawRpt;        // Vitesse instantanée de sortie de boite ( mesurée par le TroughBore Encoder )
-  NdoubleRollingAverage m_GearboxRightAveragedRpt;      // Vitesse moyenne de sortie de boite (Moyenne glissante)
+  DynamicData           m_GearboxRightOutRawRpt;        // Vitesse instantanée de sortie de boite ( mesurée par le TroughBore Encoder )
+  NdoubleRollingAverage m_GearboxRightOutAveragedRpt;   // Vitesse moyenne de sortie de boite (Moyenne glissante)
   double                m_SuperMotorRightRawRpm;        // Vitesse instantannée du supermoteur d'entrée de boite ( = Moyenne des vitesses en ticks / 100 ms mesurées par les 3 Encodeurs moteurs de la boite )
   NdoubleRollingAverage m_SuperMotorRightAveragedRpm;   // Vitesse Moyenne du supermoteur d'entrée de boite (Moyenne glissante)
   double                m_GearboxRightOutAdjustedRpm;   // Vitesse de la gearbox droite en RPM ( combinaison linéaire de la vitesse moyenne de sortie de boite et de la vitesse moyenne du supermoteur en entrée de boite)
   
-  NdoubleRollingAverage m_GearboxesOutAccelerationRpm2; // Acceleration des gearbox RPM²
+  double                m_GearboxesOutAdjustedRpm;      // Vitesse (translation) du robot exprimée en RPM
+  NdoubleRollingAverage m_GearboxesOutAccelerationRpm2; // Acceleration (translation) du robot exprimée RPM²
  
-  double m_SwitchTimeLock; // temps de blocage du changement de vitesse
-  double m_Robot_W; // vitesse angulaire du robot
+  double                m_GearShiftingTimeLock;         // Temps de blocage du changement de vitesse
+  double                m_CurrentGearboxRatio;          // Rapport (Reduction) de la vitesse engagée dans la  boite (V1 ou V2)
 
-  double m_Joystick_V_Last; // ancienne valeur joystick V
-  
+
+  DynamicData           m_JoystickRaw_V;
+  DynamicData           m_JoystickRaw_W;
+ 
   double m_Joystick_V_Acceleration; // accélération joystick V
 
   double m_Joystick_V_Limited; // joystick V limité
   double m_Joystick_W_Limited; // joystick W limité
 
-  double m_Joystick_V_Pure; // joystick V pur
-  double m_Joystick_W_Pure; // joystick W pur
 
   double m_SwitchSpeed; // vitesse de changement de vitesse
   double m_Recul; // recul du robot
 
-  double m_CurrentGearboxReductionFactor; // Reduction de la vitesse engagée dans la  boite (V1 ou V2)
 
 
 
@@ -126,6 +135,4 @@ private:
   frc::Encoder m_EncoderLeft{2, 3,false};
 
   frc::DoubleSolenoid m_BallShifterSolenoidLeft{frc::PneumaticsModuleType::REVPH, 0, 1};
-
-  bool isGearSwitchAvailable();
 };
