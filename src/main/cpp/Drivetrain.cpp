@@ -13,12 +13,17 @@
 #define NLERP(a,b,t)	( a + (b - a)*t )
 
 #include "Drivetrain.h"
-#include "lib/DynamicData.h"
+#include "lib/Dynamic.h"
 #include "lib/utils.h"
 #include <iostream>
 #include <frc/smartdashboard/SmartDashboard.h>
 
-Drivetrain::Drivetrain() : m_GearboxRightAveragedRpt(AVERAGE_SAMPLES_NUMBER), m_GearboxLeftAveragedRpt(AVERAGE_SAMPLES_NUMBER), m_SuperMotorLeftAveragedRpm(AVERAGE_SAMPLES_NUMBER), m_SuperMotorRightAveragedRpm(AVERAGE_SAMPLES_NUMBER)
+Drivetrain::Drivetrain() :  m_GearboxLeftOutAveragedRpt(AVERAGE_SAMPLES_NUMBER), 
+                            m_GearboxRightOutAveragedRpt(AVERAGE_SAMPLES_NUMBER),
+                            m_SuperMotorLeftAveragedRpm(AVERAGE_SAMPLES_NUMBER), 
+                            m_SuperMotorRightAveragedRpm(AVERAGE_SAMPLES_NUMBER),
+                            m_GearboxesOutAccelerationRpm2(AVERAGE_SAMPLES_NUMBER)
+
 {
     m_MotorLeft1.ConfigFactoryDefault(); // reset des paramètres du moteur
     m_MotorLeft2.ConfigFactoryDefault();
@@ -73,11 +78,11 @@ Drivetrain::Drivetrain() : m_GearboxRightAveragedRpt(AVERAGE_SAMPLES_NUMBER), m_
     m_EncoderLeft.Reset(); // reset des encodeurs
     m_EncoderRight.Reset(); 
 
-    m_rateLimiter_V_Fast.Reset(0.0,0.0,2.0); // reset des rate limiters
-    m_rateLimiter_V_Slow.Reset(0.0,0.0,0.05);
+    m_JoystickPrelimited_V.Reset(0.0,0.0,2.0); // reset des rate limiters
+    m_JoystickLimited_V.Reset(0.0,0.0,0.05);
 
-    m_rateLimiter_W_Fast.Reset(0.0,0.0,2.0);
-    m_rateLimiter_W_Slow.Reset(0.0,0.0,0.05);
+    m_JoystickPrelimited_W.Reset(0.0,0.0,2.0);
+    m_JoystickLimited_W.Reset(0.0,0.0,0.05);
 
     // m_logCSV.setItem(0,"joystick_V",5,&m_Joystick_V_Pure);
     // m_logCSV.setItem(1,"joystick_W",5,&m_Joystick_W_Pure);
@@ -91,7 +96,7 @@ Drivetrain::Drivetrain() : m_GearboxRightAveragedRpt(AVERAGE_SAMPLES_NUMBER), m_
     // Règle le ball shifter, le State et la Reduction en V1 lors de l'initialisation du robot
     ActiveBallShifterV1(); 
     m_State =State::lowGear;
-    m_CurrentGearboxReductionFactor = REDUC_V1; 
+    m_CurrentGearboxRatio = REDUC_V1; 
 
 
 }
@@ -126,12 +131,11 @@ void Drivetrain::InvertBallShifter() // inverse ball shifter
     }
 }
 
-double Drivetrain::GetSwitchGearVoltage(double motor_w_rpm) // calcule la tension de référence en fonction de la vitesse du robot
+double Drivetrain::GetGearShiftingVoltage() // calcule la tension de référence en fonction de la vitesse du robot
 {
-    double u = NABS(motor_w_rpm)/MOTOR_WF_RPM + RESIST_TORQUE_NM/MOTOR_TS_NM;
-    return NCLAMP(0.0,u,1.0);
 
-    //return (std::abs(w_motor_rpm) + WF_MOTOR_RPM * RESIST_TORQUE_NM) / WF_MOTOR_RPM;
+    double u = NABS(m_GearboxesOutAdjustedRpm*m_CurrentGearboxRatio)/MOTOR_WF_RPM + RESIST_TORQUE_NM/MOTOR_TS_NM;
+    return m_GearboxesOutAdjustedRpm > 0.0 ? NCLAMP(0.0,u,1.0):-NCLAMP(0.0,u,1.0);
 }
 
 void Drivetrain::EnableBrakeMode(bool change) // active/ désactive le breakMode 
@@ -234,17 +238,15 @@ bool Drivetrain::isCoastdownShiftingAllowed() // mode coastdown, détermine si o
 
 void Drivetrain::SwitchUp(double w_motor_rpm) // passage de la vitesse en V2
 {
-    m_SwitchSpeed = GetSwitchGearVoltage(w_motor_rpm);
-    m_Recul = ((m_rateLimiter_V_Slow.m_current - m_SwitchSpeed)/m_rateLimiter_V_Slow.m_speed )*m_rateLimiter_V_Fast.m_speed;
-    m_rateLimiter_V_Fast.m_current=m_SwitchSpeed-m_Recul;
+    double u = GetGearShiftingVoltage();
+    m_JoystickPrelimited_V.m_current = u - ((m_JoystickLimited_V.m_current - u)/m_JoystickLimited_V.m_speed )*m_JoystickPrelimited_V.m_speed;
     ActiveBallShifterV2();
 }
 
 void Drivetrain::SwitchDown(double w_motor_rpm) // passage de la vitesse en V1
 {
-    m_SwitchSpeed = GetSwitchGearVoltage(w_motor_rpm);
-    m_Recul = ((m_rateLimiter_V_Slow.m_current - m_SwitchSpeed)/m_rateLimiter_V_Slow.m_speed )*m_rateLimiter_V_Fast.m_speed;
-    m_rateLimiter_V_Fast.m_current=m_SwitchSpeed-m_Recul;
+   double u = GetGearShiftingVoltage();
+    m_JoystickPrelimited_V.m_current = u - ((m_JoystickLimited_V.m_current - u)/m_JoystickLimited_V.m_speed )*m_JoystickPrelimited_V.m_speed;
     ActiveBallShifterV1();
 }
 
@@ -254,13 +256,7 @@ void Drivetrain::SwitchDown(double w_motor_rpm) // passage de la vitesse en V1
 void Drivetrain::Drive(double joystick_V, double joystick_W) // 
 {
     // double signe=dif_Right>0 ? 1 : -1;
-    //distance sortie de boite en nombre de tour
-    // double encoder_Gearbox_Right_Distance = m_EncoderRight.GetDistance(); // nombre de tours de l''axe de sortie de boite droite
-    // double encoder_Gearbox_Left_Distance = m_EncoderLeft.GetDistance();  // nombre de tours de l'axe de sortie de boite gauche
-    // vitesse angulaire en sortie de boite basé sur les encodeurs motors
-    // double encoder_Motor_Right_Distance = m_MotorRight1.GetSensorCollection().GetIntegratedSensorVelocity()* 600 / (2048*reduction_factor);// RPM axe du moteur 1 de la boite droite / par le reduction_factor de réduction
-    // double encoder_Motor_Left_Distance = m_MotorLeft1.GetSensorCollection().GetIntegratedSensorVelocity()* 600 / (2048*reduction_factor);// RPM axe du moteur 1 de la boite de gauche / par le reduction_factor de réduction
-
+   
     // calcul de la vitesse moyenne des deux encodeurs de sortie de boite. (GetDistance renvoie un nombre de tours car setup fait dans le constructeur)(.SetDistancePerPulse(1.0/2048.0)
     // les valeurs sont en tours/tick
     m_GearboxRightOutRawRpt.set(m_EncoderRight.GetDistance() ); 
@@ -281,45 +277,26 @@ void Drivetrain::Drive(double joystick_V, double joystick_W) //
     // Il faut donc les convertir en RPM ( * (60/TICK_DT) ). 
     // Les m_SuperMotorLeftRpm et m_SuperMotorRightRpm sont les valeurs avant réduction, il faut appliquer le facteur de réduction de boite enclenché 
     // pour obtenir une valeur RPM "sortie de boite" (m_CurrentGearboxReductionFactor)
-    m_GearboxRightOutAdjustedRpm = (m_GearboxRightOutAveragedRpt.get() * (60 / TICK_DT) * TRUST_GEARBOX_OUT_ENCODER + m_SuperMotorRightAveragedRpm.get() * m_CurrentGearboxReductionFactor *(1-TRUST_GEARBOX_OUT_ENCODER )) ;  
-    m_GearboxLeftOutAdjustedRpm = (m_GearboxLeftOutAveragedRpt.get() * (60 / TICK_DT) * TRUST_GEARBOX_OUT_ENCODER + m_SuperMotorLeftAveragedRpm.get() * m_CurrentGearboxReductionFactor *(1-TRUST_GEARBOX_OUT_ENCODER )) ; 
+    m_GearboxRightOutAdjustedRpm = (m_GearboxRightOutAveragedRpt.get() * (60 / TICK_DT) * TRUST_GEARBOX_OUT_ENCODER + m_SuperMotorRightAveragedRpm.get() * m_CurrentGearboxRatio *(1-TRUST_GEARBOX_OUT_ENCODER )) ;  
+    m_GearboxLeftOutAdjustedRpm = (m_GearboxLeftOutAveragedRpt.get() * (60 / TICK_DT) * TRUST_GEARBOX_OUT_ENCODER + m_SuperMotorLeftAveragedRpm.get() * m_CurrentGearboxRatio *(1-TRUST_GEARBOX_OUT_ENCODER )) ; 
 
     m_GearboxesOutAdjustedRpm = ( m_GearboxRightOutAdjustedRpm + m_GearboxLeftOutAdjustedRpm )/2.0;
     m_GearboxesOutAccelerationRpm2.add(m_GearboxesOutAdjustedRpm);
 
-    m_Joystick_V_Pure = joystick_V; 
-    m_Joystick_W_Pure = joystick_W;
-    m_Joystick_V_Acceleration = (m_Joystick_V_Pure - m_Joystick_V_Last) / 0.02;//pourquoi par 0.02 ??
-    m_Joystick_V_Last = m_Joystick_V_Pure;
+    // 
+    m_JoystickRaw_V.set(joystick_V); 
+    m_JoystickLimited_V.Update( m_JoystickPrelimited_V.Update(joystick_V) );
+
+    m_JoystickRaw_W.set(joystick_W);
+    m_JoystickLimited_W.Update( m_JoystickPrelimited_W.Update(joystick_W) );
+
 
     // décrémentation du temps de verrouillage de la vitesse    
     if(m_GearShiftingTimeLock >= TICK_DT)
         m_GearShiftingTimeLock -= TICK_DT; 
     else
         m_GearShiftingTimeLock = 0.0;
-    
-    m_rateLimiter_V_Fast.Update(m_Joystick_V_Pure); 
-    m_rateLimiter_V_Slow.Update(m_rateLimiter_V_Fast.m_current);
-
-    m_rateLimiter_W_Fast.Update(m_Joystick_W_Pure);
-    m_rateLimiter_W_Slow.Update(m_rateLimiter_W_Fast.m_current);
-
-    m_MotorLeft1.Set(ctre::phoenix::motorcontrol::ControlMode::PercentOutput, Calcul_De_Notre_Brave_JM(m_rateLimiter_V_Slow.m_current, m_rateLimiter_W_Slow.m_current, 0));
-    m_MotorRight1.Set(ctre::phoenix::motorcontrol::ControlMode::PercentOutput, Calcul_De_Notre_Brave_JM(m_rateLimiter_V_Slow.m_current, m_rateLimiter_W_Slow.m_current, 1));
-
-    frc::SmartDashboard::PutNumber("m_rateLimiter_V_Fast.m_current", m_rateLimiter_V_Fast.m_current);
-    frc::SmartDashboard::PutNumber("m_rateLimiter_V_Slow.m_current", m_rateLimiter_V_Slow.m_current);
-
-    frc::SmartDashboard::PutNumber("m_rateLimiter_W_Fast.m_current", m_rateLimiter_W_Fast.m_current);
-    frc::SmartDashboard::PutNumber("m_rateLimiter_W_Slow.m_current", m_rateLimiter_W_Slow.m_current);
-
-    frc::SmartDashboard::PutNumber("m_Joystick_V_Pure", m_Joystick_V_Pure);
-    frc::SmartDashboard::PutNumber("m_Joystick_W_Pure", m_Joystick_W_Pure);
-
-    frc::SmartDashboard::PutNumber("W", );
-
-
-
+ 
     switch (m_State)
     {
         case State::lowGear:
@@ -367,4 +344,16 @@ void Drivetrain::Drive(double joystick_V, double joystick_W) //
             }
         }
     }
+
+    m_MotorLeft1.Set(ctre::phoenix::motorcontrol::ControlMode::PercentOutput, Calcul_De_Notre_Brave_JM(m_JoystickLimited_V.m_current, m_JoystickLimited_W.m_current, 0));
+    m_MotorRight1.Set(ctre::phoenix::motorcontrol::ControlMode::PercentOutput, Calcul_De_Notre_Brave_JM(m_JoystickLimited_V.m_current, m_JoystickLimited_W.m_current, 1));
+
+    frc::SmartDashboard::PutNumber("m_JoystickPrelimited_V",    m_JoystickPrelimited_V.m_current);
+    frc::SmartDashboard::PutNumber("m_JoystickLimited_V",       m_JoystickLimited_V.m_current);
+    frc::SmartDashboard::PutNumber("m_JoystickPrelimited_W",    m_JoystickPrelimited_W.m_current);
+    frc::SmartDashboard::PutNumber("m_JoystickLimited_W",       m_JoystickLimited_W.m_current);
+    frc::SmartDashboard::PutNumber("m_JoystickRaw_V", m_JoystickRaw_V.m_current);
+    frc::SmartDashboard::PutNumber("m_JoystickRaw_W", m_JoystickRaw_W.m_current);
+
+
 }

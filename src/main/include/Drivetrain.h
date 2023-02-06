@@ -10,7 +10,7 @@
 #include <frc/Compressor.h>
 #include <ostream>
 #include <fstream>
-#include <lib/DynamicData.h>
+#include <lib/Dynamic.h>
 
 #define VOLTAGE_REF   12.0     // tension de référence
 #define MOTOR_WF_RPM  6380.0   // Free Speed théorique du moteur à la tension de reference (12V)
@@ -53,7 +53,7 @@ class Drivetrain : public frc2::SubsystemBase
 public:
   Drivetrain();
   void Set(double speed);                                                                                       // faire autre chose y a moyen
-  double GetSwitchGearVoltage(double w); // voir avec JM                                                              // ok
+  
   void InvertBallShifter();
   void ActiveBallShifterV1();                                                   // ok
   void ActiveBallShifterV2();               
@@ -65,7 +65,7 @@ public:
   bool isUpshiftingAllowed();
   bool isKickdownShiftingAllowed();
   bool isCoastdownShiftingAllowed();
- 
+ double GetGearShiftingVoltage(); // voir avec JM                                 // ok
 
   void SetVoltageTarget(double voltageTarget,double state);
   void SwitchUp(double w);
@@ -73,14 +73,14 @@ public:
 
 
   // Côté gauche
-  DynamicData           m_GearboxLeftOutRawRpt;         // Vitesse instantanée de sortie de boite ( mesurée par le TroughBore Encoder )
+  Dynamic               m_GearboxLeftOutRawRpt;         // Vitesse instantanée de sortie de boite ( mesurée par le TroughBore Encoder )
   NdoubleRollingAverage m_GearboxLeftOutAveragedRpt;    // Vitesse moyenne de sortie de boite (Moyenne glissante)
   double                m_SuperMotorLeftRawRpm;         // Vitesse instantannée du supermoteur d'entrée de boite ( = Moyenne des vitesses en ticks / 100 ms mesurées par les 3 Encodeurs moteurs de la boite )
   NdoubleRollingAverage m_SuperMotorLeftAveragedRpm;    // Vitesse Moyenne du supermoteur d'entrée de boite (Moyenne glissante)
   double                m_GearboxLeftOutAdjustedRpm;    // Vitesse de la gearbox gauche en RPM ( combinaison linéaire de la vitesse moyenne de sortie de boite et de la vitesse moyenne du supermoteur en entrée de boite)
 
   // Côté droit
-  DynamicData           m_GearboxRightOutRawRpt;        // Vitesse instantanée de sortie de boite ( mesurée par le TroughBore Encoder )
+  Dynamic               m_GearboxRightOutRawRpt;        // Vitesse instantanée de sortie de boite ( mesurée par le TroughBore Encoder )
   NdoubleRollingAverage m_GearboxRightOutAveragedRpt;   // Vitesse moyenne de sortie de boite (Moyenne glissante)
   double                m_SuperMotorRightRawRpm;        // Vitesse instantannée du supermoteur d'entrée de boite ( = Moyenne des vitesses en ticks / 100 ms mesurées par les 3 Encodeurs moteurs de la boite )
   NdoubleRollingAverage m_SuperMotorRightAveragedRpm;   // Vitesse Moyenne du supermoteur d'entrée de boite (Moyenne glissante)
@@ -92,17 +92,22 @@ public:
   double                m_GearShiftingTimeLock;         // Temps de blocage du changement de vitesse
   double                m_CurrentGearboxRatio;          // Rapport (Reduction) de la vitesse engagée dans la  boite (V1 ou V2)
 
-
-  DynamicData           m_JoystickRaw_V;
-  DynamicData           m_JoystickRaw_W;
+  double                m_GearShiftingSpeed;            // vitesse de changement de vitesse
  
-  double m_Joystick_V_Acceleration; // accélération joystick V
 
+  Dynamic               m_JoystickRaw_V;
+  RateLimiter           m_JoystickPrelimited_V;         // joystick V rate limiter 1
+  RateLimiter           m_JoystickLimited_V;            // joystick V rate limiter 2
+
+  Dynamic               m_JoystickRaw_W;
+  RateLimiter           m_JoystickPrelimited_W;         // joystick W rate limiter 1
+  RateLimiter           m_JoystickLimited_W;            // joystick W rate limiter 2
+
+ 
   double m_Joystick_V_Limited; // joystick V limité
   double m_Joystick_W_Limited; // joystick W limité
 
 
-  double m_SwitchSpeed; // vitesse de changement de vitesse
  
 
 
@@ -116,12 +121,7 @@ public:
 
   State m_State;
 
-  RateLimiter m_rateLimiter_V_Fast; // rate limiter joystick V
-  RateLimiter m_rateLimiter_V_Slow; // rate limiter du rate limiter joystick V
-
-  RateLimiter m_rateLimiter_W_Fast; // rate limiter joystick W
-  RateLimiter m_rateLimiter_W_Slow; // rate limiter du rate limiter joystick W
-
+  
   //NLCSV m_logCSV{8}; // log csv
 
 
