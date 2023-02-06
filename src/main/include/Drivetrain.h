@@ -20,13 +20,14 @@
 #define REDUC_V2 8.8
 
 #define TRUST_GEARBOX_OUT_ENCODER 0.7
+#define TURNING_TOLERANCE 0.05
 
 #define UP_SHIFTING_POINT_JOYSTICK_V                  0.8                     // Valeur minimum du joystick V pour passer en vitesse 2
 #define UP_SHIFTING_POINT_JOYSTICK_V_VARIATION        0.0                     // Valeur minimum de la variation (=delta) du joystick V pour passer en vitesse 2
 #define UP_SHIFTING_POINT_GEARBOXES_OUT_RPM           (6380.0*0.8/REDUC_V1)   // Valeur minimum de la vitesse de sortie de boites pour passer en vitesse 2
 #define UP_SHIFTING_POINT_GEARBOXES_OUT_RPM2          0.0                     // Valeur minimum de l'accel.  de sortie de boites pour passer en vitesse 2
 
-#define KICKDOWN_SHIFTING_POINT_GEARBOXES_OUT_RPM     (6380.0*0.5/REDUC_V2)   // Valeur max "haute" de la vitesse de sortie de boites pour retrograder en vitesse 1
+#define KICKDOWN_SHIFTING_POINT_GEARBOXES_OUT_RPM     (6380.0*0.6/REDUC_V2)   // Valeur max "haute" de la vitesse de sortie de boites pour retrograder en vitesse 1
 #define KICKDOWN_SHIFTING_POINT_JOYSTICK_V            0.6                     // Valeur minimum du joystick V pour retrograder en vitesse 1 afin de re-accelerer fort
 #define KICKDOWN_SHIFTING_POINT_JOYSTICK_V_VARIATION  0.2                     // Valeur minimum de la variation (=delta) du joystick V pour retrograder en vitesse 1
 
@@ -73,39 +74,39 @@ public:
 
 
   // Côté gauche
-  Dynamic               m_GearboxLeftOutRawRpt;         // Vitesse instantanée de sortie de boite ( mesurée par le TroughBore Encoder )
-  NdoubleRollingAverage m_GearboxLeftOutAveragedRpt;    // Vitesse moyenne de sortie de boite (Moyenne glissante)
-  double                m_SuperMotorLeftRawRpm;         // Vitesse instantannée du supermoteur d'entrée de boite ( = Moyenne des vitesses en ticks / 100 ms mesurées par les 3 Encodeurs moteurs de la boite )
-  NdoubleRollingAverage m_SuperMotorLeftAveragedRpm;    // Vitesse Moyenne du supermoteur d'entrée de boite (Moyenne glissante)
-  double                m_GearboxLeftOutAdjustedRpm;    // Vitesse de la gearbox gauche en RPM ( combinaison linéaire de la vitesse moyenne de sortie de boite et de la vitesse moyenne du supermoteur en entrée de boite)
+  Dynamic               m_GearboxLeftOutRawRpt;                // Vitesse instantanée de sortie de boite ( mesurée par le TroughBore Encoder )
+  NdoubleRollingAverage m_GearboxLeftOutAveragedRpt;           // Vitesse moyenne de sortie de boite (Moyenne glissante)
+  double                m_SuperMotorLeftRawRpm;                // Vitesse instantannée du supermoteur d'entrée de boite ( = Moyenne des vitesses en ticks / 100 ms mesurées par les 3 Encodeurs moteurs de la boite )
+  NdoubleRollingAverage m_SuperMotorLeftAveragedRpm;           // Vitesse Moyenne du supermoteur d'entrée de boite (Moyenne glissante)
+  double                m_GearboxLeftOutAdjustedRpm;           // Vitesse de la gearbox gauche en RPM ( combinaison linéaire de la vitesse moyenne de sortie de boite et de la vitesse moyenne du supermoteur en entrée de boite)
 
   // Côté droit
-  Dynamic               m_GearboxRightOutRawRpt;        // Vitesse instantanée de sortie de boite ( mesurée par le TroughBore Encoder )
-  NdoubleRollingAverage m_GearboxRightOutAveragedRpt;   // Vitesse moyenne de sortie de boite (Moyenne glissante)
-  double                m_SuperMotorRightRawRpm;        // Vitesse instantannée du supermoteur d'entrée de boite ( = Moyenne des vitesses en ticks / 100 ms mesurées par les 3 Encodeurs moteurs de la boite )
-  NdoubleRollingAverage m_SuperMotorRightAveragedRpm;   // Vitesse Moyenne du supermoteur d'entrée de boite (Moyenne glissante)
-  double                m_GearboxRightOutAdjustedRpm;   // Vitesse de la gearbox droite en RPM ( combinaison linéaire de la vitesse moyenne de sortie de boite et de la vitesse moyenne du supermoteur en entrée de boite)
+  Dynamic               m_GearboxRightOutRawRpt;               // Vitesse instantanée de sortie de boite ( mesurée par le TroughBore Encoder )
+  NdoubleRollingAverage m_GearboxRightOutAveragedRpt;          // Vitesse moyenne de sortie de boite (Moyenne glissante)
+  double                m_SuperMotorRightRawRpm;               // Vitesse instantannée du supermoteur d'entrée de boite ( = Moyenne des vitesses en ticks / 100 ms mesurées par les 3 Encodeurs moteurs de la boite )
+  NdoubleRollingAverage m_SuperMotorRightAveragedRpm;          // Vitesse Moyenne du supermoteur d'entrée de boite (Moyenne glissante)
+  double                m_GearboxRightOutAdjustedRpm;          // Vitesse de la gearbox droite en RPM ( combinaison linéaire de la vitesse moyenne de sortie de boite et de la vitesse moyenne du supermoteur en entrée de boite)
   
-  double                m_GearboxesOutAdjustedRpm;      // Vitesse (translation) du robot exprimée en RPM
-  NdoubleRollingAverage m_GearboxesOutAccelerationRpm2; // Acceleration (translation) du robot exprimée RPM²
+  Dynamic               m_GearboxesOutAdjustedRpm;             // Vitesse (translation) du robot exprimée en RPM
+  NdoubleRollingAverage m_GearboxesOutAveragedAccelerationRpm2;// Acceleration moyennée (translation) du robot exprimée RPM²
  
-  double                m_GearShiftingTimeLock;         // Temps de blocage du changement de vitesse
-  double                m_CurrentGearboxRatio;          // Rapport (Reduction) de la vitesse engagée dans la  boite (V1 ou V2)
+  double                m_GearShiftingTimeLock;                // Temps de blocage du changement de vitesse
+  double                m_CurrentGearboxRatio;                 // Rapport (Reduction) de la vitesse engagée dans la  boite (V1 ou V2)
 
-  double                m_GearShiftingSpeed;            // vitesse de changement de vitesse
+  double                m_GearShiftingSpeed;                   // vitesse de changement de vitesse
  
 
   Dynamic               m_JoystickRaw_V;
-  RateLimiter           m_JoystickPrelimited_V;         // joystick V rate limiter 1
-  RateLimiter           m_JoystickLimited_V;            // joystick V rate limiter 2
+  RateLimiter           m_JoystickPrelimited_V;                // joystick V rate limiter 1
+  RateLimiter           m_JoystickLimited_V;                   // joystick V rate limiter 2
 
   Dynamic               m_JoystickRaw_W;
-  RateLimiter           m_JoystickPrelimited_W;         // joystick W rate limiter 1
-  RateLimiter           m_JoystickLimited_W;            // joystick W rate limiter 2
+  RateLimiter           m_JoystickPrelimited_W;                // joystick W rate limiter 1
+  RateLimiter           m_JoystickLimited_W;                   // joystick W rate limiter 2
 
  
-  double m_Joystick_V_Limited; // joystick V limité
-  double m_Joystick_W_Limited; // joystick W limité
+  double m_Joystick_V_Limited;                                 // joystick V limité
+  double m_Joystick_W_Limited;                                 // joystick W limité
 
 
  
