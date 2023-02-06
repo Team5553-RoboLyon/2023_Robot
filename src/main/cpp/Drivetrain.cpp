@@ -223,21 +223,12 @@ bool Drivetrain::isKickdownShiftingAllowed() // mode kickdown, détermine si on 
         return false;
 }
 
-bool Drivetrain::CoastDown(double speedRobot) // mode coastdown, détermine si on peut passer en V1
+bool Drivetrain::isCoastdownShiftingAllowed() // mode coastdown, détermine si on peut passer en V1
 {
-    if (speedRobot < 10)
-    {
+    if (m_GearboxesOutAdjustedRpm < COASTDOWN_SHIFTING_POINT_GEARBOXES_OUT_RPM)
         return true;
-    }
     else
-    {
         return false;
-    }
-}
-
-void Drivetrain::SetSwitchTimeLock(double switchTimeLock) // défini le temps de lock
-{
-    m_SwitchTimeLock = switchTimeLock;
 }
 
 
