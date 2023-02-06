@@ -48,37 +48,33 @@ public:
   void EnableBrakeMode(bool Change);                                            // ok
   void Drive(double joystickLeft, double joystickRight);                        // ok
   double Calcul_De_Notre_Brave_JM(double forward, double turn, bool wheelSide); // Si wheelSide 0: roue droite / Si wheelSide 1: roue gauche
-  bool General(double switchTimeLock,double GearboxRightRpm, double GearboxLeftRpm);
-  bool Up(double speedRobot, double accelerationRobot, double joystick, double deltaJoystick);
-  bool KickDown(double speedRobot, double accelerationRobot, double joystick);
-  bool CoastDown(double speedRobot);
+  
+  bool isUpshiftingAllowed(double speedRobot, double accelerationRobot, double joystick, double deltaJoystick);
+  bool isKickdownShiftingAllowed(double speedRobot, double accelerationRobot, double joystick);
+  bool isCoastdownShifting(double speedRobot);
+  
   void SetSwitchTimeLock(double switchTimeLock);
   void SetVoltageTarget(double voltageTarget,double state);
   void SwitchUp(double w);
   void SwitchDown(double w);
 
 
+  // Côté gauche
+  MoveData              m_GearboxLeftOutRawRpt;         // Vitesse instantanée de sortie de boite ( mesurée par le TroughBore Encoder )
+  NdoubleRollingAverage m_GearboxLeftOutAveragedRpt;    // Vitesse moyenne de sortie de boite (Moyenne glissante)
+  double                m_SuperMotorLeftRawRpm;         // Vitesse instantannée du supermoteur d'entrée de boite ( = Moyenne des vitesses en ticks / 100 ms mesurées par les 3 Encodeurs moteurs de la boite )
+  NdoubleRollingAverage m_SuperMotorLeftAveragedRpm;    // Vitesse Moyenne du supermoteur d'entrée de boite (Moyenne glissante)
+  double                m_GearboxLeftOutAdjustedRpm;    // Vitesse de la gearbox gauche en RPM ( combinaison linéaire de la vitesse moyenne de sortie de boite et de la vitesse moyenne du supermoteur en entrée de boite)
 
-  MoveData m_GearboxRightOutRawRpt; // encodeur droit en en tours/tick (RPT)
-  MoveData m_GearboxLeftOutRawRpt; // encodeur gauche
-
-  MoveData m_SuperMotorRightRawRpm; // moteur droit
-  MoveData m_SuperMotorLeftRawRpm; // moteur gauche
-
-  NdoubleRollingAverage m_GearboxRightAveragedRpt; 
-  NdoubleRollingAverage m_GearboxLeftAveragedRpt;
-
-  NdoubleRollingAverage m_SuperMotorLeftAveragedRpm;
-  NdoubleRollingAverage m_SuperMotorRightAveragedRpm;
-
-  double m_GearboxRightOutAdjustedRpm; // vitesses droit mixé entre encodeur moteur et axe
-  double m_GearboxLeftOutAdjustedRpm; // vitesses gauche mixé entre encodeur moteur et axe
-
-  double m_RobotAccelerationRight; // accélération robot droit mixé entre encodeur moteur et axe
-  double m_RobotAccelerationLeft; // accélération robot gauche mixé entre encodeur moteur et axe
-
-  double m_Gearboxes_Acceleration; // accélération robot moyenne entre les deux cotés
-
+  // Côté droit
+  MoveData              m_GearboxRightOutRawRpt;        // Vitesse instantanée de sortie de boite ( mesurée par le TroughBore Encoder )
+  NdoubleRollingAverage m_GearboxRightAveragedRpt;      // Vitesse moyenne de sortie de boite (Moyenne glissante)
+  double                m_SuperMotorRightRawRpm;        // Vitesse instantannée du supermoteur d'entrée de boite ( = Moyenne des vitesses en ticks / 100 ms mesurées par les 3 Encodeurs moteurs de la boite )
+  NdoubleRollingAverage m_SuperMotorRightAveragedRpm;   // Vitesse Moyenne du supermoteur d'entrée de boite (Moyenne glissante)
+  double                m_GearboxRightOutAdjustedRpm;   // Vitesse de la gearbox droite en RPM ( combinaison linéaire de la vitesse moyenne de sortie de boite et de la vitesse moyenne du supermoteur en entrée de boite)
+  
+  NdoubleRollingAverage m_GearboxesOutAccelerationRpm2; // Acceleration des gearbox RPM²
+ 
   double m_SwitchTimeLock; // temps de blocage du changement de vitesse
   double m_Robot_W; // vitesse angulaire du robot
 
@@ -130,4 +126,6 @@ private:
   frc::Encoder m_EncoderLeft{2, 3,false};
 
   frc::DoubleSolenoid m_BallShifterSolenoidLeft{frc::PneumaticsModuleType::REVPH, 0, 1};
+
+  bool isGearSwitchAvailable();
 };
