@@ -32,21 +32,21 @@
 #define KICKDOWN_SHIFTING_POINT_JOYSTICK_V            0.6                     // Valeur minimum du joystick V pour retrograder en vitesse 1 afin de re-accelerer fort
 #define KICKDOWN_SHIFTING_POINT_JOYSTICK_V_VARIATION  0.2                     // Valeur minimum de la variation (=delta) du joystick V pour retrograder en vitesse 1
 
-#define COASTDOWN_SHIFTING_POINT_GEARBOXES_OUT_RPM    (6380.0*0.2/REDUC_V2)  // Valeur max "basse" de la vitesse de sortie de boites pour retrograder en vitesse 1
+#define COASTDOWN_SHIFTING_POINT_GEARBOXES_OUT_RPM    (6380.0*0.4/REDUC_V2)   // Valeur max "basse" de la vitesse de sortie de boites pour retrograder en vitesse 1
 
 
 #define GEARSHIFTING_TIMELOCK 0.5
 
-#define RESIST_TORQUE_NM 0.013   // hop plus de frottements
-#define MAXSWITCHTIMELOCK 0.5                              // temps max pour le switch de vitesse
+#define RESIST_TORQUE_NM 1.1553   // Valeur obtenue par test
+#define MAXSWITCHTIMELOCK 0.5     // temps max pour le switch de vitesse
 
-#define AXLETRACK 0.5098 // distance entre les roues
+#define AXLETRACK 0.5098          // distance entre les roues
 #define HALF_TRACKWIDTH (AXLETRACK / 2.0)
 
 
-#define TICK_DT 0.02 // durée d'un tick en seconde
-#define SIGMA 0.5          // sigma pour le rate limiter
-#define AVERAGE_SAMPLES_NUMBER 5 // nombre de samples pour la moyenne
+#define TICK_DT 0.02              // durée d'un tick en seconde
+#define SIGMA 0.5                 // sigma pour le rate limiter
+#define AVERAGE_SAMPLES_NUMBER 5  // nombre de samples pour la moyenne
 
 
 
@@ -138,8 +138,8 @@ private:
   ctre::phoenix::motorcontrol::can::TalonFX m_MotorLeft2{5};
   ctre::phoenix::motorcontrol::can::TalonFX m_MotorLeft3{6};
 
-  frc::Encoder m_EncoderRight{0, 1,true};
-  frc::Encoder m_EncoderLeft{2, 3,false};
+  frc::Encoder m_EncoderRight{0, 1,false};
+  frc::Encoder m_EncoderLeft{2, 3,true};
 
   frc::DoubleSolenoid m_BallShifterSolenoidLeft{frc::PneumaticsModuleType::REVPH, 0, 1};
   //frc::PowerDistribution::ModuleType m_PDP{0};
