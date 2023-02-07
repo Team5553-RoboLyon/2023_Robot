@@ -15,30 +15,20 @@ void Robot::RobotPeriodic()
 void Robot::AutonomousInit() {}
 void Robot::AutonomousPeriodic() {}
 
-void Robot::TeleopInit()
-{
-    m_Drivetrain.m_logCSV.open("/home/lvuser/",true);
-
-}
-
+void Robot::TeleopInit(){}
 void Robot::TeleopPeriodic()
 {
   
   if (m_JoystickLeft.GetRawButtonPressed(1))
   {
-    m_Drivetrain.InvertBallShifter();
+    m_Drivetrain.SetBallShifterV1();
   }
   
   m_Drivetrain.Drive(-m_JoystickRight.GetY(), m_JoystickLeft.GetZ());
-  m_Drivetrain.m_logCSV.write();
   std::cout<<"periodic"<<std::endl;
-
-
 }
 
-void Robot::DisabledInit() {
-  m_Drivetrain.m_logCSV.close();
-}
+void Robot::DisabledInit() {}
 void Robot::DisabledPeriodic() {}
 
 void Robot::TestInit() {}

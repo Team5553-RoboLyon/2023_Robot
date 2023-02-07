@@ -13,45 +13,15 @@ class Drivetrain : public frc2::SubsystemBase
 {
 public:
   Drivetrain();
-  void Set(double speed);                                                                                       // faire autre chose y a moyen
-  double GetSwitchGearVoltageRight(double w, double voltageReference, double reduction, double finalReduction); // voir avec JM
-  double GetSwitchGearVoltageLeft(double w, double voltageReference, double reduction, double finalReduction);  // voir avec JM                                                                // ok
-  void InvertBallShifter();
-  void ActiveBallShifterV1();                                                   // ok
-  void ActiveBallShifterV2();               
-  void EnableBrakeMode(bool Change);                                            // ok
+  void Set(double speed);                                                                                       // faire autre chose y a moyen                                                          // ok                                                       // ok
   void Drive(double joystickLeft, double joystickRight);                        // ok
   double Calcul_De_Notre_Brave_JM(double forward, double turn, bool wheelSide); // Si wheelSide 0: roue droite / Si wheelSide 1: roue gauche
+  void SetBallShifterV1();
 
-  double w;
-  double T;
-  double Ts = 4.69;
-  double wfRef = 6380;
-  double m_count = 0;
-  double m_coun = 0;
-  double encoder_RightLast=0.0;
-  double encoder_LeftLast=0.0;
-  double m_difRight=0.0;
-  double m_difLeft=0.0;
-  double m_encoderRightMotor=0.0;
-  double m_encoderLeftMotor=0.0;
-  double m_getSwitchGearVoltageRight=0.0;
-  double m_getSwitchGearVoltageLeft=0.0;
-  double m_vitesse=0.0;
-  double m_speed=0.0;
-
-  enum State
-  {
-    Pilote_V1,
-    Auto_V1toV2,
-    Auto_V1toV2_Inter,
-    Pilote_V2,
-    Auto_V2toV1,
-    Auto_V2toV1_Inter
-  };
-  Drivetrain::State m_state = Drivetrain::State::Pilote_V1;
-  NLCSV m_logCSV{8};
-
+  double m_EncoderRightLast;
+  double m_EncoderLeftLast;
+  double m_EncoderRightCurrent;
+  double m_EncoderLeftCurrent;
 
 private:
   ctre::phoenix::motorcontrol::can::TalonFX m_MotorGearboxRight1{1};
@@ -65,5 +35,7 @@ private:
   frc::Encoder m_EncoderRight{0, 1,true};
   frc::Encoder m_EncoderLeft{2, 3,false};
 
-  frc::DoubleSolenoid m_BallShifterSolenoidLeft{frc::PneumaticsModuleType::REVPH, 0, 1};
+  frc::Compressor m_Compressor{1, frc::PneumaticsModuleType::REVPH};
+  frc::DoubleSolenoid m_BallShifter{frc::PneumaticsModuleType::REVPH, 0, 1};
+
 };
