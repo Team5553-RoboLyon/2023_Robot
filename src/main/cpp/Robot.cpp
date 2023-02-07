@@ -15,8 +15,8 @@ double Robot::signe(double x) {
 }
 
 void Robot::RobotInit() {
-  // frc::ADXRS450_Gyro(frc::SPI::Port::kOnboardCS0);
-  m_gyro.Reset();
+  //frc::ADXRS450_Gyro(frc::SPI::Port::kOnboardCS0);
+  m_gyro.Reset(); 
   m_gyro.Calibrate();
 }
 void Robot::RobotPeriodic() {}
