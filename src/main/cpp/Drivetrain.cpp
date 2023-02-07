@@ -90,6 +90,8 @@ Drivetrain::Drivetrain()
 
     m_EncoderLeft.Reset();
     m_EncoderRight.Reset();
+
+    frc::SmartDashboard::PutNumber("Voltage_moteurs", 0.0 );
     
 
 
@@ -139,14 +141,14 @@ void Drivetrain::Drive(double joystickRight, double joystickLeft, double buttonp
 
     double rpmrobot = (rpmright + rpmleft) / 2;
 
-    double voltage = frc::SmartDashboard::GetNumber("voltage moteurs", 0.0 );
+    
     frc::SmartDashboard::PutNumber("RPM Right", rpmright);
     frc::SmartDashboard::PutNumber("RPM Left", rpmleft);
     frc::SmartDashboard::PutNumber("RPM Robot", rpmrobot);
-    frc::SmartDashboard::PutNumber("voltage moteurs", voltage);
+    m_Voltage = frc::SmartDashboard::GetNumber("Voltage_moteurs", 0.0 )/12.0;
     if (buttonpressed)
     {
-        Drivetrain::Set(voltage/12.0);
+        Drivetrain::Set(m_Voltage);
     }
     else 
     {

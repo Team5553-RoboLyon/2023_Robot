@@ -22,6 +22,7 @@ public:
   double m_EncoderLeftLast;
   double m_EncoderRightCurrent;
   double m_EncoderLeftCurrent;
+  double m_Voltage;
 
 private:
   ctre::phoenix::motorcontrol::can::TalonFX m_MotorGearboxRight1{1};
