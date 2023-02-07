@@ -79,10 +79,10 @@ Drivetrain::Drivetrain() :  m_GearboxLeftOutAveragedRpt(AVERAGE_SAMPLES_NUMBER),
     m_EncoderRight.Reset(); 
 
     m_JoystickPrelimited_V.Reset(0.0,0.0,2.0); // reset des rate limiters
-    m_JoystickLimited_V.Reset(0.0,0.0,0.03);
+    m_JoystickLimited_V.Reset(0.0,0.0,0.05);
 
     m_JoystickPrelimited_W.Reset(0.0,0.0,2.0);
-    m_JoystickLimited_W.Reset(0.0,0.0,0.03);
+    m_JoystickLimited_W.Reset(0.0,0.0,0.05);
 
     // m_logCSV.setItem(0,"joystick_V",5,&m_Joystick_V_Pure);
     // m_logCSV.setItem(1,"joystick_W",5,&m_Joystick_W_Pure);
@@ -129,6 +129,11 @@ void Drivetrain::InvertBallShifter() // inverse ball shifter
     {
         ActiveBallShifterV2();
     }
+}
+
+int Drivetrain::GetSpeedSign() // retourne le signe de la vitesse du robot
+{
+    return m_GearboxesOutAdjustedRpm.m_current > 0.0 ? 1 : -1;
 }
 
 double Drivetrain::GetGearShiftingVoltage() // calcule la tension de référence en fonction de la vitesse du robot
@@ -204,35 +209,81 @@ bool Drivetrain::isUpshiftingAllowed() // mode up, détermine si on peut passer 
 {
     // Le Gear shifting précédent est-il suffisamment "ancien" ?  (m_GearShiftingTimeLock doit être  null )
     // Le robot est-il en train de rouler tout droit, sans tourner ?  (m_GearboxLeftOutAdjustedRpm/m_GearboxRightOutAdjustedRpm doit être proche de 1 )
-    if ((m_GearShiftingTimeLock == 0.0) and (m_GearboxRightOutAdjustedRpm) and (m_GearboxLeftOutAdjustedRpm/m_GearboxRightOutAdjustedRpm < (1 + TURNING_TOLERANCE)) and ((1 - TURNING_TOLERANCE) < m_GearboxLeftOutAdjustedRpm/m_GearboxRightOutAdjustedRpm))
+    // La vérification se fait pour un robot allant en marche avant (m_GearboxesOutAdjustedRpm.m_current > 0.0)
+    if (m_GearboxesOutAdjustedRpm.m_current > 0.0)
     {
-        if (  m_GearboxesOutAdjustedRpm.m_current           > UP_SHIFTING_POINT_GEARBOXES_OUT_RPM  and 
-              m_GearboxesOutAveragedAccelerationRpm2.get()  > UP_SHIFTING_POINT_GEARBOXES_OUT_RPM2 and 
-              m_JoystickRaw_V.m_current                     > UP_SHIFTING_POINT_JOYSTICK_V and 
-              m_JoystickRaw_V.m_delta                       >=UP_SHIFTING_POINT_JOYSTICK_V_VARIATION )
-            return true;
+        if ((m_GearShiftingTimeLock == 0.0) and (m_GearboxRightOutAdjustedRpm) and (m_GearboxLeftOutAdjustedRpm/m_GearboxRightOutAdjustedRpm < (1 + TURNING_TOLERANCE)) and ((1 - TURNING_TOLERANCE) < m_GearboxLeftOutAdjustedRpm/m_GearboxRightOutAdjustedRpm))
+        {
+            if (    m_GearboxesOutAdjustedRpm.m_current           > UP_SHIFTING_POINT_GEARBOXES_OUT_RPM  and 
+                    m_GearboxesOutAveragedAccelerationRpm2.get()  > UP_SHIFTING_POINT_GEARBOXES_OUT_RPM2 and 
+                    m_JoystickRaw_V.m_current                     > UP_SHIFTING_POINT_JOYSTICK_V and 
+                    m_JoystickRaw_V.m_delta                       >=UP_SHIFTING_POINT_JOYSTICK_V_VARIATION )
+                    return true;
+            else
+                    return false;
+        }
     }
-    return false;
+
+    // La vérification se fait pour un robot allant en marche arrière (m_GearboxesOutAdjustedRpm.m_current < 0.0) 
+    else 
+    {
+        if ((m_GearShiftingTimeLock == 0.0) and (m_GearboxRightOutAdjustedRpm) and (m_GearboxLeftOutAdjustedRpm/m_GearboxRightOutAdjustedRpm < (1 + TURNING_TOLERANCE)) and ((1 - TURNING_TOLERANCE) < m_GearboxLeftOutAdjustedRpm/m_GearboxRightOutAdjustedRpm))
+        {
+            if (    -m_GearboxesOutAdjustedRpm.m_current           > UP_SHIFTING_POINT_GEARBOXES_OUT_RPM  and 
+                    -m_GearboxesOutAveragedAccelerationRpm2.get()  > UP_SHIFTING_POINT_GEARBOXES_OUT_RPM2 and 
+                    -m_JoystickRaw_V.m_current                     > UP_SHIFTING_POINT_JOYSTICK_V and 
+                    -m_JoystickRaw_V.m_delta                       >=UP_SHIFTING_POINT_JOYSTICK_V_VARIATION )
+                    return true;
+            else
+                    return false;
+        }
+    }
 }
 
 bool Drivetrain::isKickdownShiftingAllowed() // mode kickdown, détermine si on peut passer en V1
 {
     //double speedRobot, double accelerationRobot, double joystick
-    if (    m_GearboxesOutAdjustedRpm.m_current             < KICKDOWN_SHIFTING_POINT_GEARBOXES_OUT_RPM  and
-            m_GearboxesOutAveragedAccelerationRpm2.get()    < 0.0 and
-            m_JoystickRaw_V.m_current                       > KICKDOWN_SHIFTING_POINT_JOYSTICK_V and 
-            m_JoystickRaw_V.m_delta                         >=KICKDOWN_SHIFTING_POINT_JOYSTICK_V_VARIATION )
-        return true;
-    else
-        return false;
+    return false;
+    if (m_GearboxesOutAdjustedRpm.m_current > 0.0) 
+    {   
+        if (    m_GearboxesOutAdjustedRpm.m_current            < KICKDOWN_SHIFTING_POINT_GEARBOXES_OUT_RPM  and
+                m_GearboxesOutAveragedAccelerationRpm2.get()   < 0.0 and
+                m_JoystickRaw_V.m_current                      > KICKDOWN_SHIFTING_POINT_JOYSTICK_V and 
+                m_JoystickRaw_V.m_delta                        >=KICKDOWN_SHIFTING_POINT_JOYSTICK_V_VARIATION )
+            return true;
+        else
+            return false;
+    }
+    else 
+    {
+        if (    -m_GearboxesOutAdjustedRpm.m_current            < KICKDOWN_SHIFTING_POINT_GEARBOXES_OUT_RPM  and
+                -m_GearboxesOutAveragedAccelerationRpm2.get()   < 0.0 and
+                -m_JoystickRaw_V.m_current                      > KICKDOWN_SHIFTING_POINT_JOYSTICK_V and 
+                -m_JoystickRaw_V.m_delta                        >=KICKDOWN_SHIFTING_POINT_JOYSTICK_V_VARIATION )
+            return true;
+        else
+            return false;
+
+    }
+
 }
 
 bool Drivetrain::isCoastdownShiftingAllowed() // mode coastdown, détermine si on peut passer en V1
 {
-    if (m_GearboxesOutAdjustedRpm.m_current < COASTDOWN_SHIFTING_POINT_GEARBOXES_OUT_RPM)
-        return true;
+    if (m_GearboxesOutAdjustedRpm.m_current > 0.0)
+    {   
+        if (m_GearboxesOutAdjustedRpm.m_current < COASTDOWN_SHIFTING_POINT_GEARBOXES_OUT_RPM)
+            return true;
+        else
+            return false;
+    }
     else
-        return false;
+    {   
+        if (-m_GearboxesOutAdjustedRpm.m_current < COASTDOWN_SHIFTING_POINT_GEARBOXES_OUT_RPM)
+            return true;
+        else
+            return false;
+    }
 }
 
 
@@ -256,9 +307,7 @@ void Drivetrain::ShiftGearDown() // passage de la vitesse en V1
 
 
 void Drivetrain::Drive(double joystick_V, double joystick_W) // 
-{
-    double signe=dif_Right>0 ? 1 : -1;
-   
+{   
     // calcul de la vitesse moyenne des deux encodeurs de sortie de boite. (GetDistance renvoie un nombre de tours car setup fait dans le constructeur)(.SetDistancePerPulse(1.0/2048.0)
     // les valeurs sont en tours/tick
     m_GearboxRightOutRawRpt.set(m_EncoderRight.GetDistance() ); 
@@ -309,7 +358,6 @@ void Drivetrain::Drive(double joystick_V, double joystick_W) //
             // m_MotorRight1.Set(ctre::phoenix::motorcontrol::ControlMode::PercentOutput, Calcul_De_Notre_Brave_JM(m_rateLimiter_V_Slow.m_current, m_rateLimiter_W_Slow.m_current, 1));
             if (isUpshiftingAllowed())
             {
-                break;
                 ShiftGearUp();
                 m_GearShiftingTimeLock    = GEARSHIFTING_TIMELOCK;
                 m_CurrentGearboxRatio     = REDUC_V2;
@@ -365,6 +413,7 @@ void Drivetrain::Drive(double joystick_V, double joystick_W) //
     frc::SmartDashboard::PutNumber("COASTDOWN_SHIFTING_POINT_GEARBOXES_OUT_RPM", COASTDOWN_SHIFTING_POINT_GEARBOXES_OUT_RPM);
     frc::SmartDashboard::PutNumber("m_GearboxesOutAveragedAccelerationRpm2", m_GearboxesOutAveragedAccelerationRpm2.get());
     frc::SmartDashboard::PutNumber("m_GearboxesOutAdjustedRpm.m_delta", m_GearboxesOutAdjustedRpm.m_delta);
+   // frc::SmartDashBoard::PutNumber("Total_current", m_PDP.GetTotalCurrent());
 
 
     

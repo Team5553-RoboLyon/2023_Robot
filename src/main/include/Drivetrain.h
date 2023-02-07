@@ -4,6 +4,7 @@
 #include <frc/Encoder.h>
 #include <frc/Doublesolenoid.h>
 #include <ctre/Phoenix/motorcontrol/can/TalonFX.h>
+#include <frc/PowerDistribution.h>
 #include <lib/NRollingAverage.h>
 #include <lib/rate_limiter.h>
 #include <lib/NLCsv.h>
@@ -24,14 +25,14 @@
 
 #define UP_SHIFTING_POINT_JOYSTICK_V                  0.8                     // Valeur minimum du joystick V pour passer en vitesse 2
 #define UP_SHIFTING_POINT_JOYSTICK_V_VARIATION        0.0                     // Valeur minimum de la variation (=delta) du joystick V pour passer en vitesse 2
-#define UP_SHIFTING_POINT_GEARBOXES_OUT_RPM           (6380.0*0.8/REDUC_V1)   // Valeur minimum de la vitesse de sortie de boites pour passer en vitesse 2
+#define UP_SHIFTING_POINT_GEARBOXES_OUT_RPM           (6380.0*0.65/REDUC_V1)   // Valeur minimum de la vitesse de sortie de boites pour passer en vitesse 2
 #define UP_SHIFTING_POINT_GEARBOXES_OUT_RPM2          0.0                     // Valeur minimum de l'accel.  de sortie de boites pour passer en vitesse 2
 
-#define KICKDOWN_SHIFTING_POINT_GEARBOXES_OUT_RPM     (6380.0*0.6/REDUC_V2)   // Valeur max "haute" de la vitesse de sortie de boites pour retrograder en vitesse 1
+#define KICKDOWN_SHIFTING_POINT_GEARBOXES_OUT_RPM     (6380.0*0.5/REDUC_V2)   // Valeur max "haute" de la vitesse de sortie de boites pour retrograder en vitesse 1
 #define KICKDOWN_SHIFTING_POINT_JOYSTICK_V            0.6                     // Valeur minimum du joystick V pour retrograder en vitesse 1 afin de re-accelerer fort
 #define KICKDOWN_SHIFTING_POINT_JOYSTICK_V_VARIATION  0.2                     // Valeur minimum de la variation (=delta) du joystick V pour retrograder en vitesse 1
 
-#define COASTDOWN_SHIFTING_POINT_GEARBOXES_OUT_RPM    (6380.0*0.4/REDUC_V2)  // Valeur max "basse" de la vitesse de sortie de boites pour retrograder en vitesse 1
+#define COASTDOWN_SHIFTING_POINT_GEARBOXES_OUT_RPM    (6380.0*0.2/REDUC_V2)  // Valeur max "basse" de la vitesse de sortie de boites pour retrograder en vitesse 1
 
 
 #define GEARSHIFTING_TIMELOCK 0.5
@@ -59,7 +60,8 @@ public:
   void ActiveBallShifterV1();                                                   // ok
   void ActiveBallShifterV2();               
   void EnableBrakeMode(bool Change);                                            // ok
-  void Drive(double joystickLeft, double joystickRight);                        // ok
+  void Drive(double joystickLeft, double joystickRight); 
+  int  GetSpeedSign();                   // ok
 
   double Calcul_De_Notre_Brave_JM(double forward, double turn, bool wheelSide); // Si wheelSide 0: roue droite / Si wheelSide 1: roue gauche
   
@@ -140,4 +142,5 @@ private:
   frc::Encoder m_EncoderLeft{2, 3,false};
 
   frc::DoubleSolenoid m_BallShifterSolenoidLeft{frc::PneumaticsModuleType::REVPH, 0, 1};
+  //frc::PowerDistribution::ModuleType m_PDP{0};
 };
