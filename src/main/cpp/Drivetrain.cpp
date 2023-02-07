@@ -289,18 +289,22 @@ bool Drivetrain::isCoastdownShiftingAllowed() // mode coastdown, détermine si o
 
 void Drivetrain::ShiftGearUp() // passage de la vitesse en V2
 {
+    frc::SmartDashboard::PutNumber("JoystickUp", m_JoystickLimited_V.m_current);
     double u = GetGearShiftingVoltage();
-    m_JoystickPrelimited_V.m_current = u - ((m_JoystickLimited_V.m_current - u)/m_JoystickLimited_V.m_speed )*m_JoystickPrelimited_V.m_speed;
-    m_JoystickLimited_V.Update(m_JoystickPrelimited_V.m_current);
-    ActiveBallShifterV2();
+    frc::SmartDashboard::PutNumber("GearUp", u);
+    //m_JoystickPrelimited_V.m_current = u - ((m_JoystickLimited_V.m_current - u)/m_JoystickLimited_V.m_speed )*m_JoystickPrelimited_V.m_speed;
+    //m_JoystickLimited_V.Update(m_JoystickPrelimited_V.m_current);
+    //ActiveBallShifterV2();
 }
 
 void Drivetrain::ShiftGearDown() // passage de la vitesse en V1
 {
-   double u = GetGearShiftingVoltage();
-    m_JoystickPrelimited_V.m_current = u - ((m_JoystickLimited_V.m_current - u)/m_JoystickLimited_V.m_speed )*m_JoystickPrelimited_V.m_speed;
-    m_JoystickLimited_V.Update(m_JoystickPrelimited_V.m_current);
-    ActiveBallShifterV1();
+       frc::SmartDashboard::PutNumber("JoystickDown", m_JoystickLimited_V.m_current);
+       double u = GetGearShiftingVoltage();
+       frc::SmartDashboard::PutNumber("GearDown", u );
+//     m_JoystickPrelimited_V.m_current = u - ((m_JoystickLimited_V.m_current - u)/m_JoystickLimited_V.m_speed )*m_JoystickPrelimited_V.m_speed;
+//     m_JoystickLimited_V.Update(m_JoystickPrelimited_V.m_current);
+//     ActiveBallShifterV1();
 }
 
 
@@ -358,9 +362,9 @@ void Drivetrain::Drive(double joystick_V, double joystick_W) //
             // m_MotorRight1.Set(ctre::phoenix::motorcontrol::ControlMode::PercentOutput, Calcul_De_Notre_Brave_JM(m_rateLimiter_V_Slow.m_current, m_rateLimiter_W_Slow.m_current, 1));
             if (isUpshiftingAllowed())
             {
+                m_CurrentGearboxRatio     = REDUC_V2;
                 ShiftGearUp();
                 m_GearShiftingTimeLock    = GEARSHIFTING_TIMELOCK;
-                m_CurrentGearboxRatio     = REDUC_V2;
                 m_State                   = State::highGear;
             }
         }
@@ -372,9 +376,9 @@ void Drivetrain::Drive(double joystick_V, double joystick_W) //
             // m_MotorRight1.Set(ctre::phoenix::motorcontrol::ControlMode::PercentOutput, Calcul_De_Notre_Brave_JM(m_rateLimiter_V_Slow.m_current, m_rateLimiter_W_Slow.m_current, 1));
             if (isCoastdownShiftingAllowed() or isKickdownShiftingAllowed())
             {
+                m_CurrentGearboxRatio   = REDUC_V1;
                 ShiftGearDown();
                 m_GearShiftingTimeLock  = GEARSHIFTING_TIMELOCK;
-                m_CurrentGearboxRatio   = REDUC_V1;
                 m_State                 = State::lowGear;
             }
         }
