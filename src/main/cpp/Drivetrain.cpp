@@ -62,6 +62,13 @@ Drivetrain::Drivetrain()
     m_MotorGearboxRight2.ConfigOpenloopRamp(0.5);
     m_MotorGearboxRight3.ConfigOpenloopRamp(0.5);
 
+    m_MotorGearboxLeft1.EnableVoltageCompensation(true);
+    m_MotorGearboxLeft2.EnableVoltageCompensation(true);
+    m_MotorGearboxLeft3.EnableVoltageCompensation(true);
+
+    m_MotorGearboxRight1.EnableVoltageCompensation(true);
+    m_MotorGearboxRight2.EnableVoltageCompensation(true);
+    m_MotorGearboxRight3.EnableVoltageCompensation(true);
 
     m_MotorGearboxRight1.ConfigVoltageCompSaturation(12.0);
     m_MotorGearboxRight2.ConfigVoltageCompSaturation(12.0);
@@ -120,7 +127,7 @@ void Drivetrain::SetBallShifterV1()
     m_BallShifter.Set(frc::DoubleSolenoid::Value::kForward);
 }
 
-void Drivetrain::Drive(double joystickRight, double joystickLeft)
+void Drivetrain::Drive(double joystickRight, double joystickLeft, double buttonpressed)
 {
     m_EncoderRightCurrent = m_EncoderRight.GetDistance();
     m_EncoderLeftCurrent  = m_EncoderLeft.GetDistance();
@@ -136,7 +143,12 @@ void Drivetrain::Drive(double joystickRight, double joystickLeft)
     frc::SmartDashboard::PutNumber("RPM Left", rpmleft);
     frc::SmartDashboard::PutNumber("RPM Robot", rpmrobot);
     double voltage = frc::SmartDashboard::GetNumber("voltage moteurs", 0.0 );
-    if ()
-    Drivetrain::Set(voltage);
-    Set(voltage)
+    if (buttonpressed)
+    {
+        Drivetrain::Set(voltage/12.0);
+    }
+    else 
+    {
+        Drivetrain::Set(0.0);
+    }
     }
