@@ -138,4 +138,5 @@ void Drivetrain::Drive(double joystickRight, double joystickLeft)
     double voltage = frc::SmartDashboard::GetNumber("voltage moteurs", 0.0 );
     if ()
     Drivetrain::Set(voltage);
-}
+    Set(voltage)
+    }
