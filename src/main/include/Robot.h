@@ -3,6 +3,21 @@
 // the WPILib BSD license file in the root directory of this project.
 
 #pragma once
+#define SIGMA 0.5
+
+#define AMAX 5.1 // Acceleration Max  au PIF .. à définir aux encodeurs
+#define VMAX 3.4 // vitesse Max  théorique (3,395472 sur JVN-DT) .. à vérifier aux encodeurs
+#define WMAX                       \
+    (((2.0 * VMAX) / AXLETRACK) / \
+     1.7) // vitesse angulaire Max theorique	.. à modifier avec Garice
+
+#define NABS(a)         (((a) < 0) ? -(a) : (a))     // VALEUR ABSOLUE
+#define NMAX(a, b)      (((a) > (b)) ? (a) : (b)) // Max
+#define NMIN(a, b)      (((a) < (b)) ? (a) : (b)) // Min
+#define NROUND(fval)	( ( (fval) >= 0.0f ) ? ((Ns32)((fval) + 0.5f)) : ((Ns32)((fval) - 0.5f)) )
+#define NSIGN(a)        (((a)<0) ? -1:1)	
+#define NCLAMP(mn,a,mx)	( ((a)<(mn)) ? (mn) : ((a)>(mx)) ? (mx) : (a) )
+#define NLERP(a,b,t)	( a + (b - a)*t )
 
 #include <frc/TimedRobot.h>
 #include <frc/Joystick.h>
@@ -36,10 +51,12 @@ class Robot : public frc::TimedRobot {
 
 
   double signe(double x);
+  double Calcul_De_Notre_Brave_JM(double forward, double turn, bool wheelSide);
 
  private:
 
-  frc::Joystick m_joystick{0};
+  frc::Joystick m_joystickRight{0};
+  frc::Joystick m_joystickLeft{1};
   frc::BuiltInAccelerometer m_accelerometer{};
   frc::PIDController m_pidController{0, 0, 0};
   frc::ADXRS450_Gyro m_gyro;
