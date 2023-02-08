@@ -61,7 +61,6 @@ public:
   void ActiveBallShifterV2();               
   void EnableBrakeMode(bool Change);                                            // ok
   void Drive(double joystickLeft, double joystickRight); 
-  int  GetSpeedSign();                   // ok
 
   double Calcul_De_Notre_Brave_JM(double forward, double turn, bool wheelSide); // Si wheelSide 0: roue droite / Si wheelSide 1: roue gauche
   
@@ -106,6 +105,8 @@ public:
   RateLimiter           m_JoystickPrelimited_W;                // joystick W rate limiter 1
   RateLimiter           m_JoystickLimited_W;                   // joystick W rate limiter 2
 
+  double                m_U;   
+
  
 
 
@@ -120,7 +121,7 @@ public:
   State m_State;
 
   
-  NLCSV m_logCSV{8}; // log csv
+  NLCSV m_logCSV{9}; // log csv
 
 
 

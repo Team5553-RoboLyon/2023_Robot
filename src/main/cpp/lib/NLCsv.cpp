@@ -85,7 +85,7 @@ bool NLCSV::open(const char* logname)
 	else
 		strftime(filename, NLCSVITEM_FILENAME_MAXSIZE, "log[%d_%m_%Y__%H_%M_%S].csv", localtime(&t));
 
-	m_pFile = fopen(filename, "w");
+	m_pFile = fopen(filename, "w, ccs=UTF-8");
 	if (m_pFile)
 		return true;
 	else

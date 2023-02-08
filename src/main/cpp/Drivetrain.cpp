@@ -92,6 +92,8 @@ Drivetrain::Drivetrain() :  m_GearboxLeftOutAveragedRpt(AVERAGE_SAMPLES_NUMBER),
     m_logCSV.setItem(5,"rate_limiter_Slow_V",5,&m_JoystickPrelimited_V.m_current);
     m_logCSV.setItem(6,"rate_limiter_Fast_W",5,&m_JoystickLimited_W.m_current);
     m_logCSV.setItem(7,"rate_limiter_Slow_W",5,&m_JoystickPrelimited_W.m_current);
+    m_logCSV.setItem(8,"GearShifting",5,&m_U);
+
 
     // Règle le ball shifter, le State et la Reduction en V1 lors de l'initialisation du robot
     ActiveBallShifterV1(); 
@@ -129,11 +131,6 @@ void Drivetrain::InvertBallShifter() // inverse ball shifter
     {
         ActiveBallShifterV2();
     }
-}
-
-int Drivetrain::GetSpeedSign() // retourne le signe de la vitesse du robot
-{
-    return m_GearboxesOutAdjustedRpm.m_current > 0.0 ? 1 : -1;
 }
 
 double Drivetrain::GetGearShiftingVoltage() // calcule la tension de référence en fonction de la vitesse du robot
@@ -312,6 +309,8 @@ void Drivetrain::ShiftGearDown() // passage de la vitesse en V1
 
 void Drivetrain::Drive(double joystick_V, double joystick_W) // 
 {   
+
+    m_U = GetGearShiftingVoltage();
     // calcul de la vitesse moyenne des deux encodeurs de sortie de boite. (GetDistance renvoie un nombre de tours car setup fait dans le constructeur)(.SetDistancePerPulse(1.0/2048.0)
     // les valeurs sont en tours/tick
     m_GearboxRightOutRawRpt.set(m_EncoderRight.GetDistance() ); 
@@ -383,6 +382,8 @@ void Drivetrain::Drive(double joystick_V, double joystick_W) //
             }
         }
     }
+
+    m_logCSV.write();
 
     m_MotorLeft1.Set(ctre::phoenix::motorcontrol::ControlMode::PercentOutput, Calcul_De_Notre_Brave_JM(m_JoystickLimited_V.m_current, m_JoystickLimited_W.m_current, 0));
     m_MotorRight1.Set(ctre::phoenix::motorcontrol::ControlMode::PercentOutput, Calcul_De_Notre_Brave_JM(m_JoystickLimited_V.m_current, m_JoystickLimited_W.m_current, 1));

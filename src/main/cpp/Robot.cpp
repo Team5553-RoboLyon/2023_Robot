@@ -28,7 +28,6 @@ void Robot::TeleopPeriodic()
   }
   
   m_Drivetrain.Drive(-m_JoystickRight.GetY(), -m_JoystickLeft.GetZ());
- m_Drivetrain.m_logCSV.write();
 
 }
 
