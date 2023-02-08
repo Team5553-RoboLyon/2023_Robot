@@ -26,6 +26,8 @@ void Robot::TeleopInit() {
 
   frc::SmartDashboard::PutNumber("coef",0.2);
 
+  m_motor.SetIdleMode(rev::CANSparkMax::IdleMode::kBrake);
+
 }
 void Robot::TeleopPeriodic() {
   m_clamp = frc::SmartDashboard::GetNumber("coef",0.2);
