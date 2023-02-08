@@ -84,14 +84,14 @@ Drivetrain::Drivetrain() :  m_GearboxLeftOutAveragedRpt(AVERAGE_SAMPLES_NUMBER),
     m_JoystickPrelimited_W.Reset(0.0,0.0,2.0);
     m_JoystickLimited_W.Reset(0.0,0.0,0.05);
 
-    // m_logCSV.setItem(0,"joystick_V",5,&m_Joystick_V_Pure);
-    // m_logCSV.setItem(1,"joystick_W",5,&m_Joystick_W_Pure);
-    // m_logCSV.setItem(2,"SpeedRobot",5,&m_Gearboxes_W_average_RPM);
-    // m_logCSV.setItem(3,"état",5,&m_Etat);
-    // m_logCSV.setItem(4,"rate_limiter_Fast_V",5,&m_rateLimiter_V_Fast.m_current);
-    // m_logCSV.setItem(5,"rate_limiter_Slow_V",5,&m_rateLimiter_V_Slow.m_current);
-    // m_logCSV.setItem(6,"rate_limiter_Fast_W",5,&m_rateLimiter_W_Fast.m_current);
-    // m_logCSV.setItem(7,"rate_limiter_Slow_W",5,&m_rateLimiter_W_Slow.m_current);
+    m_logCSV.setItem(0,"joystick_V",5,&m_JoystickRaw_V.m_current);
+    m_logCSV.setItem(1,"joystick_W",5,&m_JoystickRaw_W.m_current);
+    m_logCSV.setItem(2,"SpeedRobot",5,&m_GearboxesOutAdjustedRpm.m_current);
+    m_logCSV.setItem(3,"état",5,&m_CurrentGearboxRatio);
+    m_logCSV.setItem(4,"rate_limiter_Fast_V",5,&m_JoystickLimited_V.m_current);
+    m_logCSV.setItem(5,"rate_limiter_Slow_V",5,&m_JoystickPrelimited_V.m_current);
+    m_logCSV.setItem(6,"rate_limiter_Fast_W",5,&m_JoystickLimited_W.m_current);
+    m_logCSV.setItem(7,"rate_limiter_Slow_W",5,&m_JoystickPrelimited_W.m_current);
 
     // Règle le ball shifter, le State et la Reduction en V1 lors de l'initialisation du robot
     ActiveBallShifterV1(); 

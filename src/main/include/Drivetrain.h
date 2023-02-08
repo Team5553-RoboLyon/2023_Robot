@@ -107,11 +107,6 @@ public:
   RateLimiter           m_JoystickLimited_W;                   // joystick W rate limiter 2
 
  
-  double m_Joystick_V_Limited;                                 // joystick V limité
-  double m_Joystick_W_Limited;                                 // joystick W limité
-
-
- 
 
 
 
@@ -125,7 +120,7 @@ public:
   State m_State;
 
   
-  //NLCSV m_logCSV{8}; // log csv
+  NLCSV m_logCSV{8}; // log csv
 
 
 
