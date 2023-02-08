@@ -57,13 +57,21 @@ Drivetrain::Drivetrain() :  m_GearboxLeftOutAveragedRpt(AVERAGE_SAMPLES_NUMBER),
     m_MotorRight2.SetNeutralMode(ctre::phoenix::motorcontrol::NeutralMode::Brake);
     m_MotorRight3.SetNeutralMode(ctre::phoenix::motorcontrol::NeutralMode::Brake);
 
-    m_MotorRight1.ConfigVoltageCompSaturation(VOLTAGE_REF); // init tension de référence
-    m_MotorRight2.ConfigVoltageCompSaturation(VOLTAGE_REF);
-    m_MotorRight3.ConfigVoltageCompSaturation(VOLTAGE_REF);
+    m_MotorLeft1.EnableVoltageCompensation(true);
+    m_MotorLeft2.EnableVoltageCompensation(true);
+    m_MotorLeft3.EnableVoltageCompensation(true);
 
-    m_MotorLeft1.ConfigVoltageCompSaturation(VOLTAGE_REF);
-    m_MotorLeft2.ConfigVoltageCompSaturation(VOLTAGE_REF);
-    m_MotorLeft3.ConfigVoltageCompSaturation(VOLTAGE_REF);
+    m_MotorRight1.EnableVoltageCompensation(true);
+    m_MotorRight2.EnableVoltageCompensation(true);
+    m_MotorRight3.EnableVoltageCompensation(true);
+
+    m_MotorRight1.ConfigVoltageCompSaturation(VOLTAGE_COMPENSATION); // init tension de référence
+    m_MotorRight2.ConfigVoltageCompSaturation(VOLTAGE_COMPENSATION);
+    m_MotorRight3.ConfigVoltageCompSaturation(VOLTAGE_COMPENSATION);
+
+    m_MotorLeft1.ConfigVoltageCompSaturation(VOLTAGE_COMPENSATION);
+    m_MotorLeft2.ConfigVoltageCompSaturation(VOLTAGE_COMPENSATION);
+    m_MotorLeft3.ConfigVoltageCompSaturation(VOLTAGE_COMPENSATION);
 
     m_MotorLeft2.Follow(m_MotorLeft1); // init follower moteurs
     m_MotorLeft3.Follow(m_MotorLeft1);
@@ -85,14 +93,10 @@ Drivetrain::Drivetrain() :  m_GearboxLeftOutAveragedRpt(AVERAGE_SAMPLES_NUMBER),
     m_JoystickLimited_W.Reset(0.0,0.0,0.05);
 
     m_logCSV.setItem(0,"joystick_V",5,&m_JoystickRaw_V.m_current);
-    m_logCSV.setItem(1,"joystick_W",5,&m_JoystickRaw_W.m_current);
-    m_logCSV.setItem(2,"SpeedRobot",5,&m_GearboxesOutAdjustedRpm.m_current);
-    m_logCSV.setItem(3,"état",5,&m_CurrentGearboxRatio);
-    m_logCSV.setItem(4,"rate_limiter_Fast_V",5,&m_JoystickLimited_V.m_current);
-    m_logCSV.setItem(5,"rate_limiter_Slow_V",5,&m_JoystickPrelimited_V.m_current);
-    m_logCSV.setItem(6,"rate_limiter_Fast_W",5,&m_JoystickLimited_W.m_current);
-    m_logCSV.setItem(7,"rate_limiter_Slow_W",5,&m_JoystickPrelimited_W.m_current);
-    m_logCSV.setItem(8,"GearShifting",5,&m_U);
+    m_logCSV.setItem(1,"SpeedRobot",5,&m_GearboxesOutAdjustedRpm.m_current);
+    m_logCSV.setItem(2,"état",5,&m_CurrentGearboxRatio);
+    m_logCSV.setItem(3,"rate_limiter_Fast_V",5,&m_JoystickLimited_V.m_current);
+    m_logCSV.setItem(4,"GearShifting",5,&m_U);
 
 
     // Règle le ball shifter, le State et la Reduction en V1 lors de l'initialisation du robot
@@ -185,8 +189,8 @@ double Drivetrain::Calcul_De_Notre_Brave_JM(double forward, double turn, bool wh
     // else
     //     return left_wheel;
 
-    double m_forward = utils::Deadband(forward);
-    double m_turn = utils::Deadband(turn);
+    double m_forward = forward;
+    double m_turn = turn;
 
     double left_wheel = m_forward + m_turn * SIGMA;
     double right_wheel = m_forward - m_turn * SIGMA;
@@ -286,22 +290,18 @@ bool Drivetrain::isCoastdownShiftingAllowed() // mode coastdown, détermine si o
 
 void Drivetrain::ShiftGearUp() // passage de la vitesse en V2
 {
-    frc::SmartDashboard::PutNumber("JoystickUp", m_JoystickLimited_V.m_current);
-    double u = GetGearShiftingVoltage();
-    frc::SmartDashboard::PutNumber("GearUp", u);
-    //m_JoystickPrelimited_V.m_current = u - ((m_JoystickLimited_V.m_current - u)/m_JoystickLimited_V.m_speed )*m_JoystickPrelimited_V.m_speed;
-    //m_JoystickLimited_V.Update(m_JoystickPrelimited_V.m_current);
-    //ActiveBallShifterV2();
+        //double u = GetGearShiftingVoltage();
+        //m_JoystickPrelimited_V.m_current = u - ((m_JoystickLimited_V.m_current - u)/m_JoystickLimited_V.m_speed )*m_JoystickPrelimited_V.m_speed;
+        m_JoystickLimited_V.Update(m_JoystickPrelimited_V.m_current);
+        ActiveBallShifterV2();
 }
 
 void Drivetrain::ShiftGearDown() // passage de la vitesse en V1
 {
-       frc::SmartDashboard::PutNumber("JoystickDown", m_JoystickLimited_V.m_current);
-       double u = GetGearShiftingVoltage();
-       frc::SmartDashboard::PutNumber("GearDown", u );
-//     m_JoystickPrelimited_V.m_current = u - ((m_JoystickLimited_V.m_current - u)/m_JoystickLimited_V.m_speed )*m_JoystickPrelimited_V.m_speed;
-//     m_JoystickLimited_V.Update(m_JoystickPrelimited_V.m_current);
-//     ActiveBallShifterV1();
+        //double u = GetGearShiftingVoltage();
+        //m_JoystickPrelimited_V.m_current = u - ((m_JoystickLimited_V.m_current - u)/m_JoystickLimited_V.m_speed )*m_JoystickPrelimited_V.m_speed;
+        m_JoystickLimited_V.Update(m_JoystickPrelimited_V.m_current);
+        ActiveBallShifterV1();
 }
 
 
@@ -309,7 +309,8 @@ void Drivetrain::ShiftGearDown() // passage de la vitesse en V1
 
 void Drivetrain::Drive(double joystick_V, double joystick_W) // 
 {   
-
+    frc::SmartDashboard::PutNumber("joyV",joystick_V);
+    frc::SmartDashboard::PutNumber("joyW",joystick_W);
     m_U = GetGearShiftingVoltage();
     // calcul de la vitesse moyenne des deux encodeurs de sortie de boite. (GetDistance renvoie un nombre de tours car setup fait dans le constructeur)(.SetDistancePerPulse(1.0/2048.0)
     // les valeurs sont en tours/tick
@@ -339,6 +340,8 @@ void Drivetrain::Drive(double joystick_V, double joystick_W) //
     m_GearboxesOutAveragedAccelerationRpm2.add(m_GearboxesOutAdjustedRpm.m_delta);
 
     // 
+    joystick_V = utils::Deadband(joystick_V,0.05);
+    joystick_W = utils::Deadband(joystick_W,0.05);
     m_JoystickRaw_V.set(joystick_V); 
     m_JoystickLimited_V.Update( m_JoystickPrelimited_V.Update(joystick_V) );
 
@@ -388,36 +391,36 @@ void Drivetrain::Drive(double joystick_V, double joystick_W) //
     m_MotorLeft1.Set(ctre::phoenix::motorcontrol::ControlMode::PercentOutput, Calcul_De_Notre_Brave_JM(m_JoystickLimited_V.m_current, m_JoystickLimited_W.m_current, 0));
     m_MotorRight1.Set(ctre::phoenix::motorcontrol::ControlMode::PercentOutput, Calcul_De_Notre_Brave_JM(m_JoystickLimited_V.m_current, m_JoystickLimited_W.m_current, 1));
 
-    frc::SmartDashboard::PutNumber("m_JoystickPrelimited_V",    m_JoystickPrelimited_V.m_current);
-    frc::SmartDashboard::PutNumber("m_JoystickLimited_V",       m_JoystickLimited_V.m_current);
-    frc::SmartDashboard::PutNumber("m_JoystickPrelimited_W",    m_JoystickPrelimited_W.m_current);
-    frc::SmartDashboard::PutNumber("m_JoystickLimited_W",       m_JoystickLimited_W.m_current);
-    frc::SmartDashboard::PutNumber("m_JoystickRaw_V", m_JoystickRaw_V.m_current);
-    frc::SmartDashboard::PutNumber("m_JoystickRaw_W", m_JoystickRaw_W.m_current);
+    // frc::SmartDashboard::PutNumber("m_JoystickPrelimited_V",    m_JoystickPrelimited_V.m_current);
+    // frc::SmartDashboard::PutNumber("m_JoystickLimited_V",       m_JoystickLimited_V.m_current);
+    // frc::SmartDashboard::PutNumber("m_JoystickPrelimited_W",    m_JoystickPrelimited_W.m_current);
+    // frc::SmartDashboard::PutNumber("m_JoystickLimited_W",       m_JoystickLimited_W.m_current);
+    // frc::SmartDashboard::PutNumber("m_JoystickRaw_V", m_JoystickRaw_V.m_current);
+    // frc::SmartDashboard::PutNumber("m_JoystickRaw_W", m_JoystickRaw_W.m_current);
     // frc::SmartDashboard::PutString("m_State", m_State == State::lowGear ? "lowGear" : "highGear");
-    frc::SmartDashboard::PutNumber("m_State", (double) m_State);
-    frc::SmartDashboard::PutNumber("m_GearShiftingTimeLock", m_GearShiftingTimeLock);
-    frc::SmartDashboard::PutNumber("m_CurrentGearboxRatio", m_CurrentGearboxRatio);
+    // frc::SmartDashboard::PutNumber("m_State", (double) m_State);
+    // frc::SmartDashboard::PutNumber("m_GearShiftingTimeLock", m_GearShiftingTimeLock);
+    // frc::SmartDashboard::PutNumber("m_CurrentGearboxRatio", m_CurrentGearboxRatio);
 
-    frc::SmartDashboard::PutNumber("m_GearShiftingTimeLock", m_GearShiftingTimeLock);
-    frc::SmartDashboard::PutNumber("m_GearboxesOutAdjustedRpm", m_GearboxesOutAdjustedRpm.m_current);
-    frc::SmartDashboard::PutNumber("m_GearboxesOutAccelerationRpm2", m_GearboxesOutAveragedAccelerationRpm2.get());
-    frc::SmartDashboard::PutNumber("m_JoystickRaw_V", m_JoystickRaw_V.m_current);
-    frc::SmartDashboard::PutNumber("m_JoystickRaw_V_Acceleration", m_JoystickRaw_V.m_delta);
-    frc::SmartDashboard::PutNumber("Gearboxes_Ration", m_GearboxLeftOutAdjustedRpm/m_GearboxRightOutAdjustedRpm);
+    // frc::SmartDashboard::PutNumber("m_GearShiftingTimeLock", m_GearShiftingTimeLock);
+    // frc::SmartDashboard::PutNumber("m_GearboxesOutAdjustedRpm", m_GearboxesOutAdjustedRpm.m_current);
+    // frc::SmartDashboard::PutNumber("m_GearboxesOutAccelerationRpm2", m_GearboxesOutAveragedAccelerationRpm2.get());
+    // frc::SmartDashboard::PutNumber("m_JoystickRaw_V", m_JoystickRaw_V.m_current);
+    // frc::SmartDashboard::PutNumber("m_JoystickRaw_V_Acceleration", m_JoystickRaw_V.m_delta);
+    // frc::SmartDashboard::PutNumber("Gearboxes_Ration", m_GearboxLeftOutAdjustedRpm/m_GearboxRightOutAdjustedRpm);
     // frc::SmartDashboard::PutNumber("GetEncoderRight", m_EncoderRight.GetDistance());
     // frc::SmartDashboard::PutNumber("GetEncoderLeft", m_EncoderLeft.GetDistance());
     // frc::SmartDashboard::PutNumber("GetEncoderMotorRight", m_SuperMotorRightRawRpm);
     // frc::SmartDashboard::PutNumber("GetEncoderMotorLeft", m_SuperMotorLeftRawRpm);
-    frc::SmartDashboard::PutNumber("m_GearboxLeftOutAdjustedRpm", m_GearboxLeftOutAdjustedRpm);  
-    frc::SmartDashboard::PutNumber("m_GearboxRightOutAdjustedRpm", m_GearboxRightOutAdjustedRpm);
-    frc::SmartDashboard::PutNumber("m_SuperMotorRightAveragedRpm", (m_SuperMotorRightAveragedRpm.get() / m_CurrentGearboxRatio));
-    frc::SmartDashboard::PutNumber("m_SuperMotorLeftAveragedRpm", (m_SuperMotorLeftAveragedRpm.get() / m_CurrentGearboxRatio));
-    frc::SmartDashboard::PutNumber("UP_SHIFTING_POINT_GEARBOXES_OUT_RPM", UP_SHIFTING_POINT_GEARBOXES_OUT_RPM);
-    frc::SmartDashboard::PutNumber("KICKDOWN_SHIFTING_POINT_GEARBOXES_OUT_RPM", KICKDOWN_SHIFTING_POINT_GEARBOXES_OUT_RPM);
-    frc::SmartDashboard::PutNumber("COASTDOWN_SHIFTING_POINT_GEARBOXES_OUT_RPM", COASTDOWN_SHIFTING_POINT_GEARBOXES_OUT_RPM);
-    frc::SmartDashboard::PutNumber("m_GearboxesOutAveragedAccelerationRpm2", m_GearboxesOutAveragedAccelerationRpm2.get());
-    frc::SmartDashboard::PutNumber("m_GearboxesOutAdjustedRpm.m_delta", m_GearboxesOutAdjustedRpm.m_delta);
+    // frc::SmartDashboard::PutNumber("m_GearboxLeftOutAdjustedRpm", m_GearboxLeftOutAdjustedRpm);  
+    // frc::SmartDashboard::PutNumber("m_GearboxRightOutAdjustedRpm", m_GearboxRightOutAdjustedRpm);
+    // frc::SmartDashboard::PutNumber("m_SuperMotorRightAveragedRpm", (m_SuperMotorRightAveragedRpm.get() / m_CurrentGearboxRatio));
+    // frc::SmartDashboard::PutNumber("m_SuperMotorLeftAveragedRpm", (m_SuperMotorLeftAveragedRpm.get() / m_CurrentGearboxRatio));
+    // frc::SmartDashboard::PutNumber("UP_SHIFTING_POINT_GEARBOXES_OUT_RPM", UP_SHIFTING_POINT_GEARBOXES_OUT_RPM);
+    // frc::SmartDashboard::PutNumber("KICKDOWN_SHIFTING_POINT_GEARBOXES_OUT_RPM", KICKDOWN_SHIFTING_POINT_GEARBOXES_OUT_RPM);
+    // frc::SmartDashboard::PutNumber("COASTDOWN_SHIFTING_POINT_GEARBOXES_OUT_RPM", COASTDOWN_SHIFTING_POINT_GEARBOXES_OUT_RPM);
+    // frc::SmartDashboard::PutNumber("m_GearboxesOutAveragedAccelerationRpm2", m_GearboxesOutAveragedAccelerationRpm2.get());
+    // frc::SmartDashboard::PutNumber("m_GearboxesOutAdjustedRpm.m_delta", m_GearboxesOutAdjustedRpm.m_delta);
    // frc::SmartDashBoard::PutNumber("Total_current", m_PDP.GetTotalCurrent());
 
 
