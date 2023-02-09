@@ -19,6 +19,8 @@
 #define NCLAMP(mn,a,mx)	( ((a)<(mn)) ? (mn) : ((a)>(mx)) ? (mx) : (a) )
 #define NLERP(a,b,t)	( a + (b - a)*t )
 
+#define bruit 0.1 
+
 #include <frc/TimedRobot.h>
 #include <frc/Joystick.h>
 #include <rev/CANSparkMax.h>
@@ -29,7 +31,9 @@
 #include <frc/BuiltInAccelerometer.h>
 #include <frc/ADXRS450_Gyro.h>
 #include <frc/SPI.h>
-#include 
+#include <lib/NRollingAverage.h>
+#include <lib/rate_limiter.h>
+#include <lib/Dynamic.h>
 
 //gyro
 
@@ -68,5 +72,17 @@ class Robot : public frc::TimedRobot {
   ctre::phoenix::motorcontrol::can::TalonFX m_MotorLeft{4};
   ctre::phoenix::motorcontrol::can::TalonFX m_MotorLeftFollower{5};
   ctre::phoenix::motorcontrol::can::TalonFX m_MotorLeftFollower2{6};
+
+
+  NdoubleRollingAverage m_AccelerometerX_Average{25};
+  NdoubleRollingAverage m_AccelerometerX_Arcos_Average{25};
+
+  Dynamic m_AccelerometerX;
+  Dynamic m_AccelerometerY;
+  Dynamic m_Gyro_Angle;
+
+  double m_Sum_Delta_Gyro_Angle=0.0;
+  
+
 
 };
