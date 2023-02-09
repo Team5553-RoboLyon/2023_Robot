@@ -63,15 +63,23 @@ void Robot::TeleopInit() {
   m_MotorRightFollower.Follow(m_MotorRight);
   m_MotorRightFollower2.Follow(m_MotorRight);
 
+  m_MotorLeft.SetNeutralMode(ctre::phoenix::motorcontrol::NeutralMode::Brake);
+  m_MotorLeftFollower.SetNeutralMode(ctre::phoenix::motorcontrol::NeutralMode::Brake);
+  m_MotorLeftFollower2.SetNeutralMode(ctre::phoenix::motorcontrol::NeutralMode::Brake);
+
+  m_MotorRight.SetNeutralMode(ctre::phoenix::motorcontrol::NeutralMode::Brake);
+  m_MotorRightFollower.SetNeutralMode(ctre::phoenix::motorcontrol::NeutralMode::Brake);
+  m_MotorRightFollower2.SetNeutralMode(ctre::phoenix::motorcontrol::NeutralMode::Brake);
+
 }
 void Robot::TeleopPeriodic() {
-  m_pidController.SetP(frc::SmartDashboard::GetNumber("P", 1.5));
+  m_pidController.SetP(frc::SmartDashboard::GetNumber("P", 0.1));
   m_pidController.SetI(frc::SmartDashboard::GetNumber("I", 0));
   m_pidController.SetD(frc::SmartDashboard::GetNumber("D", 0));
   double z = std::abs(m_accelerometer.GetX()); // -1/1
   double y =m_accelerometer.GetY();
 
-  double output = m_pidController.Calculate(z, frc::SmartDashboard::GetNumber("Setpoint", 1));
+  double output = m_pidController.Calculate(y, frc::SmartDashboard::GetNumber("Setpoint", 1));
 
 
   frc::SmartDashboard::PutNumber("Z", z);
@@ -82,7 +90,7 @@ void Robot::TeleopPeriodic() {
   frc::SmartDashboard::PutNumber("Angle", angle);
   // frc::SmartDashboard::PutNumber("arcos accélé",std::acos(y)/3.14159265*180.0);
 
-  double speed = signe(y)*output;
+  double speed = signe(-angle)*output;
   frc::SmartDashboard::PutNumber("speed",speed);
   if (m_joystickRight.GetRawButton(1))
   {
@@ -92,13 +100,14 @@ void Robot::TeleopPeriodic() {
   }
   else
   {
-    m_MotorRight.Set(ctre::phoenix::motorcontrol::ControlMode::PercentOutput, Calcul_De_Notre_Brave_JM(-m_joystickLeft.GetY(), m_joystickRight.GetZ(), 1));
-    m_MotorLeft.Set(ctre::phoenix::motorcontrol::ControlMode::PercentOutput, Calcul_De_Notre_Brave_JM(-m_joystickLeft.GetY(), m_joystickRight.GetZ(), 0));
+    m_MotorRight.Set(ctre::phoenix::motorcontrol::ControlMode::PercentOutput, Calcul_De_Notre_Brave_JM(-m_joystickLeft.GetY(), m_joystickRight.GetZ(), 0));
+    m_MotorLeft.Set(ctre::phoenix::motorcontrol::ControlMode::PercentOutput, Calcul_De_Notre_Brave_JM(-m_joystickLeft.GetY(), m_joystickRight.GetZ(), 1));
 
   }
   
 
 }
+
 
 void Robot::DisabledInit() {
   m_gyro.Reset();
