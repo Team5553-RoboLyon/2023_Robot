@@ -14,9 +14,28 @@ double Robot::signe(double x) {
   }
 }
 
+double Robot::Calcul_De_Notre_Brave_JM(double forward, double turn, bool wheelSide) // calcule la vitesse des roues
+{
+    double m_forward = forward;
+    double m_turn = turn;
+
+    double left_wheel = m_forward + m_turn * SIGMA;
+    double right_wheel = m_forward - m_turn * SIGMA;
+
+    double k;
+    k = 1.0 / (NMAX(1, NMAX(NABS(left_wheel), NABS(right_wheel))));
+    left_wheel *= k;
+    right_wheel *= k;
+
+    if (wheelSide == 0)
+        return right_wheel;
+    else
+        return left_wheel;
+}
+
 void Robot::RobotInit() {
-  // frc::ADXRS450_Gyro(frc::SPI::Port::kOnboardCS0);
-  m_gyro.Reset();
+  //frc::ADXRS450_Gyro(frc::SPI::Port::kOnboardCS0);
+  m_gyro.Reset(); 
   m_gyro.Calibrate();
 }
 void Robot::RobotPeriodic() {}
@@ -29,6 +48,21 @@ void Robot::TeleopInit() {
   frc::SmartDashboard::PutNumber("I", 0);
   frc::SmartDashboard::PutNumber("D", 0);
   frc::SmartDashboard::PutNumber("Setpoint", 1);
+
+  m_MotorLeft.SetInverted(true);
+  m_MotorLeftFollower.SetInverted(true);
+  m_MotorLeftFollower2.SetInverted(true);
+
+  m_MotorRight.SetInverted(false);
+  m_MotorRightFollower.SetInverted(false);
+  m_MotorRightFollower2.SetInverted(false);
+
+  m_MotorLeftFollower.Follow(m_MotorLeft);
+  m_MotorLeftFollower2.Follow(m_MotorLeft);
+
+  m_MotorRightFollower.Follow(m_MotorRight);
+  m_MotorRightFollower2.Follow(m_MotorRight);
+
 }
 void Robot::TeleopPeriodic() {
   m_pidController.SetP(frc::SmartDashboard::GetNumber("P", 1.5));
@@ -50,24 +84,18 @@ void Robot::TeleopPeriodic() {
 
   double speed = signe(y)*output;
   frc::SmartDashboard::PutNumber("speed",speed);
-  // if (m_joystick.GetRawButton(1))
-  // {
-  //   m_MotorRight.Set(ctre::phoenix::motorcontrol::ControlMode::PercentOutput, speed);
-  //   m_MotorRightFollower.Set(ctre::phoenix::motorcontrol::ControlMode::PercentOutput, speed);
-  //   m_MotorRightFollower2.Set(ctre::phoenix::motorcontrol::ControlMode::PercentOutput, speed);
-  //   m_MotorLeft.Set(ctre::phoenix::motorcontrol::ControlMode::PercentOutput, speed);
-  //   m_MotorLeftFollower.Set(ctre::phoenix::motorcontrol::ControlMode::PercentOutput, speed);
-  //   m_MotorLeftFollower2.Set(ctre::phoenix::motorcontrol::ControlMode::PercentOutput, speed);
-  // }
-  // else
-  // {
-  //   m_MotorRight.Set(ctre::phoenix::motorcontrol::ControlMode::PercentOutput, 0.0);
-  //   m_MotorRightFollower.Set(ctre::phoenix::motorcontrol::ControlMode::PercentOutput, 0.0);
-  //   m_MotorRightFollower2.Set(ctre::phoenix::motorcontrol::ControlMode::PercentOutput, 0.0);
-  //   m_MotorLeft.Set(ctre::phoenix::motorcontrol::ControlMode::PercentOutput, 0.0);
-  //   m_MotorLeftFollower.Set(ctre::phoenix::motorcontrol::ControlMode::PercentOutput, 0.0);
-  //   m_MotorLeftFollower2.Set(ctre::phoenix::motorcontrol::ControlMode::PercentOutput, 0.0);
-  // }
+  if (m_joystickRight.GetRawButton(1))
+  {
+    m_MotorRight.Set(ctre::phoenix::motorcontrol::ControlMode::PercentOutput, speed);
+    m_MotorLeft.Set(ctre::phoenix::motorcontrol::ControlMode::PercentOutput, speed);
+
+  }
+  else
+  {
+    m_MotorRight.Set(ctre::phoenix::motorcontrol::ControlMode::PercentOutput, Calcul_De_Notre_Brave_JM(-m_joystickLeft.GetY(), m_joystickRight.GetZ(), 1));
+    m_MotorLeft.Set(ctre::phoenix::motorcontrol::ControlMode::PercentOutput, Calcul_De_Notre_Brave_JM(-m_joystickLeft.GetY(), m_joystickRight.GetZ(), 0));
+
+  }
   
 
 }
