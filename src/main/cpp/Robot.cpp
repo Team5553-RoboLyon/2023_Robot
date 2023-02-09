@@ -44,10 +44,10 @@ void Robot::AutonomousInit() {}
 void Robot::AutonomousPeriodic() {}
 
 void Robot::TeleopInit() {
-  frc::SmartDashboard::PutNumber("P", 1.5);
+  frc::SmartDashboard::PutNumber("P", 0);
   frc::SmartDashboard::PutNumber("I", 0);
   frc::SmartDashboard::PutNumber("D", 0);
-  frc::SmartDashboard::PutNumber("Setpoint", 1);
+  frc::SmartDashboard::PutNumber("Setpoint", 0);
 
   m_MotorLeft.SetInverted(true);
   m_MotorLeftFollower.SetInverted(true);
@@ -63,6 +63,8 @@ void Robot::TeleopInit() {
   m_MotorRightFollower.Follow(m_MotorRight);
   m_MotorRightFollower2.Follow(m_MotorRight);
 
+
+
   m_MotorLeft.SetNeutralMode(ctre::phoenix::motorcontrol::NeutralMode::Brake);
   m_MotorLeftFollower.SetNeutralMode(ctre::phoenix::motorcontrol::NeutralMode::Brake);
   m_MotorLeftFollower2.SetNeutralMode(ctre::phoenix::motorcontrol::NeutralMode::Brake);
@@ -73,24 +75,26 @@ void Robot::TeleopInit() {
 
 }
 void Robot::TeleopPeriodic() {
-  m_pidController.SetP(frc::SmartDashboard::GetNumber("P", 0.1));
+  m_pidController.SetP(frc::SmartDashboard::GetNumber("P", 0));
   m_pidController.SetI(frc::SmartDashboard::GetNumber("I", 0));
   m_pidController.SetD(frc::SmartDashboard::GetNumber("D", 0));
-  double z = std::abs(m_accelerometer.GetX()); // -1/1
-  double y =m_accelerometer.GetY();
+  double x = m_accelerometer.GetX(); // -1/1
+  double y =std::abs(m_accelerometer.GetY());
+  double z =m_accelerometer.GetZ();
 
-  double output = m_pidController.Calculate(y, frc::SmartDashboard::GetNumber("Setpoint", 1));
+  double output = m_pidController.Calculate(std::abs(x), frc::SmartDashboard::GetNumber("Setpoint", 1));
 
 
   frc::SmartDashboard::PutNumber("Z", z);
   frc::SmartDashboard::PutNumber("Y", y);
+  frc::SmartDashboard::PutNumber("X",x);
   frc::SmartDashboard::PutNumber("Output", output);
-  frc::SmartDashboard::PutNumber("Angle", y);
+  frc::SmartDashboard::PutNumber("error",m_pidController.GetPositionError());
   double angle = m_gyro.GetAngle();
   frc::SmartDashboard::PutNumber("Angle", angle);
-  // frc::SmartDashboard::PutNumber("arcos accélé",std::acos(y)/3.14159265*180.0);
+  frc::SmartDashboard::PutNumber("arcos accélé",std::acos(x)/3.14159265*180.0);
 
-  double speed = signe(-angle)*output;
+  double speed = signe(angle)*std::clamp(output,-0.3,0.3);
   frc::SmartDashboard::PutNumber("speed",speed);
   if (m_joystickRight.GetRawButton(1))
   {
@@ -104,7 +108,11 @@ void Robot::TeleopPeriodic() {
     m_MotorLeft.Set(ctre::phoenix::motorcontrol::ControlMode::PercentOutput, Calcul_De_Notre_Brave_JM(-m_joystickLeft.GetY(), m_joystickRight.GetZ(), 1));
 
   }
-  
+  if (m_joystickLeft.GetRawButton(1))
+  {
+    m_pidController.Reset();
+    m_gyro.Reset();
+  }
 
 }
 
