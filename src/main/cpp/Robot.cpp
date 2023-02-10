@@ -104,20 +104,21 @@ void Robot::TeleopPeriodic() {
   }  
 
 
-frc::SmartDashboard::PutNumber("Accel_X",x);
-frc::SmartDashboard::PutNumber("Accel_Y",y);
-frc::SmartDashboard::PutNumber("Accel_Z",z);
-frc::SmartDashboard::PutNumber("Angle_Gyro",angle);
-frc::SmartDashboard::PutNumber("Accel_X_Average",m_AccelerometerX_Average.get());
-frc::SmartDashboard::PutNumber("Accel_Arcos_X",arcos_X);
-frc::SmartDashboard::PutNumber("Accel_Arcos_X_Average",m_AccelerometerX_Arcos_Average.get());
-frc::SmartDashboard::PutNumber("Current_Dynamic_Accel_X",m_AccelerometerX.m_current);
-frc::SmartDashboard::PutNumber("Current_Dynamic_Accel_Y",m_AccelerometerY.m_current);
-frc::SmartDashboard::PutNumber("Current_Dynamic_Gryo",m_Gyro_Angle.m_current);
-frc::SmartDashboard::PutNumber("Delta_Dynamic_Accel_X",m_AccelerometerX.m_delta);
-frc::SmartDashboard::PutNumber("Delta_Dynamic_Accel_Y",m_AccelerometerY.m_delta);
-frc::SmartDashboard::PutNumber("Delta_Dynamic_Gryo",m_Gyro_Angle.m_delta);
-frc::SmartDashboard::PutNumber("Sum_Delta_Gyro_Angle",m_Sum_Delta_Gyro_Angle);
+ frc::SmartDashboard::PutNumber("Accel_X",x);
+ frc::SmartDashboard::PutNumber("Accel_Y",y);
+ frc::SmartDashboard::PutNumber("Accel_Z",z);
+ frc::SmartDashboard::PutNumber("Angle_Gyro",angle);
+ frc::SmartDashboard::PutNumber("Accel_X_Average",m_AccelerometerX_Average.get());
+ frc::SmartDashboard::PutNumber("Accel_Arcos_X",arcos_X);
+ frc::SmartDashboard::PutNumber("Accel_Arcos_X_Average",m_AccelerometerX_Arcos_Average.get());
+ frc::SmartDashboard::PutNumber("Current_Dynamic_Accel_X",m_AccelerometerX.m_current);
+ frc::SmartDashboard::PutNumber("Current_Dynamic_Accel_Y",m_AccelerometerY.m_current);
+ frc::SmartDashboard::PutNumber("Current_Dynamic_Gryo",m_Gyro_Angle.m_current);
+ frc::SmartDashboard::PutNumber("Delta_Dynamic_Accel_X",m_AccelerometerX.m_delta);
+ frc::SmartDashboard::PutNumber("Delta_Dynamic_Accel_Y",m_AccelerometerY.m_delta);
+ frc::SmartDashboard::PutNumber("Delta_Dynamic_Gryo",m_Gyro_Angle.m_delta);
+ frc::SmartDashboard::PutNumber("Sum_Delta_Gyro_Angle",m_Sum_Delta_Gyro_Angle);
+ frc::SmartDashboard::PutNumber("Signe",signe(m_Sum_Delta_Gyro_Angle));
 
 
 
