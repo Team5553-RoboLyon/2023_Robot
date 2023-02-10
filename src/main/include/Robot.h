@@ -34,6 +34,8 @@
 #include <lib/NRollingAverage.h>
 #include <lib/rate_limiter.h>
 #include <lib/Dynamic.h>
+#include <frc/Encoder.h>
+#include <lib/Angle_AG.h>
 
 //gyro
 
@@ -57,6 +59,8 @@ class Robot : public frc::TimedRobot {
 
   double signe(double x);
   double Calcul_De_Notre_Brave_JM(double forward, double turn, bool wheelSide);
+
+  double GetAngle();
 
  private:
 
@@ -82,6 +86,11 @@ class Robot : public frc::TimedRobot {
   Dynamic m_Gyro_Angle;
 
   double m_Sum_Delta_Gyro_Angle=0.0;
+
+  frc::Encoder m_EncoderRight{1,2};
+  frc::Encoder m_EncoderLeft{3,4};
+
+  Angle_AG m_FusAngle{0.02,0.075};
   
 
 

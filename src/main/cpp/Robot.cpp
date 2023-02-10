@@ -44,9 +44,9 @@ void Robot::AutonomousInit() {}
 void Robot::AutonomousPeriodic() {}
 
 void Robot::TeleopInit() {
-  // frc::SmartDashboard::PutNumber("P", 0);
-  // frc::SmartDashboard::PutNumber("I", 0);
-  // frc::SmartDashboard::PutNumber("D", 0);
+  frc::SmartDashboard::PutNumber("P", 0);
+  frc::SmartDashboard::PutNumber("I", 0);
+  frc::SmartDashboard::PutNumber("D", 0);
   frc::SmartDashboard::PutNumber("Setpoint", 1);
 
   m_MotorLeft.SetInverted(true);
@@ -94,31 +94,42 @@ void Robot::TeleopPeriodic() {
   m_AccelerometerY.set(y);
   m_Gyro_Angle.set(angle);
 
+  m_FusAngle.Update(m_gyro.GetRate()/180.0*3.14159265,m_accelerometer.GetY(),m_accelerometer.GetX());
+
+  frc::SmartDashboard::PutNumber("FuseAngle",m_FusAngle.GetAngle()*180.0/3.14159265);
+  frc::SmartDashboard::PutNumber("m_K",m_FusAngle.m_k);
+  frc::SmartDashboard::PutNumber("m_dt",m_FusAngle.m_dt);
+  frc::SmartDashboard::PutNumber("m_tau",m_FusAngle.m_tau);
+  frc::SmartDashboard::PutNumber("m_a",m_FusAngle.m_a);
+  frc::SmartDashboard::PutNumber("m_angleAccel",m_FusAngle.m_angleAccel);
+
+
+
   if (m_Gyro_Angle.m_delta > bruit)
   {
     m_Sum_Delta_Gyro_Angle += m_Gyro_Angle.m_delta;
   }
-  else if (m_Gyro_Angle.m_delta < bruit)
+  else if (m_Gyro_Angle.m_delta < -bruit)
   {
     m_Sum_Delta_Gyro_Angle += m_Gyro_Angle.m_delta;
   }  
 
 
- frc::SmartDashboard::PutNumber("Accel_X",x);
- frc::SmartDashboard::PutNumber("Accel_Y",y);
- frc::SmartDashboard::PutNumber("Accel_Z",z);
- frc::SmartDashboard::PutNumber("Angle_Gyro",angle);
- frc::SmartDashboard::PutNumber("Accel_X_Average",m_AccelerometerX_Average.get());
- frc::SmartDashboard::PutNumber("Accel_Arcos_X",arcos_X);
- frc::SmartDashboard::PutNumber("Accel_Arcos_X_Average",m_AccelerometerX_Arcos_Average.get());
- frc::SmartDashboard::PutNumber("Current_Dynamic_Accel_X",m_AccelerometerX.m_current);
- frc::SmartDashboard::PutNumber("Current_Dynamic_Accel_Y",m_AccelerometerY.m_current);
- frc::SmartDashboard::PutNumber("Current_Dynamic_Gryo",m_Gyro_Angle.m_current);
- frc::SmartDashboard::PutNumber("Delta_Dynamic_Accel_X",m_AccelerometerX.m_delta);
- frc::SmartDashboard::PutNumber("Delta_Dynamic_Accel_Y",m_AccelerometerY.m_delta);
- frc::SmartDashboard::PutNumber("Delta_Dynamic_Gryo",m_Gyro_Angle.m_delta);
- frc::SmartDashboard::PutNumber("Sum_Delta_Gyro_Angle",m_Sum_Delta_Gyro_Angle);
- frc::SmartDashboard::PutNumber("Signe",signe(m_Sum_Delta_Gyro_Angle));
+  frc::SmartDashboard::PutNumber("Accel_X",x);
+  frc::SmartDashboard::PutNumber("Accel_Y",y);
+  frc::SmartDashboard::PutNumber("Accel_Z",z);
+  frc::SmartDashboard::PutNumber("Angle_Gyro",angle);
+  frc::SmartDashboard::PutNumber("Accel_X_Average",m_AccelerometerX_Average.get());
+  frc::SmartDashboard::PutNumber("Accel_Arcos_X",arcos_X);
+  frc::SmartDashboard::PutNumber("Accel_Arcos_X_Average",m_AccelerometerX_Arcos_Average.get());
+  // frc::SmartDashboard::PutNumber("Current_Dynamic_Accel_X",m_AccelerometerX.m_current);
+  // frc::SmartDashboard::PutNumber("Current_Dynamic_Accel_Y",m_AccelerometerY.m_current);
+  // frc::SmartDashboard::PutNumber("Current_Dynamic_Gryo",m_Gyro_Angle.m_current);
+  // frc::SmartDashboard::PutNumber("Delta_Dynamic_Accel_X",m_AccelerometerX.m_delta);
+  // frc::SmartDashboard::PutNumber("Delta_Dynamic_Accel_Y",m_AccelerometerY.m_delta);
+  frc::SmartDashboard::PutNumber("Delta_Dynamic_Gryo",m_Gyro_Angle.m_delta);
+  frc::SmartDashboard::PutNumber("Sum_Delta_Gyro_Angle",m_Sum_Delta_Gyro_Angle);
+  frc::SmartDashboard::PutNumber("Signe",signe(m_Sum_Delta_Gyro_Angle));
 
 
 
@@ -146,7 +157,6 @@ void Robot::TeleopPeriodic() {
   if (m_joystickLeft.GetRawButton(1))
   {
     m_pidController.Reset();
-    m_gyro.Reset();
   }
 
   frc::SmartDashboard::PutNumber("speed",speed);
