@@ -4,16 +4,6 @@
 
 #include "Robot.h"
 
-double Robot::signe(double x) {
-  if (x > 0) {
-    return 1;
-  } else if (x < 0) {
-    return -1;
-  } else {
-    return 0;
-  }
-}
-
 double Robot::Calcul_De_Notre_Brave_JM(double forward, double turn, bool wheelSide) // calcule la vitesse des roues
 {
     double m_forward = forward;
@@ -34,7 +24,7 @@ double Robot::Calcul_De_Notre_Brave_JM(double forward, double turn, bool wheelSi
 }
 
 void Robot::RobotInit() {
-  //frc::ADXRS450_Gyro(frc::SPI::Port::kOnboardCS0);
+  frc::ADXRS450_Gyro(frc::SPI::Port::kOnboardCS0);
   m_gyro.Reset(); 
   m_gyro.Calibrate();
 }
@@ -48,6 +38,7 @@ void Robot::TeleopInit() {
   frc::SmartDashboard::PutNumber("I", 0);
   frc::SmartDashboard::PutNumber("D", 0);
   frc::SmartDashboard::PutNumber("Setpoint", 1);
+  frc::SmartDashboard::PutNumber("m_tau", 0.075);
 
   m_MotorLeft.SetInverted(true);
   m_MotorLeftFollower.SetInverted(true);
@@ -95,41 +86,19 @@ void Robot::TeleopPeriodic() {
   m_Gyro_Angle.set(angle);
 
   m_FusAngle.Update(m_gyro.GetRate()/180.0*3.14159265,m_accelerometer.GetY(),m_accelerometer.GetX());
+  m_FusAngle.SetTau(frc::SmartDashboard::GetNumber("m_tau",0.075));
 
   frc::SmartDashboard::PutNumber("FuseAngle",m_FusAngle.GetAngle()*180.0/3.14159265);
   frc::SmartDashboard::PutNumber("m_K",m_FusAngle.m_k);
   frc::SmartDashboard::PutNumber("m_dt",m_FusAngle.m_dt);
-  frc::SmartDashboard::PutNumber("m_tau",m_FusAngle.m_tau);
   frc::SmartDashboard::PutNumber("m_a",m_FusAngle.m_a);
   frc::SmartDashboard::PutNumber("m_angleAccel",m_FusAngle.m_angleAccel);
-
-
-
-  if (m_Gyro_Angle.m_delta > bruit)
-  {
-    m_Sum_Delta_Gyro_Angle += m_Gyro_Angle.m_delta;
-  }
-  else if (m_Gyro_Angle.m_delta < -bruit)
-  {
-    m_Sum_Delta_Gyro_Angle += m_Gyro_Angle.m_delta;
-  }  
-
 
   frc::SmartDashboard::PutNumber("Accel_X",x);
   frc::SmartDashboard::PutNumber("Accel_Y",y);
   frc::SmartDashboard::PutNumber("Accel_Z",z);
   frc::SmartDashboard::PutNumber("Angle_Gyro",angle);
-  frc::SmartDashboard::PutNumber("Accel_X_Average",m_AccelerometerX_Average.get());
-  frc::SmartDashboard::PutNumber("Accel_Arcos_X",arcos_X);
-  frc::SmartDashboard::PutNumber("Accel_Arcos_X_Average",m_AccelerometerX_Arcos_Average.get());
-  // frc::SmartDashboard::PutNumber("Current_Dynamic_Accel_X",m_AccelerometerX.m_current);
-  // frc::SmartDashboard::PutNumber("Current_Dynamic_Accel_Y",m_AccelerometerY.m_current);
-  // frc::SmartDashboard::PutNumber("Current_Dynamic_Gryo",m_Gyro_Angle.m_current);
-  // frc::SmartDashboard::PutNumber("Delta_Dynamic_Accel_X",m_AccelerometerX.m_delta);
-  // frc::SmartDashboard::PutNumber("Delta_Dynamic_Accel_Y",m_AccelerometerY.m_delta);
-  frc::SmartDashboard::PutNumber("Delta_Dynamic_Gryo",m_Gyro_Angle.m_delta);
-  frc::SmartDashboard::PutNumber("Sum_Delta_Gyro_Angle",m_Sum_Delta_Gyro_Angle);
-  frc::SmartDashboard::PutNumber("Signe",signe(m_Sum_Delta_Gyro_Angle));
+  frc::SmartDashboard::PutNumber("Angle_Accel_X",arcos_X);
 
 
 
@@ -139,7 +108,7 @@ void Robot::TeleopPeriodic() {
 
 
   double output = m_pidController.Calculate(std::abs(x), frc::SmartDashboard::GetNumber("Setpoint", 1));
-  double speed = signe(m_Sum_Delta_Gyro_Angle)*std::clamp(output,-0.3,0.3);
+  double speed = signe(m_FusAngle.GetAngle())*std::clamp(output,-0.3,0.3);
 
 
   if (m_joystickRight.GetRawButton(1))
@@ -160,15 +129,8 @@ void Robot::TeleopPeriodic() {
   }
 
   frc::SmartDashboard::PutNumber("speed",speed);
-  // frc::SmartDashboard::PutNumber("Z", z);
-  // frc::SmartDashboard::PutNumber("Y", y);
-  // frc::SmartDashboard::PutNumber("X",x);
-  // frc::SmartDashboard::PutNumber("m_AccelerometerX_Average",m_AccelerometerX_Average.get());
-  // frc::SmartDashboard::PutNumber("m_AccelerometerX_arcos_Average",m_AccelerometerX_Arcos_Average.get());
   frc::SmartDashboard::PutNumber("Output", output);
   frc::SmartDashboard::PutNumber("error",m_pidController.GetPositionError());
-  // frc::SmartDashboard::PutNumber("Angle", angle);
-  // frc::SmartDashboard::PutNumber("arcos accelerometer X average",arcos_X);
 
 }
 

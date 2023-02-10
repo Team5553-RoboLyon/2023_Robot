@@ -20,6 +20,7 @@
 #define NLERP(a,b,t)	( a + (b - a)*t )
 
 #define bruit 0.1 
+#define signe(a) (((a) < 0) ? -1:1)
 
 #include <frc/TimedRobot.h>
 #include <frc/Joystick.h>
@@ -57,7 +58,7 @@ class Robot : public frc::TimedRobot {
   void TestPeriodic() override;
 
 
-  double signe(double x);
+  // double signe(double x);
   double Calcul_De_Notre_Brave_JM(double forward, double turn, bool wheelSide);
 
   double GetAngle();
