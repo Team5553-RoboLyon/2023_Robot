@@ -82,6 +82,8 @@ class Robot : public frc::TimedRobot {
   NdoubleRollingAverage m_AccelerometerX_Average{25};
   NdoubleRollingAverage m_AccelerometerX_Arcos_Average{25};
 
+  NdoubleRollingAverage m_error{10};
+
   Dynamic m_AccelerometerX;
   Dynamic m_AccelerometerY;
   Dynamic m_Gyro_Angle;

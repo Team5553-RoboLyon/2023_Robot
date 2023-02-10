@@ -8,11 +8,11 @@ Angle_AG::Angle_AG(double dt,double tau,double angle) : m_angle(angle), m_dt(dt)
 //xaccel et zaccel -> base ortonormée directe avec z pointant vers le haut et x axe horizontale 
 double Angle_AG::Update(double rate_gyro, double xaccel, double zaccel)
 {
-    m_a =NCLAMP(-1.0,zaccel,1.0);
-    m_b=NCLAMP(-1.0,xaccel,1.0);
-    // m_angleAccel = acos(m_a);
-    m_angleAccel =atan2(m_b,m_a);
-    m_angle=m_k *(m_angle+rate_gyro*m_dt)+(1.0-m_k)*(m_angleAccel);
+    double a = NCLAMP(-1.0,zaccel,1.0);
+    double b = NCLAMP(-1.0,xaccel,1.0);
+    // m_angleAccel = acos(a);
+    double angleaccel = atan2(b,a);
+    m_angle = m_k *(m_angle+rate_gyro*m_dt)+(1.0-m_k)*(angleaccel);
     return m_angle;
 
 

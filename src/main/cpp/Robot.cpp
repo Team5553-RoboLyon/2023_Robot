@@ -24,7 +24,6 @@ double Robot::Calcul_De_Notre_Brave_JM(double forward, double turn, bool wheelSi
 }
 
 void Robot::RobotInit() {
-  frc::ADXRS450_Gyro(frc::SPI::Port::kOnboardCS0);
   m_gyro.Reset(); 
   m_gyro.Calibrate();
 }
@@ -37,7 +36,6 @@ void Robot::TeleopInit() {
   frc::SmartDashboard::PutNumber("P", 0);
   frc::SmartDashboard::PutNumber("I", 0);
   frc::SmartDashboard::PutNumber("D", 0);
-  frc::SmartDashboard::PutNumber("Setpoint", 1);
   frc::SmartDashboard::PutNumber("m_tau", 0.075);
 
   m_MotorLeft.SetInverted(true);
@@ -64,6 +62,9 @@ void Robot::TeleopInit() {
   m_MotorRightFollower.SetNeutralMode(ctre::phoenix::motorcontrol::NeutralMode::Brake);
   m_MotorRightFollower2.SetNeutralMode(ctre::phoenix::motorcontrol::NeutralMode::Brake);
 
+  m_pidController.SetTolerance(1.5);
+
+
 }
 void Robot::TeleopPeriodic() {
 
@@ -73,13 +74,8 @@ void Robot::TeleopPeriodic() {
 
   double x = m_accelerometer.GetX(); // -1/1
   double y =m_accelerometer.GetY();
-  double z =m_accelerometer.GetZ();
-
 
   double angle = m_gyro.GetAngle();
-  m_AccelerometerX_Average.add(x);
-  double arcos_X = std::acos(m_AccelerometerX_Average.get())/3.14159265*180.0;
-  m_AccelerometerX_Arcos_Average.add(arcos_X);
 
   m_AccelerometerX.set(x);
   m_AccelerometerY.set(y);
@@ -90,25 +86,13 @@ void Robot::TeleopPeriodic() {
 
   frc::SmartDashboard::PutNumber("FuseAngle",m_FusAngle.GetAngle()*180.0/3.14159265);
   frc::SmartDashboard::PutNumber("m_K",m_FusAngle.m_k);
-  frc::SmartDashboard::PutNumber("m_dt",m_FusAngle.m_dt);
-  frc::SmartDashboard::PutNumber("m_a",m_FusAngle.m_a);
-  frc::SmartDashboard::PutNumber("m_angleAccel",m_FusAngle.m_angleAccel);
-
   frc::SmartDashboard::PutNumber("Accel_X",x);
   frc::SmartDashboard::PutNumber("Accel_Y",y);
-  frc::SmartDashboard::PutNumber("Accel_Z",z);
   frc::SmartDashboard::PutNumber("Angle_Gyro",angle);
-  frc::SmartDashboard::PutNumber("Angle_Accel_X",arcos_X);
 
 
-
-
-
-
-
-
-  double output = m_pidController.Calculate(std::abs(x), frc::SmartDashboard::GetNumber("Setpoint", 1));
-  double speed = signe(m_FusAngle.GetAngle())*std::clamp(output,-0.3,0.3);
+  double output = m_pidController.Calculate(m_FusAngle.GetAngle()*180.0/3.14159265, 0.0);
+  double speed = std::clamp(output,-0.3,0.3);
 
 
   if (m_joystickRight.GetRawButton(1))
