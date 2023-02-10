@@ -37,6 +37,10 @@
 #include <lib/Dynamic.h>
 #include <frc/Encoder.h>
 #include <lib/Angle_AG.h>
+#include <lib/Pid.h>
+#include <iostream>
+#include <cstdlib>
+#include <cmath>
 
 //gyro
 
@@ -68,7 +72,7 @@ class Robot : public frc::TimedRobot {
   frc::Joystick m_joystickRight{0};
   frc::Joystick m_joystickLeft{1};
   frc::BuiltInAccelerometer m_accelerometer{};
-  frc::PIDController m_pidController{0, 0, 0};
+  // frc::PIDController m_pidController{0, 0, 0};
   frc::ADXRS450_Gyro m_gyro{frc::SPI::Port::kOnboardCS0};
 
   ctre::phoenix::motorcontrol::can::TalonFX m_MotorRight{1};
@@ -90,10 +94,11 @@ class Robot : public frc::TimedRobot {
 
   double m_Sum_Delta_Gyro_Angle=0.0;
 
-  frc::Encoder m_EncoderRight{1,2};
-  frc::Encoder m_EncoderLeft{3,4};
+  frc::Encoder m_EncoderRight{0,1};
+  frc::Encoder m_EncoderLeft{2,3};
 
   Angle_AG m_FusAngle{0.02,0.075};
+  Pid m_PidController{0.0,0.01,0.0005,0.0};
   
 
 

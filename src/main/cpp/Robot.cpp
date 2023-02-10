@@ -62,15 +62,14 @@ void Robot::TeleopInit() {
   m_MotorRightFollower.SetNeutralMode(ctre::phoenix::motorcontrol::NeutralMode::Brake);
   m_MotorRightFollower2.SetNeutralMode(ctre::phoenix::motorcontrol::NeutralMode::Brake);
 
-  m_pidController.SetTolerance(1.5);
+  m_PidController.SetTolerance(1.5);
 
 
 }
 void Robot::TeleopPeriodic() {
 
-  m_pidController.SetP(frc::SmartDashboard::GetNumber("P", 0));
-  m_pidController.SetI(frc::SmartDashboard::GetNumber("I", 0));
-  m_pidController.SetD(frc::SmartDashboard::GetNumber("D", 0));
+  m_PidController.SetGains(frc::SmartDashboard::GetNumber("P", 0),frc::SmartDashboard::GetNumber("I", 0),frc::SmartDashboard::GetNumber("D", 0));
+
 
   double x = m_accelerometer.GetX(); // -1/1
   double y =m_accelerometer.GetY();
@@ -91,8 +90,9 @@ void Robot::TeleopPeriodic() {
   frc::SmartDashboard::PutNumber("Angle_Gyro",angle);
 
 
-  double output = m_pidController.Calculate(m_FusAngle.GetAngle()*180.0/3.14159265, 0.0);
+  double output = m_PidController.Calculate(m_FusAngle.GetAngle()*180.0/3.14159265);
   double speed = std::clamp(output,-0.3,0.3);
+
 
 
   if (m_joystickRight.GetRawButton(1))
@@ -109,12 +109,11 @@ void Robot::TeleopPeriodic() {
   }
   if (m_joystickLeft.GetRawButton(1))
   {
-    m_pidController.Reset();
+    m_PidController.Reset();
   }
 
   frc::SmartDashboard::PutNumber("speed",speed);
   frc::SmartDashboard::PutNumber("Output", output);
-  frc::SmartDashboard::PutNumber("error",m_pidController.GetPositionError());
 
 }
 
