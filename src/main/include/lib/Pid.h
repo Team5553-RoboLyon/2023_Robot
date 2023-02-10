@@ -13,12 +13,13 @@ class Pid
     double Calculate(double measurement); // retourne l'output à appliquer measurement en degrés
     void Reset(double error=0.0,double lastError=0.0,double integrative=0.0,double derivative=0.0,double output=0.0); // réinitialise le pid
     void SetTolerance(double tolerance){m_tolerance=tolerance;};
+    double m_error; // erreur entre la consigne et la mesure
+
 
 
   private:
 
   double m_output; // output du pid
-  double m_error; // erreur entre la consigne et la mesure
   double m_lastError; // erreur précédente
   double m_setpoint; // consigne
   double m_integrative; // intégrale de l'erreur

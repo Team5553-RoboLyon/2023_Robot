@@ -21,6 +21,7 @@
 
 #define bruit 0.1 
 #define signe(a) (((a) < 0) ? -1:1)
+#define CHARGE_STATION_WIDTH 1.0 // en metre
 
 #include <frc/TimedRobot.h>
 #include <frc/Joystick.h>
@@ -67,6 +68,16 @@ class Robot : public frc::TimedRobot {
 
   double GetAngle();
 
+  //machine à état
+  enum State
+  {
+    Init,
+    Adjusting,
+    End
+  };
+
+  State m_state=State::End;
+
  private:
 
   frc::Joystick m_joystickRight{0};
@@ -99,7 +110,17 @@ class Robot : public frc::TimedRobot {
 
   Angle_AG m_FusAngle{0.02,0.075};
   Pid m_PidController{0.0,0.01,0.0005,0.0};
-  
+
+  double m_kPmin = 0.0075;
+  double m_kPmax = 0.02;
+
+  double m_distanceParcourue = 0.0;
+  double m_distanceRestante = 0.0;
+  double m_distanceAparcourir = 0.0;
+
+  double m_signe_error;
+  double m_encoder_origine;
+
 
 
 };

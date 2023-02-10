@@ -36,7 +36,7 @@ void Robot::TeleopInit() {
   frc::SmartDashboard::PutNumber("P", 0);
   frc::SmartDashboard::PutNumber("I", 0);
   frc::SmartDashboard::PutNumber("D", 0);
-  frc::SmartDashboard::PutNumber("m_tau", 0.075);
+  frc::SmartDashboard::PutNumber("m_tau", 0.5);
 
   m_MotorLeft.SetInverted(true);
   m_MotorLeftFollower.SetInverted(true);
@@ -63,12 +63,20 @@ void Robot::TeleopInit() {
   m_MotorRightFollower2.SetNeutralMode(ctre::phoenix::motorcontrol::NeutralMode::Brake);
 
   m_PidController.SetTolerance(1.5);
+  m_state=State::End;
+  m_EncoderLeft.SetDistancePerPulse(1.0/2048.0);
 
 
 }
 void Robot::TeleopPeriodic() {
 
-  m_PidController.SetGains(frc::SmartDashboard::GetNumber("P", 0),frc::SmartDashboard::GetNumber("I", 0),frc::SmartDashboard::GetNumber("D", 0));
+
+  
+
+
+
+  double a=0.0;
+  double ratio_distance=0.0;
 
 
   double x = m_accelerometer.GetX(); // -1/1
@@ -81,36 +89,74 @@ void Robot::TeleopPeriodic() {
   m_Gyro_Angle.set(angle);
 
   m_FusAngle.Update(m_gyro.GetRate()/180.0*3.14159265,m_accelerometer.GetY(),m_accelerometer.GetX());
-  m_FusAngle.SetTau(frc::SmartDashboard::GetNumber("m_tau",0.075));
+  m_FusAngle.SetTau(frc::SmartDashboard::GetNumber("m_tau",0.5));
 
-  frc::SmartDashboard::PutNumber("FuseAngle",m_FusAngle.GetAngle()*180.0/3.14159265);
-  frc::SmartDashboard::PutNumber("m_K",m_FusAngle.m_k);
-  frc::SmartDashboard::PutNumber("Accel_X",x);
-  frc::SmartDashboard::PutNumber("Accel_Y",y);
-  frc::SmartDashboard::PutNumber("Angle_Gyro",angle);
+  // frc::SmartDashboard::PutNumber("FuseAngle",m_FusAngle.GetAngle()*180.0/3.14159265);
+  // frc::SmartDashboard::PutNumber("m_K",m_FusAngle.m_k);
+  // frc::SmartDashboard::PutNumber("Accel_X",x);
+  // frc::SmartDashboard::PutNumber("Accel_Y",y);
+  // frc::SmartDashboard::PutNumber("Angle_Gyro",angle);
 
 
   double output = m_PidController.Calculate(m_FusAngle.GetAngle()*180.0/3.14159265);
   double speed = std::clamp(output,-0.3,0.3);
 
-
-
   if (m_joystickRight.GetRawButton(1))
   {
+      m_distanceAparcourir = CHARGE_STATION_WIDTH;// à mettre
+      m_distanceParcourue = 0.0;
+      m_distanceRestante=m_distanceAparcourir-m_distanceParcourue;
+      m_encoder_origine=abs(m_EncoderLeft.GetDistance()*(3.0*0.0254)*(2.0*3.14159265));
+      m_PidController.Reset();
+      m_PidController.SetSetpoint(0);
+      m_signe_error = signe(m_PidController.m_error);
+      m_state= State::Adjusting;
+  }
+    frc::SmartDashboard::PutNumber("m_distanceParcourue",m_distanceParcourue);
+    frc::SmartDashboard::PutNumber("m_distanceRestante",m_distanceRestante);
+switch (m_state)
+    {
+    case  Adjusting:
+      std::cout<<("Adjusting")<<std::endl;
+      if (signe(m_PidController.m_error)!=m_signe_error)
+      {
+        m_signe_error=-m_signe_error;
+        m_distanceAparcourir=m_distanceParcourue/2.0;
+        m_kPmax=m_kPmin+(m_kPmax-m_kPmin)*0.9;
+
+        
+        m_distanceParcourue=0.0;
+        m_encoder_origine=NABS(m_EncoderLeft.GetDistance()*(3.0*0.0254)*(2.0*3.14159265));
+      }
+
+      m_distanceParcourue = NABS(m_EncoderLeft.GetDistance()*(3.0*0.0254)*(2.0*3.14159265))-m_encoder_origine;
+      m_distanceRestante =m_distanceAparcourir-m_distanceParcourue;
+      
+      ratio_distance = NCLAMP(0.0,m_distanceRestante,m_distanceAparcourir)/m_distanceAparcourir;
+      a = NLERP(m_kPmin,m_kPmax,ratio_distance);
+      m_PidController.SetGains(a,0.0,0.0);
+    
+      break;
+    }
+
+
+    frc::SmartDashboard::PutNumber("a",a);
+    frc::SmartDashboard::PutNumber("ratio_distance",ratio_distance);
+
+  if (m_joystickLeft.GetRawButton(1))
+  {
+   
     m_MotorRight.Set(ctre::phoenix::motorcontrol::ControlMode::PercentOutput, speed);
     m_MotorLeft.Set(ctre::phoenix::motorcontrol::ControlMode::PercentOutput, speed);
-
   }
   else
   {
     m_MotorRight.Set(ctre::phoenix::motorcontrol::ControlMode::PercentOutput, Calcul_De_Notre_Brave_JM(-m_joystickLeft.GetY(), m_joystickRight.GetZ(), 0));
     m_MotorLeft.Set(ctre::phoenix::motorcontrol::ControlMode::PercentOutput, Calcul_De_Notre_Brave_JM(-m_joystickLeft.GetY(), m_joystickRight.GetZ(), 1));
-
+      
   }
-  if (m_joystickLeft.GetRawButton(1))
-  {
-    m_PidController.Reset();
-  }
+    
+    
 
   frc::SmartDashboard::PutNumber("speed",speed);
   frc::SmartDashboard::PutNumber("Output", output);
