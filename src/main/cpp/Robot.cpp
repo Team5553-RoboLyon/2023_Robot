@@ -23,6 +23,7 @@ void Robot::TeleopInit() {
   m_motor.SetInverted(true);
   m_motor.SetSmartCurrentLimit(40);
   m_motor.SetOpenLoopRampRate(0.5);
+  m_motor.SetIdleMode(rev::CANSparkMax::IdleMode::kBrake);
 
   frc::SmartDashboard::PutNumber("coef",0.2);
 
