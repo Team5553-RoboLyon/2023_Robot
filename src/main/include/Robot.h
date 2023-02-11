@@ -11,17 +11,14 @@
     (((2.0 * VMAX) / AXLETRACK) / \
      1.7) // vitesse angulaire Max theorique	.. à modifier avec Garice
 
-#define NABS(a)         (((a) < 0) ? -(a) : (a))     // VALEUR ABSOLUE
-#define NMAX(a, b)      (((a) > (b)) ? (a) : (b)) // Max
-#define NMIN(a, b)      (((a) < (b)) ? (a) : (b)) // Min
-#define NROUND(fval)	( ( (fval) >= 0.0f ) ? ((Ns32)((fval) + 0.5f)) : ((Ns32)((fval) - 0.5f)) )
-#define NSIGN(a)        (((a)<0) ? -1:1)	
-#define NCLAMP(mn,a,mx)	( ((a)<(mn)) ? (mn) : ((a)>(mx)) ? (mx) : (a) )
-#define NLERP(a,b,t)	( a + (b - a)*t )
 
-#define bruit 0.1 
-#define signe(a) (((a) < 0) ? -1:1)
+#define NOISE   0.1                                             // à la place de ....   #define bruit 0.1 
 #define CHARGE_STATION_WIDTH 1.0 // en metre
+
+#define TRACTION_WHEEL_DIAMETER             (6.0*0.0254)          // Diametre des roues du robot 
+#define TRACTION_WHEEL_RADIUS               (3.0*0.0254)          // rayon des roues du robot 
+#define TRACTION_WHEEL_CIRCUMFERENCE        (3.0*0.0254*NF64_2PI) // circonference  des roues du robot 
+
 
 #include <frc/TimedRobot.h>
 #include <frc/Joystick.h>
@@ -111,16 +108,26 @@ class Robot : public frc::TimedRobot {
   Angle_AG m_FusAngle{0.02,0.075};
   Pid m_PidController{0.0,0.01,0.0005,0.0};
 
-  double m_kPmin = 0.0075;
-  double m_kPmax = 0.02;
+// ARGH !!!!!!!!!!!!!!!!!!!!!!! 
+// Pas d'affectation dans la déclaration !!! 
+  /*
+  double m_kPmin = 0.0075;              !!! MAL
+  double m_kPmax = 0.02;                !!! MAL
 
-  double m_distanceParcourue = 0.0;
-  double m_distanceRestante = 0.0;
-  double m_distanceAparcourir = 0.0;
+  double m_distanceParcourue = 0.0;     !!! MAL
+  double m_distanceRestante = 0.0;      !!! MAL
+  double m_distanceAparcourir = 0.0;    !!! MAL
+  */
+  double m_kPmin;
+  double m_kPmax;
 
-  double m_signe_error;
-  double m_encoder_origine;
+  double m_selfConfidenceMin;   //à la place de  ... double m_kPmin;
+  double m_selfConfidenceMax;   //à la place de  ... double m_kPmax;
 
+  double m_traveledDistance;    //à la place de  ... double m_distanceParcourue;
+  double m_refDistance;         //à la place de  ... double m_distanceAparcourir;
+  // rien ....................    à la place de  ... double m_distanceRestante;
 
-
+  double m_errorSign;           //à la place de  ... double m_signe_error;
+  double m_encoderOrigin;       //à la place de  ... double m_encoder_origin;
 };

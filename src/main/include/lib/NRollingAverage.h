@@ -1,5 +1,4 @@
-#ifndef __NROLLINGAVERAGE_H
-#define __NROLLINGAVERAGE_H
+#pragma once
 
 #include <cstdlib>
 // ***************************************************************************************
@@ -61,9 +60,4 @@ public:
 	long		   *m_plong;
 };
 
-
-
-
-
-#endif // __NROLLINGAVERAGE_H 
 

@@ -1,3 +1,4 @@
+#include "lib/RblUtils.h"
 #include <lib/Pid.h>
 
 Pid::Pid(double setpoint, double kp, double ki, double kd) : m_setpoint(0.0), m_kp(0.0), m_ki(0.0), m_kd(0.0){}
@@ -16,7 +17,7 @@ double Pid::Calculate(double measurement)
     m_derivative = m_error - m_lastError; // calcul de la dérivée de l'erreur 
     m_lastError = m_error; // sauvegarde de l'erreur précédente
     m_output = m_kp * m_error + m_ki * m_integrative + m_kd * m_derivative; // calcul de l'output
-    if (abs(m_error) < m_tolerance){m_output = 0.0; }// si l'erreur est inférieure à la tolérance on arrête le moteur
+    if (NABS(m_error) < m_tolerance){m_output = 0.0; }// si l'erreur est inférieure à la tolérance on arrête le moteur
     return m_output;
 }
 
