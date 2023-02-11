@@ -2,6 +2,8 @@
 
 Angle_AG::Angle_AG(double dt,double tau,double angle) : m_angle(angle), m_dt(dt),m_tau(tau) {
     m_k=tau/(tau+dt);
+    m_delta=0.0;
+    m_bias=0.0;
 }
 
 //rate_gyro -> rate du gyro en radian/sec
@@ -12,8 +14,10 @@ double Angle_AG::Update(double rate_gyro, double xaccel, double zaccel)
     double b = NCLAMP(-1.0,xaccel,1.0);
     // m_angleAccel = acos(a);
     double angleaccel = atan2(b,a);
-    m_angle = m_k *(m_angle+rate_gyro*m_dt)+(1.0-m_k)*(angleaccel);
-    return m_angle;
+    a = m_k *(m_angle+rate_gyro*m_dt)+(1.0-m_k)*(angleaccel);
+    m_delta = a -m_angle;
+    m_angle = a;
+    return m_angle-m_bias;
 
 
 //doc : 

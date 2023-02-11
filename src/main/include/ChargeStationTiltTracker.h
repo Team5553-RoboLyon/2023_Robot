@@ -10,10 +10,10 @@ public:
 	~TiltTracker();
     
     void initialize(double left_encoder_dist, double right_encoder_dist, double m_angle, double estimated_next_tilt_distance );
- 	void DetectTiltPoint(double left_encoder_dist, double right_encoder_dist,double angle);
+ 	bool DetectTiltPoint(double left_encoder_dist, double right_encoder_dist,double angle);
     double getDistanceBetweenTilts(){return NABS(m_tiltB - m_tiltA);}
-     double getAlgebricDistanceBetweenTilts(){return m_tiltB - m_tiltA;}
-    
+    double getAlgebricDistanceBetweenTilts(){return m_tiltB - m_tiltA;}
+    double getNormalizeDistance();
     double	m_tiltA;
 	double	m_tiltB;
     double* m_pTilt;

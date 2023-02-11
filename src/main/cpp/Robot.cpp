@@ -37,9 +37,9 @@ void Robot::AutonomousInit() {}
 void Robot::AutonomousPeriodic() {}
 
 void Robot::TeleopInit() {
-  frc::SmartDashboard::PutNumber("P", 0);
-  frc::SmartDashboard::PutNumber("I", 0);
-  frc::SmartDashboard::PutNumber("D", 0);
+  frc::SmartDashboard::PutNumber("P", 0.0);
+  frc::SmartDashboard::PutNumber("I", 0.0);
+  frc::SmartDashboard::PutNumber("D", 0.0);
   frc::SmartDashboard::PutNumber("m_tau", 0.5);
 
   m_MotorLeft.SetInverted(true);
@@ -66,19 +66,14 @@ void Robot::TeleopInit() {
   m_MotorRightFollower.SetNeutralMode(ctre::phoenix::motorcontrol::NeutralMode::Brake);
   m_MotorRightFollower2.SetNeutralMode(ctre::phoenix::motorcontrol::NeutralMode::Brake);
 
-  m_PidController.SetTolerance(1.5);
+  m_AngleController.SetTolerance(4);
   m_state=State::End;
   m_EncoderLeft.SetDistancePerPulse(1.0/2048.0);
+  m_EncoderRight.SetDistancePerPulse(1.0/2048.0);
 
 
 }
 void Robot::TeleopPeriodic() {
-
-
-  
-
-
-
   double a      =0.0;
   double ratio_distance=0.0;
 
@@ -90,6 +85,8 @@ void Robot::TeleopPeriodic() {
   m_AccelerometerX.set(x);
   m_AccelerometerY.set(y);
   m_Gyro_Angle.set(angle);
+  m_DeltaAngle_Average.add(m_FusAngle.GetDelta()*180.0/3.14159265);
+
   
   m_FusAngle.SetTau(frc::SmartDashboard::GetNumber("m_tau",0.5));
   m_FusAngle.Update(NDEGtoRAD(m_gyro.GetRate()),m_accelerometer.GetY(),m_accelerometer.GetX());    // A la place de  ... m_FusAngle.Update(m_gyro.GetRate()/180.0*3.14159265,m_accelerometer.GetY(),m_accelerometer.GetX());
@@ -105,14 +102,18 @@ void Robot::TeleopPeriodic() {
 
   if (m_joystickRight.GetRawButton(1))
   {
+    m_FusAngle.AutoSetBias();
       // reset de la posiition de ref des encodeurs.
-      m_encoderOrigin       = NABS(m_EncoderLeft.GetDistance()*TRACTION_WHEEL_CIRCUMFERENCE);   // a la place de  ... m_encoder_origine=abs(m_EncoderLeft.GetDistance()*(3.0*0.0254)*(2.0*3.14159265));
-      m_refDistance         = CHARGE_STATION_WIDTH;                                             // a la place de  ... m_distanceAparcourir  = CHARGE_STATION_WIDTH;
-      m_traveledDistance    = 0.0;                                                              // a la place de  ... m_distanceParcourue   = 0.0;
+      //m_encoderOrigin       = NABS(m_EncoderLeft.GetDistance()*TRACTION_WHEEL_CIRCUMFERENCE);   // a la place de  ... m_encoder_origine=abs(m_EncoderLeft.GetDistance()*(3.0*0.0254)*(2.0*3.14159265));
+      //m_refDistance         = CHARGE_STATION_WIDTH;                                             // a la place de  ... m_distanceAparcourir  = CHARGE_STATION_WIDTH;
+      // m_traveledDistance    = 0.0;                                                              // a la place de  ... m_distanceParcourue   = 0.0;
                                                                                                 // on supprime ....   m_distanceRestante    = m_distanceAparcourir-m_distanceParcourue;
-      m_PidController.Reset();
-      m_PidController.SetSetpoint(0.0);                                                 // à la place de ... m_PidController.SetSetpoint(0);
-      m_errorSign = NSIGN(m_PidController.m_error);                                     // à la place de ... m_signe_error = NSIGN(m_PidController.m_error);
+      m_AngleController.Reset();
+      m_AngleController.SetSetpoint(0.0);                                                 // à la place de ... m_AngleController.SetSetpoint(0);
+      m_VangleController.Reset();
+      m_VangleController.SetSetpoint(0.0);                                                
+      // m_errorSign = NSIGN(m_AngleController.m_error);                                     // à la place de ... m_signe_error = NSIGN(m_AngleController.m_error);
+      m_TiltTracker.initialize(m_EncoderLeft.GetDistance()*TRACTION_WHEEL_CIRCUMFERENCE,m_EncoderRight.GetDistance()*TRACTION_WHEEL_CIRCUMFERENCE,m_FusAngle.GetAngle(),CHARGE_STATION_WIDTH);
       m_state= State::Adjusting;
   }
   
@@ -122,7 +123,10 @@ void Robot::TeleopPeriodic() {
   {
     case  Adjusting:
       std::cout<<("Adjusting")<<std::endl;
-      if (NSIGN(m_PidController.m_error)!=m_errorSign)
+      // if(m_TiltTracker.DetectTiltPoint(m_EncoderLeft.GetDistance()*TRACTION_WHEEL_CIRCUMFERENCE,m_EncoderRight.GetDistance()*TRACTION_WHEEL_CIRCUMFERENCE,m_FusAngle.GetAngle()))
+      // {
+      // }
+      if (NSIGN(m_AngleController.m_error)!=m_errorSign)
       {
         m_errorSign=-m_errorSign;
         m_refDistance=m_traveledDistance/2.0;
@@ -138,20 +142,32 @@ void Robot::TeleopPeriodic() {
       
       a = (m_refDistance - m_traveledDistance)/m_refDistance;
       ratio_distance = NCLAMP(0.0,a,1.0);
-      a = NLERP(m_kPmin,m_kPmax,ratio_distance);
-      m_PidController.SetGains(a,0.0,0.0);
+     // avant a = NLERP(m_kPmin,m_kPmax,ratio_distance);
+      //m_AngleController.SetGains(m_kPmax,0.0,0.0); // avant m_AngleController.SetGains(a,0.0,0.0);
     
       break;
 
       default:
         break;
   }
-
-  double output = m_PidController.Calculate(m_FusAngle.GetAngle()*180.0/3.14159265);
+  double p=frc::SmartDashboard::GetNumber("P",0.008);
+  double i =frc::SmartDashboard::GetNumber("I",0.0001);
+  double d =frc::SmartDashboard::GetNumber("D",0.07);
+  m_TiltTracker.DetectTiltPoint(m_EncoderLeft.GetDistance()*TRACTION_WHEEL_CIRCUMFERENCE,m_EncoderRight.GetDistance()*TRACTION_WHEEL_CIRCUMFERENCE,m_FusAngle.GetAngle());
+  m_AngleController.SetGains(p,i,d); // avant m_AngleController.SetGains(a,0.0,0.0);
+  m_VangleController.SetGains(p*8.0,i*10.0,d*10.0);
+  double Angleoutput = m_AngleController.Calculate(m_FusAngle.GetAngle()*180.0/3.14159265);
+  double Voutput = m_VangleController.Calculate(m_DeltaAngle_Average.get());
+  double output = K_ANTICIPATION*Voutput+(1-K_ANTICIPATION)*Angleoutput;
   output = NCLAMP(-0.3,output,0.3);
+  frc::SmartDashboard::PutNumber("a",a);
+  frc::SmartDashboard::PutNumber("error",m_AngleController.m_error);
+  frc::SmartDashboard::PutNumber("delta_error",m_VangleController.m_error);
+  frc::SmartDashboard::PutNumber("ratio_distance",ratio_distance);
+  frc::SmartDashboard::PutNumber("m_tiltA",m_TiltTracker.m_tiltA);
+  frc::SmartDashboard::PutNumber("m_tiltB",m_TiltTracker.m_tiltB);
+  frc::SmartDashboard::PutNumber("encoder",(m_EncoderLeft.GetDistance()*TRACTION_WHEEL_CIRCUMFERENCE+m_EncoderRight.GetDistance()*TRACTION_WHEEL_CIRCUMFERENCE)/2);
 
-    frc::SmartDashboard::PutNumber("a",a);
-    frc::SmartDashboard::PutNumber("ratio_distance",ratio_distance);
 
   if (m_joystickLeft.GetRawButton(1))
   {
@@ -167,6 +183,9 @@ void Robot::TeleopPeriodic() {
   }
 
   frc::SmartDashboard::PutNumber("Output", output);
+  frc::SmartDashboard::PutNumber("Voutput", Voutput);
+  frc::SmartDashboard::PutNumber("Angleoutput", Angleoutput);
+
 
 }
 

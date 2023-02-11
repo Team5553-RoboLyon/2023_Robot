@@ -18,7 +18,7 @@
 #define TRACTION_WHEEL_DIAMETER             (6.0*0.0254)          // Diametre des roues du robot 
 #define TRACTION_WHEEL_RADIUS               (3.0*0.0254)          // rayon des roues du robot 
 #define TRACTION_WHEEL_CIRCUMFERENCE        (3.0*0.0254*NF64_2PI) // circonference  des roues du robot 
-
+#define K_ANTICIPATION 0.4
 
 #include <frc/TimedRobot.h>
 #include <frc/Joystick.h>
@@ -29,6 +29,7 @@
 #include <frc/shuffleboard/Shuffleboard.h>
 #include <frc/BuiltInAccelerometer.h>
 #include <frc/ADXRS450_Gyro.h>
+#include <ChargeStationTiltTracker.h>
 #include <frc/SPI.h>
 #include <lib/NRollingAverage.h>
 #include <lib/rate_limiter.h>
@@ -80,7 +81,7 @@ class Robot : public frc::TimedRobot {
   frc::Joystick m_joystickRight{0};
   frc::Joystick m_joystickLeft{1};
   frc::BuiltInAccelerometer m_accelerometer{};
-  // frc::PIDController m_pidController{0, 0, 0};
+  // frc::PIDController m_AngleController{0, 0, 0};
   frc::ADXRS450_Gyro m_gyro{frc::SPI::Port::kOnboardCS0};
 
   ctre::phoenix::motorcontrol::can::TalonFX m_MotorRight{1};
@@ -93,6 +94,7 @@ class Robot : public frc::TimedRobot {
 
   NdoubleRollingAverage m_AccelerometerX_Average{25};
   NdoubleRollingAverage m_AccelerometerX_Arcos_Average{25};
+  NdoubleRollingAverage m_DeltaAngle_Average{10};
 
   NdoubleRollingAverage m_error{10};
 
@@ -106,7 +108,11 @@ class Robot : public frc::TimedRobot {
   frc::Encoder m_EncoderLeft{2,3};
 
   Angle_AG m_FusAngle{0.02,0.075};
-  Pid m_PidController{0.0,0.01,0.0005,0.0};
+  Pid m_VangleController{0.0,0.01,0.0005,0.0};
+  Pid m_AngleController{0.0,0.01,0.0005,0.0};
+
+  TiltTracker m_TiltTracker{5};
+
 
 // ARGH !!!!!!!!!!!!!!!!!!!!!!! 
 // Pas d'affectation dans la déclaration !!! 

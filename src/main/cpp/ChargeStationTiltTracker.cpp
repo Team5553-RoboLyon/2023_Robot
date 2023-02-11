@@ -21,7 +21,7 @@ void TiltTracker::initialize(double left_encoder_dist, double right_encoder_dist
     m_angle = angle;
 }
 
-void TiltTracker::DetectTiltPoint(double left_encoder_dist, double right_encoder_dist, double angle)
+bool TiltTracker::DetectTiltPoint(double left_encoder_dist, double right_encoder_dist, double angle)
 {
     if( NSIGN(angle) != NSIGN(m_angle) )
     {
@@ -32,6 +32,14 @@ void TiltTracker::DetectTiltPoint(double left_encoder_dist, double right_encoder
             m_angle = angle;
             *m_pTilt = (left_encoder_dist + right_encoder_dist)/2.0;
             m_pTilt = (m_pTilt == &m_tiltA) ? &m_tiltB:&m_tiltA;
+            return true;
         }
+
     }
+    return false;
+}
+
+double TiltTracker::getNormalizeDistance()
+{
+    return 0.0;
 }
