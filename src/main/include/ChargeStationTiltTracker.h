@@ -13,9 +13,11 @@ public:
  	void DetectTiltPoint(double left_encoder_dist, double right_encoder_dist,double angle);
     double getDistanceBetweenTilts(){return NABS(m_tiltB - m_tiltA);}
      double getAlgebricDistanceBetweenTilts(){return m_tiltB - m_tiltA;}
+    
     double	m_tiltA;
 	double	m_tiltB;
     double* m_pTilt;
     double  m_angle;
     double  m_angleThreshold;
+    
 };
