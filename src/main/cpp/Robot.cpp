@@ -78,19 +78,19 @@ void Robot::TeleopPeriodic() {
   double ratio_distance=0.0;
 
 
-  double x      = m_accelerometer.GetX(); // -1/1
-  double y      =m_accelerometer.GetY();
-  double angle  = m_gyro.GetAngle();
+  double x_g              = m_accelerometer.GetX(); // -1/1
+  double y_g              = m_accelerometer.GetY();
+  double angle_deg        = m_gyro.GetAngle();
+  double gyro_rate_degps  = m_gyro.GetRate();
 
-  m_AccelerometerX.set(x);
-  m_AccelerometerY.set(y);
-  m_Gyro_Angle.set(angle);
-  m_DeltaAngle_Average.add(m_FusAngle.GetDelta()*180.0/3.14159265);
+  m_AccelerometerX.set(x_g);
+  m_AccelerometerY.set(y_g);
+  m_GyroAngle.set(angle_deg);
 
-  
   m_FusAngle.SetTau(frc::SmartDashboard::GetNumber("m_tau",0.5));
-  m_FusAngle.Update(NDEGtoRAD(m_gyro.GetRate()),m_accelerometer.GetY(),m_accelerometer.GetX());    // A la place de  ... m_FusAngle.Update(m_gyro.GetRate()/180.0*3.14159265,m_accelerometer.GetY(),m_accelerometer.GetX());
- 
+  m_FusAngle.Update(NDEGtoRAD(gyro_rate_degps),y_g,x_g);    // A la place de  ... m_FusAngle.Update(m_gyro.GetRate()/180.0*3.14159265,m_accelerometer.GetY(),m_accelerometer.GetX());
+  m_gyroRateAverage.add(gyro_rate_degps); //m_gyroRateAverage.add(m_FusAngle.GetDelta()*180.0/3.14159265);
+
   // frc::SmartDashboard::PutNumber("FuseAngle",m_FusAngle.GetAngle()*180.0/3.14159265);
   // frc::SmartDashboard::PutNumber("m_K",m_FusAngle.m_k);
   // frc::SmartDashboard::PutNumber("Accel_X",x);
@@ -157,7 +157,7 @@ void Robot::TeleopPeriodic() {
   m_AngleController.SetGains(p,i,d); // avant m_AngleController.SetGains(a,0.0,0.0);
   m_VangleController.SetGains(p*8.0,i*10.0,d*10.0);
   double Angleoutput = m_AngleController.Calculate(m_FusAngle.GetAngle()*180.0/3.14159265);
-  double Voutput = m_VangleController.Calculate(m_DeltaAngle_Average.get());
+  double Voutput = m_VangleController.Calculate(m_gyroRateAverage.get());
   double output = K_ANTICIPATION*Voutput+(1-K_ANTICIPATION)*Angleoutput;
   output = NCLAMP(-0.3,output,0.3);
   frc::SmartDashboard::PutNumber("a",a);
