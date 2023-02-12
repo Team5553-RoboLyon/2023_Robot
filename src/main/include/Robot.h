@@ -94,13 +94,13 @@ class Robot : public frc::TimedRobot {
 
   NdoubleRollingAverage m_AccelerometerX_Average{25};
   NdoubleRollingAverage m_AccelerometerX_Arcos_Average{25};
-  NdoubleRollingAverage m_DeltaAngle_Average{10};
+  NdoubleRollingAverage m_gyroRateAverage{10};
 
   NdoubleRollingAverage m_error{10};
 
   Dynamic m_AccelerometerX;
   Dynamic m_AccelerometerY;
-  Dynamic m_Gyro_Angle;
+  Dynamic m_GyroAngle;
 
   double m_Sum_Delta_Gyro_Angle=0.0;
 
@@ -113,27 +113,16 @@ class Robot : public frc::TimedRobot {
 
   TiltTracker m_TiltTracker{5};
 
-
-// ARGH !!!!!!!!!!!!!!!!!!!!!!! 
-// Pas d'affectation dans la déclaration !!! 
-  /*
-  double m_kPmin = 0.0075;              !!! MAL
-  double m_kPmax = 0.02;                !!! MAL
-
-  double m_distanceParcourue = 0.0;     !!! MAL
-  double m_distanceRestante = 0.0;      !!! MAL
-  double m_distanceAparcourir = 0.0;    !!! MAL
-  */
   double m_kPmin;
   double m_kPmax;
 
-  double m_selfConfidenceMin;   //à la place de  ... double m_kPmin;
-  double m_selfConfidenceMax;   //à la place de  ... double m_kPmax;
+  double m_selfConfidenceMin;   
+  double m_selfConfidenceMax;   
 
-  double m_traveledDistance;    //à la place de  ... double m_distanceParcourue;
-  double m_refDistance;         //à la place de  ... double m_distanceAparcourir;
-  // rien ....................    à la place de  ... double m_distanceRestante;
+  double m_traveledDistance;    
+  double m_refDistance;         
+  
 
-  double m_errorSign;           //à la place de  ... double m_signe_error;
-  double m_encoderOrigin;       //à la place de  ... double m_encoder_origin;
+  double m_errorSign;         
+  double m_encoderOrigin;     
 };
