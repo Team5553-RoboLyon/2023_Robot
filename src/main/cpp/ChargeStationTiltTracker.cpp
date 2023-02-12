@@ -23,6 +23,7 @@ void TiltTracker::initialize(double left_encoder_dist, double right_encoder_dist
 
 bool TiltTracker::DetectTiltPoint(double left_encoder_dist, double right_encoder_dist, double angle)
 {
+    m_kAnticipation=0.5;
     if( NSIGN(angle) != NSIGN(m_angle) )
     {
         double dif = angle - m_angle;

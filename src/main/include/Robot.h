@@ -40,6 +40,7 @@
 #include <iostream>
 #include <cstdlib>
 #include <cmath>
+#include <lib/NLCsv.h>
 
 //gyro
 
@@ -104,8 +105,8 @@ class Robot : public frc::TimedRobot {
 
   double m_Sum_Delta_Gyro_Angle=0.0;
 
-  frc::Encoder m_EncoderRight{0,1};
-  frc::Encoder m_EncoderLeft{2,3};
+  frc::Encoder m_EncoderRight{0,1,true};
+  frc::Encoder m_EncoderLeft{2,3,false};
 
   Angle_AG m_FusAngle{0.02,0.075};
   Pid m_VangleController{0.0,0.01,0.0005,0.0};
@@ -124,5 +125,18 @@ class Robot : public frc::TimedRobot {
   
 
   double m_errorSign;         
-  double m_encoderOrigin;     
+  double m_encoderOrigin; 
+
+  double m_vOutput;
+  double m_Output;
+  double m_AngleOutput;
+  double m_LogFusAngle;
+  double m_LogGyroRate;
+  double m_LogGyroRateAverage;
+  double m_LogAngleAccel;
+  double m_LogEncoderM;
+  double m_LogAccelX;
+
+
+  NLCSV m_logCSV{11};    
 };

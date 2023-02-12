@@ -19,6 +19,7 @@ class Angle_AG
   void SetBias(double bias){m_bias=bias;};
   void AutoSetBias(){m_bias=m_angle;};
 
+  double m_angleAccel; // angle en radian calculé avec l'accelerometre
 
 
 
@@ -30,5 +31,6 @@ class Angle_AG
   double m_tau;   // temp en seconde
   double m_k;     // coef calculé grace à m_tau et dt
   double m_bias; // 
+  
   
 };

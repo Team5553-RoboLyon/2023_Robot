@@ -1,6 +1,8 @@
 #pragma once
 #include <cstdlib>
 #include "lib/RblUtils.h"
+#define K_MIN 0.2 
+#define K_MAX 0.8
 
 class TiltTracker
 {
@@ -19,5 +21,8 @@ public:
     double* m_pTilt;
     double  m_angle;
     double  m_angleThreshold;
+    double m_kAnticipation;
+    double m_a;
+    
     
 };

@@ -13,8 +13,8 @@ double Angle_AG::Update(double rate_gyro, double xaccel, double zaccel)
     double a = NCLAMP(-1.0,zaccel,1.0);
     double b = NCLAMP(-1.0,xaccel,1.0);
     // m_angleAccel = acos(a);
-    double angleaccel = atan2(b,a);
-    a = m_k *(m_angle+rate_gyro*m_dt)+(1.0-m_k)*(angleaccel);
+    m_angleAccel = atan2(b,a);
+    a = m_k *(m_angle+rate_gyro*m_dt)+(1.0-m_k)*(m_angleAccel);
     m_delta = a -m_angle;
     m_angle = a;
     return m_angle-m_bias;
