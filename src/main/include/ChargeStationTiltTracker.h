@@ -8,20 +8,28 @@ class TiltTracker
 {
 public:
 	TiltTracker();
-    TiltTracker(double angle_threshold);
+    TiltTracker(const double angle_rate_threshold, const double dt_threshold, const double m_kmin);
 	~TiltTracker();
     
-    void initialize(double left_encoder_dist, double right_encoder_dist, double m_angle, double estimated_next_tilt_distance );
- 	bool DetectTiltPoint(double left_encoder_dist, double right_encoder_dist,double angle);
+    void initialize(const double position,const double estimated_next_tilt_distance);
+ 	double Update(const double dt, const double position, const double angle,const double angle_rate);
     double getDistanceBetweenTilts(){return NABS(m_tiltB - m_tiltA);}
     double getAlgebricDistanceBetweenTilts(){return m_tiltB - m_tiltA;}
     double getNormalizeDistance();
+    
     double	m_tiltA;
 	double	m_tiltB;
-    double* m_pTilt;
-    double  m_angle;
+    double* m_pFrom;
+    double* m_pTo;
+
+    double  m_dt;
     double  m_angleThreshold;
-    double m_kAnticipation;
+    double  m_deltaTimeThreshold;
+    
+    
+    double m_aParabolic;
+    double m_bParabolic;    // = m_k minimum
+    double m_k;
     double m_a;
     
     

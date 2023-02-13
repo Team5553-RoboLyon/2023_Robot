@@ -128,7 +128,7 @@ void Robot::TeleopPeriodic() {
       m_VangleController.Reset();
       m_VangleController.SetSetpoint(0.0);                                                
       // m_errorSign = NSIGN(m_AngleController.m_error);                                     // à la place de ... m_signe_error = NSIGN(m_AngleController.m_error);
-      m_TiltTracker.initialize(m_EncoderLeft.GetDistance()*TRACTION_WHEEL_CIRCUMFERENCE,m_EncoderRight.GetDistance()*TRACTION_WHEEL_CIRCUMFERENCE,m_FusAngle.GetAngle(),CHARGE_STATION_WIDTH);
+      m_TiltTracker.initialize((m_EncoderLeft.GetDistance()+m_EncoderRight.GetDistance())*TRACTION_WHEEL_CIRCUMFERENCE/2.0,CHARGE_STATION_WIDTH);
       m_state= State::Adjusting;
   }
   
@@ -167,13 +167,14 @@ void Robot::TeleopPeriodic() {
   double i =frc::SmartDashboard::GetNumber("I",0.0001);
   double d =frc::SmartDashboard::GetNumber("D",0.07);
 
-  m_TiltTracker.DetectTiltPoint(m_EncoderLeft.GetDistance()*TRACTION_WHEEL_CIRCUMFERENCE,m_EncoderRight.GetDistance()*TRACTION_WHEEL_CIRCUMFERENCE,m_FusAngle.GetAngle());
+  m_TiltTracker.Update(0.02,(m_EncoderLeft.GetDistance()+m_EncoderRight.GetDistance())*TRACTION_WHEEL_CIRCUMFERENCE/2.0,m_FusAngle.GetAngle(),m_gyroRateAverage.get());
   m_AngleController.SetGains(p,i,d); // avant m_AngleController.SetGains(a,0.0,0.0);
   m_VangleController.SetGains(p*8.0,i*10.0,d*10.0);
   m_AngleOutput = m_AngleController.Calculate(NRADtoDEG(m_FusAngle.GetAngle()));
   m_vOutput = m_VangleController.Calculate(m_gyroRateAverage.get());
-  m_Output = m_TiltTracker.m_kAnticipation*m_vOutput+(1-m_TiltTracker.m_kAnticipation)*m_AngleOutput;
-  frc::SmartDashboard::PutNumber("k_anticipation",m_TiltTracker.m_kAnticipation);
+  m_Output = m_vOutput+ m_TiltTracker.m_k*m_AngleOutput;
+  
+  frc::SmartDashboard::PutNumber("k_anticipation",m_TiltTracker.m_k);
   m_Output = NCLAMP(-0.3,0,0.3);
   frc::SmartDashboard::PutNumber("a",a);
   frc::SmartDashboard::PutNumber("error",m_AngleController.m_error);
