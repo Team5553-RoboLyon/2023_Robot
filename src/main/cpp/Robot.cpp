@@ -13,35 +13,51 @@ void Robot::AutonomousInit() {}
 void Robot::AutonomousPeriodic() {}
 
 void Robot::TeleopInit() {
-  frc::SmartDashboard::PutNumber("P", 0);
-  frc::SmartDashboard::PutNumber("I", 0);
-  frc::SmartDashboard::PutNumber("D", 0);
+  m_logCSV.open("/home/lvuser/", true);
   frc::SmartDashboard::PutNumber("Setpoint", 0);
   m_encoder.Reset();
-  m_encoder.SetDistancePerPulse((90/22)*360);//conversion de la distance en degré en théorie
+  m_encoder.SetDistancePerPulse(1.0/2048.0*(22.0/90.0)*360.0);//conversion de la distance en degré en théorie /2048.0*(90.0/22.0)
+
+  m_encoderMotor.SetPositionConversionFactor(1.0/2048.0*(24.5*(90/22))*360);
 
   m_motor.SetInverted(true);
   m_motor.SetSmartCurrentLimit(40);
-  m_motor.SetOpenLoopRampRate(0.5);
   m_motor.SetIdleMode(rev::CANSparkMax::IdleMode::kBrake);
 
   frc::SmartDashboard::PutNumber("coef",0.2);
 
   m_motor.SetIdleMode(rev::CANSparkMax::IdleMode::kBrake);
 
+
+  m_logCSV.setItem(0,"m_encoderThrougboreDeg",5, &m_encoderThrougboreDeg);
+  m_logCSV.setItem(1,"m_encoderMotorDeg",5,&m_encoderMotorDeg);
+  m_logCSV.setItem(2,"voltage",5, &m_voltage);
+  m_logCSV.setItem(3,"current",5, &m_current);
+
 }
+
 void Robot::TeleopPeriodic() {
+  m_current = m_motor.GetOutputCurrent();
+  m_voltage = m_motor.GetBusVoltage();
+  m_encoderThrougboreDeg = m_encoder.GetDistance();
+  // m_encoderMotorDeg=m_encoderMotor.GetPosition();
   m_clamp = frc::SmartDashboard::GetNumber("coef",0.2);
-  m_pidController.SetP(frc::SmartDashboard::GetNumber("P", 0));
-  m_pidController.SetI(frc::SmartDashboard::GetNumber("I", 0));
-  m_pidController.SetD(frc::SmartDashboard::GetNumber("D", 0));
-  m_pidController.SetSetpoint(frc::SmartDashboard::GetNumber("Setpoint", 1));
+  frc::SmartDashboard::PutNumber("m_encoderThrougboreDeg", m_encoderThrougboreDeg);
+  frc::SmartDashboard::PutNumber("m_encoderMotorDeg",m_encoderMotor.GetPosition());
+  frc::SmartDashboard::PutNumber("revolution",  m_encoderMotor.GetCountsPerRevolution());
+  frc::SmartDashboard::PutNumber("voltage", m_voltage);
+  frc::SmartDashboard::PutNumber("current", m_current);
 
 
-  m_motor.Set(std::clamp(m_joystick.GetZ(), -m_clamp, m_clamp));
+  double m_voltage=std::clamp(m_joystick.GetZ(), -m_clamp, m_clamp)*12.0;
+  m_motor.Set(m_voltage/12.0);
+
+  m_logCSV.write();
 }
 
-void Robot::DisabledInit() {}
+void Robot::DisabledInit() {
+  m_logCSV.close();
+}
 void Robot::DisabledPeriodic() {}
 
 void Robot::TestInit() {}
