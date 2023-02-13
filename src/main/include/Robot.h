@@ -11,6 +11,7 @@
 #include <frc/Joystick.h>
 #include <frc/Encoder.h>
 #include <NLCsv.h>
+#include <units/voltage.h>
 
 class Robot : public frc::TimedRobot {
  public:
@@ -33,7 +34,7 @@ class Robot : public frc::TimedRobot {
   void SimulationPeriodic() override;
 
   private:
-  frc::Encoder m_encoder{0, 1};
+  frc::Encoder m_encoder{0, 1,false};
   frc::Joystick m_joystick{0};
   frc::PIDController m_pidController{0, 0, 0};
   NLCSV m_logCSV{4};

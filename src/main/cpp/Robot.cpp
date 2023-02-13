@@ -16,11 +16,11 @@ void Robot::TeleopInit() {
   m_logCSV.open("/home/lvuser/", true);
   frc::SmartDashboard::PutNumber("Setpoint", 0);
   m_encoder.Reset();
-  m_encoder.SetDistancePerPulse(1.0/2048.0*(22.0/90.0)*360.0);//conversion de la distance en degré en théorie /2048.0*(90.0/22.0)
+  m_encoder.SetDistancePerPulse((1.0/2048.0*(22.0/90.0)*360.0));//conversion de la distance en degré en théorie /2048.0*(90.0/22.0)
+  m_encoderMotor.SetPosition(0.0);
+  m_encoderMotor.SetPositionConversionFactor(((1.0/24.5)*(22.0/90.0)*360.0));
 
-  m_encoderMotor.SetPositionConversionFactor(1.0/2048.0*(24.5*(90/22))*360);
-
-  m_motor.SetInverted(true);
+  m_motor.SetInverted(false);
   m_motor.SetSmartCurrentLimit(40);
   m_motor.SetIdleMode(rev::CANSparkMax::IdleMode::kBrake);
 
@@ -37,20 +37,26 @@ void Robot::TeleopInit() {
 }
 
 void Robot::TeleopPeriodic() {
+  m_voltage=5.0;
   m_current = m_motor.GetOutputCurrent();
-  m_voltage = m_motor.GetBusVoltage();
   m_encoderThrougboreDeg = m_encoder.GetDistance();
-  // m_encoderMotorDeg=m_encoderMotor.GetPosition();
+  m_encoderMotorDeg=m_encoderMotor.GetPosition();
   m_clamp = frc::SmartDashboard::GetNumber("coef",0.2);
   frc::SmartDashboard::PutNumber("m_encoderThrougboreDeg", m_encoderThrougboreDeg);
   frc::SmartDashboard::PutNumber("m_encoderMotorDeg",m_encoderMotor.GetPosition());
-  frc::SmartDashboard::PutNumber("revolution",  m_encoderMotor.GetCountsPerRevolution());
   frc::SmartDashboard::PutNumber("voltage", m_voltage);
   frc::SmartDashboard::PutNumber("current", m_current);
 
 
-  double m_voltage=std::clamp(m_joystick.GetZ(), -m_clamp, m_clamp)*12.0;
-  m_motor.Set(m_voltage/12.0);
+  // m_motor.Set(m_voltage/12.0);
+  if (m_encoderThrougboreDeg<360.0)
+  {
+    m_motor.SetVoltage(units::voltage::volt_t (m_voltage));
+  }
+  else
+  {
+    m_motor.SetVoltage(units::voltage::volt_t (0.0));
+  }
 
   m_logCSV.write();
 }
