@@ -37,7 +37,7 @@ void Robot::AutonomousInit() {}
 void Robot::AutonomousPeriodic() {}
 
 void Robot::TeleopInit() {
-  frc::SmartDashboard::PutNumber("P", 0.0);
+  frc::SmartDashboard::PutNumber("P", 0.02);
   frc::SmartDashboard::PutNumber("I", 0.0);
   frc::SmartDashboard::PutNumber("D", 0.0);
   frc::SmartDashboard::PutNumber("m_tau", 0.5);
@@ -66,23 +66,22 @@ void Robot::TeleopInit() {
   m_MotorRightFollower.SetNeutralMode(ctre::phoenix::motorcontrol::NeutralMode::Brake);
   m_MotorRightFollower2.SetNeutralMode(ctre::phoenix::motorcontrol::NeutralMode::Brake);
 
-  m_AngleController.SetTolerance(4);
   m_state=State::End;
   m_EncoderLeft.SetDistancePerPulse(1.0/2048.0);
   m_EncoderRight.SetDistancePerPulse(1.0/2048.0);
 
-  m_logCSV.open("/home/lvuser/", true);
-  m_logCSV.setItem(0, "m_FusAngle",5, &m_LogFusAngle);
-  m_logCSV.setItem(1, "m_gyroRateAverage",5, &m_LogGyroRateAverage);
-  m_logCSV.setItem(2, "m_gyrorate",5, &m_LogGyroRate);
-  m_logCSV.setItem(3, "m_AngleController.m_error",5, &m_AngleController.m_error);
-  m_logCSV.setItem(4, "m_VangleController.m_error",5, &m_VangleController.m_error);
-  m_logCSV.setItem(5, "m_vOutput",5, &m_vOutput);
-  m_logCSV.setItem(6, "m_AngleOutput",5, &m_AngleOutput);
-  m_logCSV.setItem(7, "m_Output",5, &m_Output);
-  m_logCSV.setItem(8, "m_EncoderMetre",5, &m_LogEncoderM);
-  m_logCSV.setItem(9, "m_AccelX",5, &m_LogAccelX);
-  m_logCSV.setItem(10, "m_AngleAccel",5, &m_LogAngleAccel);
+  // m_logCSV.open("/home/lvuser/", true);
+  // m_logCSV.setItem(0, "m_FusAngle",5, &m_LogFusAngle);
+  // m_logCSV.setItem(1, "m_gyroRateAverage",5, &m_LogGyroRateAverage);
+  // m_logCSV.setItem(2, "m_gyrorate",5, &m_LogGyroRate);
+  // m_logCSV.setItem(3, "m_AngleController.m_error",5, &m_AngleController.m_error);
+  // m_logCSV.setItem(4, "m_VangleController.m_error",5, &m_VangleController.m_error);
+  // m_logCSV.setItem(5, "m_vOutput",5, &m_vOutput);
+  // m_logCSV.setItem(6, "m_AngleOutput",5, &m_AngleOutput);
+  // m_logCSV.setItem(7, "m_Output",5, &m_Output);
+  // m_logCSV.setItem(8, "m_EncoderMetre",5, &m_LogEncoderM);
+  // m_logCSV.setItem(9, "m_AccelX",5, &m_LogAccelX);
+  // m_logCSV.setItem(10, "m_AngleAccel",5, &m_LogAngleAccel);
 
 
 }
@@ -124,58 +123,29 @@ void Robot::TeleopPeriodic() {
       // m_traveledDistance    = 0.0;                                                              // a la place de  ... m_distanceParcourue   = 0.0;
                                                                                                 // on supprime ....   m_distanceRestante    = m_distanceAparcourir-m_distanceParcourue;
       m_AngleController.Reset();
-      m_AngleController.SetSetpoint(0.0);                                                 // à la place de ... m_AngleController.SetSetpoint(0);
+      m_AngleController.SetSetpoint(0.0);   
+      m_AngleController.SetTolerance(4);
+                                              // à la place de ... m_AngleController.SetSetpoint(0);
       m_VangleController.Reset();
-      m_VangleController.SetSetpoint(0.0);                                                
+      m_VangleController.SetSetpoint(0.0); 
+      m_VangleController.SetTolerance(4);                                               
       // m_errorSign = NSIGN(m_AngleController.m_error);                                     // à la place de ... m_signe_error = NSIGN(m_AngleController.m_error);
       m_TiltTracker.initialize((m_EncoderLeft.GetDistance()+m_EncoderRight.GetDistance())*TRACTION_WHEEL_CIRCUMFERENCE/2.0,CHARGE_STATION_WIDTH);
-      m_state= State::Adjusting;
   }
-  
-  switch (m_state)
-  {
-    case  Adjusting:
-      std::cout<<("Adjusting")<<std::endl;
-      // if(m_TiltTracker.DetectTiltPoint(m_EncoderLeft.GetDistance()*TRACTION_WHEEL_CIRCUMFERENCE,m_EncoderRight.GetDistance()*TRACTION_WHEEL_CIRCUMFERENCE,m_FusAngle.GetAngle()))
-      // {
-      // }
-      if (NSIGN(m_AngleController.m_error)!=m_errorSign)
-      {
-        m_errorSign=-m_errorSign;
-        m_refDistance=m_traveledDistance/2.0;
-        m_kPmax = m_kPmin + (m_kPmax-m_kPmin)*0.9;
-
-        
-        m_traveledDistance=0.0;
-        m_encoderOrigin=NABS(m_EncoderLeft.GetDistance()*TRACTION_WHEEL_CIRCUMFERENCE);
-      }
-
-      m_traveledDistance = NABS(m_EncoderLeft.GetDistance()*TRACTION_WHEEL_CIRCUMFERENCE)-m_encoderOrigin;
-      //m_distanceRestante =m_distanceAparcourir-m_distanceParcourue;
-      
-      a = (m_refDistance - m_traveledDistance)/m_refDistance;
-      ratio_distance = NCLAMP(0.0,a,1.0);
-     // avant a = NLERP(m_kPmin,m_kPmax,ratio_distance);
-      //m_AngleController.SetGains(m_kPmax,0.0,0.0); // avant m_AngleController.SetGains(a,0.0,0.0);
-    
-      break;
-
-      default:
-        break;
-  }
-  double p=frc::SmartDashboard::GetNumber("P",0.008);
-  double i =frc::SmartDashboard::GetNumber("I",0.0001);
-  double d =frc::SmartDashboard::GetNumber("D",0.07);
+  double p=frc::SmartDashboard::GetNumber("P",0.02);
+  double i =frc::SmartDashboard::GetNumber("I",0.0);
+  double d =frc::SmartDashboard::GetNumber("D",0.0);
 
   m_TiltTracker.Update(0.02,(m_EncoderLeft.GetDistance()+m_EncoderRight.GetDistance())*TRACTION_WHEEL_CIRCUMFERENCE/2.0,m_FusAngle.GetAngle(),m_gyroRateAverage.get());
   m_AngleController.SetGains(p,i,d); // avant m_AngleController.SetGains(a,0.0,0.0);
-  m_VangleController.SetGains(p*8.0,i*10.0,d*10.0);
+  m_VangleController.SetGains(p*0.8,i*10.0,d*10.0);
   m_AngleOutput = m_AngleController.Calculate(NRADtoDEG(m_FusAngle.GetAngle()));
   m_vOutput = m_VangleController.Calculate(m_gyroRateAverage.get());
   m_Output = m_vOutput+ m_TiltTracker.m_k*m_AngleOutput;
   
   frc::SmartDashboard::PutNumber("k_anticipation",m_TiltTracker.m_k);
-  m_Output = NCLAMP(-0.3,0,0.3);
+  m_Output = NCLAMP(-0.5,m_Output,0.5);
+  frc::SmartDashboard::PutNumber("output",m_Output);
   frc::SmartDashboard::PutNumber("a",a);
   frc::SmartDashboard::PutNumber("error",m_AngleController.m_error);
   frc::SmartDashboard::PutNumber("delta_error",m_VangleController.m_error);
@@ -201,17 +171,17 @@ void Robot::TeleopPeriodic() {
   frc::SmartDashboard::PutNumber("m_Output", m_Output);
   frc::SmartDashboard::PutNumber("m_vOutput", m_vOutput);
   frc::SmartDashboard::PutNumber("m_AngleOutput", m_AngleOutput);
-  m_LogFusAngle = m_FusAngle.GetAngle();
-  m_LogGyroRateAverage = m_gyroRateAverage.get();
-  m_LogGyroRate = m_gyro.GetRate();
-  m_LogEncoderM = ((m_EncoderLeft.GetDistance()*TRACTION_WHEEL_CIRCUMFERENCE)+(m_EncoderRight.GetDistance()*TRACTION_WHEEL_CIRCUMFERENCE))/2;
-  m_LogAngleAccel = m_FusAngle.m_angleAccel;
-  m_LogAccelX = m_accelerometer.GetX();
+  // m_LogFusAngle = m_FusAngle.GetAngle();
+  // m_LogGyroRateAverage = m_gyroRateAverage.get();
+  // m_LogGyroRate = m_gyro.GetRate();
+  // m_LogEncoderM = ((m_EncoderLeft.GetDistance()*TRACTION_WHEEL_CIRCUMFERENCE)+(m_EncoderRight.GetDistance()*TRACTION_WHEEL_CIRCUMFERENCE))/2;
+  // m_LogAngleAccel = m_FusAngle.m_angleAccel;
+  // m_LogAccelX = m_accelerometer.GetX();
 
  
   
 
-  m_logCSV.write();
+  // m_logCSV.write();
 
 
 }
@@ -219,7 +189,7 @@ void Robot::TeleopPeriodic() {
 
 void Robot::DisabledInit() {
   m_gyro.Reset();
-  m_logCSV.close();
+  // m_logCSV.close();
 }
 void Robot::DisabledPeriodic() {}
 

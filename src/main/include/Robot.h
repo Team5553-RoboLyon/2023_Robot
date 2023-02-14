@@ -112,7 +112,7 @@ class Robot : public frc::TimedRobot {
   Pid m_VangleController{0.0,0.01,0.0005,0.0};
   Pid m_AngleController{0.0,0.01,0.0005,0.0};
 
-  TiltTracker m_TiltTracker{5};
+  TiltTracker m_TiltTracker{2.0,0.2,0.6};
 
   double m_kPmin;
   double m_kPmax;
