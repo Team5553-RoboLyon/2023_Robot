@@ -1,5 +1,6 @@
 #pragma once
 #include <cstdlib>
+#include <math.h>
 #include "lib/RblUtils.h"
 #define K_MIN 0.2 
 #define K_MAX 0.8
@@ -11,8 +12,8 @@ public:
     TiltTracker(const double angle_rate_threshold, const double dt_threshold, const double m_kmin);
 	~TiltTracker();
     
-    void initialize(const double position,const double estimated_next_tilt_distance);
- 	double Update(const double dt, const double position, const double angle,const double angle_rate);
+    void initialize(const double angle,const double position,const double estimated_next_tilt_distance);
+ 	bool Update(const double dt, const double position, const double angle,const double angle_rate);
     double getDistanceBetweenTilts(){return NABS(m_tiltB - m_tiltA);}
     double getAlgebricDistanceBetweenTilts(){return m_tiltB - m_tiltA;}
     double getNormalizeDistance();
@@ -30,7 +31,7 @@ public:
     double m_aParabolic;
     double m_bParabolic;    // = m_k minimum
     double m_k;
-    double m_a;
+    double m_angle;
     
     
 };

@@ -13,7 +13,7 @@
 
 
 #define NOISE   0.1                                             // à la place de ....   #define bruit 0.1 
-#define CHARGE_STATION_WIDTH 1.0 // en metre
+#define CHARGE_STATION_WIDTH 1.75 // en metre
 
 #define TRACTION_WHEEL_DIAMETER             (6.0*0.0254)          // Diametre des roues du robot 
 #define TRACTION_WHEEL_RADIUS               (3.0*0.0254)          // rayon des roues du robot 
@@ -95,7 +95,7 @@ class Robot : public frc::TimedRobot {
 
   NdoubleRollingAverage m_AccelerometerX_Average{25};
   NdoubleRollingAverage m_AccelerometerX_Arcos_Average{25};
-  NdoubleRollingAverage m_gyroRateAverage{10};
+  NdoubleRollingAverage m_gyroRateAverage{25};
 
   NdoubleRollingAverage m_error{10};
 
@@ -112,7 +112,7 @@ class Robot : public frc::TimedRobot {
   Pid m_VangleController{0.0,0.01,0.0005,0.0};
   Pid m_AngleController{0.0,0.01,0.0005,0.0};
 
-  TiltTracker m_TiltTracker{2.0,0.2,0.6};
+  TiltTracker m_TiltTracker{0.05,1.0,0.2};//{80.0,0.5,0.4}; ça marche
 
   double m_kPmin;
   double m_kPmax;

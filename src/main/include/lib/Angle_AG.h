@@ -20,13 +20,14 @@ class Angle_AG
   void AutoSetBias(){m_bias=m_angle;};
 
   double m_angleAccel; // angle en radian calculé avec l'accelerometre
+  double m_delta; // différence entre l'angle et l'angle précédent
+
 
 
 
   private :
 
   double m_angle; // angle en radian combinant accel et gyro
-  double m_delta; // différence entre l'angle et l'angle précédent
   double m_dt;    // intervalle de temps en seconde entre 
   double m_tau;   // temp en seconde
   double m_k;     // coef calculé grace à m_tau et dt
