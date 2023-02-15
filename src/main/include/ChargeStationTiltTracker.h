@@ -25,15 +25,17 @@ public:
     double* m_pFrom;
     double* m_pTo;
 
-    double  m_dt;
+    //double  m_dt;
     double  m_threshold;
     double  m_peakInfluence;
+    
+    double  m_peakWidth;
 
     double  m_deltaTimeThreshold;
     
     double  m_previousFilteredRate;
     NdoubleMovingAverage m_filteredRateAverage;
-
+    int     m_tilted;
 
     
     double m_aParabolic;
