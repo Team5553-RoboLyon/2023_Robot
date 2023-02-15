@@ -1,6 +1,8 @@
 #pragma once
 
 #include <cstdlib>
+#include <math.h>
+
 // ***************************************************************************************
 // ***************************************************************************************
 // **																					**
@@ -8,22 +10,29 @@
 // **																					**
 // ***************************************************************************************
 // ***************************************************************************************
-class NdoubleRollingAverage
+#define NMA_DEFAULT_SAMPLE_NB		8
+class NdoubleMovingAverage
 {
 public:
-	NdoubleRollingAverage();
-	NdoubleRollingAverage(const int table_size, const double initial_average = 0.0 );
-	~NdoubleRollingAverage();
+	NdoubleMovingAverage();
+	NdoubleMovingAverage(const int table_size, const double initial_average = 0.0 );
+	~NdoubleMovingAverage();
 
-	void reset(const double initial_average = 0.0);
-	const double add(const double value);
-	inline const double get(){return m_average;}
-	
-	int	m_last;
-	int	m_index;
-	double			m_average;
-	double			m_sum;
-	double*			m_pdouble;
+	void reset(const int table_size = 0, const double initial_average = 0.0 );
+	const double addSample(const double value);
+	inline const double getMean(){return m_mean;}
+	inline const double getVariance(){return m_variance;}
+	inline const double getStdDeviation(){return sqrt(m_variance);}
+
+	double			m_sum2;			// somme du carré des samples
+	double			m_sum;			// Somme algérique des samples
+	double*			m_pSamples;		// Table des samples
+	int				m_last;			// index du dernier sample ( = tablesize - 1)	
+	int				m_index;		// index du sample "à écrire"
+
+	double			m_mean;			// moyenne
+	double 			m_variance;		// variance
+
 };
 
 class NfloatRollingAverage

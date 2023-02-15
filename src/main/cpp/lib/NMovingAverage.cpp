@@ -1,60 +1,90 @@
-#include "lib/NRollingAverage.h"
+#include "lib/NMovingAverage.h"
 
-NdoubleRollingAverage::NdoubleRollingAverage()
+NdoubleMovingAverage::NdoubleMovingAverage()
 {
 	m_last			= 0;
-	m_pdouble		= NULL;
+	m_pSamples		= NULL;
 	m_sum			= 0.0;
-	m_average		= 0.0;	
+	m_sum2			= 0.0;
+	m_mean			= 0.0;	
+	m_variance		= 0.0;
 	m_index			= 0;
 }
 
-NdoubleRollingAverage::NdoubleRollingAverage(const int table_size, const double initial_average)
+NdoubleMovingAverage::NdoubleMovingAverage(const int table_size, const double initial_average)
 {
 	m_last			= table_size - 1;
-	m_pdouble		= (double*)malloc(sizeof(double)*table_size);
+	m_pSamples		= (double*)malloc(sizeof(double)*table_size);
 	m_sum			= initial_average*table_size;
-	m_average		= initial_average;	
+	m_sum2			= m_sum*initial_average;
+	m_mean			= initial_average;	
+	m_variance		= 0.0;
 	m_index			= 0;
 
-	double *pd = m_pdouble;
+	double *pd = m_pSamples;
 	for(int i= 0;i<table_size;i++,pd++)
 		*pd = initial_average;
 }
 
-NdoubleRollingAverage::~NdoubleRollingAverage()
+NdoubleMovingAverage::~NdoubleMovingAverage()
 {
-	m_pdouble -= m_index;	// replace le pointeur en position initiale
-	free(m_pdouble);			// lib�re la m�moire
+	m_pSamples -= m_index;	// replace le pointeur en position initiale
+	free(m_pSamples);			// lib�re la m�moire
 }
 
-const double NdoubleRollingAverage::add(const double value)
+const double NdoubleMovingAverage::addSample(const double value)
 {
-	m_sum += (value - *m_pdouble);
-	m_average = m_sum/(m_last+1);
-	*m_pdouble  = value;
+	m_sum += (value - *m_pSamples);
+	m_sum2+= (value*value - (*m_pSamples)*(*m_pSamples) );
+	m_mean = m_sum/(m_last+1);
+	m_variance = (m_sum2 - (m_sum*m_sum)/(m_last+1))/(m_last+1);
+	*m_pSamples  = value;
 	
 	if(m_index == m_last)
 	{
-		m_pdouble -= m_last;
-		m_index	  = 0;
+		m_pSamples -= m_last; 	// Le pointeur "re-pointe" sur l'adresse du premier sample
+		m_index	  = 0;			// L'index "re-designe" le premier sample
 	}
 	else
 	{
-		m_pdouble ++;
-		m_index	 ++;
+		m_pSamples ++;			// On décale le pointeur sur le sample suivant
+		m_index	 ++;			// L'index designe le sample suivant
 	}
 
-	return m_average;
+	return m_mean;
 }
 
-void NdoubleRollingAverage::reset(const double initial_average)
+void NdoubleMovingAverage::reset(const int table_size = 0, const double initial_average = 0.0 )
 {
-	m_sum	  = initial_average*(m_last+1);
-	m_average = initial_average;
-	m_pdouble -= m_index;	// replace le pointeur en position initiale
-	m_index	  = 0;
-	double *pd = m_pdouble;
+	if(table_size < 2)
+	{	
+		if(!m_pSamples)
+		{
+			m_last		= NMA_DEFAULT_SAMPLE_NB - 1;
+			m_pSamples	= (double*)malloc(sizeof(double)*NMA_DEFAULT_SAMPLE_NB);
+			m_index 	= 0;
+		}
+		//else
+		// on ne fait rien. en faisant un reset avec une valeur <= 2, l'utilisateur sous entend ne pas vouloir réallouer.
+	}
+	else // table_size > 2
+	{
+		if(m_last != (table_size - 1))
+		{
+			m_last		= table_size - 1;
+			m_pSamples	= (double*)realloc(m_pSamples, sizeof(double)*table_size);
+			m_index 	= 0;
+		}
+	}
+
+	m_sum	  	= initial_average*(m_last+1);
+	m_sum2 		= m_sum*initial_average;
+	m_mean 		= initial_average;
+	m_variance 	= 0.0;
+	m_pSamples -= m_index;	// replace le pointeur en position initiale
+	m_index	  	= 0;
+
+	double *pd = m_pSamples;
 	for(int i= 0;i<=m_last;i++,pd++)
 		*pd = initial_average;
 }

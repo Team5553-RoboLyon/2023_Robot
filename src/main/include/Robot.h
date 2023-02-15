@@ -31,7 +31,7 @@
 #include <frc/ADXRS450_Gyro.h>
 #include <ChargeStationTiltTracker.h>
 #include <frc/SPI.h>
-#include <lib/NRollingAverage.h>
+#include <lib/NMovingAverage.h>
 #include <lib/rate_limiter.h>
 #include <lib/Dynamic.h>
 #include <frc/Encoder.h>
@@ -93,11 +93,11 @@ class Robot : public frc::TimedRobot {
   ctre::phoenix::motorcontrol::can::TalonFX m_MotorLeftFollower2{6};
 
 
-  NdoubleRollingAverage m_AccelerometerX_Average{25};
-  NdoubleRollingAverage m_AccelerometerX_Arcos_Average{25};
-  NdoubleRollingAverage m_gyroRateAverage{25};
+  NdoubleMovingAverage m_AccelerometerX_Average{25};
+  NdoubleMovingAverage m_AccelerometerX_Arcos_Average{25};
+  NdoubleMovingAverage m_gyroRateAverage{25};
 
-  NdoubleRollingAverage m_error{10};
+  NdoubleMovingAverage m_error{10};
 
   Dynamic m_AccelerometerX;
   Dynamic m_AccelerometerY;
@@ -112,7 +112,7 @@ class Robot : public frc::TimedRobot {
   Pid m_VangleController{0.0,0.01,0.0005,0.0};
   Pid m_AngleController{0.0,0.01,0.0005,0.0};
 
-  TiltTracker m_TiltTracker{0.05,1.0,0.2};//{80.0,0.5,0.4}; ça marche
+  TiltTracker m_TiltTracker{5,0.05,1.0,0.2};//{80.0,0.5,0.4}; ça marche
 
   double m_kPmin;
   double m_kPmax;

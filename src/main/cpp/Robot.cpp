@@ -101,10 +101,10 @@ void Robot::TeleopPeriodic() {
 
   m_FusAngle.SetTau(frc::SmartDashboard::GetNumber("m_tau",0.5));
   m_FusAngle.Update(NDEGtoRAD(gyro_rate_degps),y_g,x_g);    // A la place de  ... m_FusAngle.Update(m_gyro.GetRate()/180.0*3.14159265,m_accelerometer.GetY(),m_accelerometer.GetX());
-  m_gyroRateAverage.add(gyro_rate_degps); //m_gyroRateAverage.add(m_FusAngle.GetDelta()*180.0/3.14159265);
+  m_gyroRateAverage.addSample(gyro_rate_degps); //m_gyroRateAverage.add(m_FusAngle.GetDelta()*180.0/3.14159265);
 
   frc::SmartDashboard::PutNumber("FuseAngle",NRADtoDEG(m_FusAngle.GetAngle()));
-  frc::SmartDashboard::PutNumber("GyroRate",m_gyroRateAverage.get());
+  frc::SmartDashboard::PutNumber("GyroRate",m_gyroRateAverage.getMean());
   frc::SmartDashboard::PutNumber("anglegyro",m_gyro.GetAngle());
   // frc::SmartDashboard::PutNumber("m_K",m_FusAngle.m_k);
   // frc::SmartDashboard::PutNumber("Accel_X",x);
@@ -136,11 +136,11 @@ void Robot::TeleopPeriodic() {
   double i =frc::SmartDashboard::GetNumber("I",0.0);
   double d =frc::SmartDashboard::GetNumber("D",0.0);
 
-  bool tilt = m_TiltTracker.Update(0.02,(m_EncoderLeft.GetDistance()+m_EncoderRight.GetDistance())*TRACTION_WHEEL_CIRCUMFERENCE/2.0,m_FusAngle.GetAngle(),m_gyroRateAverage.get());
+  bool tilt = m_TiltTracker.Update(0.02,(m_EncoderLeft.GetDistance()+m_EncoderRight.GetDistance())*TRACTION_WHEEL_CIRCUMFERENCE/2.0,m_FusAngle.GetAngle(),m_gyroRateAverage.getMean());
   m_AngleController.SetGains(0.03,0,0); // avant m_AngleController.SetGains(a,0.0,0.0);
   m_VangleController.SetGains(0.005,i*10.0,d*10.0);
   m_AngleOutput = m_AngleController.Calculate(NRADtoDEG(m_FusAngle.GetAngle()));
-  m_vOutput = m_VangleController.Calculate(m_gyroRateAverage.get());
+  m_vOutput = m_VangleController.Calculate(m_gyroRateAverage.getMean());
   m_Output =  m_TiltTracker.m_k*m_AngleOutput;// voutput
   
   frc::SmartDashboard::PutNumber("k_anticipation",m_TiltTracker.m_k);
@@ -174,7 +174,7 @@ void Robot::TeleopPeriodic() {
   frc::SmartDashboard::PutNumber("m_vOutput", m_vOutput);
   frc::SmartDashboard::PutNumber("m_AngleOutput", m_AngleOutput);
   m_LogFusAngle = m_FusAngle.GetAngle();
-  m_LogGyroRateAverage = m_gyroRateAverage.get();
+  m_LogGyroRateAverage = m_gyroRateAverage.getMean();
   m_LogGyroRate = m_gyro.GetRate();
   m_LogEncoderM = ((m_EncoderLeft.GetDistance()*TRACTION_WHEEL_CIRCUMFERENCE)+(m_EncoderRight.GetDistance()*TRACTION_WHEEL_CIRCUMFERENCE))/2;
   m_LogAngleAccel = m_FusAngle.m_angleAccel;

@@ -2,6 +2,8 @@
 #include <cstdlib>
 #include <math.h>
 #include "lib/RblUtils.h"
+#include "lib/NMovingAverage.h"
+
 #define K_MIN 0.2 
 #define K_MAX 0.8
 
@@ -9,7 +11,7 @@ class TiltTracker
 {
 public:
 	TiltTracker();
-    TiltTracker(const double angle_rate_threshold, const double dt_threshold, const double m_kmin);
+    TiltTracker(const int rate_average_range, const double angle_rate_threshold, const double dt_threshold, const double m_kmin);
 	~TiltTracker();
     
     void initialize(const double angle,const double position,const double estimated_next_tilt_distance);
@@ -24,9 +26,15 @@ public:
     double* m_pTo;
 
     double  m_dt;
-    double  m_angleThreshold;
+    double  m_threshold;
+    double  m_peakInfluence;
+
     double  m_deltaTimeThreshold;
     
+    double  m_previousFilteredRate;
+    NdoubleMovingAverage m_filteredRateAverage;
+
+
     
     double m_aParabolic;
     double m_bParabolic;    // = m_k minimum
