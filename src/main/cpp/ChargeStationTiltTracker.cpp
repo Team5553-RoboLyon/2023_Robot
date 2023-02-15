@@ -103,7 +103,7 @@ double TiltTracker::Update(const double dt, const double position, const double 
     // ci-dessous, ... pour eviter la racine carrée du "vrai test" à effectuer à partir de l'écart type: if(NABS(m_dv) > m_angleThreshold*sqrt(m_rateAverage.m_variance) )
     // on utilise la variance ( = ecart type au carré ), threshold devra donc être ajusté en conséquence ( élevé au carré pour conserver les mêmes résultats qu'avec la standard deviation)
     // if ((m_dv * m_dv) > (m_threshold * m_filteredRateAverage.m_variance))
-    if (abs(m_dv) > m_filteredRateAverage.getStdDeviation())
+    if (abs(m_dv) > m_threshold * m_filteredRateAverage.getStdDeviation())
     {
         // à partir d'ici nous sommes sûrs que : m_dv != 0.0
         if (m_dv > 0.0) // angle_rate > m_rateAverage.m_mean
