@@ -74,11 +74,11 @@ void Robot::TeleopInit()
   m_logCSV.setItem(0, "m_FusAngle", 5, &m_LogFusAngle);
   m_logCSV.setItem(1, "m_gyroRateAverage", 5, &m_LogGyroRateAverage);
   m_logCSV.setItem(2, "m_gyrorate", 5, &m_LogGyroRate);
-  m_logCSV.setItem(3, "m_AngleController.m_error", 5, &m_AngleController.m_error);
-  m_logCSV.setItem(4, "m_VangleController.m_error", 5, &m_VangleController.m_error);
-  m_logCSV.setItem(5, "m_vOutput", 5, &m_vOutput);
-  m_logCSV.setItem(6, "m_AngleOutput", 5, &m_AngleOutput);
-  m_logCSV.setItem(7, "m_Output", 5, &m_Output);
+  m_logCSV.setItem(3, "m_logTiltAverage", 5, &m_logTiltAverage);
+  m_logCSV.setItem(4, "m_logTiltVariance", 5, &m_logTiltVariance);
+  m_logCSV.setItem(5, "m_logTilt", 5, &m_logTilt);
+  m_logCSV.setItem(6, "m_logTiltDown", 5, &m_logTiltDown);
+  m_logCSV.setItem(7, "m_logTiltUp", 5, &m_logTiltUp);
   m_logCSV.setItem(8, "m_EncoderMetre", 5, &m_LogEncoderM);
   m_logCSV.setItem(9, "m_AccelX", 5, &m_LogAccelX);
   m_logCSV.setItem(10, "m_AngleAccel", 5, &m_LogAngleAccel);
@@ -103,7 +103,7 @@ void Robot::TeleopPeriodic()
 
   frc::SmartDashboard::PutNumber("FuseAngle", NRADtoDEG(m_FusAngle.GetAngle()));
   frc::SmartDashboard::PutNumber("GyroRate", m_gyroRateAverage.getMean());
-  frc::SmartDashboard::PutNumber("anglegyro", m_gyro.GetAngle());
+  frc::SmartDashboard::PutNumber("anglegyro", angle_deg);
   // frc::SmartDashboard::PutNumber("m_K",m_FusAngle.m_k);
   // frc::SmartDashboard::PutNumber("Accel_X",x);
   // frc::SmartDashboard::PutNumber("Accel_Y",y);
@@ -138,28 +138,29 @@ void Robot::TeleopPeriodic()
   m_vOutput = m_VangleController.Calculate(m_gyroRateAverage.getMean());
   m_Output = m_TiltTracker.m_k * m_AngleOutput; // voutput
 
-  frc::SmartDashboard::PutNumber("k_anticipation", m_TiltTracker.m_k);
-  frc::SmartDashboard::PutNumber("k*angleoutput", m_TiltTracker.m_k * m_AngleOutput);
-  frc::SmartDashboard::PutNumber("delta_angle", m_FusAngle.m_delta);
+  // frc::SmartDashboard::PutNumber("k_anticipation", m_TiltTracker.m_k);
+  // frc::SmartDashboard::PutNumber("k*angleoutput", m_TiltTracker.m_k * m_AngleOutput);
+  // frc::SmartDashboard::PutNumber("delta_angle", m_FusAngle.m_delta);
   m_Output = NCLAMP(-0.3, m_Output, 0.3);
-  frc::SmartDashboard::PutNumber("output", m_Output);
-  frc::SmartDashboard::PutNumber("a", a);
-  frc::SmartDashboard::PutNumber("error", m_AngleController.m_error);
-  frc::SmartDashboard::PutNumber("delta_error", m_VangleController.m_error);
-  frc::SmartDashboard::PutNumber("ratio_distance", ratio_distance);
-  frc::SmartDashboard::PutNumber("m_encoderRight", m_EncoderRight.GetDistance());
-  frc::SmartDashboard::PutNumber("m_encoderLeft", m_EncoderLeft.GetDistance());
-  frc::SmartDashboard::PutNumber("encoder", ((m_EncoderLeft.GetDistance() * TRACTION_WHEEL_CIRCUMFERENCE) + (m_EncoderRight.GetDistance() * TRACTION_WHEEL_CIRCUMFERENCE)) / 2);
+  // frc::SmartDashboard::PutNumber("output", m_Output);
+  // frc::SmartDashboard::PutNumber("a", a);
+  // frc::SmartDashboard::PutNumber("error", m_AngleController.m_error);
+  // frc::SmartDashboard::PutNumber("delta_error", m_VangleController.m_error);
+  // frc::SmartDashboard::PutNumber("ratio_distance", ratio_distance);
+  // frc::SmartDashboard::PutNumber("m_encoderRight", m_EncoderRight.GetDistance());
+  // frc::SmartDashboard::PutNumber("m_encoderLeft", m_EncoderLeft.GetDistance());
+  // frc::SmartDashboard::PutNumber("encoder", ((m_EncoderLeft.GetDistance() * TRACTION_WHEEL_CIRCUMFERENCE) + (m_EncoderRight.GetDistance() * TRACTION_WHEEL_CIRCUMFERENCE)) / 2);
   frc::SmartDashboard::PutNumber("tilt", tilt);
   frc::SmartDashboard::PutNumber("variance", m_TiltTracker.m_filteredRateAverage.m_variance);
   frc::SmartDashboard::PutNumber("moyenne", m_TiltTracker.m_filteredRateAverage.m_mean);
   frc::SmartDashboard::PutNumber("m_peakWidth", m_TiltTracker.m_peakWidth);
   frc::SmartDashboard::PutNumber("m_tilted", m_TiltTracker.m_tilted * 25);
-  frc::SmartDashboard::PutNumber("m_dv", m_TiltTracker.m_dv);
+  frc::SmartDashboard::PutNumber("m_dv", abs(m_TiltTracker.m_dv));
   double up = m_TiltTracker.m_filteredRateAverage.m_mean + m_TiltTracker.m_filteredRateAverage.getStdDeviation();
   double down = m_TiltTracker.m_filteredRateAverage.m_mean - m_TiltTracker.m_filteredRateAverage.getStdDeviation();
   frc::SmartDashboard::PutNumber("up", up);
   frc::SmartDashboard::PutNumber("down", down);
+  frc::SmartDashboard::PutNumber("deviation*coef", m_TiltTracker.m_threshold * m_TiltTracker.m_filteredRateAverage.getStdDeviation());
 
   if (m_joystickLeft.GetRawButton(1))
   {
@@ -173,15 +174,20 @@ void Robot::TeleopPeriodic()
     m_MotorLeft.Set(ctre::phoenix::motorcontrol::ControlMode::PercentOutput, Calcul_De_Notre_Brave_JM(-m_joystickLeft.GetY(), m_joystickRight.GetZ(), 1));
   }
 
-  frc::SmartDashboard::PutNumber("m_Output", m_Output);
-  frc::SmartDashboard::PutNumber("m_vOutput", m_vOutput);
-  frc::SmartDashboard::PutNumber("m_AngleOutput", m_AngleOutput);
+  // frc::SmartDashboard::PutNumber("m_Output", m_Output);
+  // frc::SmartDashboard::PutNumber("m_vOutput", m_vOutput);
+  // frc::SmartDashboard::PutNumber("m_AngleOutput", m_AngleOutput);
   m_LogFusAngle = m_FusAngle.GetAngle();
   m_LogGyroRateAverage = m_gyroRateAverage.getMean();
   m_LogGyroRate = m_gyro.GetRate();
   m_LogEncoderM = ((m_EncoderLeft.GetDistance() * TRACTION_WHEEL_CIRCUMFERENCE) + (m_EncoderRight.GetDistance() * TRACTION_WHEEL_CIRCUMFERENCE)) / 2;
   m_LogAngleAccel = m_FusAngle.m_angleAccel;
   m_LogAccelX = m_accelerometer.GetX();
+  m_logTiltAverage = m_TiltTracker.m_filteredRateAverage.m_mean;
+  m_logTiltVariance = m_TiltTracker.m_filteredRateAverage.m_variance;
+  m_logTilt = m_TiltTracker.m_tilted;
+  m_logTiltUp = up;
+  m_logTiltDown = down;
 
   m_logCSV.write();
 }

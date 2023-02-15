@@ -109,7 +109,7 @@ private:
   Pid m_VangleController{0.0, 0.01, 0.0005, 0.0};
   Pid m_AngleController{0.0, 0.01, 0.0005, 0.0};
 
-  TiltTracker m_TiltTracker{5, 100.0, 0.06, 0.0001, 0.2}; //{80.0,0.5,0.4}; ça marche
+  TiltTracker m_TiltTracker{25, 5.5, 0.06, 0.01, 0.2}; //{80.0,0.5,0.4}; ça marche
 
   double m_kPmin;
   double m_kPmax;
@@ -132,6 +132,11 @@ private:
   double m_LogAngleAccel;
   double m_LogEncoderM;
   double m_LogAccelX;
+  double m_logTiltAverage;
+  double m_logTiltVariance;
+  double m_logTilt;
+  double m_logTiltUp;
+  double m_logTiltDown;
 
   NLCSV m_logCSV{11};
 };
