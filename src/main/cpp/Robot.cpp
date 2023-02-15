@@ -16,15 +16,15 @@ void Robot::TeleopInit() {
   m_logCSV.open("/home/lvuser/", true);
   frc::SmartDashboard::PutNumber("Setpoint", 0);
   m_encoder.Reset();
-  m_encoder.SetDistancePerPulse((1.0/2048.0*(22.0/90.0)*360.0));//conversion de la distance en degré en théorie /2048.0*(90.0/22.0)
+  m_encoder.SetDistancePerPulse((1.0/2048.0*(14.0/54.0)*360.0));//conversion de la distance en degré en théorie /2048.0*(90.0/22.0)
   m_encoderMotor.SetPosition(0.0);
-  m_encoderMotor.SetPositionConversionFactor(((1.0/24.5)*(22.0/90.0)*360.0));
+  m_encoderMotor.SetPositionConversionFactor(((1.0/24.5)*(14.0/54.0)*360.0));
 
   m_motor.SetInverted(false);
   m_motor.SetSmartCurrentLimit(40);
   m_motor.SetIdleMode(rev::CANSparkMax::IdleMode::kBrake);
 
-  frc::SmartDashboard::PutNumber("coef",0.2);
+  frc::SmartDashboard::PutNumber("coef",0.0);
 
   m_motor.SetIdleMode(rev::CANSparkMax::IdleMode::kBrake);
 
@@ -41,22 +41,24 @@ void Robot::TeleopPeriodic() {
   m_current = m_motor.GetOutputCurrent();
   m_encoderThrougboreDeg = m_encoder.GetDistance();
   m_encoderMotorDeg=m_encoderMotor.GetPosition();
-  m_clamp = frc::SmartDashboard::GetNumber("coef",0.2);
+  m_clamp = frc::SmartDashboard::GetNumber("coef",0.0);
   frc::SmartDashboard::PutNumber("m_encoderThrougboreDeg", m_encoderThrougboreDeg);
   frc::SmartDashboard::PutNumber("m_encoderMotorDeg",m_encoderMotor.GetPosition());
   frc::SmartDashboard::PutNumber("voltage", m_voltage);
   frc::SmartDashboard::PutNumber("current", m_current);
+  double speed=std::clamp(m_joystick.GetZ(),-m_clamp,m_clamp);
+  frc::SmartDashboard::PutNumber("speed",speed);
+  frc::SmartDashboard::PutNumber("joystick",m_joystick.GetZ());
 
-
-  // m_motor.Set(m_voltage/12.0);
-  if (m_encoderThrougboreDeg<360.0)
-  {
-    m_motor.SetVoltage(units::voltage::volt_t (m_voltage));
-  }
-  else
-  {
-    m_motor.SetVoltage(units::voltage::volt_t (0.0));
-  }
+  m_motor.Set(speed);
+  // if (m_encoderThrougboreDeg<360.0)
+  // {
+  //   m_motor.SetVoltage(units::voltage::volt_t (m_voltage));
+  // }
+  // else
+  // {
+  //   m_motor.SetVoltage(units::voltage::volt_t (0.0));
+  // }
 
   m_logCSV.write();
 }
