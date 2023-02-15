@@ -18,7 +18,7 @@ public:
 	NdoubleMovingAverage(const int table_size, const double initial_average = 0.0 );
 	~NdoubleMovingAverage();
 
-	void reset(const int table_size = 0, const double initial_average = 0.0 );
+	void reset(const int table_size, const double initial_average );
 	const double addSample(const double value);
 	inline const double getMean(){return m_mean;}
 	inline const double getVariance(){return m_variance;}

@@ -2,173 +2,198 @@
 #include "ChargeStationTiltTracker.h"
 #include <iostream>
 
-/// @brief 
-TiltTracker::TiltTracker(): m_filteredRateAverage(),
-                            /*m_dt(0.0),*/
-                            m_tiltA(0.0),
-                            m_tiltB(0.0),
-                            m_pFrom(&m_tiltA),
-                            m_pTo(&m_tiltB), 
-                            m_threshold(0.0),
-                            m_deltaTimeThreshold(0.0),
-                            m_aParabolic(1.0/(0.5*0.5)),
-                            m_bParabolic(0.0),
-                            m_peakWidth(0.0),
-                            m_tilted(0),
-                            m_angle(0.0),
-                            m_peakInfluence(0.0),
-                            m_previousFilteredRate(0.0),
-                            m_k(0.0){}
-
-TiltTracker::TiltTracker(const int average_samples_nb, const double threshold, const double dt_threshold, const double kmin):   m_filteredRateAverage(average_samples_nb),
-                                                                                                                                /*m_dt(0.0),*/
-                                                                                                                                m_tiltA(0.0),
-                                                                                                                                m_tiltB(0.0),
-                                                                                                                                m_pFrom(&m_tiltA),
-                                                                                                                                m_pTo(&m_tiltB),
-                                                                                                                                m_threshold(threshold),
-                                                                                                                                m_deltaTimeThreshold(dt_threshold),
-                                                                                                                                m_aParabolic((1.0-kmin)/(0.5*0.5)),
-                                                                                                                                m_bParabolic(kmin),
-                                                                                                                                m_peakWidth(0.0),
-                                                                                                                                m_tilted(0),
-                                                                                                                                m_angle(0.0),
-                                                                                                                                m_peakInfluence(0.0),
-                                                                                                                                m_previousFilteredRate(0.0),
-                                                                                                                                m_k(0.0){}
-
-/// @brief 
-TiltTracker::~TiltTracker(){}
-
-/// @brief initialise le Tilttracker. A appeler au pied de la charge station.                                    
-/// @param position             valeur renvoyée par le getDistance de l'encodeur gauche en mètres                
-/// @param estimated_next_tilt_distance estimation de la distance à laquelle surviendra le prochain Tilt en mètre
-void TiltTracker::initialize(const double angle,const double position,const double estimated_next_tilt_distance)
+/// @brief
+TiltTracker::TiltTracker() : m_filteredRateAverage(),
+                             /*m_dt(0.0),*/
+                             m_tiltA(0.0),
+                             m_tiltB(0.0),
+                             m_pFrom(&m_tiltA),
+                             m_pTo(&m_tiltB),
+                             m_threshold(0.0),
+                             m_deltaTimeThreshold(0.0),
+                             m_aParabolic(1.0 / (0.5 * 0.5)),
+                             m_bParabolic(0.0),
+                             m_peakWidth(0.0),
+                             m_tilted(0),
+                             m_angle(0.0),
+                             m_peakInfluence(0.0),
+                             m_previousFilteredRate(0.0),
+                             m_k(0.0)
 {
-    m_tilted= 0;
+}
+
+TiltTracker::TiltTracker(const int average_samples_nb, const double threshold, const double dt_threshold, const double peak_influence, const double kmin) : m_filteredRateAverage(average_samples_nb),
+                                                                                                                                                            /*m_dt(0.0),*/
+                                                                                                                                                            m_tiltA(0.0),
+                                                                                                                                                            m_tiltB(0.0),
+                                                                                                                                                            m_pFrom(&m_tiltA),
+                                                                                                                                                            m_pTo(&m_tiltB),
+                                                                                                                                                            m_threshold(threshold),
+                                                                                                                                                            m_deltaTimeThreshold(dt_threshold),
+                                                                                                                                                            m_aParabolic((1.0 - kmin) / (0.5 * 0.5)),
+                                                                                                                                                            m_bParabolic(kmin),
+                                                                                                                                                            m_peakWidth(0.0),
+                                                                                                                                                            m_tilted(0),
+                                                                                                                                                            m_angle(0.0),
+                                                                                                                                                            m_peakInfluence(peak_influence),
+                                                                                                                                                            m_previousFilteredRate(0.0),
+                                                                                                                                                            m_k(0.0)
+{
+}
+
+/// @brief
+TiltTracker::~TiltTracker() {}
+
+/// @brief initialise le Tilttracker. A appeler au pied de la charge station.
+/// @param position             valeur renvoyée par le getDistance de l'encodeur gauche en mètres
+/// @param estimated_next_tilt_distance estimation de la distance à laquelle surviendra le prochain Tilt en mètre
+void TiltTracker::initialize(const double angle, const double position, const double estimated_next_tilt_distance)
+{
+    m_tilted = 0;
     m_angle = angle;
     m_tiltA = position;
     m_tiltB = m_tiltA + estimated_next_tilt_distance;
     m_pFrom = &m_tiltA;
-    m_pTo   = &m_tiltB;
-    m_filteredRateAverage.reset(0,0.0);
+    m_pTo = &m_tiltB;
+    m_filteredRateAverage.reset(0, 0.0);
     m_previousFilteredRate = 0.0;
 }
 
-bool TiltTracker::Update(const double dt, const double position, const double angle,const double angle_rate)
+double TiltTracker::Update(const double dt, const double position, const double angle, const double angle_rate)
 {
-    bool r=false;
+    double r = 0;
 
- /*
-  * ------------------------------------------------------------------------------------
-  * V0.0
-    m_dt += dt;
-    if(m_dt >= m_deltaTimeThreshold)
+    /*
+     * ------------------------------------------------------------------------------------
+     * V0.0
+       m_dt += dt;
+       if(m_dt >= m_deltaTimeThreshold)
+       {
+           std::cout<<"(m_dt >= m_deltaTimeThreshold)"<<std::endl;
+           double dif = m_angle-angle;
+           // if( NSIGN(angle) != NSIGN(angle_rate) )
+           if (abs(dif)>m_angleThreshold)
+           {
+               std::cout<<"(abs(dif)>m_angleThreshold"<<dif<<std::endl;
+               // if(angle_rate > m_angleThreshold)
+               // {
+                   r=true;
+                   *m_pTo = position;
+                   double *pd = m_pFrom;
+                   m_pFrom = m_pTo;
+                   m_pTo = pd;
+                   m_dt = 0.0;
+
+               // }
+           }
+       }
+       m_angle=angle;
+   *
+   * ------------------------------------------------------------------------------------
+   */
+
+    /*
+     * ------------------------------------------------------------------------------------
+     * V0.1
+     */
+    // Dans cette nouvelle version, angle_rate est supposé être la valeur brute de Gyro rate le tiltTracker incluant cette moyenne !
+    m_dv = angle_rate - m_filteredRateAverage.m_mean;
+    double filtered_rate;
+    bool btilt = false;
+    // ci-dessous, ... pour eviter la racine carrée du "vrai test" à effectuer à partir de l'écart type: if(NABS(m_dv) > m_angleThreshold*sqrt(m_rateAverage.m_variance) )
+    // on utilise la variance ( = ecart type au carré ), threshold devra donc être ajusté en conséquence ( élevé au carré pour conserver les mêmes résultats qu'avec la standard deviation)
+    // if ((m_dv * m_dv) > (m_threshold * m_filteredRateAverage.m_variance))
+    if (abs(m_dv) > m_filteredRateAverage.getStdDeviation())
     {
-        std::cout<<"(m_dt >= m_deltaTimeThreshold)"<<std::endl;
-        double dif = m_angle-angle;
-        // if( NSIGN(angle) != NSIGN(angle_rate) )
-        if (abs(dif)>m_angleThreshold)
+        // à partir d'ici nous sommes sûrs que : m_dv != 0.0
+        if (m_dv > 0.0) // angle_rate > m_rateAverage.m_mean
         {
-            std::cout<<"(abs(dif)>m_angleThreshold"<<dif<<std::endl;
-            // if(angle_rate > m_angleThreshold)
+            m_tilted = 1;
+            std::cout << "m_dv" << m_dv << std::endl;
+            // pic positif
+            // if (m_peakWidth < 0.0)
             // {
-                r=true;
-                *m_pTo = position;
-                double *pd = m_pFrom;
-                m_pFrom = m_pTo;
-                m_pTo = pd;
-                m_dt = 0.0;
-
+            //     m_peakWidth = 0.0;
+            //     std::cout << "m_peakWidth" << m_peakWidth << std::endl;
+            // }
+            // m_peakWidth += dt;
+            // if (m_peakWidth > m_deltaTimeThreshold)
+            // {
+            //     std::cout << "m_peakWidth > m_deltaTimeThreshold" << m_peakWidth << m_deltaTimeThreshold << std::endl;
+            //     if (m_tilted != 1)
+            //     {
+            //         r = 1;
+            //         std::cout << "mtilted" << m_tilted << std::endl;
+            //         m_tilted = 1;
+            //         btilt = true;
+            //     }
             // }
         }
-    }
-    m_angle=angle;
-*    
-* ------------------------------------------------------------------------------------
-*/
-
-/*
- * ------------------------------------------------------------------------------------
- * V0.1
-*/
-// Dans cette nouvelle version, angle_rate est supposé être la valeur brute de Gyro rate le tiltTracker incluant cette moyenne !
-double dv = angle_rate - m_filteredRateAverage.m_mean;
-double filtered_rate;
-bool btilt = false;
-// ci-dessous, ... pour eviter la racine carrée du "vrai test" à effectuer à partir de l'écart type: if(NABS(dv) > m_angleThreshold*sqrt(m_rateAverage.m_variance) )
-// on utilise la variance ( = ecart type au carré ), threshold devra donc être ajusté en conséquence ( élevé au carré pour conserver les mêmes résultats qu'avec la standard deviation)
-if((dv*dv) > m_threshold*m_filteredRateAverage.m_variance)
-{
-    // à partir d'ici nous sommes sûrs que : dv != 0.0
-
-    if(dv > 0.0) // angle_rate > m_rateAverage.m_mean
-    {
-        // pic positif
-        if(m_peakWidth<0.0)
-            m_peakWidth = 0.0;
-        
-        m_peakWidth += dt;
-        if(m_peakWidth > m_deltaTimeThreshold)
+        else // angle_rate < m_rateAverage.m_mean
         {
-             if(m_tilted<=0)
-             {
-               m_tilted = 1;
-               btilt    = true;
-             } 
+            m_tilted = -1;
+
+            std::cout << "m_dv" << m_dv << std::endl;
+            std::cout << "m_peakWidth" << m_peakWidth << std::endl;
+
+            // pic negatif
+            // if (m_peakWidth > 0.0)
+            // {
+            //     m_peakWidth = 0.0;
+            //     std::cout << "m_peakWidth" << m_peakWidth << std::endl;
+            // }
+
+            // m_peakWidth -= dt;
+            // if (m_peakWidth < -m_deltaTimeThreshold)
+            // {
+            //     std::cout << "m_peakWidth < m_deltaTimeThreshold" << -m_deltaTimeThreshold << std::endl;
+            //     std::cout << "m_tilted" << m_tilted << std::endl;
+
+            //     if (m_tilted != -1)
+            //     {
+            //         r = 1;
+            //         m_tilted = -1;
+            //         btilt = true;
+            //         std::cout << "mtilted" << m_tilted << std::endl;
+            //     }
+            // }
         }
+        filtered_rate = m_peakInfluence * angle_rate + (1.0 - m_peakInfluence) * m_previousFilteredRate;
     }
-    else        // angle_rate < m_rateAverage.m_mean 
+    else
     {
-        // pic negatif
-        if(m_peakWidth>0.0)
-            m_peakWidth = 0.0;
-        
-        m_peakWidth = -dt;
-        if(m_peakWidth < -m_deltaTimeThreshold)
-        {
-             if(m_tilted>=0)
-             {
-               m_tilted = -1;
-               btilt    = true;
-             } 
-        }
+        filtered_rate = angle_rate;
+        m_tilted = 0;
     }
-    
-    filtered_rate = m_peakInfluence*angle_rate + (1.0-m_peakInfluence)*m_previousFilteredRate;
-}
-else
-{
-    filtered_rate = angle_rate;
-}
-m_filteredRateAverage.addSample(filtered_rate);
+    m_filteredRateAverage.addSample(filtered_rate);
+    m_previousFilteredRate = filtered_rate;
 
-// tilt ?
-if(tilt != 0)
-{
-    *m_pTo = position;
-    double *pd = m_pFrom;
-    m_pFrom = m_pTo;
-    m_pTo = pd;
-}
-//-----------------------parabolic---------------------------
-//    double nrmx =  (position - *m_pFrom) / (*m_pTo - *m_pFrom);
-//    nrmx = NCLAMP(0,nrmx,1.0) - 0.5;
-//    m_k = m_aParabolic*nrmx*nrmx + m_bParabolic;
+    // tilt ?
+    if (btilt) // btilt !=0
+    {
+        *m_pTo = position;
+        double *pd = m_pFrom;
+        m_pFrom = m_pTo;
+        m_pTo = pd;
+    }
+    //-----------------------parabolic---------------------------
+    //    double nrmx =  (position - *m_pFrom) / (*m_pTo - *m_pFrom);
+    //    nrmx = NCLAMP(0,nrmx,1.0) - 0.5;
+    //    m_k = m_aParabolic*nrmx*nrmx + m_bParabolic;
 
-//----------------------------cos-----------------------------
-   double nrmx =  (position - *m_pFrom) / (*m_pTo - *m_pFrom);
-   nrmx = NCLAMP(0,nrmx,1.0) *NF64_PI;
-   nrmx=(cos(nrmx)+1.0)/2.0;
-   m_k =  m_bParabolic + nrmx*(1-m_bParabolic); // m_bparabole = m_cosinus min
+    //----------------------------cos-----------------------------
+    double nrmx = (position - *m_pFrom) / (*m_pTo - *m_pFrom);
+    nrmx = NCLAMP(0, nrmx, 1.0) * NF64_PI;
+    nrmx = (cos(nrmx) + 1.0) / 2.0;
+    m_k = m_bParabolic + nrmx * (1 - m_bParabolic); // m_bparabole = m_cosinus min
 
-//----------------------------cos2pi--------------------------
-//    double nrmx =  (position - *m_pFrom) / (*m_pTo - *m_pFrom);
-//    nrmx = NCLAMP(0,nrmx,1.0) *NF64_2PI;
-//    nrmx=(cos(nrmx)+1.0)/2.0;
-//    m_k =  m_bParabolic + nrmx*(1-m_bParabolic); // m_bparabole = m_cosinus min
+    //----------------------------cos2pi--------------------------
+    //    double nrmx =  (position - *m_pFrom) / (*m_pTo - *m_pFrom);
+    //    nrmx = NCLAMP(0,nrmx,1.0) *NF64_2PI;
+    //    nrmx=(cos(nrmx)+1.0)/2.0;
+    //    m_k =  m_bParabolic + nrmx*(1-m_bParabolic); // m_bparabole = m_cosinus min
 
-   return r; 
+    return r;
 }
 
 double TiltTracker::getNormalizeDistance()

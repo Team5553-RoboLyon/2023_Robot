@@ -7,17 +7,16 @@
 
 #define AMAX 5.1 // Acceleration Max  au PIF .. à définir aux encodeurs
 #define VMAX 3.4 // vitesse Max  théorique (3,395472 sur JVN-DT) .. à vérifier aux encodeurs
-#define WMAX                       \
-    (((2.0 * VMAX) / AXLETRACK) / \
-     1.7) // vitesse angulaire Max theorique	.. à modifier avec Garice
+#define WMAX                    \
+  (((2.0 * VMAX) / AXLETRACK) / \
+   1.7) // vitesse angulaire Max theorique	.. à modifier avec Garice
 
-
-#define NOISE   0.1                                             // à la place de ....   #define bruit 0.1 
+#define NOISE 0.1                 // à la place de ....   #define bruit 0.1
 #define CHARGE_STATION_WIDTH 1.75 // en metre
 
-#define TRACTION_WHEEL_DIAMETER             (6.0*0.0254)          // Diametre des roues du robot 
-#define TRACTION_WHEEL_RADIUS               (3.0*0.0254)          // rayon des roues du robot 
-#define TRACTION_WHEEL_CIRCUMFERENCE        (3.0*0.0254*NF64_2PI) // circonference  des roues du robot 
+#define TRACTION_WHEEL_DIAMETER (6.0 * 0.0254)                 // Diametre des roues du robot
+#define TRACTION_WHEEL_RADIUS (3.0 * 0.0254)                   // rayon des roues du robot
+#define TRACTION_WHEEL_CIRCUMFERENCE (3.0 * 0.0254 * NF64_2PI) // circonference  des roues du robot
 #define K_ANTICIPATION 0.4
 
 #include <frc/TimedRobot.h>
@@ -42,10 +41,11 @@
 #include <cmath>
 #include <lib/NLCsv.h>
 
-//gyro
+// gyro
 
-class Robot : public frc::TimedRobot {
- public:
+class Robot : public frc::TimedRobot
+{
+public:
   void RobotInit() override;
   void RobotPeriodic() override;
 
@@ -61,13 +61,12 @@ class Robot : public frc::TimedRobot {
   void TestInit() override;
   void TestPeriodic() override;
 
-
   // double signe(double x);
   double Calcul_De_Notre_Brave_JM(double forward, double turn, bool wheelSide);
 
   double GetAngle();
 
-  //machine à état
+  // machine à état
   enum State
   {
     Init,
@@ -75,10 +74,9 @@ class Robot : public frc::TimedRobot {
     End
   };
 
-  State m_state=State::End;
+  State m_state = State::End;
 
- private:
-
+private:
   frc::Joystick m_joystickRight{0};
   frc::Joystick m_joystickLeft{1};
   frc::BuiltInAccelerometer m_accelerometer{};
@@ -92,7 +90,6 @@ class Robot : public frc::TimedRobot {
   ctre::phoenix::motorcontrol::can::TalonFX m_MotorLeftFollower{5};
   ctre::phoenix::motorcontrol::can::TalonFX m_MotorLeftFollower2{6};
 
-
   NdoubleMovingAverage m_AccelerometerX_Average{25};
   NdoubleMovingAverage m_AccelerometerX_Arcos_Average{25};
   NdoubleMovingAverage m_gyroRateAverage{25};
@@ -103,29 +100,28 @@ class Robot : public frc::TimedRobot {
   Dynamic m_AccelerometerY;
   Dynamic m_GyroAngle;
 
-  double m_Sum_Delta_Gyro_Angle=0.0;
+  double m_Sum_Delta_Gyro_Angle = 0.0;
 
-  frc::Encoder m_EncoderRight{0,1,true};
-  frc::Encoder m_EncoderLeft{2,3,false};
+  frc::Encoder m_EncoderRight{0, 1, true};
+  frc::Encoder m_EncoderLeft{2, 3, false};
 
-  Angle_AG m_FusAngle{0.02,0.075};
-  Pid m_VangleController{0.0,0.01,0.0005,0.0};
-  Pid m_AngleController{0.0,0.01,0.0005,0.0};
+  Angle_AG m_FusAngle{0.02, 0.075};
+  Pid m_VangleController{0.0, 0.01, 0.0005, 0.0};
+  Pid m_AngleController{0.0, 0.01, 0.0005, 0.0};
 
-  TiltTracker m_TiltTracker{5,0.05,1.0,0.2};//{80.0,0.5,0.4}; ça marche
+  TiltTracker m_TiltTracker{5, 100.0, 0.06, 0.0001, 0.2}; //{80.0,0.5,0.4}; ça marche
 
   double m_kPmin;
   double m_kPmax;
 
-  double m_selfConfidenceMin;   
-  double m_selfConfidenceMax;   
+  double m_selfConfidenceMin;
+  double m_selfConfidenceMax;
 
-  double m_traveledDistance;    
-  double m_refDistance;         
-  
+  double m_traveledDistance;
+  double m_refDistance;
 
-  double m_errorSign;         
-  double m_encoderOrigin; 
+  double m_errorSign;
+  double m_encoderOrigin;
 
   double m_vOutput;
   double m_Output;
@@ -137,6 +133,5 @@ class Robot : public frc::TimedRobot {
   double m_LogEncoderM;
   double m_LogAccelX;
 
-
-  NLCSV m_logCSV{11};    
+  NLCSV m_logCSV{11};
 };
