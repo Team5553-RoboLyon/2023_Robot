@@ -35,9 +35,9 @@ NdoubleMovingAverage::~NdoubleMovingAverage()
 const double NdoubleMovingAverage::addSample(const double value)
 {
 	m_sum += (value - *m_pSamples);
-	m_sum2 += (value * value - (*m_pSamples) * (*m_pSamples));
+	m_sum2 += ((value * value) - (*m_pSamples) * (*m_pSamples));
 	m_mean = m_sum / (m_last + 1);
-	m_variance = (m_sum2 - (m_sum * m_sum) / (m_last + 1)) / (m_last);
+	m_variance = (m_sum2 - ((m_sum * m_sum) / (m_last + 1))) / (m_last);
 	//m_variance = (m_sum2 / (m_last + 1) - (m_mean * m_mean));
 	*m_pSamples = value;
 
@@ -55,7 +55,7 @@ const double NdoubleMovingAverage::addSample(const double value)
 	return m_mean;
 }
 
-void NdoubleMovingAverage::reset(const int table_size = 0, const double initial_average = 0.0)
+void NdoubleMovingAverage::reset(const int table_size, const double initial_average)
 {
 	if (table_size < 2)
 	{
