@@ -6,10 +6,53 @@
 
 #include <frc/TimedRobot.h>
 
-class Robot : public frc::TimedRobot {
- public:
-  void RobotInit() override;
-  void RobotPeriodic() override;
+#include "lib/N/NType.h"
+#include "lib/N/NFlags.h"
+
+#include "lib/NL/MotionControl/Trajectory/NLTrajectory.h"
+#include "lib/NL/MotionControl/Path/NLPathPersistentTrackingData.h"
+#include "lib/NL/Simulation/VControllers/NLVMotorController.h"
+#include "lib/NL/Simulation/VControllers/NLVEncoder.h"
+#include "lib/NL/Simulation/VControllers/NLVGyro.h"
+
+#include "lib/NL/MotionControl/NLPid.h"
+#include "lib/NL/MotionControl/NLRobotPose.h"
+#include "lib/NL/MotionControl/DriveTrain/Characterization/NLCharacterizationTable.h"
+#include "lib/NL/MotionControl/DriveTrain/Characterization/NLMotorCharacterization.h"
+#include "lib/NL/MotionControl/NLPathWorkbench.h"
+
+#include "lib/NL/MotionControl/Trajectory/NLFollowerTank.h"
+class NLVIRTUAL_ROBOT;
+class Robot : public frc::TimedRobot
+{
+public:
+  enum STATE
+  {
+    PATH_ERROR = 0, ///< L'initialisation du path following a rencontr� un probl�me ( erreur au chargement tr�s probablement ). Le Robot ne peut-�tre en �tat PATH_FOLLOWING.
+    PATH_FOLLOWING, ///< Le robot est en �tat de suivit de chemin.
+    PATH_END        ///< La Vitesse  est en d�passement.
+  };
+
+  Robot() : m_flags(0) {}
+  Robot(NLVIRTUAL_ROBOT *pvr) : m_flags(0), m_pVirtualRobot(pvr) {}
+  ~Robot() {}
+
+  void inline setVirtualRobot(NLVIRTUAL_ROBOT *pvr) { m_pVirtualRobot = pvr; }
+  inline Nbool IsInitialized() { return (ISFLAG_ON(m_flags, FLAG_NLROBOT_IS_INITIALIZED) ? NTRUE : false); }
+
+  STATE m_state;
+  Nu32 m_flags;
+
+  NLMOTOR_CHARACTERIZATION m_CrtzL1;
+  NLMOTOR_CHARACTERIZATION m_CrtzL2;
+  NLMOTOR_CHARACTERIZATION m_CrtzR1;
+  NLMOTOR_CHARACTERIZATION m_CrtzR2;
+
+  NLTRAJECTORY_PACK m_TrajectoryPack;
+  NLFOLLOWER_TANK m_follower;
+
+  void RobotInit(NLPATH_WORKBENCH *pwb);
+  void RobotPeriodic(const Nf32 dt);
 
   void AutonomousInit() override;
   void AutonomousPeriodic() override;
@@ -25,4 +68,7 @@ class Robot : public frc::TimedRobot {
 
   void SimulationInit() override;
   void SimulationPeriodic() override;
+
+private:
+  NLVIRTUAL_ROBOT *m_pVirtualRobot;
 };

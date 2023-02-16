@@ -1,13 +1,13 @@
-#include "../../N/NMemory.h"
-#include "../../N/NMath.h"
-#include "../../N/Miscellaneous/NColor.h"
-#include "../../N/NErrorHandling.h"
-#include "../../N/Utilities/Draw/NUT_Draw.h"
+#include "lib/N/NMemory.h"
+#include "lib/N/NMath.h"
+#include "lib/N/Miscellaneous/NColor.h"
+#include "lib/N/NErrorHandling.h"
+#include "lib/N/Utilities/Draw/NUT_Draw.h"
 
-#include "../MotionControl/DriveTrain/NLOdometry.h"
+#include "lib/NL/MotionControl/DriveTrain/NLOdometry.h"
 
-#include "./VirtualRobot/NLVirtualRobot.h"
-#include "NLRobot.h"
+#include "lib/NL/Simulation/VirtualRobot/NLVirtualRobot.h"
+#include "lib/NL/Simulation/NLRobot.h"
 
 /*
 void NLROBOT::fromWorkbench(const NLPATH_WORKBENCH* pwb)
@@ -26,11 +26,11 @@ void NLROBOT::fromWorkbench(const NLPATH_WORKBENCH* pwb)
 }
 */
 
-void NLROBOT::RobotInit(NLPATH_WORKBENCH* pwb)
+void NLROBOT::RobotInit(NLPATH_WORKBENCH *pwb)
 {
 	NErrorIf(!m_pVirtualRobot, NERROR_NULL_POINTER); // A virtual Robot has to be defined !!!
-	m_gyro.Init(0,m_pVirtualRobot);	
-	
+	m_gyro.Init(0, m_pVirtualRobot);
+
 	// a reprendre :
 	/*********************************************************************************************************************
 	NLCHARACTERIZATION_TABLE	characterization_table(4);
@@ -51,15 +51,15 @@ void NLROBOT::RobotInit(NLPATH_WORKBENCH* pwb)
 
 
 	// Read TrajectoryFollowing external data:
-	// En mode simulation ces données sont 'lues' ( copiées en fait ) depuis le path workbench courant.
-	// En mode "réel" elles sont effectivement présentes sous forme de fichiers chargés à l'initialisation.
+	// En mode simulation ces donnï¿½es sont 'lues' ( copiï¿½es en fait ) depuis le path workbench courant.
+	// En mode "rï¿½el" elles sont effectivement prï¿½sentes sous forme de fichiers chargï¿½s ï¿½ l'initialisation.
 	Nu32 read_error_count = 0;
 
 	read_error_count += m_DriveTrainSpecs.read(pwb)? 0:1;
 	read_error_count += m_ramsete.read(pwb) ? 0:1;
 	read_error_count += m_TrajectoryPack.read(pwb) ? 0:1;
 	read_error_count += m_TrajectoryPack.m_chunksArray.Size ? 0:1;
-	
+
 	m_currrentPoint.null();
 	m_TrajectoryPack.initializePersistentData();
 	//read_error_count += m_TrajectoryStateSPack.read(pwb) ? 0:1;
@@ -70,13 +70,13 @@ void NLROBOT::RobotInit(NLPATH_WORKBENCH* pwb)
 		m_state = NLROBOT::STATE::PATH_ERROR;
 	else
 		m_state = NLROBOT::STATE::PATH_FOLLOWING;
-		
+
 	m_dsLeftWheel	= 0.0f;
 	m_dsRightWheel	= 0.0f;
 	m_estimatedPose.reset();
 	**********************************************************************************************************************/
 
-	NLCHARACTERIZATION_TABLE	characterization_table(4);
+	NLCHARACTERIZATION_TABLE characterization_table(4);
 	characterization_table.importTxt("D:/_PROJETS/FIRST/C++/Simulateur/Simulateur/data/characterization_MultiVarLinearRegression.txt");
 	characterization_table.get(&m_CrtzL1, "L1", NFALSE);
 	characterization_table.get(&m_CrtzL2, "L2", NFALSE);
@@ -91,87 +91,84 @@ void NLROBOT::RobotInit(NLPATH_WORKBENCH* pwb)
 	m_leftGearboxEncoder.Init(0, NLVENCODER_ENCODING_K4X, m_pVirtualRobot);
 	m_rightGearboxEncoder.Init(1, NLVENCODER_ENCODING_K4X, m_pVirtualRobot);
 
-	m_TrajectoryPack.load(/*"trajectory1.pak"*/pwb);
-	m_follower.load(/*"scrumtrooper.ftk"*/pwb);
+	m_TrajectoryPack.load(/*"trajectory1.pak"*/ pwb);
+	m_follower.load(/*"scrumtrooper.ftk"*/ pwb);
 	m_follower.initialize(&m_TrajectoryPack);
 	m_state = NLROBOT::STATE::PATH_FOLLOWING;
 }
 
-
-
-
 void NLROBOT::RobotPeriodic(const Nf32 dt)
 {
 	NLRAMSETEOUTPUT output;
-	const NLFOLLOWER_TANK_OUTPUT* pout;
+	const NLFOLLOWER_TANK_OUTPUT *pout;
 
 	switch (m_state)
 	{
-		case NLROBOT::STATE::PATH_ERROR:
-			break;
+	case NLROBOT::STATE::PATH_ERROR:
+		break;
 
-		case NLROBOT::STATE::PATH_FOLLOWING:
-			// *****************************************************    'THE' METHOD(e)
-			// A) Feed back:
-			// avec les encodeurs on estime la position du robot:
-			//			l = distance parcourue par la roue gauche depuis le dernier reset encodeur.
-			//			r = distance parcourue par la roue droite depuis le dernier reset encodeur.
-			//
-			//			dl et dr = distances parcourues par les roues gauche et droite depuis le dernier call.
-			//			(note dl/dt = vitesse roue gauche et dr/dt = vitesse roue droite  )
-			//
-			/*
-			l = (m_leftGearboxEncoder.getRaw() / 8192.0f) * NF32_2PI * m_DriveTrainSpecs.m_wheelRadius;
-			r = (m_rightGearboxEncoder.getRaw() / 8192.0f) * NF32_2PI * m_DriveTrainSpecs.m_wheelRadius;
-			dl = l - m_dsLeftWheel;
-			dr = r - m_dsRightWheel;
-			m_dsLeftWheel = l;
-			m_dsRightWheel = r;
-			// forward:
-			m_estimatedPose.odometryUpdate(&m_DriveTrainSpecs, dl, dr, m_gyro.get());
-			*/
-			// backward:
-			//m_estimatedPose.odometryUpdate(&m_DriveTrainSpecs, -dr, -dl, m_gyro.get());
-			m_follower.estimate(m_leftGearboxEncoder.getRaw() / 8192.0f, m_rightGearboxEncoder.getRaw() / 8192.0f, m_gyro.get());
+	case NLROBOT::STATE::PATH_FOLLOWING:
+		// *****************************************************    'THE' METHOD(e)
+		// A) Feed back:
+		// avec les encodeurs on estime la position du robot:
+		//			l = distance parcourue par la roue gauche depuis le dernier reset encodeur.
+		//			r = distance parcourue par la roue droite depuis le dernier reset encodeur.
+		//
+		//			dl et dr = distances parcourues par les roues gauche et droite depuis le dernier call.
+		//			(note dl/dt = vitesse roue gauche et dr/dt = vitesse roue droite  )
+		//
+		/*
+		l = (m_leftGearboxEncoder.getRaw() / 8192.0f) * NF32_2PI * m_DriveTrainSpecs.m_wheelRadius;
+		r = (m_rightGearboxEncoder.getRaw() / 8192.0f) * NF32_2PI * m_DriveTrainSpecs.m_wheelRadius;
+		dl = l - m_dsLeftWheel;
+		dr = r - m_dsRightWheel;
+		m_dsLeftWheel = l;
+		m_dsRightWheel = r;
+		// forward:
+		m_estimatedPose.odometryUpdate(&m_DriveTrainSpecs, dl, dr, m_gyro.get());
+		*/
+		// backward:
+		// m_estimatedPose.odometryUpdate(&m_DriveTrainSpecs, -dr, -dl, m_gyro.get());
+		m_follower.estimate(m_leftGearboxEncoder.getRaw() / 8192.0f, m_rightGearboxEncoder.getRaw() / 8192.0f, m_gyro.get());
 
-			/*
-			// B) Feed forward : State ( full )
-			m_currrentPoint.m_kin.m_t += dt;
-			m_TrajectoryPack.getPoint(&m_currrentPoint, m_currrentPoint.m_kin.m_t);
-			*/
-			m_follower.updateTarget(&m_TrajectoryPack,dt);
-			// C) Ramsete:
-			//m_ramsete.update2(&output, &m_DriveTrainSpecs, &m_currrentPoint, &m_estimatedPose);
-			//m_ramsete.update3(&output, &m_follower);
-			
-			pout =  m_follower.compute();
-			// forward:
-			/*
-			m_moteurL1.SetVoltage(m_CrtzL1.getVoltage(output.m_leftVelocity, output.m_leftAcceleration));
-			m_moteurL2.SetVoltage(m_CrtzL2.getVoltage(output.m_leftVelocity, output.m_leftAcceleration));
-			m_moteurR1.SetVoltage(m_CrtzR1.getVoltage(output.m_rightVelocity, output.m_rightAcceleration));
-			m_moteurR2.SetVoltage(m_CrtzR2.getVoltage(output.m_rightVelocity, output.m_rightAcceleration));
-			*/
-			/*
-			// backward:
-			m_moteurR1.SetVoltage(m_CrtzL1.getVoltage(-output.m_leftVelocity, -output.m_leftAcceleration));
-			m_moteurR2.SetVoltage(m_CrtzL2.getVoltage(-output.m_leftVelocity, -output.m_leftAcceleration));
+		/*
+		// B) Feed forward : State ( full )
+		m_currrentPoint.m_kin.m_t += dt;
+		m_TrajectoryPack.getPoint(&m_currrentPoint, m_currrentPoint.m_kin.m_t);
+		*/
+		m_follower.updateTarget(&m_TrajectoryPack, dt);
+		// C) Ramsete:
+		// m_ramsete.update2(&output, &m_DriveTrainSpecs, &m_currrentPoint, &m_estimatedPose);
+		// m_ramsete.update3(&output, &m_follower);
 
-			m_moteurL1.SetVoltage(m_CrtzR1.getVoltage(-output.m_rightVelocity,-output.m_rightAcceleration));
-			m_moteurL2.SetVoltage(m_CrtzR2.getVoltage(-output.m_rightVelocity,-output.m_rightAcceleration));
-			*/
-			m_moteurL1.SetVoltage(m_CrtzL1.getVoltage(pout->m_leftVelocity,		pout->m_leftAcceleration));
-			m_moteurL2.SetVoltage(m_CrtzL2.getVoltage(pout->m_leftVelocity,		pout->m_leftAcceleration));
-			m_moteurR1.SetVoltage(m_CrtzR1.getVoltage(pout->m_rightVelocity,	pout->m_rightAcceleration));
-			m_moteurR2.SetVoltage(m_CrtzR2.getVoltage(pout->m_rightVelocity,	pout->m_rightAcceleration));
+		pout = m_follower.compute();
+		// forward:
+		/*
+		m_moteurL1.SetVoltage(m_CrtzL1.getVoltage(output.m_leftVelocity, output.m_leftAcceleration));
+		m_moteurL2.SetVoltage(m_CrtzL2.getVoltage(output.m_leftVelocity, output.m_leftAcceleration));
+		m_moteurR1.SetVoltage(m_CrtzR1.getVoltage(output.m_rightVelocity, output.m_rightAcceleration));
+		m_moteurR2.SetVoltage(m_CrtzR2.getVoltage(output.m_rightVelocity, output.m_rightAcceleration));
+		*/
+		/*
+		// backward:
+		m_moteurR1.SetVoltage(m_CrtzL1.getVoltage(-output.m_leftVelocity, -output.m_leftAcceleration));
+		m_moteurR2.SetVoltage(m_CrtzL2.getVoltage(-output.m_leftVelocity, -output.m_leftAcceleration));
 
-			break;
+		m_moteurL1.SetVoltage(m_CrtzR1.getVoltage(-output.m_rightVelocity,-output.m_rightAcceleration));
+		m_moteurL2.SetVoltage(m_CrtzR2.getVoltage(-output.m_rightVelocity,-output.m_rightAcceleration));
+		*/
+		m_moteurL1.SetVoltage(m_CrtzL1.getVoltage(pout->m_leftVelocity, pout->m_leftAcceleration));
+		m_moteurL2.SetVoltage(m_CrtzL2.getVoltage(pout->m_leftVelocity, pout->m_leftAcceleration));
+		m_moteurR1.SetVoltage(m_CrtzR1.getVoltage(pout->m_rightVelocity, pout->m_rightAcceleration));
+		m_moteurR2.SetVoltage(m_CrtzR2.getVoltage(pout->m_rightVelocity, pout->m_rightAcceleration));
 
-		case NLROBOT::STATE::PATH_END:
-			break;
-		default:
-			NErrorIf(1, NERROR_UNAUTHORIZED_CASE);
-			break;
+		break;
+
+	case NLROBOT::STATE::PATH_END:
+		break;
+	default:
+		NErrorIf(1, NERROR_UNAUTHORIZED_CASE);
+		break;
 	}
 }
 
@@ -180,22 +177,28 @@ void NLROBOT::draw()
 	// ***************************************************************************************
 	// *
 	// ROBOT REFERENCE
-	// Représentation de la position et de l'orientation de REFERENCE DU ROBOT.
-	// Selon les données du NLTRAJECTORY_PACK ( état courant )
+	// Reprï¿½sentation de la position et de l'orientation de REFERENCE DU ROBOT.
+	// Selon les donnï¿½es du NLTRAJECTORY_PACK ( ï¿½tat courant )
 	NVEC2f32 u;
 	u.x = m_follower.getTargetPoint()->m_u.x;
 	u.y = m_follower.getTargetPoint()->m_u.y;
 
 	NVec2Normalize(&u);
 	NMATRIX3x3 mx;
-	mx.XAxis.x =  u.x;	mx.YAxis.x =-u.y;	mx.ZAxis.x = 0.0f;	
-	mx.XAxis.y =  u.y;	mx.YAxis.y = u.x;	mx.ZAxis.y = 0.0f;	
-	mx.XAxis.z = 0.0f;	mx.YAxis.z = 0.0f;	mx.ZAxis.z = 1.0f;	
+	mx.XAxis.x = u.x;
+	mx.YAxis.x = -u.y;
+	mx.ZAxis.x = 0.0f;
+	mx.XAxis.y = u.y;
+	mx.YAxis.y = u.x;
+	mx.ZAxis.y = 0.0f;
+	mx.XAxis.z = 0.0f;
+	mx.YAxis.z = 0.0f;
+	mx.ZAxis.z = 1.0f;
 	NVEC3 origin;
 	origin.x = m_follower.getTargetPoint()->m_p.x;
 	origin.y = m_follower.getTargetPoint()->m_p.y;
 	origin.z = 0.0f;
-	NCOLOR		color = { NCOLOR_PRESET3F_GREEN,1.0f };
+	NCOLOR color = {NCOLOR_PRESET3F_GREEN, 1.0f};
 	m_pVirtualRobot->drawRobotShape(&m_TrajectoryPack.m_matrix, &mx, &origin, &color);
 	// *
 	// ***************************************************************************************
@@ -203,15 +206,15 @@ void NLROBOT::draw()
 	// ***************************************************************************************
 	// *
 	// ROBOT RAMSETE DEBUG
-	// Représentation de la position et de l'orientation de REFERENCE DU ROBOT.
-	// VUE DEPUIS la position estimée du ROBOT.
+	// Reprï¿½sentation de la position et de l'orientation de REFERENCE DU ROBOT.
+	// VUE DEPUIS la position estimï¿½e du ROBOT.
 	/*
 	NMATRIX mx2, mxr;
 	NVEC3f32 p;
 	p.x = m_ramsete.dbg_currentposture.x;
 	p.y = m_ramsete.dbg_currentposture.y;
 	p.z = 0.0f;
-	
+
 	NComposeMatrix(&mx2, &m_ramsete.dbg_mx,&p);
 	NMulMatrix(&mxr, &mx2, &m_TrajectoryPack.m_matrix);
 
@@ -224,7 +227,7 @@ void NLROBOT::draw()
 	o.x = mxr.f30;
 	o.y = mxr.f31;
 	o.z = mxr.f32;
-	
+
 	NUT_Draw_3DMatrix3x3(&mx3, &o, 2.0f);
 
 
@@ -244,11 +247,10 @@ void NLROBOT::draw()
 	NUT_Draw_Ellipse(&ellipse);
 	*/
 
-
 	/*
 	NVEC3		pos,B;
 	NCOLOR		color = { NCOLOR_PRESET3F_GREEN,1.0f };
-	
+
 
 	// Preparation: texte
 	Nchar			txt[64];
@@ -258,9 +260,9 @@ void NLROBOT::draw()
 	NSetColorf(&drawtxt.Color, NCOLOR_PRESET3F_BLUE_ELECTRIC, 1);
 
 
-	
+
 	//NUT_Draw_Cross(&m_refPosition, &xtd, &color);
-	
+
 
 	// A: Position de Reference
 	m_refMatrix.XAxis.x =  m_refTangent.y;
@@ -275,7 +277,7 @@ void NLROBOT::draw()
 	m_refMatrix.ZAxis.y = 0.0f;
 	m_refMatrix.ZAxis.z = 1.0f;
 	NUT_SetDrawConstructionPlaneMatrix3x3(&m_refMatrix);
-	// position du centre géométrique du robot.
+	// position du centre gï¿½omï¿½trique du robot.
 	pos.x = m_refPosition.x;//- m_pSpecifications->m_centerOfMass.x;
 	pos.y = m_refPosition.y;//- m_pSpecifications->m_centerOfMass.y;
 	pos.z = m_refPosition.z;//- m_pSpecifications->m_centerOfMass.z;
@@ -283,22 +285,22 @@ void NLROBOT::draw()
 
 
 
-	// B: Position estimée par Odométrie ( avec les encodeurs )
+	// B: Position estimï¿½e par Odomï¿½trie ( avec les encodeurs )
 	NSetColorf(&color, NCOLOR_PRESET3F_RED, 1.0f);
 	NRotationMatrix3x3_AxisZ(&m_estimatedMatrix, m_estimatedAngle - NF32_PI_2);
 	NUT_SetDrawConstructionPlaneMatrix3x3(&m_estimatedMatrix);
-	// position du centre géométrique du robot.
+	// position du centre gï¿½omï¿½trique du robot.
 	pos.x = m_estimatedPosition.x;//- m_pSpecifications->m_centerOfMass.x;
 	pos.y = m_estimatedPosition.y;//- m_pSpecifications->m_centerOfMass.y;
 	pos.z = m_estimatedPosition.z;//- m_pSpecifications->m_centerOfMass.z;
-	// tracage du cadre fantome 1( position et orientation estimée par odométrie )
+	// tracage du cadre fantome 1( position et orientation estimï¿½e par odomï¿½trie )
 	m_pVirtualRobot->drawRobotShape(&pos, &m_estimatedMatrix, &color);
 
 //	sprintf(txt, "LU: %.4f    RU: %.4f", m_leftErrorVoltage, m_rightErrorVoltage);
 //	NUT_Draw_Text(txt, &pos, &drawtxt);
-	
+
 	// ----------------------------------------------------------------------------------
-	// Visualisation RAMSETE DATA sur la position estimée
+	// Visualisation RAMSETE DATA sur la position estimï¿½e
 	NUT_SetDrawConstructionPlane(_PLANE_XY);
 
 	NVEC2 xtd = { 0.2f,0.2f };
@@ -322,14 +324,14 @@ void NLROBOT::draw()
 	// ----------------------------------------------------------------------------------
 
 
-	// C: Position estimée par Odométrie ( avec des moteurs "MAGIQUES" délivrant exactement la vitesse et l'acceleration demandées )
+	// C: Position estimï¿½e par Odomï¿½trie ( avec des moteurs "MAGIQUES" dï¿½livrant exactement la vitesse et l'acceleration demandï¿½es )
 	NRotationMatrix3x3_AxisZ(&m_trueVelAccMatrix, m_trueVelAccAngle - NF32_PI_2);
 	NUT_SetDrawConstructionPlaneMatrix3x3(&m_trueVelAccMatrix);
-	// position du centre géométrique du robot.
+	// position du centre gï¿½omï¿½trique du robot.
 	pos.x = m_trueVelAccPosition.x;//- m_pSpecifications->m_centerOfMass.x;
 	pos.y = m_trueVelAccPosition.y;//- m_pSpecifications->m_centerOfMass.y;
 	pos.z = m_trueVelAccPosition.z;//- m_pSpecifications->m_centerOfMass.z;
-	// tracage du cadre fantome 1( position et orientation estimée par odométrie )
+	// tracage du cadre fantome 1( position et orientation estimï¿½e par odomï¿½trie )
 	NSetColorf(&color, NCOLOR_PRESET3F_BLUE_AQUAMARINE,1.0f);
 	//NUT_Draw_Quad(&pos, &extend, &col);
 	m_pVirtualRobot->drawRobotShape(&pos, &m_trueVelAccMatrix, &color);
