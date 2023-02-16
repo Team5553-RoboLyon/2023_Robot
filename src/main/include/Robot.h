@@ -8,10 +8,13 @@
 #include <frc/TimedRobot.h>
 #include <frc/smartdashboard/SmartDashboard.h>
 #include <frc/Joystick.h>
-#include <rev/CANSparkMax.h>
+#include <ctre/phoenix/motorcontrol/can/VictorSPX.h>
+#include <frc/DoubleSolenoid.h>
+#include <frc/Compressor.h>
 
-class Robot : public frc::TimedRobot {
- public:
+class Robot : public frc::TimedRobot
+{
+public:
   void RobotInit() override;
   void RobotPeriodic() override;
 
@@ -30,13 +33,11 @@ class Robot : public frc::TimedRobot {
   void SimulationInit() override;
   void SimulationPeriodic() override;
 
-
-  private:
-    frc::Joystick m_stick{0};
-    rev::CANSparkMax m_motorRight{1, rev::CANSparkMax::MotorType::kBrushless};
-    rev::CANSparkMax m_motorLeft{2, rev::CANSparkMax::MotorType::kBrushless};
-
-    double last_invert1 = false;
-    double last_invert2 = false;
+private:
+  frc::Joystick m_joystick{0};
+  ctre::phoenix::motorcontrol::can::VictorSPX m_motorRight{1};
+  ctre::phoenix::motorcontrol::can::VictorSPX m_motorLeft{2};
+  frc::DoubleSolenoid m_solenoid{frc::PneumaticsModuleType::REVPH, 12, 13};
+  frc::Compressor m_compressor{frc::PneumaticsModuleType::REVPH};
+  double m_speed;
 };
-

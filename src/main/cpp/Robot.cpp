@@ -3,42 +3,53 @@
 // the WPILib BSD license file in the root directory of this project.
 
 #include "Robot.h"
-//cc
+// cc
 
 void Robot::RobotInit() {}
-void Robot::RobotPeriodic() {
+void Robot::RobotPeriodic()
+{
   frc2::CommandScheduler::GetInstance().Run();
 }
 
 void Robot::AutonomousInit() {}
 void Robot::AutonomousPeriodic() {}
 
-void Robot::TeleopInit() {  
-  m_motorLeft.RestoreFactoryDefaults();
-  m_motorRight.RestoreFactoryDefaults();
-  m_motorLeft.SetSmartCurrentLimit(40);
-  m_motorRight.SetSmartCurrentLimit(40);
+void Robot::TeleopInit()
+{
+  m_motorLeft.ConfigFactoryDefault();
+  m_motorRight.ConfigFactoryDefault();
+  m_motorLeft.ConfigVoltageCompSaturation(12);
+  m_motorRight.ConfigVoltageCompSaturation(12);
   m_motorLeft.SetInverted(true);
-  m_motorRight.SetInverted(true);
-  m_motorLeft.SetOpenLoopRampRate(0.3);
-  m_motorRight.SetOpenLoopRampRate(0.3);
-
+  m_motorRight.SetInverted(false);
+  m_motorLeft.ConfigOpenloopRamp(0.3);
+  m_motorRight.ConfigOpenloopRamp(0.3);
+  m_motorRight.Follow(m_motorLeft);
+  frc::SmartDashboard::PutNumber("speed", 0.0);
+  frc::SmartDashboard::PutBoolean("oui", false);
 }
-void Robot::TeleopPeriodic() {
-  if (m_stick.GetRawButton(1))
+void Robot::TeleopPeriodic()
+{
+  m_compressor.EnableDigital();
+  m_speed = frc::SmartDashboard::GetNumber("speed", 0.0);
+
+  // if (m_joystick.GetRawButton(1))
+  // {
+  //   m_motorLeft.Set(ctre::phoenix::motorcontrol::VictorSPXControlMode::PercentOutput, m_speed);
+  // }
+  // else
+  // {
+  //   m_motorLeft.Set(ctre::phoenix::motorcontrol::VictorSPXControlMode::PercentOutput, 0.0);
+  // }
+  // frc::SmartDashboard::GetBoolean("oui", false) == false
+  if (m_joystick.GetRawButton(1))
   {
-    m_motorLeft.Set(1);
-    m_motorRight.Set(0.8);
+    m_solenoid.Set(frc::DoubleSolenoid::Value::kForward);
   }
   else
   {
-    m_motorLeft.Set(0);
-    m_motorRight.Set(0);
+    m_solenoid.Set(frc::DoubleSolenoid::Value::kReverse);
   }
-  
-
-
-
 }
 
 void Robot::DisabledInit() {}
@@ -51,7 +62,8 @@ void Robot::SimulationInit() {}
 void Robot::SimulationPeriodic() {}
 
 #ifndef RUNNING_FRC_TESTS
-int main() {
+int main()
+{
   return frc::StartRobot<Robot>();
 }
 #endif
