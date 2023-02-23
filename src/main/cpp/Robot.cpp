@@ -66,18 +66,18 @@ void Robot::TeleopInit()
   m_EncoderLeft.SetDistancePerPulse(1.0 / 2048.0);
   m_EncoderRight.SetDistancePerPulse(1.0 / 2048.0);
 
-  // m_logCSV.open("/home/lvuser/", true);
-  // m_logCSV.setItem(0, "m_FusAngle",5, &m_LogFusAngle);
-  // m_logCSV.setItem(1, "m_gyroRateAverage",5, &m_LogGyroRateAverage);
-  // m_logCSV.setItem(2, "m_gyrorate",5, &m_LogGyroRate);
-  // m_logCSV.setItem(3, "m_AngleController.m_error",5, &m_AngleController.m_error);
-  // m_logCSV.setItem(4, "m_VangleController.m_error",5, &m_VangleController.m_error);
-  // m_logCSV.setItem(5, "m_vOutput",5, &m_vOutput);
-  // m_logCSV.setItem(6, "m_AngleOutput",5, &m_AngleOutput);
-  // m_logCSV.setItem(7, "m_Output",5, &m_Output);
-  // m_logCSV.setItem(8, "m_EncoderMetre",5, &m_LogEncoderM);
-  // m_logCSV.setItem(9, "m_AccelX",5, &m_LogAccelX);
-  // m_logCSV.setItem(10, "m_AngleAccel",5, &m_LogAngleAccel);
+  m_logCSV.open("/home/lvuser/", true);
+  m_logCSV.setItem(0, "m_FusAngle", 5, &m_LogFusAngle);
+  m_logCSV.setItem(1, "m_gyroRateAverage", 5, &m_LogGyroRateAverage);
+  m_logCSV.setItem(2, "m_gyrorate", 5, &m_LogGyroRate);
+  m_logCSV.setItem(3, "m_AngleController.m_error", 5, &m_AngleController.m_error);
+  m_logCSV.setItem(4, "m_VangleController.m_error", 5, &m_VangleController.m_error);
+  m_logCSV.setItem(5, "m_vOutput", 5, &m_vOutput);
+  m_logCSV.setItem(6, "m_AngleOutput", 5, &m_AngleOutput);
+  m_logCSV.setItem(7, "m_Output", 5, &m_Output);
+  m_logCSV.setItem(8, "m_EncoderMetre", 5, &m_LogEncoderM);
+  m_logCSV.setItem(9, "m_AccelX", 5, &m_LogAccelX);
+  m_logCSV.setItem(10, "m_AngleAccel", 5, &m_LogAngleAccel);
 }
 void Robot::TeleopPeriodic()
 {
@@ -120,7 +120,7 @@ void Robot::TeleopPeriodic()
   m_vOutput = m_VangleController.Calculate(m_gyroRateAverage.get());
   m_Output = m_vOutput + m_AngleOutput;
 
-  m_Output = NCLAMP(-0.5, m_Output, 0.5);
+  m_Output = NCLAMP(-0.3, m_Output, 0.3);
   m_signeOutput = NSIGN(m_Output);
   m_Output = NMAX(NABS(m_Output), 0.0);
   m_Output = m_signeOutput * m_Output;
@@ -142,20 +142,20 @@ void Robot::TeleopPeriodic()
     m_MotorLeft.Set(ctre::phoenix::motorcontrol::ControlMode::PercentOutput, Calcul_De_Notre_Brave_JM(-m_joystickLeft.GetY(), m_joystickRight.GetZ(), 1));
   }
 
-  // m_LogFusAngle = m_FusAngle.GetAngle();
-  // m_LogGyroRateAverage = m_gyroRateAverage.get();
-  // m_LogGyroRate = m_gyro.GetRate();
-  // m_LogEncoderM = ((m_EncoderLeft.GetDistance()*TRACTION_WHEEL_CIRCUMFERENCE)+(m_EncoderRight.GetDistance()*TRACTION_WHEEL_CIRCUMFERENCE))/2;
-  // m_LogAngleAccel = m_FusAngle.m_angleAccel;
-  // m_LogAccelX = m_accelerometer.GetX();
+  m_LogFusAngle = m_FusAngle.GetAngle();
+  m_LogGyroRateAverage = m_gyroRateAverage.get();
+  m_LogGyroRate = m_gyro.GetRate();
+  m_LogEncoderM = ((m_EncoderLeft.GetDistance() * TRACTION_WHEEL_CIRCUMFERENCE) + (m_EncoderRight.GetDistance() * TRACTION_WHEEL_CIRCUMFERENCE)) / 2;
+  m_LogAngleAccel = m_FusAngle.m_angleAccel;
+  m_LogAccelX = m_accelerometer.GetX();
 
-  // m_logCSV.write();
+  m_logCSV.write();
 }
 
 void Robot::DisabledInit()
 {
   m_gyro.Reset();
-  // m_logCSV.close();
+  m_logCSV.close();
 }
 void Robot::DisabledPeriodic() {}
 
