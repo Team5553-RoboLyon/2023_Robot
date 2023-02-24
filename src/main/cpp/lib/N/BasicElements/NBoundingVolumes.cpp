@@ -1,11 +1,11 @@
 #include "lib/N/NCStandard.h"
 #include "lib/N/NType.h"
 #include "lib/N/GL/Ngl.h"
-#include "../Maths/NVec3f32.h"
+#include "lib/N/Maths/NVec3f32.h"
 #include "lib/N/Geometry/NGeometry.h"
-#include "../NCamera.h"
-#include "../Containers/NArray.h"
-#include "../NBoundingVolumes.h"
+#include "lib/N/NCamera.h"
+#include "lib/N/Containers/NArray.h"
+#include "lib/N/NBoundingVolumes.h"
 #include "lib/N/NErrorHandling.h"
 
 // IMPORTANT NOTES:

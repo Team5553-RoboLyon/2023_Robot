@@ -1,9 +1,9 @@
 #include "lib/N/NCStandard.h"
 #include "lib/N/GL/Ngl.h"
 
-#include "../NMatrix.h"
-#include "../NViewport.h"
-#include "../NCamera.h"
+#include "lib/N/NMatrix.h"
+#include "lib/N/NViewport.h"
+#include "lib/N/NCamera.h"
 #include "lib/N/NErrorHandling.h"
 
 // Global Variable
@@ -459,10 +459,10 @@ static inline void _UpdateViewPort_BasicConstants()
 
 #ifdef _NIOS
 	NViewPort.Width = viewport[2] * 2;
-	!!!todo : check that it's WEIRD after all !!! take a look at CSS pixel size stackoverflow on the Web ... NViewPort.Height = viewport[3] * 2; !!!todo : check that it's WEIRD after all !!! ....
+	!!!todo : check that it 's WEIRD after all !!! take a look at CSS pixel size stackoverflow on the Web ... NViewPort.Height = viewport[3] * 2; !!!todo : check that it' s WEIRD after all !!!....
 #endif
 
-																																						   NErrorIf(!NViewPort.Width || !NViewPort.Height, NERROR_NULL_VALUE);
+			  NErrorIf(!NViewPort.Width || !NViewPort.Height, NERROR_NULL_VALUE);
 
 	NViewPort.InvWidth = 1.0f / (Nf32)NViewPort.Width;
 	NViewPort.InvHeight = 1.0f / (Nf32)NViewPort.Height;
