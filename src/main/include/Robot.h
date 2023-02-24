@@ -22,6 +22,11 @@
 #include "lib/NL/MotionControl/NLPathWorkbench.h"
 
 #include "lib/NL/MotionControl/Trajectory/NLFollowerTank.h"
+
+#include "rev/CANSparkMax.h"
+#include <frc/Encoder.h>
+#include <frc/ADXRS450_Gyro.h>
+
 class NLVIRTUAL_ROBOT;
 class Robot : public frc::TimedRobot
 {
@@ -71,4 +76,16 @@ public:
 
 private:
   NLVIRTUAL_ROBOT *m_pVirtualRobot;
+
+  rev::CANSparkMax m_moteurL1 {1,rev::CANSparkMax::MotorType::kBrushless};
+  rev::CANSparkMax m_moteurL2 {2,rev::CANSparkMax::MotorType::kBrushless};
+  rev::CANSparkMax m_moteurR1 {3,rev::CANSparkMax::MotorType::kBrushless};
+  rev::CANSparkMax m_moteurR2 {4,rev::CANSparkMax::MotorType::kBrushless};
+
+  frc::Encoder m_leftGearboxEncoder{1,2};
+  frc::Encoder m_rightGearboxEncoder{3,4};
+
+  frc::ADXRS450_Gyro m_gyro{};
+
+
 };

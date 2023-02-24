@@ -1,15 +1,15 @@
 // ==========================================================================================
 // Vector.cpp
 // ------------------------------------------------------------------------------------------
-// Author  : 
+// Author  :
 // Created : 03/01/2012
-// Updated : 
+// Updated :
 // ------------------------------------------------------------------------------------------
 // Vectors management.
 // ==========================================================================================
-#include "../NCStandard.h"
+#include "lib/N/NCStandard.h"
 #include "../Maths/NVec2f32.h"
-#include "../NType.h"
+#include "lib/N/NType.h"
 // -------------------------------------------------------------------------------------------
 // NVec2Normalize
 // -------------------------------------------------------------------------------------------
@@ -22,12 +22,12 @@
 //		Vector length before normalization.
 //
 // -------------------------------------------------------------------------------------------
-Nf32 NVec2Normalize(NVEC2* v)
+Nf32 NVec2Normalize(NVEC2 *v)
 {
-	Nf32	n,sn;
+	Nf32 n, sn;
 
 	n = sqrt(v->x * v->x + v->y * v->y);
-	if( n >= NF32_EPSILON_VECTOR_LENGTH )
+	if (n >= NF32_EPSILON_VECTOR_LENGTH)
 	{
 		sn = 1.0f / n;
 		v->x *= sn;
@@ -49,12 +49,12 @@ Nf32 NVec2Normalize(NVEC2* v)
 //		Vector length before normalization.
 //
 // -------------------------------------------------------------------------------------------
-Nf32 NVec2FastNormalize(NVEC2* v)
+Nf32 NVec2FastNormalize(NVEC2 *v)
 {
-	Nf32	n,sn;
+	Nf32 n, sn;
 
 	n = NFastSqrt(v->x * v->x + v->y * v->y);
-	if( n >= NF32_EPSILON_VECTOR_LENGTH )
+	if (n >= NF32_EPSILON_VECTOR_LENGTH)
 	{
 		sn = 1.0f / n;
 		v->x *= sn;

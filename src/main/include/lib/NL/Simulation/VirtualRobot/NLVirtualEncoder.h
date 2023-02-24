@@ -1,5 +1,5 @@
 #pragma once
-#include "../../../N/NType.h"
+#include "lib/N/NType.h"
 #include "NLVirtualOutPut.h"
 
 // https://www.cuidevices.com/blog/what-is-encoder-ppr-cpr-and-lpr
@@ -25,6 +25,6 @@ private:
 
 	Nu32				m_pulsePerRevolution;	// resolution de l'encodeur ( cpr = ppr * 4 ) k1x = ppr / k2x = ppr*2 / k4x = ppr * 4 
 	Nf32				m_count;				// nombre de 'ticks' actuels
-	NLVIRTUAL_OUTPUT	m_input0;				// 'snapshot' enregistré au reset de l'output tracké par l'encodeur
+	NLVIRTUAL_OUTPUT	m_input0;				// 'snapshot' enregistrï¿½ au reset de l'output trackï¿½ par l'encodeur
 	NLVIRTUAL_OUTPUT	*m_pDriveInput;
 };

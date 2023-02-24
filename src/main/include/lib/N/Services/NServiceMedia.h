@@ -8,25 +8,24 @@
 // **																					**
 // ***************************************************************************************
 // ***************************************************************************************
-#include "../NCStandard.h"
-#include "../NType.h"
+#include "lib/N/NCStandard.h"
+#include "lib/N/NType.h"
 
 #ifdef __cplusplus
 extern "C"
 {
 #endif
-// --------------------------------------------------------------------------------------------------------------------------------------------------------------
-void NPlayVideo(const Nchar* file_name);
-void NStopVideo();
+    // --------------------------------------------------------------------------------------------------------------------------------------------------------------
+    void NPlayVideo(const Nchar *file_name);
+    void NStopVideo();
 
-void NPlayMusic(const char* file_name);
-void NStartMusic();
-void NPauseMusic();
-void NStopMusic();
-void NSetMusicVolume( const Nf32 vol);
+    void NPlayMusic(const char *file_name);
+    void NStartMusic();
+    void NPauseMusic();
+    void NStopMusic();
+    void NSetMusicVolume(const Nf32 vol);
 // ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 #ifdef __cplusplus
 }
-#endif	//  __cpluplus
-#endif	//  __NSERVICE_MEDIA_H 
-
+#endif //  __cpluplus
+#endif //  __NSERVICE_MEDIA_H

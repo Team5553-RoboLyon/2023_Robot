@@ -11,9 +11,9 @@
 // ***************************************************************************************
 
 #ifdef _NEDITOR
-#include "../N/NFlags.h"
+#include "lib/N/NFlags.h"
 
-// LES FLAGS BIT_8 à BIT_31 de la struct NL2DOCS sont utilisables :
+// LES FLAGS BIT_8 ï¿½ BIT_31 de la struct NL2DOCS sont utilisables :
 // -----------------------------------------------------------------------------------------------------------------------
 
 #define FLAG_NL2DOCS_MOTIONPROFILE_LAYER_VIEW_FT			BIT_8	// default is FS ( en fonction de S )

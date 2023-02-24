@@ -1,10 +1,10 @@
-#include "../NCStandard.h"
+#include "lib/N/NCStandard.h"
 #include "../NCore.h"
-#include "../NType.h"
-#include "../NString.h"
-#include "../File/NFile.h"
+#include "lib/N/NType.h"
+#include "lib/N/NString.h"
+#include "lib/N/File/NFile.h"
 #include "../File/NFileExt.h"
-#include "../NErrorHandling.h"
+#include "lib/N/NErrorHandling.h"
 #include "../Containers/NHashMap.h"
 #include "../Libraries/NLibraries.h"
 
@@ -41,7 +41,7 @@ void NFileWriteTextureBank(NFILE *pfile, const Nu8 bank_id, const Nu32 writetext
 	// Just move forward instead writing the header, it will be written with the right values at the end of the process.
 	NFileSeek(pfile,sizeof(NHEADER_TEXTURE_BANK),NFILE_SEEK_CUR);
 	Nmem0(&header,NHEADER_TEXTURE_BANK);
-	header.Flags |= (writetexturebank_flags&MASK_NHEADER_TEXTURE_BANK_ELEMENTS_INCLUDED); 
+	header.Flags |= (writetexturebank_flags&MASK_NHEADER_TEXTURE_BANK_ELEMENTS_INCLUDED);
 
 	// Pass trough all the Textures Library (OAHashMap) to retrieve Textures that belong to the bank.
 	for(i=0;i<TexturesLibrary.Size;i++ )
@@ -55,7 +55,7 @@ void NFileWriteTextureBank(NFILE *pfile, const Nu8 bank_id, const Nu32 writetext
 
 			NFileWrite(pfile,&namesize,sizeof(Nu32),1);
 			NFileWrite(pfile,ptexture->pName,sizeof(Nchar),namesize);
-			
+
 			if(ISFLAG_ON(header.Flags,FLAG_NHEADER_TEXTURE_BANK_TEXTURE_PARAMETERS_INCLUDED))
 			{
 				// TODO
@@ -65,11 +65,11 @@ void NFileWriteTextureBank(NFILE *pfile, const Nu8 bank_id, const Nu32 writetext
 
 			if(ISFLAG_ON(header.Flags,FLAG_NHEADER_TEXTURE_BANK_TEXTURE_PARAMETERS_INCLUDED))
 				NFileWriteTextureParameters(pfile,ptexture);
-			
+
 			header.BankSize ++;
 		}
 	}
-	
+
 	// Seek back and Write Header content at the right place.
 	Ns32 offsetb = NFileTell(pfile);
 	NFileSeek(pfile,offset,NFILE_SEEK_SET);
@@ -88,7 +88,7 @@ void NFileWriteTextureBank(NFILE *pfile, const Nu8 bank_id, const Nu32 writetext
 //		pfile			: a Valid pointer on an open file
 //		bank_id			: a bank id between 0 and 254 (255 is system reserved and mean: UNUSED)
 // Out :
-//		
+//
 // ------------------------------------------------------------------------------------------
 void NFileReadTextureBank(NFILE *pfile, const Nu8 bank_id)
 {
@@ -110,8 +110,8 @@ void NFileReadTextureBank(NFILE *pfile, const Nu8 bank_id)
 		case NGETVERSION_MAIN( VERSION_NHEADER_TEXTURE_BANK ):
 			Nmem0(&header,NHEADER_TEXTURE_BANK);
 			NFileRead(pfile,&header,sizeof(NHEADER_TEXTURE_BANK),1);
-			
-			// Turn ON 'RootRelativeDefaultPathSystem' if necessary 
+
+			// Turn ON 'RootRelativeDefaultPathSystem' if necessary
 / *
 			if( !NIsRootRelativeDefaultPathSystem() )
 			{

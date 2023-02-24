@@ -1,11 +1,11 @@
 #pragma once
-#include "../../../N/NType.h"
+#include "lib/N/NType.h"
 #include "NLVirtualMotor.h"
 #include "NLVirtualEncoder.h"
 #include "NLVirtualOutPut.h"
 
 #define CONSTANT_NLVIRTUAL_GEARBOX_MAX_NUMBER_OF_DRIVEN_INPUT		3		// min: 1 max: NU32MAX
-																			// equivalant au nombre max de moteurs présents dans la GearBox			
+																			// equivalant au nombre max de moteurs prï¿½sents dans la GearBox			
 class NLVIRTUAL_GEARBOX
 {
 	friend class NLVIRTUAL_ROBOT;

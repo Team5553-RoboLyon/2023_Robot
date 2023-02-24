@@ -5,8 +5,8 @@
 // **																					**
 // ***************************************************************************************
 // ***************************************************************************************
-#include "../NCStandard.h"
-#include "../NType.h"
+#include "lib/N/NCStandard.h"
+#include "lib/N/NType.h"
 #include "../Core/NTime.h"
 #include "../NPostUpdate.h"
 #include "../NPool.h"

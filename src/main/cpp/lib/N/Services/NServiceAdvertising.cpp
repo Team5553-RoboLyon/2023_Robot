@@ -6,8 +6,8 @@
 // ***************************************************************************************
 // ***************************************************************************************
 //
-#include "../NCStandard.h"
-#include "../NType.h"
+#include "lib/N/NCStandard.h"
+#include "lib/N/NType.h"
 #ifdef _NANDROID
 #include "../System/NAndroid.h"
 #endif
@@ -25,58 +25,57 @@ void NServiceAdvertising_PrepareBanner()
 
 void NShowADBanner(const Ns32 banner_position)
 {
-	#ifdef _NANDROID
-	NBuildJNICall_Ns32( "mr_ShowADBanner", banner_position );
-	#endif
+#ifdef _NANDROID
+	NBuildJNICall_Ns32("mr_ShowADBanner", banner_position);
+#endif
 }
 
 void NHideADBanner()
 {
-	#ifdef _NANDROID
-	NBuildJNICall( "mr_HideADBanner");
-	#endif
+#ifdef _NANDROID
+	NBuildJNICall("mr_HideADBanner");
+#endif
 }
 
 void NRequestADInterstitiel()
 {
-    #ifdef _NANDROID
-    NBuildJNICall( "mr_RequestADInterstitial");
-    #endif
+#ifdef _NANDROID
+	NBuildJNICall("mr_RequestADInterstitial");
+#endif
 }
 void NShowADInterstitiel()
 {
-	#ifdef _NANDROID
-	NBuildJNICall( "mr_ShowADInterstitial" );
-	#endif
+#ifdef _NANDROID
+	NBuildJNICall("mr_ShowADInterstitial");
+#endif
 }
-//void NHideADInterstitiel() doesn'exist !
+// void NHideADInterstitiel() doesn'exist !
 
 void NRequestADRewarded()
 {
-	#ifdef _NANDROID
-	NBuildJNICall( "mr_RequestADRewarded" );
-	#endif
+#ifdef _NANDROID
+	NBuildJNICall("mr_RequestADRewarded");
+#endif
 }
 void NShowADRewarded()
 {
-	#ifdef _NANDROID
-	NBuildJNICall( "mr_ShowADRewarded" );
-	#endif
+#ifdef _NANDROID
+	NBuildJNICall("mr_ShowADRewarded");
+#endif
 }
-//void NHideADRewarded() doesn'exist !
+// void NHideADRewarded() doesn'exist !
 
 void NPrepareADNative()
 {
 #ifdef _NANDROID
-	//Todo
+	// Todo
 #endif
 }
 
 void NShowADNative()
 {
 #ifdef _NANDROID
-	NBuildJNICall( "InitNativedAD" );
+	NBuildJNICall("InitNativedAD");
 #endif
 }
-//void NHideADNative() doesn'exist !
-
+// void NHideADNative() doesn'exist !

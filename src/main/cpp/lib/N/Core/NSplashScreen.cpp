@@ -5,7 +5,7 @@
 // **																					**
 // ***************************************************************************************
 // ***************************************************************************************
-#include "../GL/Ngl.h"
+#include "lib/N/GL/Ngl.h"
 #include "../NTexture.h"
 #include "NSplashScreen.h"
 #include "../Geometry/Components/NGeometryVertex.h"

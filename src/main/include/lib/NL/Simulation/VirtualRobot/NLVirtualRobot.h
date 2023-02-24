@@ -1,30 +1,30 @@
 #pragma once
 
-#include "../../../N/NType.h"
-#include "../../../N/Maths/NVec2f32.h"
-#include "../../../N/Maths/NMatrix3x3.h"
-#include "../../../N/Miscellaneous/NColor.h"
+#include "lib/N/NType.h"
+#include "lib/N/Maths/NVec2f32.h"
+#include "lib/N/Maths/NMatrix3x3.h"
+#include "lib/N/Miscellaneous/NColor.h"
 
-#include "../../MotionControl/DriveTrain/NLDriveTrainSpecs.h"
+#include "lib/NL/MotionControl/DriveTrain/NLDriveTrainSpecs.h"
 #include "NLVirtualMotor.h"
 #include "NLVirtualGearBox.h"
 #include "NLVirtualEncoder.h"
 #include "NLVirtualGyro.h"
-#include "../NLRobot.h"
+#include "lib/NL/Simulation/NLRobot.h"
 
-// Le robot virtuel ( VIRTUAL ROBOT ) est pour le simulateur l'équivalant du robot réel ( celui qui roule pour de vrai sur le terrain ).
-// Ainsi le robot virtuel est composé de boites de vitesse virtuelles, moteurs virtuels, encodeurs virtuel, gyroscope virtuel ... qui représentent
-// à chaque fois leur équivalant "réels".
+// Le robot virtuel ( VIRTUAL ROBOT ) est pour le simulateur l'ï¿½quivalant du robot rï¿½el ( celui qui roule pour de vrai sur le terrain ).
+// Ainsi le robot virtuel est composï¿½ de boites de vitesse virtuelles, moteurs virtuels, encodeurs virtuel, gyroscope virtuel ... qui reprï¿½sentent
+// ï¿½ chaque fois leur ï¿½quivalant "rï¿½els".
 
 
 #ifdef _NEDITOR
 
-#define CONSTANT_NLVIRTUAL_ROBOT_INTEGRATION_DT		0.001f		// 1 millième de seconde
+#define CONSTANT_NLVIRTUAL_ROBOT_INTEGRATION_DT		0.001f		// 1 milliï¿½me de seconde
 
 // nombre MAXIMUM de systemes inclus dans le robot virtuel.
-// Ces valeurs, fixes, peuvent être changées ici, mais doivent restées comprises entre 1 et 32 !
-// ... 32 est le max car à chaque ensemble de systèmes est associé une valeur 32 bits ( ex: m_isMotorActive pour les moteurs ) ou chaque bit represente l'etat 
-// d'un des systèmes de l'ensemble.
+// Ces valeurs, fixes, peuvent ï¿½tre changï¿½es ici, mais doivent restï¿½es comprises entre 1 et 32 !
+// ... 32 est le max car ï¿½ chaque ensemble de systï¿½mes est associï¿½ une valeur 32 bits ( ex: m_isMotorActive pour les moteurs ) ou chaque bit represente l'etat 
+// d'un des systï¿½mes de l'ensemble.
 #define CONSTANT_NLVIRTUAL_ROBOT_MAX_NUMBER_OF_MOTOR		32		// min: 1 max: 32
 #define CONSTANT_NLVIRTUAL_ROBOT_MAX_NUMBER_OF_GEARBOX		32		// min: 1 max: 32		
 #define CONSTANT_NLVIRTUAL_ROBOT_MAX_NUMBER_OF_ENCODER		32		// min: 1 max: 32		
@@ -44,7 +44,7 @@ class NLVIRTUAL_ROBOT
 
 //	friend class NLROBOT;
 public:
-	void Init();	// initialise le robot virtuel ( appelé une seule fois à l'initialisation du programme )
+	void Init();	// initialise le robot virtuel ( appelï¿½ une seule fois ï¿½ l'initialisation du programme )
 	void reset();	
 
 	/*
@@ -102,20 +102,20 @@ private:
 	NLVIRTUAL_GYRO		m_gyro;
 
 	//Simulation of Real World:
-	NVEC3				m_centerPos;			// Position du centre du cercle 'virage' sur lequel est en train de se déplacer le robot 
-	NVEC3				m_position;				// Position "réelle" du centre de masse de la base
+	NVEC3				m_centerPos;			// Position du centre du cercle 'virage' sur lequel est en train de se dï¿½placer le robot 
+	NVEC3				m_position;				// Position "rï¿½elle" du centre de masse de la base
 	
 	Nf32				m_prevLeft;				// Odometrie. pour garder trace de la distance parcourue par la roue gauche du robot
 	Nf32				m_prevRight;			// Odometrie. pour garder trace de la distance parcourue par la roue droite du robot
 
-	Nf32				m_angle;				// Angle "réel" de la base
+	Nf32				m_angle;				// Angle "rï¿½el" de la base
 	//Nf32				m_prevAngle;			
 	NMATRIX3x3			m_matrix;				// matrice de rotation du robot
 
 	NCOLOR				m_frameColor;
 	NCOLOR				m_wheelColor;
 
-	// Intégration de la classe Robot "Dans" le virtualRobot.
+	// Intï¿½gration de la classe Robot "Dans" le virtualRobot.
 	NLROBOT				m_robot;
 };
 

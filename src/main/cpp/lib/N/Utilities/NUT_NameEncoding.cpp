@@ -1,26 +1,25 @@
-#include "../NCStandard.h"
+#include "lib/N/NCStandard.h"
 
-//#include "../NUT.h"
+// #include "../NUT.h"
 
-Nu32 NUT_MakeUIDFromString( const char *ename )
+Nu32 NUT_MakeUIDFromString(const char *ename)
 {
 	// Optimized Method
-	const	Nu16*	data = (Nu16*)ename;				// Pointer to the data to be summed 
-	Nu32				len  = (strlen(ename)+1) >> 1;   // Length in 16-bit words 
-	Nu32				sum1 = 0xffff;
-	Nu32				sum2 = 0xffff;
+	const Nu16 *data = (Nu16 *)ename;	 // Pointer to the data to be summed
+	Nu32 len = (strlen(ename) + 1) >> 1; // Length in 16-bit words
+	Nu32 sum1 = 0xffff;
+	Nu32 sum2 = 0xffff;
 
-	while ( len-- )
+	while (len--)
 	{
 		sum1 += *data++;
 		sum2 += sum1;
-
 	}
 
 	sum1 = (sum1 & 0xffff) + (sum1 >> 16);
 	sum2 = (sum2 & 0xffff) + (sum2 >> 16);
 
-	// Second reduction step to reduce sums to 16 bits 
+	// Second reduction step to reduce sums to 16 bits
 	sum1 = (sum1 & 0xffff) + (sum1 >> 16);
 	sum2 = (sum2 & 0xffff) + (sum2 >> 16);
 
@@ -29,16 +28,16 @@ Nu32 NUT_MakeUIDFromString( const char *ename )
 	//---
 
 	//--- Original Method
-	//const	u16*	data = (u16*)ename;				// Pointer to the data to be summed 
-	//u32				len  = (strlen(ename)+1) >> 1;   // Length in 16-bit words 
-	//u32				sum1 = 0xffff;
-	//u32				sum2 = 0xffff;
+	// const	u16*	data = (u16*)ename;				// Pointer to the data to be summed
+	// u32				len  = (strlen(ename)+1) >> 1;   // Length in 16-bit words
+	// u32				sum1 = 0xffff;
+	// u32				sum2 = 0xffff;
 
-	//while (len)
+	// while (len)
 	//{
 	//	unsigned tlen = len > 360 ? 360 : len;
 	//	len -= tlen;
-	//	do 
+	//	do
 	//	{
 	//		sum1 += *data++;
 	//		sum2 += sum1;
@@ -49,21 +48,20 @@ Nu32 NUT_MakeUIDFromString( const char *ename )
 	//	sum2 = (sum2 & 0xffff) + (sum2 >> 16);
 	//}
 
-	//// Second reduction step to reduce sums to 16 bits 
-	//sum1 = (sum1 & 0xffff) + (sum1 >> 16);
-	//sum2 = (sum2 & 0xffff) + (sum2 >> 16);
+	//// Second reduction step to reduce sums to 16 bits
+	// sum1 = (sum1 & 0xffff) + (sum1 >> 16);
+	// sum2 = (sum2 & 0xffff) + (sum2 >> 16);
 
 	//// return identifier
-	//return sum2 << 16 | sum1;
+	// return sum2 << 16 | sum1;
 	//---
-    
 
 	//--- Methode au pif (fonctionne mais peut faire mieux)
-	//u32 ecode = 0;
-	//const char* buff = ename;
-	//s32 i = strlen(ename);
+	// u32 ecode = 0;
+	// const char* buff = ename;
+	// s32 i = strlen(ename);
 
-	//while ( i )
+	// while ( i )
 	//{
 	//	ecode += (i+1)*((*buff)-i)*((*buff)+i);
 	//	//ecode += (i+1)*((*buff)-i)*(i+(*buff)*(i+1));
@@ -72,9 +70,8 @@ Nu32 NUT_MakeUIDFromString( const char *ename )
 	//	i--;
 	//}
 
-	//return ecode;
+	// return ecode;
 	//---
 }
 
 //===============================================================================================================================================================================================
-

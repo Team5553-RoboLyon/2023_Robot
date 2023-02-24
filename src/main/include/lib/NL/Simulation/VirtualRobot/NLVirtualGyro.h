@@ -1,14 +1,14 @@
 #pragma once
-#include "../../../N/NFlags.h"
-#include "../../../N/NType.h"
-#include "../../../N/NMath.h"
+#include "lib/N/NFlags.h"
+#include "lib/N/NType.h"
+#include "lib/N/NMath.h"
 
 
-#include "../../../N/Maths/NVec2f32.h"
+#include "lib/N/Maths/NVec2f32.h"
 
 #include "NLVirtualOutPut.h"
 
-// Gyroscope: quelques Dérives prédéfinies:
+// Gyroscope: quelques Dï¿½rives prï¿½dï¿½finies:
 #define NLVIRTUAL_GYRO_DRIFT_5_DEG_PER_MIN		0.001454441043329f	// rad/sec
 #define NLVIRTUAL_GYRO_DRIFT_10_DEG_PER_MIN		0.002908882086657f	// rad/sec
 #define NLVIRTUAL_GYRO_DRIFT_15_DEG_PER_MIN		0.004363323129986f	// rad/sec
@@ -39,9 +39,9 @@ private:
 	void		setup(const NVEC2f32* paxis, const Nf32 drift);
 	void		update(const Nf32 dt);
 
-	Nf32		m_driftSpeed;		// vitesse de dérive du gyro en rad/sec
-	Nf32		m_drift;			// dérive totale
-	Nf32		m_angle;			// l'angle du gyro calculé et stocké à chaque update ( et intégrant la dérive )
-	NVEC2f32*	m_pTrackedAxis;		// pointeur sur l'axe 2D "tracké"
-	NVEC2f32	m_refAxis;			// Axe 2D de reference stocké
+	Nf32		m_driftSpeed;		// vitesse de dï¿½rive du gyro en rad/sec
+	Nf32		m_drift;			// dï¿½rive totale
+	Nf32		m_angle;			// l'angle du gyro calculï¿½ et stockï¿½ ï¿½ chaque update ( et intï¿½grant la dï¿½rive )
+	NVEC2f32*	m_pTrackedAxis;		// pointeur sur l'axe 2D "trackï¿½"
+	NVEC2f32	m_refAxis;			// Axe 2D de reference stockï¿½
 };

@@ -1,6 +1,6 @@
 ﻿#pragma once
-#include "../../../../N/NCStandard.h"
-#include "../../../../N/NType.h"
+#include "lib/N/NCStandard.h"
+#include "lib/N/NType.h"
 #include "../../Path/NLPath.h"
 
 #ifdef _NEDITOR
@@ -12,13 +12,13 @@ class NLPATH_BUILDER
 public:
 	NLPATH_BUILDER() {}
 	virtual ~NLPATH_BUILDER() {}
-	virtual void build(NLPATH *ppath) {};
-	virtual Nu32 read(FILE* pfile) { return 0; };
-	virtual Nu32 write(FILE* pfile) { return 0; };
+	virtual void build(NLPATH *ppath){};
+	virtual Nu32 read(FILE *pfile) { return 0; };
+	virtual Nu32 write(FILE *pfile) { return 0; };
 
 #ifdef _NEDITOR
-	virtual void draw() {};
-	virtual void draw(NL2DOCS* pocs) {};
+	virtual void draw(){};
+	virtual void draw(NL2DOCS *pocs){};
 #endif
 };
 

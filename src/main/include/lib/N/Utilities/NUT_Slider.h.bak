@@ -8,12 +8,12 @@
 // **																					**
 // ***************************************************************************************
 // ***************************************************************************************
-#include "../NCStandard.h"
+#include "lib/N/NCStandard.h"
 #include "../NFlags.h"
-#include "../NType.h"
+#include "lib/N/NType.h"
 #include "../Maths/NVec3f32.h"
 #include "../NScreenPoint.h"
-#include "../NErrorHandling.h"
+#include "lib/N/NErrorHandling.h"
 
 #ifdef __cplusplus
 extern "C"

@@ -1,4 +1,4 @@
-#include "../NCStandard.h"
+#include "lib/N/NCStandard.h"
 #include "../UI/NUI.h"
 
 #include "NUT_UIPresets.h"
@@ -7,7 +7,7 @@
 // NUT_CreateUISlidingLayer
 // ------------------------------------------------------------------------------------------
 // Description :
-//	
+//
 //				A Sliding layer,
 //				Is not Visible
 //				Has no graphic representation
@@ -19,28 +19,28 @@
 //
 //	List of NUT_UiCreationSet Properties Flags used by this controller creation process.
 //	-----------------------------------------------------------------------------------------
-//		FLAG_NUT_UIDESKSET_USE_BKGD_BLEND_MATERIAL			Not Used.	|		
-//		FLAG_NUT_UIDESKSET_USE_BKGD_ALTERNATIVECOLOR		Not Used.	|	
-//		FLAG_NUT_UIDESKSET_USE_ICON_BLEND_MATERIAL			Not Used.	|	
-//		FLAG_NUT_UIDESKSET_USE_ICON_ALTERNATIVECOLOR		Not Used.	|_ To use BLEND/MATERIAL and ALTERNATIVE COLOR, element by element.	
+//		FLAG_NUT_UIDESKSET_USE_BKGD_BLEND_MATERIAL			Not Used.	|
+//		FLAG_NUT_UIDESKSET_USE_BKGD_ALTERNATIVECOLOR		Not Used.	|
+//		FLAG_NUT_UIDESKSET_USE_ICON_BLEND_MATERIAL			Not Used.	|
+//		FLAG_NUT_UIDESKSET_USE_ICON_ALTERNATIVECOLOR		Not Used.	|_ To use BLEND/MATERIAL and ALTERNATIVE COLOR, element by element.
 //		FLAG_NUT_UIDESKSET_USE_TEXT_BLEND_MATERIAL			Not Used.	|
 //		FLAG_NUT_UIDESKSET_USE_TEXT_ALTERNATIVECOLOR		Not Used.	|
 //		FLAG_NUT_UIDESKSET_USE_MISC_BLEND_MATERIAL			Not Used.	|
 //		FLAG_NUT_UIDESKSET_USE_MISC_ALTERNATIVECOLOR		Not Used.	|
-//		FLAG_NUT_UIDESKSET_USE_TOUCH_MODE					Not Used. Use Specified Touch Mode ? Or let UI Using it's own default ...	
+//		FLAG_NUT_UIDESKSET_USE_TOUCH_MODE					Not Used. Use Specified Touch Mode ? Or let UI Using it's own default ...
 //		FLAG_NUT_UIDESKSET_INDEPENDENT_TEXT					Not Used. Define the Text object linked THN. ( ON: it will be the UI Renderable THN. OFF: It will be the UI THN ).
-//		FLAG_NUT_UIDESKSET_COLOR_UPDATE						Not Used. Color Updating ( according with UI main states - ENABLE/DISABLE/FOCUSED )			
-//		FLAG_NUT_UIDESKSET_PUSH								Not Used. Push ?			
-//		FLAG_NUT_UIDESKSET_DEFAULT_BKGD						Not Used. Default BKG if no BKG Atlas Element definition ?	
-//		FLAG_NUT_UIDESKSET_X_DISTRIBUTION					Not Used.	|	
+//		FLAG_NUT_UIDESKSET_COLOR_UPDATE						Not Used. Color Updating ( according with UI main states - ENABLE/DISABLE/FOCUSED )
+//		FLAG_NUT_UIDESKSET_PUSH								Not Used. Push ?
+//		FLAG_NUT_UIDESKSET_DEFAULT_BKGD						Not Used. Default BKG if no BKG Atlas Element definition ?
+//		FLAG_NUT_UIDESKSET_X_DISTRIBUTION					Not Used.	|
 //		FLAG_NUT_UIDESKSET_Y_DISTRIBUTION					Not Used.	|_DISTRIBUTION
 //		FLAG_NUT_UIDESKSET_Z_DISTRIBUTION					Not Used.	|
 //		FLAG_NUT_UIDESKSET_REVERSE_DISTRIBUTION				Not Used.	|
-//		FLAG_NUT_UIDESKSET_KEEP_BKG_TEXTURE_SIZE			Not Used. |	
-//		FLAG_NUT_UIDESKSET_KEEP_BKG_TEXTURE_PROPORTIONS		Not Used. |	
-//		FLAG_NUT_UIDESKSET_SIZECONSTRAINTS_IS_SIZE			Not Used. |- Size Constraints	
-//		FLAG_NUT_UIDESKSET_SIZECONSTRAINTS_IS_SIZEMIN		Not Used. |	
-//		FLAG_NUT_UIDESKSET_SIZECONSTRAINTS_IS_SIZEMAX		Not Used. |		
+//		FLAG_NUT_UIDESKSET_KEEP_BKG_TEXTURE_SIZE			Not Used. |
+//		FLAG_NUT_UIDESKSET_KEEP_BKG_TEXTURE_PROPORTIONS		Not Used. |
+//		FLAG_NUT_UIDESKSET_SIZECONSTRAINTS_IS_SIZE			Not Used. |- Size Constraints
+//		FLAG_NUT_UIDESKSET_SIZECONSTRAINTS_IS_SIZEMIN		Not Used. |
+//		FLAG_NUT_UIDESKSET_SIZECONSTRAINTS_IS_SIZEMAX		Not Used. |
 //
 //	List of NUT_UiCreationSet Params effectively used by this controller creation process.
 //	-----------------------------------------------------------------------------------------
@@ -64,27 +64,27 @@
 // Out :
 //		NUI *		Ptr on the created UI.
 // ------------------------------------------------------------------------------------------
-NUI_SLIDE* NUT_CreateUISlidingLayer(NUI *parent, const NUI_EVENT_HANDLE event_proc, const Nu32 user32)
+NUI_SLIDE *NUT_CreateUISlidingLayer(NUI *parent, const NUI_EVENT_HANDLE event_proc, const Nu32 user32)
 {
-	NUI_SLIDE_DESC	slidedesc;
+	NUI_SLIDE_DESC slidedesc;
 
-	memset(&slidedesc,0,sizeof(NUI_SLIDE_DESC));
-	FLAG_ON(slidedesc.UIDesc.Flags_Core,FLAG_NUIDC_SLIDE_KILL_CHILD_TOUCH_FOCUS);
-	FLAG_ON(slidedesc.UIDesc.Flags_Style,FLAG_NUIDS_INTERCEPT_TOUCH_EVENT); // To allow Sliding Layer to slide when one of its child has the Touch Focus
-	FLAG_ON(slidedesc.UIDesc.Flags_Style,FLAG_NUIDS_NO_GEOMETRY_EXTRACTION);
-	FLAG_ON(slidedesc.UIDesc.Flags_Style,FLAG_NUIDS_SLIDE_SWIPE);
+	memset(&slidedesc, 0, sizeof(NUI_SLIDE_DESC));
+	FLAG_ON(slidedesc.UIDesc.Flags_Core, FLAG_NUIDC_SLIDE_KILL_CHILD_TOUCH_FOCUS);
+	FLAG_ON(slidedesc.UIDesc.Flags_Style, FLAG_NUIDS_INTERCEPT_TOUCH_EVENT); // To allow Sliding Layer to slide when one of its child has the Touch Focus
+	FLAG_ON(slidedesc.UIDesc.Flags_Style, FLAG_NUIDS_NO_GEOMETRY_EXTRACTION);
+	FLAG_ON(slidedesc.UIDesc.Flags_Style, FLAG_NUIDS_SLIDE_SWIPE);
 	slidedesc.UIDesc.Event_Proc = event_proc;
-	
+
 	// Notice:
 	//	Layer is not going to be managed by NUT_UIdesk ... tools for placement. Obviously, its a layer !
-	return NCreateUISlide(parent, &slidedesc,user32);
+	return NCreateUISlide(parent, &slidedesc, user32);
 }
 
 // ------------------------------------------------------------------------------------------
 // NUT_CreateUISlidingFramedLayer
 // ------------------------------------------------------------------------------------------
 // Description :
-//				
+//
 //				A Framed Sliding layer,
 //				Is exactly like a Sliding Layer, PLUS ...
 //				Its BoundingBox surround all its children instead of being equal to the whole screen surface.
@@ -96,28 +96,28 @@ NUI_SLIDE* NUT_CreateUISlidingLayer(NUI *parent, const NUI_EVENT_HANDLE event_pr
 //
 //	List of NUT_UiCreationSet Properties Flags used by this controller creation process.
 //	-----------------------------------------------------------------------------------------
-//		FLAG_NUT_UIDESKSET_USE_BKGD_BLEND_MATERIAL			Not Used.	|		
-//		FLAG_NUT_UIDESKSET_USE_BKGD_ALTERNATIVECOLOR		Not Used.	|	
-//		FLAG_NUT_UIDESKSET_USE_ICON_BLEND_MATERIAL			Not Used.	|	
-//		FLAG_NUT_UIDESKSET_USE_ICON_ALTERNATIVECOLOR		Not Used.	|_ To use BLEND/MATERIAL and ALTERNATIVE COLOR, element by element.	
+//		FLAG_NUT_UIDESKSET_USE_BKGD_BLEND_MATERIAL			Not Used.	|
+//		FLAG_NUT_UIDESKSET_USE_BKGD_ALTERNATIVECOLOR		Not Used.	|
+//		FLAG_NUT_UIDESKSET_USE_ICON_BLEND_MATERIAL			Not Used.	|
+//		FLAG_NUT_UIDESKSET_USE_ICON_ALTERNATIVECOLOR		Not Used.	|_ To use BLEND/MATERIAL and ALTERNATIVE COLOR, element by element.
 //		FLAG_NUT_UIDESKSET_USE_TEXT_BLEND_MATERIAL			Not Used.	|
 //		FLAG_NUT_UIDESKSET_USE_TEXT_ALTERNATIVECOLOR		Not Used.	|
 //		FLAG_NUT_UIDESKSET_USE_MISC_BLEND_MATERIAL			Not Used.	|
 //		FLAG_NUT_UIDESKSET_USE_MISC_ALTERNATIVECOLOR		Not Used.	|
-//		FLAG_NUT_UIDESKSET_USE_TOUCH_MODE					Not Used. Use Specified Touch Mode ? Or let UI Using it's own default ...	
+//		FLAG_NUT_UIDESKSET_USE_TOUCH_MODE					Not Used. Use Specified Touch Mode ? Or let UI Using it's own default ...
 //		FLAG_NUT_UIDESKSET_INDEPENDENT_TEXT					Not Used. Define the Text object linked THN. ( ON: it will be the UI Renderable THN. OFF: It will be the UI THN ).
-//		FLAG_NUT_UIDESKSET_COLOR_UPDATE						Not Used. Color Updating ( according with UI main states - ENABLE/DISABLE/FOCUSED )			
-//		FLAG_NUT_UIDESKSET_PUSH								Not Used. Push ?			
-//		FLAG_NUT_UIDESKSET_DEFAULT_BKGD						Not Used. Default BKG if no BKG Atlas Element definition ?	
-//		FLAG_NUT_UIDESKSET_X_DISTRIBUTION					Not Used.	|	
+//		FLAG_NUT_UIDESKSET_COLOR_UPDATE						Not Used. Color Updating ( according with UI main states - ENABLE/DISABLE/FOCUSED )
+//		FLAG_NUT_UIDESKSET_PUSH								Not Used. Push ?
+//		FLAG_NUT_UIDESKSET_DEFAULT_BKGD						Not Used. Default BKG if no BKG Atlas Element definition ?
+//		FLAG_NUT_UIDESKSET_X_DISTRIBUTION					Not Used.	|
 //		FLAG_NUT_UIDESKSET_Y_DISTRIBUTION					Not Used.	|_DISTRIBUTION
 //		FLAG_NUT_UIDESKSET_Z_DISTRIBUTION					Not Used.	|
 //		FLAG_NUT_UIDESKSET_REVERSE_DISTRIBUTION				Not Used.	|
-//		FLAG_NUT_UIDESKSET_KEEP_BKG_TEXTURE_SIZE			Not Used. |	
-//		FLAG_NUT_UIDESKSET_KEEP_BKG_TEXTURE_PROPORTIONS		Not Used. |	
-//		FLAG_NUT_UIDESKSET_SIZECONSTRAINTS_IS_SIZE			Not Used. |- Size Constraints	
-//		FLAG_NUT_UIDESKSET_SIZECONSTRAINTS_IS_SIZEMIN		Not Used. |	
-//		FLAG_NUT_UIDESKSET_SIZECONSTRAINTS_IS_SIZEMAX		Not Used. |		
+//		FLAG_NUT_UIDESKSET_KEEP_BKG_TEXTURE_SIZE			Not Used. |
+//		FLAG_NUT_UIDESKSET_KEEP_BKG_TEXTURE_PROPORTIONS		Not Used. |
+//		FLAG_NUT_UIDESKSET_SIZECONSTRAINTS_IS_SIZE			Not Used. |- Size Constraints
+//		FLAG_NUT_UIDESKSET_SIZECONSTRAINTS_IS_SIZEMIN		Not Used. |
+//		FLAG_NUT_UIDESKSET_SIZECONSTRAINTS_IS_SIZEMAX		Not Used. |
 //
 //	List of NUT_UiCreationSet Params effectively used by this controller creation process.
 //	-----------------------------------------------------------------------------------------
@@ -141,21 +141,19 @@ NUI_SLIDE* NUT_CreateUISlidingLayer(NUI *parent, const NUI_EVENT_HANDLE event_pr
 // Out :
 //		NUI *		Ptr on the created UI.
 // --------------------------------------------------- ---------------------------------------
-NUI_SLIDE* NUT_CreateUISlidingFramedLayer(NUI *parent, const NUI_EVENT_HANDLE event_proc, const Nu32 user32)
+NUI_SLIDE *NUT_CreateUISlidingFramedLayer(NUI *parent, const NUI_EVENT_HANDLE event_proc, const Nu32 user32)
 {
-	NUI_SLIDE_DESC	slidedesc;
+	NUI_SLIDE_DESC slidedesc;
 
-	memset(&slidedesc,0,sizeof(NUI_SLIDE_DESC));
-	FLAG_ON(slidedesc.UIDesc.Flags_Core,FLAG_NUIDC_BBOX_UPDATE_FROM_CHILDREN_BBOX);
-	FLAG_ON(slidedesc.UIDesc.Flags_Core,FLAG_NUIDC_SLIDE_KILL_CHILD_TOUCH_FOCUS); 
-	FLAG_ON(slidedesc.UIDesc.Flags_Style,FLAG_NUIDS_INTERCEPT_TOUCH_EVENT); // To allow Sliding Layer to slide when one of its child has the Touch Focus
-	FLAG_ON(slidedesc.UIDesc.Flags_Style,FLAG_NUIDS_NO_GEOMETRY_EXTRACTION);
-	FLAG_ON(slidedesc.UIDesc.Flags_Style,FLAG_NUIDS_SLIDE_SWIPE);
+	memset(&slidedesc, 0, sizeof(NUI_SLIDE_DESC));
+	FLAG_ON(slidedesc.UIDesc.Flags_Core, FLAG_NUIDC_BBOX_UPDATE_FROM_CHILDREN_BBOX);
+	FLAG_ON(slidedesc.UIDesc.Flags_Core, FLAG_NUIDC_SLIDE_KILL_CHILD_TOUCH_FOCUS);
+	FLAG_ON(slidedesc.UIDesc.Flags_Style, FLAG_NUIDS_INTERCEPT_TOUCH_EVENT); // To allow Sliding Layer to slide when one of its child has the Touch Focus
+	FLAG_ON(slidedesc.UIDesc.Flags_Style, FLAG_NUIDS_NO_GEOMETRY_EXTRACTION);
+	FLAG_ON(slidedesc.UIDesc.Flags_Style, FLAG_NUIDS_SLIDE_SWIPE);
 	slidedesc.UIDesc.Event_Proc = event_proc;
 
 	// Notice:
 	//	Layer is not going to be managed by NUT_UIdesk ... tools for placement. Obviously, its a layer !
-	return NCreateUISlide(parent, &slidedesc,user32);
+	return NCreateUISlide(parent, &slidedesc, user32);
 }
-
-

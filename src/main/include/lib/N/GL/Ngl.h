@@ -21,7 +21,7 @@
 #include <GLES/glext.h>
 #endif
 
-#include "../NType.h"
+#include "lib/N/NType.h"
 
 #ifdef __cplusplus
 extern "C"
@@ -29,24 +29,23 @@ extern "C"
 #endif
 // --------------------------------------------------------------------------------------------------------------------------------------------------------------
 #if defined _NIOS || defined _NANDROID
-typedef float				  GLdouble;
+    typedef float GLdouble;
 
-#define glFrustum             glFrustumf
-#define glTranslated          glTranslatef
-#define glGetDoublev          glGetFloatv
-#define glOrtho               glOrthof
-#define GL_CLAMP			  GL_CLAMP_TO_EDGE
-#define GL_CLAMP_TO_BORDER	  GL_CLAMP_TO_EDGE
-#define GL_MIRRORED_REPEAT    GL_MIRRORED_REPEAT_OES
-#define GL_FUNC_ADD           GL_FUNC_ADD_OES
+#define glFrustum glFrustumf
+#define glTranslated glTranslatef
+#define glGetDoublev glGetFloatv
+#define glOrtho glOrthof
+#define GL_CLAMP GL_CLAMP_TO_EDGE
+#define GL_CLAMP_TO_BORDER GL_CLAMP_TO_EDGE
+#define GL_MIRRORED_REPEAT GL_MIRRORED_REPEAT_OES
+#define GL_FUNC_ADD GL_FUNC_ADD_OES
 #endif
 
+#define CONSTANT_DEFAULT_CLEAR_COLOR4F 25.0f / 255.0f, 56.0f / 255.0f, 50.0f / 255.0f, 0.0f
 
-#define CONSTANT_DEFAULT_CLEAR_COLOR4F	25.0f/255.0f, 56.0f/255.0f, 50.0f/255.0f, 0.0f
-
-Nbool Ngl_Init();
+    Nbool Ngl_Init();
 // ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 #ifdef __cplusplus
 }
-#endif	// __cpluplus
-#endif  // __NGL_H 
+#endif // __cpluplus
+#endif // __NGL_H

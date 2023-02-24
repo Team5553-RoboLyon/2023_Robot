@@ -59,7 +59,7 @@ void Robot::RobotPeriodic(const Nf32 dt)
     */
     // backward:
     // m_estimatedPose.odometryUpdate(&m_DriveTrainSpecs, -dr, -dl, m_gyro.get());
-    m_follower.estimate(m_leftGearboxEncoder.getRaw() / 8192.0f, m_rightGearboxEncoder.getRaw() / 8192.0f, m_gyro.get());
+    m_follower.estimate(m_leftGearboxEncoder.GetRaw() / 8192.0f, m_rightGearboxEncoder.GetRaw() / 8192.0f, m_gyro.GetAngle());//anciennement m_gyro.get() quelles get ?
 
     /*
     // B) Feed forward : State ( full )
@@ -87,10 +87,10 @@ void Robot::RobotPeriodic(const Nf32 dt)
     m_moteurL1.SetVoltage(m_CrtzR1.getVoltage(-output.m_rightVelocity,-output.m_rightAcceleration));
     m_moteurL2.SetVoltage(m_CrtzR2.getVoltage(-output.m_rightVelocity,-output.m_rightAcceleration));
     */
-    m_moteurL1.SetVoltage(m_CrtzL1.getVoltage(pout->m_leftVelocity, pout->m_leftAcceleration));
-    m_moteurL2.SetVoltage(m_CrtzL2.getVoltage(pout->m_leftVelocity, pout->m_leftAcceleration));
-    m_moteurR1.SetVoltage(m_CrtzR1.getVoltage(pout->m_rightVelocity, pout->m_rightAcceleration));
-    m_moteurR2.SetVoltage(m_CrtzR2.getVoltage(pout->m_rightVelocity, pout->m_rightAcceleration));
+    m_moteurL1.SetVoltage(units::voltage::volt_t(m_CrtzL1.getVoltage(pout->m_leftVelocity, pout->m_leftAcceleration)));
+    m_moteurL2.SetVoltage(units::voltage::volt_t(m_CrtzL2.getVoltage(pout->m_leftVelocity, pout->m_leftAcceleration)));
+    m_moteurR1.SetVoltage(units::voltage::volt_t(m_CrtzR1.getVoltage(pout->m_rightVelocity, pout->m_rightAcceleration)));
+    m_moteurR2.SetVoltage(units::voltage::volt_t(m_CrtzR2.getVoltage(pout->m_rightVelocity, pout->m_rightAcceleration)));
 
     break;
 

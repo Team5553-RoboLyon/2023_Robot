@@ -1,18 +1,18 @@
-#include "../NCStandard.h"
+#include "lib/N/NCStandard.h"
 #include "../NCore.h"
 #include "../Event/NEvent.h"
 #include "NGameHandleFunctions.h"
 
-void WindowProc(const NEVENT* pevent,const Nu32 user_Nu32)
+void WindowProc(const NEVENT *pevent, const Nu32 user_Nu32)
 {
-/*
-	switch(pevent->Type)
-	{
+	/*
+		switch(pevent->Type)
+		{
 
-		default:
-			break;
-	}
-*/
+			default:
+				break;
+		}
+	*/
 }
 /*
 void MoveCameraHandle(NEVENT* pevent,NTIME* ptime)
@@ -44,7 +44,7 @@ void MoveCameraHandle(NEVENT* pevent,NTIME* ptime)
 				glGetIntegerv( GL_VIEWPORT, viewport );
 
 				winx = (GLdouble)pMouseEvent->x;
-				winy = (GLdouble)viewport[3] - (GLdouble)pMouseEvent->y; // Hauteur ecran - y ( sinon y inversé )
+				winy = (GLdouble)viewport[3] - (GLdouble)pMouseEvent->y; // Hauteur ecran - y ( sinon y inversï¿½ )
 				winz = 0;
 				gluUnProject( winx, winy, winz, modelview, projection, viewport, &posX[0], &posY[0], &posZ[0]);
 				vect.x = (float)posX[0] - Camera.Pos.x;

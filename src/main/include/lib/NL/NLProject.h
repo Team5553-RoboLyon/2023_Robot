@@ -1,14 +1,14 @@
 #pragma once
-#include "../N/NType.h"
+#include "lib/N/NType.h"
 //#include "../N/File/NFile.h"
-#include "../N/File/NDataPacker.h"
-#include "../N/Containers/NArray.h"
-#include "../N/Core/NVersion.h"
+#include "lib/N/File/NDataPacker.h"
+#include "lib/N/Containers/NArray.h"
+#include "lib/N/Core/NVersion.h"
 
 #include "NLPlayground.h"
-#include "../NL/MotionControl/NLPathWorkbench.h"
-#include "../NL/MotionControl/DriveTrain/NLDriveTrainSpecs.h"
-#include "../NL/MotionControl/DriveTrain/NLRamsete.h"
+#include "lib/NL/MotionControl/NLPathWorkbench.h"
+#include "lib/NL/MotionControl/DriveTrain/NLDriveTrainSpecs.h"
+#include "lib/NL/MotionControl/DriveTrain/NLRamsete.h"
 
 #define DEFAULT_INITIAL_ACTIONMESSAGESLUT_ARRAY_CAPACITY	8
 
@@ -66,7 +66,7 @@ public:
 
 	// Other Data
 	NLDRIVETRAINSPECS			m_driveTrainSpecifications;
-	NLRAMSETE					m_ramseteParams;			// Paramètres par défaut des followers RAMSETE ( il y a un set de ces params par WorkBench + ce set "par défaut" (éditable) inclu dans le projet )
+	NLRAMSETE					m_ramseteParams;			// Paramï¿½tres par dï¿½faut des followers RAMSETE ( il y a un set de ces params par WorkBench + ce set "par dï¿½faut" (ï¿½ditable) inclu dans le projet )
 	Nf32						m_simulationDt;				//
 
 	NARRAY						m_actionMessagesLut;
@@ -83,7 +83,7 @@ public:
 
 #define VERSION_NLPROJECT_HEADER			NMAKEVERSION(0,0,0)				// 2022/10/03
 /*
-* premiere version, pour mémoire  >>> 2021/04/03 
+* premiere version, pour mï¿½moire  >>> 2021/04/03 
 typedef struct
 {
 	Nu32	m_available;	// juste un 32 bits vide

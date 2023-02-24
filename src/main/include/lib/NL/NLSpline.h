@@ -1,18 +1,18 @@
 #pragma once
 
-#include "NLType.h"
+#include "lib/NL/NLType.h"
 
 typedef struct
 {
-	nlf32	x;
-	nlf32	y;
-}NL2f32;
+	nlf32 x;
+	nlf32 y;
+} NL2f32;
 
 typedef struct
 {
-	nlf64	x;
-	nlf64	y;
-}NL2f64;
+	nlf64 x;
+	nlf64 y;
+} NL2f64;
 
 class NLBEZIERf32
 {

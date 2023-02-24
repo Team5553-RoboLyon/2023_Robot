@@ -12,21 +12,21 @@
 //
 // Un outil simple pour dessiner des graphs 2D
 
-#include "../N/NType.h"
-#include "../N/Miscellaneous/NColorPalette.h"
-#include "../N/NCoordinateSystemConversions.h"
-#include "../N/Maths/NVec2f32.h"
-#include "../N/NRectf32.h"
-#include "../N/Miscellaneous/NColorPalette.h"
-#include "../N/Utilities/Draw/NUT_Draw.h"
+#include "lib/N/NType.h"
+#include "lib/N/Miscellaneous/NColorPalette.h"
+#include "lib/N/NCoordinateSystemConversions.h"
+#include "lib/N/Maths/NVec2f32.h"
+#include "lib/N/NRectf32.h"
+#include "lib/N/Miscellaneous/NColorPalette.h"
+#include "lib/N/Utilities/Draw/NUT_Draw.h"
 
 #define DEFAULT_NL2DOCS_COLOR_PICKPACK		NSTCPLT_4b_PCK(0,1,0,0,0,0)
 
 #define DEFAULT_NL2DOCS_AXIS_ARROWHEAD_SIZE_MIN	NSize_fPixToHRel_W(16.0f)			// a minimum size of 16 PIXELS 
-#define DEFAULT_NL2DOCS_AXIS_ARROWHEAD_SIZE_RATIO	0.1f							// ratio de la plus petite des 2 dimensions du vecteur unité 'm_unit'
+#define DEFAULT_NL2DOCS_AXIS_ARROWHEAD_SIZE_RATIO	0.1f							// ratio de la plus petite des 2 dimensions du vecteur unitï¿½ 'm_unit'
 																
 // Position Relative de l'origine dans le Rectangle englobant												
-// Inspiré de la gestion de la gestion des "poignées" de "NUT_GizmoRectf32"
+// Inspirï¿½ de la gestion de la gestion des "poignï¿½es" de "NUT_GizmoRectf32"
 //
 															//	| T | B | L | R | 		
 															//	+---+---+---+---+
@@ -57,7 +57,7 @@
 
 //#define FLAG_NL2DOCS_ORIGIN_Reserved				BIT_0	\
 //#define FLAG_NL2DOCS_ORIGIN_Reserved				BIT_1	 |_Used by the BITS_NL2DOCS_ORIGIN_xxx values to describe position of Origin in the OCS Bounding Box	
-//#define FLAG_NL2DOCS_ORIGIN_Reserved				BIT_2	 | Utilisé par les 	valeurs BITS_NL2DOCS_ORIGIN_xxx pour décrire la position del'Origine dans la boite englobante de l'OCS. 
+//#define FLAG_NL2DOCS_ORIGIN_Reserved				BIT_2	 | Utilisï¿½ par les 	valeurs BITS_NL2DOCS_ORIGIN_xxx pour dï¿½crire la position del'Origine dans la boite englobante de l'OCS. 
 //#define FLAG_NL2DOCS_ORIGIN_Reserved				BIT_3	/
 
 //#define FLAG_NL2DOCS_available_but_RESERVED ...	BIT_4	
@@ -128,9 +128,9 @@ enum class NL2DOCS_ORIENT_ENUM : unsigned int
 	NL2DOCS_ORIENT_ENUM_SIZE = 4
 };
 */
-#define NL2DOCS_COLOR_TABLE_SIZE		16		// Nombre de couleurs dans la palette de couleurs intégrée. ( doit être puissance de 2 )
-#define NL2DOCS_COLOR_TABLE_ID_MSK		0xF		// Mask associé permettant de sécurisé un id accédant directement à la palette de couleur comme ceci:  palette[id&NL2DOCS_COLOR_TABLE_ID_MSK]
-												// par exemple avec un masque de 0xF soit 1111 la plus grande valeur possible après masquage sera 15 !
+#define NL2DOCS_COLOR_TABLE_SIZE		16		// Nombre de couleurs dans la palette de couleurs intï¿½grï¿½e. ( doit ï¿½tre puissance de 2 )
+#define NL2DOCS_COLOR_TABLE_ID_MSK		0xF		// Mask associï¿½ permettant de sï¿½curisï¿½ un id accï¿½dant directement ï¿½ la palette de couleur comme ceci:  palette[id&NL2DOCS_COLOR_TABLE_ID_MSK]
+												// par exemple avec un masque de 0xF soit 1111 la plus grande valeur possible aprï¿½s masquage sera 15 !
 												// !!! DONC, EN CAS DE MODIFICATION DE LA TAILLE DE LA PALETTE IL CONVIENT DE MODIFIER AUSSI LE MASK ASSOCIE !!!	
 												//	taille 8, mask 0x7 ... taille 16, mask 0xF ... taille 16, mask 0x1F ...
 /*				
@@ -172,7 +172,7 @@ typedef enum
 //	|				|				|		|			|	| I	| A |
 //	|				|	  4 bits	|2 bits |  3 bits	|	| N	| L |
 //	|				|	   de 0		| de 0  |	de 0	|	| E	| U |
-//	|				|	   à 15 	|  à 3  |	 à 7 	|	|  	| E |
+//	|				|	   ï¿½ 15 	|  ï¿½ 3  |	 ï¿½ 7 	|	|  	| E |
 //	|				|	  inclus	| inclus|  inclus	|	|	|   |
 //	|				|				|		|			|	|	|   |
 //	|---------------+-------.-------+-------+-----------+---+---+---|
@@ -218,7 +218,7 @@ typedef enum
 
 
 
-#define FLAG_NL2DOCS_COORD_IS_Y								BIT_0		// Si ce flag est à ZERO ( valeur par défaut) alors la coordonnée est considérée comme une abscisse (X) sinon comme une ordonnée (Y)
+#define FLAG_NL2DOCS_COORD_IS_Y								BIT_0		// Si ce flag est ï¿½ ZERO ( valeur par dï¿½faut) alors la coordonnï¿½e est considï¿½rï¿½e comme une abscisse (X) sinon comme une ordonnï¿½e (Y)
 
 typedef struct NL2DOCS_COORD	NL2DOCS_COORD;
 struct NL2DOCS_COORD
@@ -244,13 +244,13 @@ public:
 	NCOLOR					m_color[NL2DOCS_COLOR_TABLE_SIZE];
 
 	Nchar				   *m_pCaption;			// Pointeur sur la "legende" du graphique
-	NUT_DRAWTEXT			m_CaptionParam;		// Paramètres d'affichage de la légende du Graphique ( Taille et Couleur du texte, etc ... )
-	NVEC2f32				m_Origin;			// "Origine" en coordonnées "MONDE"
-	NVEC2f32				m_Size;				// "Dimensions" du repère en coordonnées "MONDE"	|
-	NVEC2f32				m_Unit;				// "Longeur" d'une unité en coordonnées "MONDE"		|_le "nombre d'unités" représentable est "m_size/m_unit"
-	NVEC2f32				m_UnitCount;		// "nombre d'unités" représentables.
+	NUT_DRAWTEXT			m_CaptionParam;		// Paramï¿½tres d'affichage de la lï¿½gende du Graphique ( Taille et Couleur du texte, etc ... )
+	NVEC2f32				m_Origin;			// "Origine" en coordonnï¿½es "MONDE"
+	NVEC2f32				m_Size;				// "Dimensions" du repï¿½re en coordonnï¿½es "MONDE"	|
+	NVEC2f32				m_Unit;				// "Longeur" d'une unitï¿½ en coordonnï¿½es "MONDE"		|_le "nombre d'unitï¿½s" reprï¿½sentable est "m_size/m_unit"
+	NVEC2f32				m_UnitCount;		// "nombre d'unitï¿½s" reprï¿½sentables.
 
-	NARRAY					m_coordsArray;		// Array de "coordonnées" stockées pour affichage.
+	NARRAY					m_coordsArray;		// Array de "coordonnï¿½es" stockï¿½es pour affichage.
 	Nu16					m_coordsStyle[NL2DOCS_COORDS_STYLE_ENUM::NL2DOCS_COORDS_STYLE_ENUM_SIZE];
 
 
@@ -311,7 +311,7 @@ public:
 	inline void				setSubScaleX(const NL2DOCS_SUBSCALE_ENUM sub, const Nf32 x) { m_subScale[sub].x = x; }
 	inline void				setSubScaleY(const NL2DOCS_SUBSCALE_ENUM sub, const Nf32 y) { m_subScale[sub].y = y; }
 
-	//	Transformation simple sans et avec application d'une échelle spécifique (subscale)
+	//	Transformation simple sans et avec application d'une ï¿½chelle spï¿½cifique (subscale)
 	inline Nf32				transformVx(const Nf32 x) { return  x * m_Unit.x; }
 	inline Nf32				transformVy(const Nf32 y) { return  y * m_Unit.y; }
 	inline void				transformV(NVEC2f32 *pv) { pv->x =  pv->x * m_Unit.x; pv->y = pv->y * m_Unit.y; }
@@ -324,14 +324,14 @@ public:
 	inline Nf32				transformY(const Nf32 y, const NL2DOCS_SUBSCALE_ENUM sub) { return m_Origin.y + y * m_subScale[sub].y*m_Unit.y; }
 	inline void				transform(NVEC2f32 *pv, const NL2DOCS_SUBSCALE_ENUM sub) { pv->x = m_Origin.x + pv->x * m_subScale[sub].x* m_Unit.x; pv->y = m_Origin.y + pv->y * m_subScale[sub].y* m_Unit.y; }
 	
-	//	Transformation stockée pour restitution ( draw ) sans et avec application d'une échelle spécifique (subscale)
+	//	Transformation stockï¿½e pour restitution ( draw ) sans et avec application d'une ï¿½chelle spï¿½cifique (subscale)
 	Nf32					transformX(const Nf32 x, const NL2DOCS_COORDS_STYLE_ENUM coord_group_id);
 	Nf32					transformY(const Nf32 y, const NL2DOCS_COORDS_STYLE_ENUM coord_group_id);
 
 	Nf32					transformX(const Nf32 x, const NL2DOCS_SUBSCALE_ENUM sub, const NL2DOCS_COORDS_STYLE_ENUM coord_style_id);
 	Nf32					transformY(const Nf32 y, const NL2DOCS_SUBSCALE_ENUM sub, const NL2DOCS_COORDS_STYLE_ENUM coord_style_id);
 
-	//	Transformation stockée pour restitution ( draw ) sans et avec application d'une échelle spécifique (subscale) + mémorisation d'un index [0,255] affichable.
+	//	Transformation stockï¿½e pour restitution ( draw ) sans et avec application d'une ï¿½chelle spï¿½cifique (subscale) + mï¿½morisation d'un index [0,255] affichable.
 	Nf32					transformX(const Nu8 index, const Nf32 x, const NL2DOCS_COORDS_STYLE_ENUM coord_style_id);
 	Nf32					transformY(const Nu8 index, const Nf32 y, const NL2DOCS_COORDS_STYLE_ENUM coord_style_id);
 
@@ -356,7 +356,7 @@ public:
 //	void					drawAxis();
 
 	// helpers:
-	Nf32					defaultAxisArrowSize() { return NMAX(NMIN(m_Unit.x, m_Unit.y)*DEFAULT_NL2DOCS_AXIS_ARROWHEAD_SIZE_RATIO, DEFAULT_NL2DOCS_AXIS_ARROWHEAD_SIZE_MIN); }	//  un ratio de la plus petite des 2 dimensions du vecteur unité
+	Nf32					defaultAxisArrowSize() { return NMAX(NMIN(m_Unit.x, m_Unit.y)*DEFAULT_NL2DOCS_AXIS_ARROWHEAD_SIZE_RATIO, DEFAULT_NL2DOCS_AXIS_ARROWHEAD_SIZE_MIN); }	//  un ratio de la plus petite des 2 dimensions du vecteur unitï¿½
 																																													// ... avec un minimum de DEFAULT_NL2DOCS_AXIS_MIN_ARROWHEAD_SIZE
 //private:
 	inline void				updateOrigin()
@@ -376,6 +376,6 @@ public:
 #ifdef _NEDITOR
 // -----------------------------------------------------------------------
 // NEDITOR Tool to easy manage and manipulate a 2D Orthogonal Coordinate System (NL2DOCS)
-// outil "NEDITOR" pour manager et manipuler facilement un système de coordonnées orthogonal 2D ( NL2DOCS )
+// outil "NEDITOR" pour manager et manipuler facilement un systï¿½me de coordonnï¿½es orthogonal 2D ( NL2DOCS )
 
 #endif	// _NEDITOR

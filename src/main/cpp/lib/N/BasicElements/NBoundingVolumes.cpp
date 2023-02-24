@@ -1,12 +1,12 @@
-#include "../NCStandard.h"
-#include "../NType.h"
-#include "../GL/Ngl.h"
+#include "lib/N/NCStandard.h"
+#include "lib/N/NType.h"
+#include "lib/N/GL/Ngl.h"
 #include "../Maths/NVec3f32.h"
-#include "../Geometry/NGeometry.h"
+#include "lib/N/Geometry/NGeometry.h"
 #include "../NCamera.h"
 #include "../Containers/NArray.h"
 #include "../NBoundingVolumes.h"
-#include "../NErrorHandling.h"
+#include "lib/N/NErrorHandling.h"
 
 // IMPORTANT NOTES:
 // Here we have a collection of several functions to easily calculate/update Bounding Volume.
@@ -22,5 +22,5 @@
 // ------------------------------------------------------------------------------------------
 // In  :
 // Out :
-//		
+//
 // ------------------------------------------------------------------------------------------

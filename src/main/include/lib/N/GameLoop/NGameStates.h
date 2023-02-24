@@ -1,7 +1,6 @@
 #ifndef __NGAMESTATES_H
 #define __NGAMESTATES_H
 
-
 // ***************************************************************************************
 // ***************************************************************************************
 // **																					**
@@ -9,7 +8,7 @@
 // **																					**
 // ***************************************************************************************
 // ***************************************************************************************
-#include "../NType.h"
+#include "lib/N/NType.h"
 #include "../Containers/NArray.h"
 #include "../Event/NEvent.h"
 #include "../Core/NTime.h"
@@ -35,87 +34,85 @@ extern "C"
 // because "gamestates" dont have any BBOX the concept of Touch Move IN, Touch Move OUT and Touch Under doesn't exist.
 // ... Excepted in ONE SPECIFIC CASE ...
 // ... When an UI that blocks Touch Event for Game states release a Touch due to a touch move OUT ...
-// this UI doesn't mask this touch any more ... By default, a game state can not receive the touch because it didn't receive first the 
+// this UI doesn't mask this touch any more ... By default, a game state can not receive the touch because it didn't receive first the
 // associated toucch start even t( it was blecked by the UI ).
 // BUT with the flag set to ON ... it can ...
-#define FLAG_NGAMESTATE_NTOUCH_LISTENER_CAPTURE_TOUCH_MOVE_RELEASED_BY_UI			BIT_4		
+#define FLAG_NGAMESTATE_NTOUCH_LISTENER_CAPTURE_TOUCH_MOVE_RELEASED_BY_UI BIT_4
 
-// "Eat messages" functions
-typedef void (*STATEHANDLE_EVENTDRIVEN_FCT)(const NEVENT* pevent,const Nu32 User_Nu32);
-typedef void (*STATEHANDLE_TIMEDRIVEN_FCT)(const NTIME* ptime,const Nu32 User_Nu32);
-typedef void (*STATESTART_FCT)(const NSTATEUID_ENUM previous_stateuid, const Nu32 User_Nu32);
-typedef void (*STATEEND_FCT)(const NSTATEUID_ENUM next_stateuid, const Nu32 User_Nu32);
+	// "Eat messages" functions
+	typedef void (*STATEHANDLE_EVENTDRIVEN_FCT)(const NEVENT *pevent, const Nu32 User_Nu32);
+	typedef void (*STATEHANDLE_TIMEDRIVEN_FCT)(const NTIME *ptime, const Nu32 User_Nu32);
+	typedef void (*STATESTART_FCT)(const NSTATEUID_ENUM previous_stateuid, const Nu32 User_Nu32);
+	typedef void (*STATEEND_FCT)(const NSTATEUID_ENUM next_stateuid, const Nu32 User_Nu32);
 
-// a GameState
-typedef struct NGAMESTATE	NGAMESTATE;
-struct NGAMESTATE
-{
-	STATEHANDLE_EVENTDRIVEN_FCT	pEventDrivenHandle;
-	STATEHANDLE_TIMEDRIVEN_FCT	pTimeDrivenHandle;
+	// a GameState
+	typedef struct NGAMESTATE NGAMESTATE;
+	struct NGAMESTATE
+	{
+		STATEHANDLE_EVENTDRIVEN_FCT pEventDrivenHandle;
+		STATEHANDLE_TIMEDRIVEN_FCT pTimeDrivenHandle;
 
-	STATESTART_FCT				pGameStateStart;
-	STATEEND_FCT				pGameStateEnd;
-	
-	Nu32						User_Nu32;
-	
-	// Interactive Data
-	NTOUCH_LISTENER				Listener;
+		STATESTART_FCT pGameStateStart;
+		STATEEND_FCT pGameStateEnd;
 
-	NGAMESTATE					*pParent;
-	NGAMESTATE					*pCurrentChild;
-	NGAMESTATE					*pCurrentEventChild;
-	NGAMESTATE					*pCurrentTimeChild;
-};
+		Nu32 User_Nu32;
 
-// a GameState Machine
-typedef struct
-{
-	NGAMESTATE		*pGameStatesList;
+		// Interactive Data
+		NTOUCH_LISTENER Listener;
 
-	NSTATEUID_ENUM	CurrentGameStateUID;
-	NGAMESTATE		*pCurrentGameState;
-	NGAMESTATE		*pCurrentRootGameState;
-	
-	NGAMESTATE		*pCurrentEventRootGameState;
-	NGAMESTATE		*pCurrentTimeRootGameState;
-}NGAMESTATEMACHINE;
+		NGAMESTATE *pParent;
+		NGAMESTATE *pCurrentChild;
+		NGAMESTATE *pCurrentEventChild;
+		NGAMESTATE *pCurrentTimeChild;
+	};
 
-// ***************************************************************************************
-// **								 Functions											**
-// ***************************************************************************************
-void	NBindGameStateEventDrivenHandle( const NSTATEUID_ENUM state,		const STATEHANDLE_EVENTDRIVEN_FCT handle_fct );
-void	NBindGameStateEndHandle( const NSTATEUID_ENUM state,		const STATEEND_FCT handle_fct );
-void	NBindGameStateStartHandle( const NSTATEUID_ENUM state,	const STATESTART_FCT handle_fct );
-void	NBindGameStateTimeDrivenHandle( const NSTATEUID_ENUM state,		const STATEHANDLE_TIMEDRIVEN_FCT handle_fct );
-void	NSetCurrentGameState( const NSTATEUID_ENUM state );
-void	NSetGameStateParent( NSTATEUID_ENUM state, const NSTATEUID_ENUM parentstate );
-void	NSetGameState_User_Nu32( const NSTATEUID_ENUM state, const Nu32 User_Nu32 );
+	// a GameState Machine
+	typedef struct
+	{
+		NGAMESTATE *pGameStatesList;
 
-void	NInitializeGameStateMachine();
-void	NDisableGameStateMachine();
+		NSTATEUID_ENUM CurrentGameStateUID;
+		NGAMESTATE *pCurrentGameState;
+		NGAMESTATE *pCurrentRootGameState;
 
-//void	NDispatchGameStateEvent(const NEVENT *pevent);
+		NGAMESTATE *pCurrentEventRootGameState;
+		NGAMESTATE *pCurrentTimeRootGameState;
+	} NGAMESTATEMACHINE;
 
-// GameState Touch
-void	NSetGameStateTouchCountMax( const NSTATEUID_ENUM state, const Nu8 touch_count_max );
-void	NEnableGameStateCaptureTouchMoveReleasedByUI( const NSTATEUID_ENUM state );
-void	NDisableGameStateCaptureTouchMoveReleasedByUI( const NSTATEUID_ENUM state );
+	// ***************************************************************************************
+	// **								 Functions											**
+	// ***************************************************************************************
+	void NBindGameStateEventDrivenHandle(const NSTATEUID_ENUM state, const STATEHANDLE_EVENTDRIVEN_FCT handle_fct);
+	void NBindGameStateEndHandle(const NSTATEUID_ENUM state, const STATEEND_FCT handle_fct);
+	void NBindGameStateStartHandle(const NSTATEUID_ENUM state, const STATESTART_FCT handle_fct);
+	void NBindGameStateTimeDrivenHandle(const NSTATEUID_ENUM state, const STATEHANDLE_TIMEDRIVEN_FCT handle_fct);
+	void NSetCurrentGameState(const NSTATEUID_ENUM state);
+	void NSetGameStateParent(NSTATEUID_ENUM state, const NSTATEUID_ENUM parentstate);
+	void NSetGameState_User_Nu32(const NSTATEUID_ENUM state, const Nu32 User_Nu32);
 
+	void NInitializeGameStateMachine();
+	void NDisableGameStateMachine();
 
-Nu32	NGetGameStateTouchCount(const NSTATEUID_ENUM state);
-Nu32	NGetGameStatePreviousTouchCount( const NSTATEUID_ENUM state );
-Nu32	NGetGameStateTouchCountIn( const NSTATEUID_ENUM state );
-Nu32	NGetGameStatePreviousTouchCountIn( const NSTATEUID_ENUM state );
-Nu32	NGetGameStateTouchCountOut( const NSTATEUID_ENUM state );
-Nu32	NGetGameStatePreviousTouchCountOut( const NSTATEUID_ENUM state );
+	// void	NDispatchGameStateEvent(const NEVENT *pevent);
 
-Nu32	NIsGameStateFirstTouchStarted( const NSTATEUID_ENUM state );
-Nu32	NIsGameStateLastTouchEnded(const NSTATEUID_ENUM state );
-Nu32	NIsGameStateFirstTouchMoveIn(const NSTATEUID_ENUM state);
-Nu32	NIsGameStateLastTouchMoveOut(const NSTATEUID_ENUM state);
+	// GameState Touch
+	void NSetGameStateTouchCountMax(const NSTATEUID_ENUM state, const Nu8 touch_count_max);
+	void NEnableGameStateCaptureTouchMoveReleasedByUI(const NSTATEUID_ENUM state);
+	void NDisableGameStateCaptureTouchMoveReleasedByUI(const NSTATEUID_ENUM state);
+
+	Nu32 NGetGameStateTouchCount(const NSTATEUID_ENUM state);
+	Nu32 NGetGameStatePreviousTouchCount(const NSTATEUID_ENUM state);
+	Nu32 NGetGameStateTouchCountIn(const NSTATEUID_ENUM state);
+	Nu32 NGetGameStatePreviousTouchCountIn(const NSTATEUID_ENUM state);
+	Nu32 NGetGameStateTouchCountOut(const NSTATEUID_ENUM state);
+	Nu32 NGetGameStatePreviousTouchCountOut(const NSTATEUID_ENUM state);
+
+	Nu32 NIsGameStateFirstTouchStarted(const NSTATEUID_ENUM state);
+	Nu32 NIsGameStateLastTouchEnded(const NSTATEUID_ENUM state);
+	Nu32 NIsGameStateFirstTouchMoveIn(const NSTATEUID_ENUM state);
+	Nu32 NIsGameStateLastTouchMoveOut(const NSTATEUID_ENUM state);
 // ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 #ifdef __cplusplus
 }
-#endif	// __cpluplus
-#endif // __NGAMESTATES_H 
-
+#endif // __cpluplus
+#endif // __NGAMESTATES_H

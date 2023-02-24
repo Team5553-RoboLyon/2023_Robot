@@ -8,7 +8,7 @@
 // **																					**
 // ***************************************************************************************
 // ***************************************************************************************
-#include "../NType.h"
+#include "lib/N/NType.h"
 #include "NUT_Snap.h"
 
 #ifdef __cplusplus
@@ -26,35 +26,50 @@ extern "C"
 // ***************************************************************************************************************************************************************
 // Notes:
 // NUT_SNAP.Grid <=0.0f, means no SNAP !
-#define NUT_DEFAULT_SNAP_GRID			50.0f	// a snap point every xxx unity
-#define NUT_DEFAULT_SNAP_DISTANCE		2.5f	//
+#define NUT_DEFAULT_SNAP_GRID 50.0f	   // a snap point every xxx unity
+#define NUT_DEFAULT_SNAP_DISTANCE 2.5f //
 
-typedef struct
-{
-	Nf32	Grid;
-	Nf32	Distance;
-}NUT_SNAP;
+	typedef struct
+	{
+		Nf32 Grid;
+		Nf32 Distance;
+	} NUT_SNAP;
 
-// ***************************************************************************************
-// ***************************************************************************************
-// **																					**
-// **									 												**
-// **								Snapping Value										**
-// **									---												**
-// **							     Functions											**
-// **																					**
-// ***************************************************************************************
-// ***************************************************************************************
-inline	Nf32	NUT_GetSnapDistance(const NUT_SNAP*psnap){return psnap->Distance;}
-inline	Nf32	NUT_GetSnapGrid(const NUT_SNAP*psnap){return psnap->Grid; }
-Nf32			NUT_GetSnapValuef(const NUT_SNAP*psnap,const Nf32 a);
-inline	void	NUT_ResetSnapToDefault(NUT_SNAP*psnap){psnap->Grid = NUT_DEFAULT_SNAP_GRID;psnap->Distance = NUT_DEFAULT_SNAP_DISTANCE;}
-inline	Nf32	NUT_SetSnapDistance(NUT_SNAP*psnap,const Nf32 a){Nf32 old;old=psnap->Distance;psnap->Distance = a;return old; }
-inline	Nf32	NUT_SetSnapGrid(NUT_SNAP*psnap,const Nf32 a){Nf32 old;old=psnap->Grid;psnap->Grid = a;return old; }
+	// ***************************************************************************************
+	// ***************************************************************************************
+	// **																					**
+	// **									 												**
+	// **								Snapping Value										**
+	// **									---												**
+	// **							     Functions											**
+	// **																					**
+	// ***************************************************************************************
+	// ***************************************************************************************
+	inline Nf32 NUT_GetSnapDistance(const NUT_SNAP *psnap) { return psnap->Distance; }
+	inline Nf32 NUT_GetSnapGrid(const NUT_SNAP *psnap) { return psnap->Grid; }
+	Nf32 NUT_GetSnapValuef(const NUT_SNAP *psnap, const Nf32 a);
+	inline void NUT_ResetSnapToDefault(NUT_SNAP *psnap)
+	{
+		psnap->Grid = NUT_DEFAULT_SNAP_GRID;
+		psnap->Distance = NUT_DEFAULT_SNAP_DISTANCE;
+	}
+	inline Nf32 NUT_SetSnapDistance(NUT_SNAP *psnap, const Nf32 a)
+	{
+		Nf32 old;
+		old = psnap->Distance;
+		psnap->Distance = a;
+		return old;
+	}
+	inline Nf32 NUT_SetSnapGrid(NUT_SNAP *psnap, const Nf32 a)
+	{
+		Nf32 old;
+		old = psnap->Grid;
+		psnap->Grid = a;
+		return old;
+	}
 
 // ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 #ifdef __cplusplus
 }
-#endif	// __cpluplus
+#endif // __cpluplus
 #endif // __NUT_H
-

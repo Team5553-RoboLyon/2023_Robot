@@ -1,18 +1,18 @@
 #pragma once
-#include "../../../N/NType.h"
-#include "../../../N/NFlags.h"
+#include "lib/N/NType.h"
+#include "lib/N/NFlags.h"
 
 
-#include "../VirtualRobot/NLVirtualMotor.h"
+#include "lib/NL/Simulation/VirtualRobot/NLVirtualMotor.h"
 
 
 #define FLAG_NLVMOTOR_CONTROLLER_IS_INVERTED		BIT_0
-class NLVIRTUAL_ROBOT;	// NLVIRTUAL_ROBOT 'possède' NLROBOT comme membre ... 
+class NLVIRTUAL_ROBOT;	// NLVIRTUAL_ROBOT 'possï¿½de' NLROBOT comme membre ... 
 						// ...	et la classe NLROBOT peut contenir un ou plusieurs  NLVMOTOR_CONTROLLER comme membre(s).
-						// Donc, pour éviter des "inclusions circulaires et/où des "error C2079" ( undefined class ... )
-						// il convient ici de déclarer la class NVIRTUAL_ROBOT en forward déclaration ( sans inclure NLVirtualRobot.h ) 
-						// ainsi le compilateur 'sait' que la class existe sans en connaitre encore le détail...
-						// ( NLVirtualRobot.h étant bien sûr inclu dans NLVMotorController.cpp ) 
+						// Donc, pour ï¿½viter des "inclusions circulaires et/oï¿½ des "error C2079" ( undefined class ... )
+						// il convient ici de dï¿½clarer la class NVIRTUAL_ROBOT en forward dï¿½claration ( sans inclure NLVirtualRobot.h ) 
+						// ainsi le compilateur 'sait' que la class existe sans en connaitre encore le dï¿½tail...
+						// ( NLVirtualRobot.h ï¿½tant bien sï¿½r inclu dans NLVMotorController.cpp ) 
 
 class NLVMOTOR_CONTROLLER
 {

@@ -6,21 +6,21 @@
 // ***************************************************************************************
 // ***************************************************************************************
 
-#include "../NCStandard.h"
+#include "lib/N/NCStandard.h"
 #include "../Containers/NArray.h"
 #include "../NPool.h"
 #include "../NCamera.h"
-#include "../NErrorHandling.h"
+#include "lib/N/NErrorHandling.h"
 
 #include "../NCore.h"
-//extern	Nbool			bRendering;
-// ***************************************************************************************
-// ***************************************************************************************
-// **																					**
-// **									FUNCTIONS										**
-// **																					**
-// ***************************************************************************************
-// ***************************************************************************************
+// extern	Nbool			bRendering;
+//  ***************************************************************************************
+//  ***************************************************************************************
+//  **																					**
+//  **									FUNCTIONS										**
+//  **																					**
+//  ***************************************************************************************
+//  ***************************************************************************************
 
 // POST UPDATE PROCESS
 // =======================================================================================
@@ -28,12 +28,11 @@
 There are 2 ways to manage Pool updating.
 You can perform update by your own or use the PostUpdate process manager.
 	1)To perform it by yourself: use when you want the 'NPoolUpdate' function.
-	
+
 	2)To use the postupdate process mechanism, register the Pool Post-Update by
 	  a call to 'NCreatePostUpdateProcess_Pool' and delete it by a call
 	  of 'NDeletePostUpdateProcess_Pool'.
 */
-
 
 // POOL CORE
 // =======================================================================================
@@ -43,19 +42,19 @@ You can perform update by your own or use the PostUpdate process manager.
 // ------------------------------------------------------------------------------------------
 // Description :
 //			Create a Pool of ... something.
-//	
+//
 //			A Pool is made with several lists:
 //						A list of 'enable Nodes'.
 //						Several list of 'disable Nodes'.
 //						A list of simple 'PoolTags'.
 //
 //			Each 'engine turn' the pool is updated to determine which Tag is Active and which Tag is not.
-//			Nodes are spread on the Active Tags. 
+//			Nodes are spread on the Active Tags.
 // ------------------------------------------------------------------------------------------
 // In  :
 //		NNODELIST		*ppoollist	a pointer on a valid Nodelist to store the pool into.
 //									it can be NULL.
-//				
+//
 //		NPOOLDESC		*pdesc		a pointer on NPOOLDESC structure which contains all the things
 //									necessary to build in the Pool.
 //									see bellow some details about parameters of 'NPOOLDESC'
@@ -66,7 +65,7 @@ You can perform update by your own or use the PostUpdate process manager.
 // Understand 'Flags' and 'Parameters' for Pool Creation:
 /*
 	The main pool purpose is managing huge number of complex objects with 'CONTROL and OPTIMIZATION'.
-	Saving time and memory...  
+	Saving time and memory...
 	Imagine you have to manage an entire Forest, with thousands of animated trees, animated grass, vegetation,etc ...
 	You can create thousands of 3D trees objects and animate each of them, but you are going to have serious problems
 	with Memory and UI rate.
@@ -77,10 +76,10 @@ You can perform update by your own or use the PostUpdate process manager.
 		  that consume a smaller amount of memory ( just a NVEC3 position and some other things ).
 		+ The process is simple, each 'engine turn' the pool determine which tag is Active and which tag is not.
 		  After this first process, the pool spread the complex objects on the valid tags.
-	
+
 	It's much more than "just" a "graphical frustrum Optimization" which exclude some geometries because they are
-	not "on screen". 
-	
+	not "on screen".
+
 	1)
 	Nf32 DistanceActivation		AND		Nf32 DistanceInactivation
 	--------------------------------------------------------------
@@ -89,67 +88,66 @@ You can perform update by your own or use the PostUpdate process manager.
 			 then Tag is set to active.
 			'DistanceInactivation', usually the biggest. If the distance between the 'REF' and the tag is bigger than this one,
 			 then Tag is set to inactive.
-			 If the distance between the 'REF' and the tag is in 'between', nothing changes. 
+			 If the distance between the 'REF' and the tag is in 'between', nothing changes.
 	2)
 	NNODELIST	*pEnableNodeList
 	----------------------------
 
 */
 
-NPOOL* NSetUpPool(NPOOL *ppool, const NPOOLDESC *pdesc)
+NPOOL *NSetUpPool(NPOOL *ppool, const NPOOLDESC *pdesc)
 {
-	NErrorIf(!ppool || !pdesc,NERROR_NULL_POINTER);
-	NErrorIf(!pdesc->pEnableXNodeList,NERROR_POOL_ENABLE_XNODELIST_MISSING);
-	memset(ppool,0,sizeof(NPOOL));
+	NErrorIf(!ppool || !pdesc, NERROR_NULL_POINTER);
+	NErrorIf(!pdesc->pEnableXNodeList, NERROR_POOL_ENABLE_XNODELIST_MISSING);
+	memset(ppool, 0, sizeof(NPOOL));
 
 	// Activation Distances
 	ppool->DistanceInactivation = pdesc->DistanceInactivation;
-	ppool->DistanceActivation	= pdesc->DistanceActivation;
+	ppool->DistanceActivation = pdesc->DistanceActivation;
 
 	// Tags List
-	//NSetupNodeList(&ppool->TagList);
+	// NSetupNodeList(&ppool->TagList);
 	NSETUP_NODELIST(&ppool->TagList);
-	ppool->pFirstInactiveTag	= (NNODE*)ppool->TagList.pFirst;
+	ppool->pFirstInactiveTag = (NNODE *)ppool->TagList.pFirst;
 
 	// ... and PoolLists (XNodelist in fact, but with 2 functions associated with)
-	NSetupArray(&ppool->PoolXNodeListArray,NPOOLXNODELIST_ARRAYCAPACITY,sizeof(NPOOLXNODELIST));
+	NSetupArray(&ppool->PoolXNodeListArray, NPOOLXNODELIST_ARRAYCAPACITY, sizeof(NPOOLXNODELIST));
 
 	// ... And the Enable List !
-	ppool->pEnableXNodeList						= pdesc->pEnableXNodeList;
+	ppool->pEnableXNodeList = pdesc->pEnableXNodeList;
 
 	return ppool;
-
 }
-NPOOL*	NCreatePool( const NPOOLDESC *pdesc)
+NPOOL *NCreatePool(const NPOOLDESC *pdesc)
 {
-	return NSetUpPool(NEW(NPOOL),pdesc);
+	return NSetUpPool(NEW(NPOOL), pdesc);
 }
 
 void NClearPool(void *ppool)
 {
-	NNODE *pnode,*pnodeb;
+	NNODE *pnode, *pnodeb;
 
-	//if( bRendering )
-	if( ISFLAG_ON( NEngineCoreFlags,FLAG_NENGINE_CORE_RENDERING ) )
+	// if( bRendering )
+	if (ISFLAG_ON(NEngineCoreFlags, FLAG_NENGINE_CORE_RENDERING))
 	{
-		NErrorIf(1,NERROR_POOL_UNAUTHORIZED_CLEAR_REQUEST);
-		return;		// Because Rendering is in Progress...
-	}				// It's better to avoid any suppressions.
+		NErrorIf(1, NERROR_POOL_UNAUTHORIZED_CLEAR_REQUEST);
+		return; // Because Rendering is in Progress...
+	}			// It's better to avoid any suppressions.
 
 	// FIRST: Delete All Pooltags
 	// By doing this we also disable all the enable node.
 	// and, all of them will be back to their original list.
-	pnode = (NNODE*)((NPOOL*)ppool)->TagList.pFirst;
-	while( pnode !=(NNODE*)&((NPOOL*)ppool)->TagList )
+	pnode = (NNODE *)((NPOOL *)ppool)->TagList.pFirst;
+	while (pnode != (NNODE *)&((NPOOL *)ppool)->TagList)
 	{
 		pnodeb = pnode;
-		pnode=(NNODE*)pnode->pNext;
+		pnode = (NNODE *)pnode->pNext;
 
-		NDeletePoolTag((NPOOL*)ppool,(NPOOLTAG*)pnodeb);
+		NDeletePoolTag((NPOOL *)ppool, (NPOOLTAG *)pnodeb);
 	}
 
 	// ... AND CLEAR all the NodelistArray
-	NClearArray(&((NPOOL*)ppool)->PoolXNodeListArray,NULL);
+	NClearArray(&((NPOOL *)ppool)->PoolXNodeListArray, NULL);
 }
 // ------------------------------------------------------------------------------------------
 // NDeletePool
@@ -163,25 +161,24 @@ void NClearPool(void *ppool)
 //		NNODE*						NVOID if not ( deleting was not performed ).
 //									a valid pointer on the original node linked with the pool
 // ------------------------------------------------------------------------------------------
-void	NDeletePool(NPOOL *ppool)
+void NDeletePool(NPOOL *ppool)
 {
 	NClearPool(ppool);
 	Nfree(ppool);
 }
 
-
-static inline void _EnableTagLinkedXNode(NXNODELIST *penablexnodelist,NPOOLXNODELIST *ppoollist,NPOOLTAG *ptag)
+static inline void _EnableTagLinkedXNode(NXNODELIST *penablexnodelist, NPOOLXNODELIST *ppoollist, NPOOLTAG *ptag)
 {
 	NXNodeRemove(ptag->pLinkedXNode); // From its "ppoollist->pList"
-	NXNodeInsertEnd(ptag->pLinkedXNode,penablexnodelist);
-	ppoollist->_XNodeEnable_CallBack(ptag,ppoollist->UserData);
+	NXNodeInsertEnd(ptag->pLinkedXNode, penablexnodelist);
+	ppoollist->_XNodeEnable_CallBack(ptag, ppoollist->UserData);
 }
 
-static inline void _DisableTagLinkedXNode(NPOOLXNODELIST *ppoolxlist,NPOOLTAG *ptag)
+static inline void _DisableTagLinkedXNode(NPOOLXNODELIST *ppoolxlist, NPOOLTAG *ptag)
 {
-	NXNodeRemove(ptag->pLinkedXNode);// From the main "penablenodelist"
-	NXNodeInsertEnd(ptag->pLinkedXNode,ppoolxlist->pXNodeList);
-	ppoolxlist->_XNodeDisable_CallBack(ptag,ppoolxlist->UserData);
+	NXNodeRemove(ptag->pLinkedXNode); // From the main "penablenodelist"
+	NXNodeInsertEnd(ptag->pLinkedXNode, ppoolxlist->pXNodeList);
+	ppoolxlist->_XNodeDisable_CallBack(ptag, ppoolxlist->UserData);
 }
 
 // ------------------------------------------------------------------------------------------
@@ -196,26 +193,26 @@ static inline void _DisableTagLinkedXNode(NPOOLXNODELIST *ppoolxlist,NPOOLTAG *p
 // Out :
 //
 // ------------------------------------------------------------------------------------------
-static inline void _UpdatePool(NPOOL	*ppool)
+static inline void _UpdatePool(NPOOL *ppool)
 {
-	NPOOLTAG		*ptag;
-	NPOOLTAG		*ptagb;
-	NNODE			*plastactive;
-	NXNODE			*pxnode;
-	NCAMERA			*pcamera; // TODO : point directly to the NVEC3 used by the pool.
-	Nf32			fdist;
-	NPOOLXNODELIST	*ppoolx;
-//	NVEC3	vdist;
+	NPOOLTAG *ptag;
+	NPOOLTAG *ptagb;
+	NNODE *plastactive;
+	NXNODE *pxnode;
+	NCAMERA *pcamera; // TODO : point directly to the NVEC3 used by the pool.
+	Nf32 fdist;
+	NPOOLXNODELIST *ppoolx;
+	//	NVEC3	vdist;
 
-	plastactive	= (NNODE*)&ppool->TagList;
-	ptag		= (NPOOLTAG*)ppool->TagList.pFirst;
-	ppoolx		= (NPOOLXNODELIST *)NGetFirstArrayPtr(&ppool->PoolXNodeListArray);
-	pcamera		= NGetCamera();
+	plastactive = (NNODE *)&ppool->TagList;
+	ptag = (NPOOLTAG *)ppool->TagList.pFirst;
+	ppoolx = (NPOOLXNODELIST *)NGetFirstArrayPtr(&ppool->PoolXNodeListArray);
+	pcamera = NGetCamera();
 
-	while( (NNODE*)ptag != (NNODE*)&ppool->TagList)
+	while ((NNODE *)ptag != (NNODE *)&ppool->TagList)
 	{
 		// Store the next PoolTag right now.
-		ptagb = (NPOOLTAG*)ptag->pNext;
+		ptagb = (NPOOLTAG *)ptag->pNext;
 
 		// Check for the PoolTag activation !
 		// ..............................................................
@@ -223,46 +220,46 @@ static inline void _UpdatePool(NPOOL	*ppool)
 		// BUT ...
 		// For this specific game (Snakes) we just need to have a X dstance comparison !
 		// So let's do that !
-		
-		// a) usual distance comparison ... 
+
+		// a) usual distance comparison ...
 		// 		NVec3Sub(&vdist,&ptag->Pos,&pcamera->TargetPos);
 		// 		fdist = NABS( NFastSqrt(vdist.x*vdist.x + vdist.y*vdist.y + vdist.z*vdist.z) - ppoolx[ptag->Type].DetectionRadius );
-		
+
 		// b) Snake Specific method
-		fdist = NABS( NABS( ptag->Pos.x - pcamera->TargetPos.x) - ppoolx[ptag->Type].DetectionRadius );
+		fdist = NABS(NABS(ptag->Pos.x - pcamera->TargetPos.x) - ppoolx[ptag->Type].DetectionRadius);
 		// ..............................................................
-		if( fdist > ppool->DistanceInactivation )
+		if (fdist > ppool->DistanceInactivation)
 		{
 			// Node Disable !
-			if ( ptag->pLinkedXNode )
+			if (ptag->pLinkedXNode)
 			{
-				_DisableTagLinkedXNode(&ppoolx[ptag->Type],ptag);
+				_DisableTagLinkedXNode(&ppoolx[ptag->Type], ptag);
 				ptag->pLinkedXNode = NULL;
 			}
 		}
-		else if( fdist < ppool->DistanceActivation )
+		else if (fdist < ppool->DistanceActivation)
 		{
 			// Node Enable !
-			if(!ptag->pLinkedXNode)
+			if (!ptag->pLinkedXNode)
 			{
-				//pxnode = XFIRST(ppoolx[ptag->Type].pXNodeList);
-				//if(XVALID(pxnode,ppoolx[ptag->Type].pXNodeList))
-				pxnode = (NXNODE*)ppoolx[ptag->Type].pXNodeList->pFirst;
-				if( pxnode != (NXNODE*)ppoolx[ptag->Type].pXNodeList )
+				// pxnode = XFIRST(ppoolx[ptag->Type].pXNodeList);
+				// if(XVALID(pxnode,ppoolx[ptag->Type].pXNodeList))
+				pxnode = (NXNODE *)ppoolx[ptag->Type].pXNodeList->pFirst;
+				if (pxnode != (NXNODE *)ppoolx[ptag->Type].pXNodeList)
 				{
 					ptag->pLinkedXNode = pxnode;
-					_EnableTagLinkedXNode(ppool->pEnableXNodeList,&ppoolx[ptag->Type],ptag);
+					_EnableTagLinkedXNode(ppool->pEnableXNodeList, &ppoolx[ptag->Type], ptag);
 				}
 				// TODO: Maybe 'TagLink_CallBack' and '_EnableNode' can be merge into a single and unique function
 				//	So, in that way we are going to remove one call back (TagLink_CallBack)
-/*
-				if( ptag->pLinkedNode )
-					ppoolx[ptag->Type]._TagLink_CallBack(ptag,ppoolx[ptag->Type].UserData); // Can be use to perform some special Init (like reset structure skin )
-*/
+				/*
+								if( ptag->pLinkedNode )
+									ppoolx[ptag->Type]._TagLink_CallBack(ptag,ppoolx[ptag->Type].UserData); // Can be use to perform some special Init (like reset structure skin )
+				*/
 			}
 			// TODO: Maybe the lines below are just a waste of time. Check ...
 
-			if(ptag->pLinkedXNode)
+			if (ptag->pLinkedXNode)
 			{
 				// An Active Pooltag ( ... == with a linked node) Rise on the top of the list !
 				// ... but we try to avoid any unnecessary Node Moves
@@ -272,151 +269,150 @@ static inline void _UpdatePool(NPOOL	*ppool)
 				// that means that there is one or more inactive node between the lastactive tag and ptag
 				// so ptag is remove from its place and relink just at the right of lastactive. And ptag becomes lasactive...
 				// do you copy ?
-				if( (NNODE*)ptag != plastactive->pNext )
+				if ((NNODE *)ptag != plastactive->pNext)
 				{
-					NNodeRemove((NNODE*)ptag);
-					NNodeInsertAfter((NNODE*)ptag,plastactive);
+					NNodeRemove((NNODE *)ptag);
+					NNodeInsertAfter((NNODE *)ptag, plastactive);
 				}
-				plastactive = (NNODE*)ptag;
+				plastactive = (NNODE *)ptag;
 			}
 		}
 
 		// Move to the next PoolTag, already read ...
 		ptag = ptagb;
 	}
-	ppool->pFirstInactiveTag = (NNODE*)plastactive->pNext;	//	Easy to understand ... 
+	ppool->pFirstInactiveTag = (NNODE *)plastactive->pNext; //	Easy to understand ...
 															//	Just on the right of the last Active Tag we have ... the first inactive one !
 }
 
-void NUpdatePool(NPOOL	*ppool)
+void NUpdatePool(NPOOL *ppool)
 {
 	_UpdatePool(ppool);
 }
 
-void NPool_PostUpdateHandle(const NTIME *ptime, Nu32 dataA,Nu32 dataB)
+void NPool_PostUpdateHandle(const NTIME *ptime, Nu32 dataA, Nu32 dataB)
 {
-	_UpdatePool((NPOOL*)dataA);
+	_UpdatePool((NPOOL *)dataA);
 }
 
-
-NPOOLXNODELIST* NPoolBindXNodeList(NPOOL *ppool, NXNODELIST *pxlist,const NPOOL_XNODEENABLE_CALLBACK enable_callback,const NPOOL_XNODEENABLE_CALLBACK disable_callback,const Nf32 detectionradius,const Nu32 userdata)
+NPOOLXNODELIST *NPoolBindXNodeList(NPOOL *ppool, NXNODELIST *pxlist, const NPOOL_XNODEENABLE_CALLBACK enable_callback, const NPOOL_XNODEENABLE_CALLBACK disable_callback, const Nf32 detectionradius, const Nu32 userdata)
 {
-	NPOOLXNODELIST	pnodelist;
+	NPOOLXNODELIST pnodelist;
 
-	pnodelist.pXNodeList				= pxlist;
-	pnodelist._XNodeDisable_CallBack	= disable_callback;
-	pnodelist._XNodeEnable_CallBack		= enable_callback;
-	pnodelist.DetectionRadius			= detectionradius;
-	pnodelist.UserData					= userdata;
-	return (NPOOLXNODELIST*)NArrayPushBack(&ppool->PoolXNodeListArray,(NBYTE*)&pnodelist);
+	pnodelist.pXNodeList = pxlist;
+	pnodelist._XNodeDisable_CallBack = disable_callback;
+	pnodelist._XNodeEnable_CallBack = enable_callback;
+	pnodelist.DetectionRadius = detectionradius;
+	pnodelist.UserData = userdata;
+	return (NPOOLXNODELIST *)NArrayPushBack(&ppool->PoolXNodeListArray, (NBYTE *)&pnodelist);
 }
 
-Nbool	NPoolUnbindXNodeList(NPOOL *ppool, NXNODELIST *pxlist)
+Nbool NPoolUnbindXNodeList(NPOOL *ppool, NXNODELIST *pxlist)
 {
-	Nu32			i,id;
-	NPOOLXNODELIST	*pnlist;
-	Nbool			bfind;
-	NPOOLTAG		*ptag;
+	Nu32 i, id;
+	NPOOLXNODELIST *pnlist;
+	Nbool bfind;
+	NPOOLTAG *ptag;
 
 	// first: check if the list is really binded
 	bfind = NFALSE;
-	pnlist =(NPOOLXNODELIST*)NGetFirstArrayPtr(&ppool->PoolXNodeListArray);
-	for(i=0;i<NGetArraySize(&ppool->PoolXNodeListArray);i++)
+	pnlist = (NPOOLXNODELIST *)NGetFirstArrayPtr(&ppool->PoolXNodeListArray);
+	for (i = 0; i < NGetArraySize(&ppool->PoolXNodeListArray); i++)
 	{
-		if(pxlist == pnlist->pXNodeList)
+		if (pxlist == pnlist->pXNodeList)
 		{
-			bfind	= NTRUE;
-			id		= i;
+			bfind = NTRUE;
+			id = i;
 			break;
 		}
 		pnlist++;
 	}
 
-	if(!bfind)
+	if (!bfind)
 		return NFALSE;
 
 	// Now we are sure that plist is binded, and we know its 'id'
 	// First of all we have to disable all node which belong to the future unbind list from the main "penablenodelist"
 	ptag = (NPOOLTAG *)ppool->TagList.pFirst;
-	while(ptag!=(NPOOLTAG*)&ppool->TagList)
+	while (ptag != (NPOOLTAG *)&ppool->TagList)
 	{
-		if(ptag->Type == id)
+		if (ptag->Type == id)
 		{
 			// Node Disable !
-			if ( ptag->pLinkedXNode )
+			if (ptag->pLinkedXNode)
 			{
-				_DisableTagLinkedXNode(pnlist,ptag);
+				_DisableTagLinkedXNode(pnlist, ptag);
 				ptag->pLinkedXNode = NULL;
 			}
 		}
 
-		ptag  = (NPOOLTAG*)ptag->pNext;
+		ptag = (NPOOLTAG *)ptag->pNext;
 	}
 
 	// And, after recompute tag type, in fact all the "type" which represents a list on the right of "plist"
 	// have to be changed due to the "plist" removal. (decrease by one, obviously)
 	ptag = (NPOOLTAG *)ppool->TagList.pFirst;
-	while(ptag!=(NPOOLTAG*)&ppool->TagList)
+	while (ptag != (NPOOLTAG *)&ppool->TagList)
 	{
-		if(ptag->Type > id)
-			ptag->Type --;
+		if (ptag->Type > id)
+			ptag->Type--;
 
-		ptag  = (NPOOLTAG*)ptag->pNext;
+		ptag = (NPOOLTAG *)ptag->pNext;
 	}
 
 	//... ok, do it
-	NEraseArrayElement(&ppool->PoolXNodeListArray,id,NULL);
+	NEraseArrayElement(&ppool->PoolXNodeListArray, id, NULL);
 	return NTRUE;
 }
 
-NPOOLTAG *NCreatePoolTag(NPOOL *ppool,const Nu8 type, const NVEC3 *ppos)
+NPOOLTAG *NCreatePoolTag(NPOOL *ppool, const Nu8 type, const NVEC3 *ppos)
 {
-	NPOOLTAG	*ptag;
+	NPOOLTAG *ptag;
 
-/*
-	ptag = (NPOOLTAG*)malloc(sizeof(NPOOLTAG));
-	if(!ptag)
-		return NULL;
-*/
+	/*
+		ptag = (NPOOLTAG*)malloc(sizeof(NPOOLTAG));
+		if(!ptag)
+			return NULL;
+	*/
 	ptag = NEW(NPOOLTAG);
-	memset(ptag,0,sizeof(NPOOLTAG));
+	memset(ptag, 0, sizeof(NPOOLTAG));
 
 	ptag->Type = type;
 	ptag->Pos = *ppos;
 
-	NNodeInsertEnd((NNODE*)ptag,&ppool->TagList);
+	NNodeInsertEnd((NNODE *)ptag, &ppool->TagList);
 	return ptag;
 }
 
 void NDeletePoolTag(NPOOL *ppool, NPOOLTAG *ptag)
 {
-	NPOOLXNODELIST	*pxnodelist;
+	NPOOLXNODELIST *pxnodelist;
 
 	// An Enable node is linked with this TAG,... WE HAVE TO disable it !
-	if( ptag->pLinkedXNode )
+	if (ptag->pLinkedXNode)
 	{
-		pxnodelist	= (NPOOLXNODELIST *)NGetFirstArrayPtr(&ppool->PoolXNodeListArray);
-		_DisableTagLinkedXNode(&pxnodelist[ptag->Type],ptag);
+		pxnodelist = (NPOOLXNODELIST *)NGetFirstArrayPtr(&ppool->PoolXNodeListArray);
+		_DisableTagLinkedXNode(&pxnodelist[ptag->Type], ptag);
 	}
-	
-	NNodeRemove((NNODE*)ptag);
+
+	NNodeRemove((NNODE *)ptag);
 	Nfree(ptag);
 }
 
 Ns16 NSetPoolTagType(NPOOL *ppool, NPOOLTAG *ptag, const Nu8 type)
 {
-	NPOOLXNODELIST	*pxnodelist;
-	Ns16			old;
+	NPOOLXNODELIST *pxnodelist;
+	Ns16 old;
 
 	// WARNING ! Into Pooltag structure, Type is coded with only 10 bits
 	// so we prefer to check that here !
-	if( type >= NGetArraySize(&ppool->PoolXNodeListArray) )
+	if (type >= NGetArraySize(&ppool->PoolXNodeListArray))
 		return -1;
-	
-	if(ptag->pLinkedXNode)
+
+	if (ptag->pLinkedXNode)
 	{
-		pxnodelist	= (NPOOLXNODELIST *)NGetFirstArrayPtr(&ppool->PoolXNodeListArray);
-		_DisableTagLinkedXNode(&pxnodelist[ptag->Type],ptag);
+		pxnodelist = (NPOOLXNODELIST *)NGetFirstArrayPtr(&ppool->PoolXNodeListArray);
+		_DisableTagLinkedXNode(&pxnodelist[ptag->Type], ptag);
 		ptag->pLinkedXNode = NULL;
 	}
 
@@ -426,35 +422,35 @@ Ns16 NSetPoolTagType(NPOOL *ppool, NPOOLTAG *ptag, const Nu8 type)
 	return old;
 }
 
-void NDisablePoolTag(NPOOL *ppool, NPOOLTAG* ptag)
+void NDisablePoolTag(NPOOL *ppool, NPOOLTAG *ptag)
 {
-	NPOOLXNODELIST	*pxnodelist;
+	NPOOLXNODELIST *pxnodelist;
 
-	if(ptag->pLinkedXNode)
+	if (ptag->pLinkedXNode)
 	{
-		pxnodelist	= (NPOOLXNODELIST *)NGetFirstArrayPtr(&ppool->PoolXNodeListArray);
-		_DisableTagLinkedXNode(&pxnodelist[ptag->Type],ptag);
+		pxnodelist = (NPOOLXNODELIST *)NGetFirstArrayPtr(&ppool->PoolXNodeListArray);
+		_DisableTagLinkedXNode(&pxnodelist[ptag->Type], ptag);
 		ptag->pLinkedXNode = NULL;
 	}
 }
 
 void NDisableAllPoolTag(NPOOL *ppool)
 {
-	NPOOLTAG		*ptag;
-	NPOOLXNODELIST	*pxnodelist;
+	NPOOLTAG *ptag;
+	NPOOLXNODELIST *pxnodelist;
 
-	pxnodelist	= (NPOOLXNODELIST *)NGetFirstArrayPtr(&ppool->PoolXNodeListArray);
-	
+	pxnodelist = (NPOOLXNODELIST *)NGetFirstArrayPtr(&ppool->PoolXNodeListArray);
+
 	ptag = (NPOOLTAG *)ppool->TagList.pFirst;
-	while(ptag!=(NPOOLTAG*)&ppool->TagList)
+	while (ptag != (NPOOLTAG *)&ppool->TagList)
 	{
-		if ( ptag->pLinkedXNode )
+		if (ptag->pLinkedXNode)
 		{
-			_DisableTagLinkedXNode(&pxnodelist[ptag->Type],ptag);
+			_DisableTagLinkedXNode(&pxnodelist[ptag->Type], ptag);
 			ptag->pLinkedXNode = NULL;
 		}
 
-		ptag  = (NPOOLTAG*)ptag->pNext;
+		ptag = (NPOOLTAG *)ptag->pNext;
 	}
 }
 
@@ -468,23 +464,23 @@ void NDisableAllPoolTag(NPOOL *ppool)
 // ------------------------------------------------------------------------------------------
 // In	:
 //			ppool:	A valid pointer on a pool
-// 
+//
 // Out :
 //
 //
 // ------------------------------------------------------------------------------------------
 void NDeleteAllPoolTags(NPOOL *ppool)
 {
-	NPOOLTAG		*ptag,*ptagb;
+	NPOOLTAG *ptag, *ptagb;
 
 	// Delete all the Pool Tags
 	ptag = (NPOOLTAG *)ppool->TagList.pFirst;
-	while(ptag!=(NPOOLTAG*)&ppool->TagList)
+	while (ptag != (NPOOLTAG *)&ppool->TagList)
 	{
 		ptagb = ptag;
-		ptag  = (NPOOLTAG*)ptag->pNext;
+		ptag = (NPOOLTAG *)ptag->pNext;
 
-		NDeletePoolTag(ppool,ptagb);
+		NDeletePoolTag(ppool, ptagb);
 	}
 }
 
@@ -495,8 +491,8 @@ void NDeleteAllPoolTags(NPOOL *ppool)
 //		Delete all pooltags AND erase all the bind list with the most efficient way.
 // ------------------------------------------------------------------------------------------
 // In	:
-// 
-// 
+//
+//
 // Out :
 //
 //
@@ -504,7 +500,7 @@ void NDeleteAllPoolTags(NPOOL *ppool)
 void NClearPool(NPOOL *ppool)
 {
 	NDeleteAllPoolTags(ppool);
-	NEraseArray(&ppool->PoolXNodeListArray,NULL);
+	NEraseArray(&ppool->PoolXNodeListArray, NULL);
 }
 
 // PREVIOUS VERSIONS
@@ -513,7 +509,7 @@ void NClearPool(NPOOL *ppool)
 inline NNODE* _GetAvailableNode(NPOOL *ppool)
 {
 	NNODE		*pnode;
-	
+
 	pnode = ppool->pFirstAvailableNode;
 	if( pnode != (NNODE*)&ppool->NodeList )
 	{
@@ -537,13 +533,13 @@ inline NNODE* _GetAvailableNode(NPOOL *ppool,Nu32 type)
 	NPOOLLIST	*poollist;
 
 	poollist = (NPOOLLIST *)NGetFirstArrayPtr(&ppool->PoolListArray);
-	
+
 	pnode = poollist[type].pList->pFirst;
 	if( pnode != (NNODE*)poollist[type].pList )
 	{
 		NNodeRemove(pnode,poollist[type].pList);
 		if(poollist[type].ToChangeEnableStatus_NodeNumber)
-		{	
+		{
 			poollist[type].ToChangeEnableStatus_NodeNumber --;
 			NNodeInsertEnd(pnode,poollist[0].pList);
 		}

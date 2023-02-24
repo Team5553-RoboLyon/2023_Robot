@@ -1,57 +1,54 @@
-//#if defined _NIOS || defined _NANDROID  
-#include "../NCStandard.h"
-#include "../NType.h"
-#include "../NErrorHandling.h"
+// #if defined _NIOS || defined _NANDROID
+#include "lib/N/NCStandard.h"
+#include "lib/N/NType.h"
+#include "lib/N/NErrorHandling.h"
 #include "../NCore.h"
 #include "../Containers/NRingBuffer.h"
 #include "../Event/NEvent.h"
 #include "./NEventBuffer.h"
 
-extern Nu32						NEngineCoreFlags;
+extern Nu32 NEngineCoreFlags;
 
-
-
-NRINGBUFFER	NEventBuffer;
+NRINGBUFFER NEventBuffer;
 
 void NInitEventBuffer()
-{	
+{
 	// A)Task Buffer
-	NSetupRingBuffer(&NEventBuffer,CONSTANT_EVENT_BUFFER_CAPACITY,sizeof(NEVENT));
+	NSetupRingBuffer(&NEventBuffer, CONSTANT_EVENT_BUFFER_CAPACITY, sizeof(NEVENT));
 }
 
 static void _clear_event_in_buffer(void *ptr)
 {
-	Nmem0(ptr,NEVENT);
+	Nmem0(ptr, NEVENT);
 }
 
 void NQuitEventBuffer()
-{	
+{
 	// A)Event Buffer
-	NClearRingBuffer(&NEventBuffer,NULL/*_clear_event_in_buffer*/);
+	NClearRingBuffer(&NEventBuffer, NULL /*_clear_event_in_buffer*/);
 }
 
 //
-NEVENT* NEventAllocBack()
+NEVENT *NEventAllocBack()
 {
-	return (NEVENT*)NRingBufferAllocBack(&NEventBuffer);
+	return (NEVENT *)NRingBufferAllocBack(&NEventBuffer);
 }
 
 void NFreePolledEvent()
 {
-	//NRingBufferFreeFrontXtd(&NEventBuffer,_clear_event_in_buffer);
+	// NRingBufferFreeFrontXtd(&NEventBuffer,_clear_event_in_buffer);
 	NRingBufferFreeFront(&NEventBuffer);
 }
 
-NEVENT*	NPollEvent()
+NEVENT *NPollEvent()
 {
-	if(NEventBuffer.Size)
+	if (NEventBuffer.Size)
 	{
-		return (NEVENT*)NRingBufferGetFront(&NEventBuffer);
+		return (NEVENT *)NRingBufferGetFront(&NEventBuffer);
 	}
 	else
 	{
 		return NULL;
 	}
-
 }
-//#endif //_NIOS || _NANDROID   
+// #endif //_NIOS || _NANDROID

@@ -5,9 +5,9 @@
 // **																					**
 // ***************************************************************************************
 // ***************************************************************************************
-#include "../NCore.h"
-#include "../NErrorHandling.h"
-#include "NAudio.h"
+#include "lib/N/NCore.h"
+#include "lib/N/NErrorHandling.h"
+#include "lib/N/Audio/NAudio.h"
 
 
 Nf32 ListenerGain = 1.0f; // By default

@@ -1,4 +1,4 @@
-#include "../NCStandard.h"
+#include "lib/N/NCStandard.h"
 #include "../NCoordinateSystemConversions.h"
 #include "../NViewport.h"
 #include "../NCore.h"
@@ -6,30 +6,27 @@
 #include "../UI/NUIClearWatchStack.h"
 #include "NEvent.h"
 
-//#include "../Utilities/NUT_Draw.h"
+// #include "../Utilities/NUT_Draw.h"
 /*
 static Nu32 UIFocusCount;
 static inline void	_DecreaseFocusCount(){UIFocusCount--;/ *printf("UIFocusCount = %d\n",UIFocusCount);* /}
 static inline void	_IncreaseFocusCount(){UIFocusCount++;/ *printf("UIFocusCount = %d\n",UIFocusCount);* /}
 Nu32 NGetUIFocusCount(){return UIFocusCount;}
 */
-extern NARRAY	ActiveUIRootsList;
-extern NUI		*pFocusedUI;
-extern Nu32		NEngineCoreFlags;
+extern NARRAY ActiveUIRootsList;
+extern NUI *pFocusedUI;
+extern Nu32 NEngineCoreFlags;
 
-
-NARRAY			DelayedUIEventArray;
-
+NARRAY DelayedUIEventArray;
 
 #ifdef _NOUT_SYS_EVENT
 Nu32 debug_id;
 #endif
 
-
 #ifdef _NOUT_SYS_EVENT
 void _debug_Printf_EVENT_NAME(const NEVENT *pevent)
 {
-	switch(pevent->Type)
+	switch (pevent->Type)
 	{
 	case NSYS_NOEVENT:
 		printf(" NSYS_NOEVENT ");
@@ -39,7 +36,7 @@ void _debug_Printf_EVENT_NAME(const NEVENT *pevent)
 		printf(" NSYS_NOT_TRANSLATED ");
 		break;
 
-	case NSYS_QUIT:					
+	case NSYS_QUIT:
 		printf(" NSYS_QUIT ");
 		break;
 
@@ -50,95 +47,95 @@ void _debug_Printf_EVENT_NAME(const NEVENT *pevent)
 	case NTOUCH_START:
 		printf(" NTOUCH_START ");
 		break;
-	case NTOUCH_MOVE:					
+	case NTOUCH_MOVE:
 		printf(" NTOUCH_MOVE ");
 		break;
-	case NTOUCH_END:					
+	case NTOUCH_END:
 		printf(" NTOUCH_END ");
 		break;
 	case NTOUCH_CANCEL:
-		if(pevent->Touch.TouchSequence.TouchCount)
+		if (pevent->Touch.TouchSequence.TouchCount)
 			printf(" NTOUCH_CANCEL ");
 		else
 			printf(" NTOUCH_CANCEL (All)");
 		break;
-	case NUI_SETUP:						
+	case NUI_SETUP:
 		printf(" NUI_SETUP ");
 		break;
-	case NUI_CLEAR:						
+	case NUI_CLEAR:
 		printf(" NUI_CLEAR ");
 		break;
-	case NUI_SHOW:						
+	case NUI_SHOW:
 		printf(" NUI_SHOW ");
 		break;
-	case NUI_HIDE:						
+	case NUI_HIDE:
 		printf(" NUI_HIDE ");
 		break;
-	case NUI_ENABLE:					
+	case NUI_ENABLE:
 		printf(" NUI_ENABLE ");
 		break;
-	case NUI_DISABLE:					
+	case NUI_DISABLE:
 		printf(" NUI_DISABLE ");
 		break;
 	// UI NOTIFY
 	case NNOTIFY_UITHNANIM_START:
 		printf(" NNOTIFY_UITHNANIM_START ");
 		break;
-	case NNOTIFY_UITHNANIM_KEY:		
+	case NNOTIFY_UITHNANIM_KEY:
 		printf(" NNOTIFY_UITHNANIM_KEY ");
 		break;
-	case NNOTIFY_UITHNANIM_REPEAT:	
+	case NNOTIFY_UITHNANIM_REPEAT:
 		printf(" NNOTIFY_UITHNANIM_REPEAT ");
 		break;
-	case NNOTIFY_UITHNANIM_END:		
+	case NNOTIFY_UITHNANIM_END:
 		printf(" NNOTIFY_UITHNANIM_END ");
 		break;
 
 	// COMMAND AND CANCEL
-	case NCOMMAND_PUSHBUTTON_DOWN:		
+	case NCOMMAND_PUSHBUTTON_DOWN:
 		printf(" NCOMMAND_PUSHBUTTON_DOWN ");
 		break;
-	case NCOMMAND_PUSHBUTTON_UP:		
+	case NCOMMAND_PUSHBUTTON_UP:
 		printf(" NCOMMAND_PUSHBUTTON_UP ");
 		break;
-	case NCOMMAND_PUSHBUTTON_CANCEL_DOWN:		
+	case NCOMMAND_PUSHBUTTON_CANCEL_DOWN:
 		printf(" NCOMMAND_PUSHBUTTON_CANCEL_DOWN ");
 		break;
 
-	case NCOMMAND_UICUSTOM_DOWN:		
+	case NCOMMAND_UICUSTOM_DOWN:
 		printf(" NCOMMAND_UICUSTOM_DOWN ");
 		break;
-	case NCOMMAND_UICUSTOM_UP:			
+	case NCOMMAND_UICUSTOM_UP:
 		printf(" NCOMMAND_UICUSTOM_UP ");
 		break;
-	case NCOMMAND_UICUSTOM_CANCEL_DOWN:		
+	case NCOMMAND_UICUSTOM_CANCEL_DOWN:
 		printf(" NCOMMAND_UICUSTOM_CANCEL_DOWN ");
 		break;
 
-	case NCOMMAND_VALUPDATER_NF32:		
+	case NCOMMAND_VALUPDATER_NF32:
 		printf(" NCOMMAND_VALUPDATER_NF32 ");
 		break;
-	case NCOMMAND_VALUPDATER_NS32:		
+	case NCOMMAND_VALUPDATER_NS32:
 		printf(" NCOMMAND_VALUPDATER_NS32 ");
 		break;
 
-	case NCOMMAND_CHECKBOX_CHECK:		
+	case NCOMMAND_CHECKBOX_CHECK:
 		printf(" NCOMMAND_CHECKBOX_CHECK ");
 		break;
-	case NCOMMAND_CHECKBOX_UNCHECK:		
+	case NCOMMAND_CHECKBOX_UNCHECK:
 		printf(" NCOMMAND_CHECKBOX_UNCHECK ");
 		break;
-	case NCOMMAND_CHECKBOX_TOGGLE:		
+	case NCOMMAND_CHECKBOX_TOGGLE:
 		printf(" NCOMMAND_CHECKBOX_TOGGLE ");
 		break;
 
-	case NCOMMAND_COLORCIRCLE_RGBA8:	
+	case NCOMMAND_COLORCIRCLE_RGBA8:
 		printf(" NCOMMAND_COLORCIRCLE_RGBA8 ");
 		break;
-	case NCOMMAND_COLORCIRCLE_RGBA32:	
+	case NCOMMAND_COLORCIRCLE_RGBA32:
 		printf(" NCOMMAND_COLORCIRCLE_RGBA32 ");
 		break;
-	
+
 	default:
 		printf(" ? Unknown EVENT ? ");
 		break;
@@ -148,12 +145,12 @@ void _debug_Printf_EVENT_NAME(const NEVENT *pevent)
 
 void NInitDelayedUIEventArray()
 {
-	NSetupArray(&DelayedUIEventArray,CONSTANT_DELAYED_UI_EVENT_ARRAY_INITIAL_CAPACITY,sizeof(NEVENT));
+	NSetupArray(&DelayedUIEventArray, CONSTANT_DELAYED_UI_EVENT_ARRAY_INITIAL_CAPACITY, sizeof(NEVENT));
 }
 
 void NQuitDelayedUIEventArray()
 {
-	NClearArray(&DelayedUIEventArray,NULL);
+	NClearArray(&DelayedUIEventArray, NULL);
 }
 
 // ------------------------------------------------------------------------------------------
@@ -174,20 +171,20 @@ void NQuitDelayedUIEventArray()
 // ------------------------------------------------------------------------------------------
 // In	:
 //			NUI *pui	The UI that is under clearing process.
-// 
+//
 // Out :
 //
 //
 // ------------------------------------------------------------------------------------------
 void NDelayedUIEventArray_UIClear_Notification(const NUI *pui)
 {
-	NEVENT *pevent = (NEVENT*)DelayedUIEventArray.pFirst;
-	for(Nu32 i=DelayedUIEventArray.Size;i!=0;i--, pevent ++)
+	NEVENT *pevent = (NEVENT *)DelayedUIEventArray.pFirst;
+	for (Nu32 i = DelayedUIEventArray.Size; i != 0; i--, pevent++)
 	{
-		if((NUI*)((NEVENT_HEAD*)pevent)->pRecipient == pui)
+		if ((NUI *)((NEVENT_HEAD *)pevent)->pRecipient == pui)
 		{
-			((NEVENT_HEAD*)pevent)->pRecipient		= NULL;
-			((NEVENT_HEAD*)pevent)->RecipientCast	= NEVENT_RECIPIENT_CAST_NULL; 
+			((NEVENT_HEAD *)pevent)->pRecipient = NULL;
+			((NEVENT_HEAD *)pevent)->RecipientCast = NEVENT_RECIPIENT_CAST_NULL;
 		}
 	}
 }
@@ -210,8 +207,8 @@ void NDelayedUIEventArray_UIClear_Notification(const NUI *pui)
 //	As you can see, 'NDelayedUIEventArray_UIHide_Notification' does exactly the same thing than 'NDelayedUIEventArray_UIDisable_Notification'
 // ------------------------------------------------------------------------------------------
 // In	:
-// 
-// 
+//
+//
 // Out :
 //
 //
@@ -235,21 +232,21 @@ void NDelayedUIEventArray_UIClear_Notification(const NUI *pui)
 //
 // ------------------------------------------------------------------------------------------
 // In	:
-// 
-// 
+//
+//
 // Out :
 //
 //
 // ------------------------------------------------------------------------------------------
 void NDelayedUIEventArray_UIDisable_Notification(const NUI *pui)
 {
-	NEVENT *pevent = (NEVENT*)DelayedUIEventArray.pFirst;
-	for(Nu32 i=DelayedUIEventArray.Size;i!=0;i--, pevent ++)
+	NEVENT *pevent = (NEVENT *)DelayedUIEventArray.pFirst;
+	for (Nu32 i = DelayedUIEventArray.Size; i != 0; i--, pevent++)
 	{
-		if((NUI*)((NEVENT_HEAD*)pevent)->pRecipient == pui && (NGET_EVENT_MAIN(pevent->Type)==_UICOMMAND) )// _UICOMMAND need an enable ui to work !!! so remove them all !!
+		if ((NUI *)((NEVENT_HEAD *)pevent)->pRecipient == pui && (NGET_EVENT_MAIN(pevent->Type) == _UICOMMAND)) // _UICOMMAND need an enable ui to work !!! so remove them all !!
 		{
-			((NEVENT_HEAD*)pevent)->pRecipient		= NULL;
-			((NEVENT_HEAD*)pevent)->RecipientCast	= NEVENT_RECIPIENT_CAST_NULL; 
+			((NEVENT_HEAD *)pevent)->pRecipient = NULL;
+			((NEVENT_HEAD *)pevent)->RecipientCast = NEVENT_RECIPIENT_CAST_NULL;
 		}
 	}
 }
@@ -275,77 +272,76 @@ void NPostDelayedUIEvent(const NEVENT *pevent)
 	// Event must be define !
 	NErrorIf(!pevent, NERROR_NULL_POINTER);
 	// Event must me authorized to be delayed ! Only _UICOMMAND and _UINOTIFY events are authorized !
-	NErrorIf( NGET_EVENT_MAIN(pevent->Type)!=_UICOMMAND && NGET_EVENT_MAIN(pevent->Type)!=_UINOTIFY, NERROR_EVENT_UNAUTHORIZED_MAIN_TYPE );
+	NErrorIf(NGET_EVENT_MAIN(pevent->Type) != _UICOMMAND && NGET_EVENT_MAIN(pevent->Type) != _UINOTIFY, NERROR_EVENT_UNAUTHORIZED_MAIN_TYPE);
 	// Event Recipient definition must be consistent !
-	NErrorIf(pevent->Head.pRecipient == NULL && pevent->Head.RecipientCast != NEVENT_RECIPIENT_CAST_NULL, NERROR_INCONSISTENT_VALUES );
-	NErrorIf(pevent->Head.pRecipient != NULL && pevent->Head.RecipientCast == NEVENT_RECIPIENT_CAST_NULL, NERROR_INCONSISTENT_VALUES );
+	NErrorIf(pevent->Head.pRecipient == NULL && pevent->Head.RecipientCast != NEVENT_RECIPIENT_CAST_NULL, NERROR_INCONSISTENT_VALUES);
+	NErrorIf(pevent->Head.pRecipient != NULL && pevent->Head.RecipientCast == NEVENT_RECIPIENT_CAST_NULL, NERROR_INCONSISTENT_VALUES);
 	// Event Recipient must be define !
 	NErrorIf(pevent->Head.pRecipient == NULL, NERROR_NULL_POINTER);
 	NErrorIf(pevent->Head.RecipientCast == NEVENT_RECIPIENT_CAST_NULL, NERROR_NULL_VALUE);
-	
-	// About UI Visible and UI Enable and Delayed Event.
-	//		_UINOTIFY event can be sent to UI even if UI is hidden and/or Disable.
-	//		_UICOMMAND event are more restrictive. They can be sent to Visible AND Enable UI only.
-	//		These two kind of events may be delayed ( only these 2 ones actually ! ). But it's not purpose of 'NPostDelayedUIEvent'
-	//		to check UI states. When Event is going to be dispatch by 'NDispatchDelayedUIEvent' the appropriate sending function ...
-	//		... 'NSendUICommandEvent' or 'NSendUINotifyEvent' is going to be called and will make the checks ( In debug mode ).
-	//
-	//		AND, The functions:
-	//				"NDelayedUIEventArray_UIDisable_Notification"
-	//				"NDelayedUIEventArray_UIHide_Notification"
-	//				"NDelayedUIEventArray_UIClear_Notification"
-	//
-	//		... are going to cleanup the Delayed Event Array each time an UI is cleared/deleted, disable or hide.
-	//
-	#ifdef _NOUT_SYS_EVENT
-	debug_id ++;
-	Nu32 local_debug_id = debug_id;
-	printf("\n \n ================================================= \n[%d] - NPostDelayedUIEvent: ",local_debug_id);
-	_debug_Printf_EVENT_NAME(pevent);
-	#endif
 
-	NArrayPushBack(&DelayedUIEventArray,(NBYTE*)pevent);
+// About UI Visible and UI Enable and Delayed Event.
+//		_UINOTIFY event can be sent to UI even if UI is hidden and/or Disable.
+//		_UICOMMAND event are more restrictive. They can be sent to Visible AND Enable UI only.
+//		These two kind of events may be delayed ( only these 2 ones actually ! ). But it's not purpose of 'NPostDelayedUIEvent'
+//		to check UI states. When Event is going to be dispatch by 'NDispatchDelayedUIEvent' the appropriate sending function ...
+//		... 'NSendUICommandEvent' or 'NSendUINotifyEvent' is going to be called and will make the checks ( In debug mode ).
+//
+//		AND, The functions:
+//				"NDelayedUIEventArray_UIDisable_Notification"
+//				"NDelayedUIEventArray_UIHide_Notification"
+//				"NDelayedUIEventArray_UIClear_Notification"
+//
+//		... are going to cleanup the Delayed Event Array each time an UI is cleared/deleted, disable or hide.
+//
+#ifdef _NOUT_SYS_EVENT
+	debug_id++;
+	Nu32 local_debug_id = debug_id;
+	printf("\n \n ================================================= \n[%d] - NPostDelayedUIEvent: ", local_debug_id);
+	_debug_Printf_EVENT_NAME(pevent);
+#endif
+
+	NArrayPushBack(&DelayedUIEventArray, (NBYTE *)pevent);
 }
 
 void NDispatchDelayedUIEvent()
 {
 #ifdef _NOUT_SYS_EVENT
-	if(DelayedUIEventArray.Size)
-		printf("\n ========================= %d Next SendUIEvent(s) is(are) DELAYED ===============",DelayedUIEventArray.Size);
+	if (DelayedUIEventArray.Size)
+		printf("\n ========================= %d Next SendUIEvent(s) is(are) DELAYED ===============", DelayedUIEventArray.Size);
 #endif
 
-	NEVENT *pevent = (NEVENT*)DelayedUIEventArray.pFirst;
-	for(Nu32 i=DelayedUIEventArray.Size;i!=0;i--, pevent ++)
+	NEVENT *pevent = (NEVENT *)DelayedUIEventArray.pFirst;
+	for (Nu32 i = DelayedUIEventArray.Size; i != 0; i--, pevent++)
 	{
-		if(pevent->Head.pRecipient) // Because it may be set to NULL by NUI Clear process
+		if (pevent->Head.pRecipient) // Because it may be set to NULL by NUI Clear process
 		{
 			NErrorIf(pevent->Head.RecipientCast != NEVENT_RECIPIENT_CAST_UI, NERROR_EVENT_INCONSISTENT_RECIPIENT);
-			switch(NGET_EVENT_MAIN(pevent->Type))
+			switch (NGET_EVENT_MAIN(pevent->Type))
 			{
-				case _UICOMMAND:
-					NSendUICommandEvent(pevent);
-					break;
+			case _UICOMMAND:
+				NSendUICommandEvent(pevent);
+				break;
 
-				case _UINOTIFY:
-					NSendUINotifyEvent(pevent);
-					break;
+			case _UINOTIFY:
+				NSendUINotifyEvent(pevent);
+				break;
 
-				default:
-					// Only _UICOMMAND and _UINOTIFY event main types can be delayed !!!
-					NErrorIf(1,NERROR_SYSTEM_CHECK);
-					break;
+			default:
+				// Only _UICOMMAND and _UINOTIFY event main types can be delayed !!!
+				NErrorIf(1, NERROR_SYSTEM_CHECK);
+				break;
 			}
 		}
 	}
 	DelayedUIEventArray.Size = 0;
 }
 
-
 // ------------------------------------------------------------------------------------------
 // void NSendUIEvent
 // ------------------------------------------------------------------------------------------
 // Description :
-// 
+//
 // ------------------------------------------------------------------------------------------
 // In	:
 //			NUI				*pui		A Valid pointer to UI which will receive the Event.
@@ -360,13 +356,13 @@ static inline Nu32 _get_uievent_listen_and_interception_flags(const Nu32 event_t
 	switch( NGET_EVENT_MAIN(event_type) )
 	{
 
-		case _UICORE:					
+		case _UICORE:
 			return FLAG_NUI_INTERCEPT_UICORE_EVENT|FLAG_NUI_LISTEN_UICORE_EVENT;
 
-		case _UINOTIFY:				
+		case _UINOTIFY:
 			return FLAG_NUI_INTERCEPT_UINOTIFY_EVENT|FLAG_NUI_LISTEN_UINOTIFY_EVENT|FLAG_NUI_SHOW;
 
-		case _UICOMMAND:				
+		case _UICOMMAND:
 			return FLAG_NUI_INTERCEPT_UICOMMAND_EVENT|FLAG_NUI_LISTEN_UICOMMAND_EVENT|FLAG_NUI_SHOW|FLAG_NUI_ENABLE;
 
 // 		case _SYSTEM:
@@ -382,13 +378,12 @@ static inline Nu32 _get_uievent_listen_and_interception_flags(const Nu32 event_t
 //			return ???;
 
 		default:
-			// 	"_get_uievent_listen_and_interception_flags" should manage all the EVENT MAIN TYPE accepted by UI ...		
+			// 	"_get_uievent_listen_and_interception_flags" should manage all the EVENT MAIN TYPE accepted by UI ...
 			NErrorIf(1,NERROR_SYSTEM_CHECK);
 			return 0;
 	}
 }
 */
-
 
 /*
 #define NGetEvent_ListenAndInterceptionMask(event_type)		(  3 << (NGET_EVENT_MAIN(event_type) << 1) )
@@ -403,10 +398,10 @@ static inline Nu32 _get_uievent_listen_and_interception_flags(const Nu32 event_t
 //		Send a UICore Event to a UI Recipient.
 //
 //		!!! ALWAYS SEND UICORE EVENT TO UI RECIPIENT.UIEventToState_Proc !!!
-//		!!! SEND UICORE EVENT TO UI RECIPIENT.Event_Proc ONLY If 'dispatch' is not refused by 
+//		!!! SEND UICORE EVENT TO UI RECIPIENT.Event_Proc ONLY If 'dispatch' is not refused by
 //			one of the potential parent interceptor.
 //		!!! BUT BUT BUT, even if UI doesn't receive it's UICore Event trough its "Event_Proc" due to a dispatch refusal,
-//		!!! that doesn't means the action or change associated with the event is not perform. 
+//		!!! that doesn't means the action or change associated with the event is not perform.
 //		!!! Understand UICORE Event like notification of something that is happening !
 //			For example:
 //				N send the UICOre Event 'NUI_HIDE' to UI.
@@ -416,136 +411,136 @@ static inline Nu32 _get_uievent_listen_and_interception_flags(const Nu32 event_t
 //				NUI_HIDE Event...
 // ------------------------------------------------------------------------------------------
 // In	:
-// 
-// 
+//
+//
 // Out :
 //
 //
 // ------------------------------------------------------------------------------------------
 void NSendUICoreEvent(const NEVENT *pevent)
 {
-	NErrorIf(!pevent,NERROR_NULL_VALUE);
+	NErrorIf(!pevent, NERROR_NULL_VALUE);
 	NErrorIf(pevent->Head.RecipientCast != NEVENT_RECIPIENT_CAST_UI, NERROR_EVENT_INCONSISTENT_RECIPIENT);
 	// Check if event is "UI compatible"
-	NErrorIf(	NGET_EVENT_MAIN(pevent->Type)!=_UICORE, NERROR_EVENT_INCONSISTENT_TYPE	);
+	NErrorIf(NGET_EVENT_MAIN(pevent->Type) != _UICORE, NERROR_EVENT_INCONSISTENT_TYPE);
 
-	// ----------------------------------------------------------------------------------------------------------
-	// - Debug OutPut
-	//
-	#ifdef _NOUT_SYS_EVENT
+// ----------------------------------------------------------------------------------------------------------
+// - Debug OutPut
+//
+#ifdef _NOUT_SYS_EVENT
 	Nu32 local_debug_id;
-	debug_id ++;
+	debug_id++;
 	local_debug_id = debug_id;
 	printf("\n \n -------------------------------------------------------------------------------------------------- ");
-	printf("\n[%d] + NSendUICoreEvent: ",local_debug_id);
+	printf("\n[%d] + NSendUICoreEvent: ", local_debug_id);
 	_debug_Printf_EVENT_NAME(pevent);
-	#endif
+#endif
 	//
 	// ----------------------------------------------------------------------------------------------------------
 
-	// 1)	Check for a potential UI Event Blocking. 
-	if( ISFLAG_ON(NEngineCoreFlags,FLAG_NENGINE_CORE_BLOCK_EVENT_TO_UI) )
+	// 1)	Check for a potential UI Event Blocking.
+	if (ISFLAG_ON(NEngineCoreFlags, FLAG_NENGINE_CORE_BLOCK_EVENT_TO_UI))
 	{
-		// ------------------------------------
-		// - Debug OutPut
-		#ifdef _NOUT_SYS_EVENT
+// ------------------------------------
+// - Debug OutPut
+#ifdef _NOUT_SYS_EVENT
 		printf("\n		|");
 		printf("\n		+--> Non Send.Blocked By Engine.");
 		printf("\n \n -------------------------------------------------------------------------------------------------- ");
-		#endif
+#endif
 		// ------------------------------------
 		return;
 	}
 
 	// Check UI address for using and Push them to StackSurvey to be aware of a potential UI delete
-	
-	NUI		*pui						= (NUI*)pevent->Head.pRecipient;
-	Nu32	stacksize					= 0;
+
+	NUI *pui = (NUI *)pevent->Head.pRecipient;
+	Nu32 stacksize = 0;
 
 	// 2)	Push UI on the ClearWatchStack ...
 	//		( this push is not added to the stacksize counter...it's normal, it will pop AFTER the parent interception process which use the stacsize )
-	NUIClearWatchStackPush( pui );
+	NUIClearWatchStackPush(pui);
 
-	#ifdef _DEBUG	
+#ifdef _DEBUG
 	Nu32 dbg_initial_clear_watch_stack_size = NGetUIClearWatchStackSize();
-	#endif
+#endif
 
 	// 3)	Is UI Parents chain intercept this Kind of event ?
-	NUI *pparent = (NUI*)pui->pParent;
-	while(pparent)
+	NUI *pparent = (NUI *)pui->pParent;
+	while (pparent)
 	{
-		if( ISFLAG_ON(pparent->Flags,FLAG_NUI_INTERCEPT_UICORE_EVENT)  )
+		if (ISFLAG_ON(pparent->Flags, FLAG_NUI_INTERCEPT_UICORE_EVENT))
 		{
-			NUIClearWatchStackPush( pparent );
-			stacksize ++;
+			NUIClearWatchStackPush(pparent);
+			stacksize++;
 		}
-		pparent = (NUI*)pparent->pParent;
+		pparent = (NUI *)pparent->pParent;
 	}
 
-	// ----------------------------------------------------------------------------------------------------------
-	// - Debug OutPut
-	//
-	#ifdef _NOUT_SYS_EVENT
-	if( stacksize )
+// ----------------------------------------------------------------------------------------------------------
+// - Debug OutPut
+//
+#ifdef _NOUT_SYS_EVENT
+	if (stacksize)
 	{
 		printf("\n		|");
-		printf("\n		+--> UIRecipient and %d UI Parent Pushed to NUIClearWatchStack.", stacksize );
-		printf("\n		+--> Start Interception Process: %d Parent Interception(s) planned before Sending to UI recipient.",(stacksize) );
+		printf("\n		+--> UIRecipient and %d UI Parent Pushed to NUIClearWatchStack.", stacksize);
+		printf("\n		+--> Start Interception Process: %d Parent Interception(s) planned before Sending to UI recipient.", (stacksize));
 	}
 	else
 	{
 		printf("\n		|");
-		printf("\n		+--> UIRecipient and %d UI Parent Pushed to NUIClearWatchStack.", stacksize );
-		printf("\n		+--> Start Interception Process: No Parent Interception planned." );
+		printf("\n		+--> UIRecipient and %d UI Parent Pushed to NUIClearWatchStack.", stacksize);
+		printf("\n		+--> Start Interception Process: No Parent Interception planned.");
 	}
-	#endif
+#endif
 	// -
 	// ----------------------------------------------------------------------------------------------------------
-	Nu32 dispatch = (ISFLAG_ON(pui->Flags,FLAG_NUI_LISTEN_UICORE_EVENT))? NTRUE:NFALSE;
+	Nu32 dispatch = (ISFLAG_ON(pui->Flags, FLAG_NUI_LISTEN_UICORE_EVENT)) ? NTRUE : NFALSE;
 
-	while(stacksize)
+	while (stacksize)
 	{
-		if( pparent = NUIClearWatchStackPop() )
+		if (pparent = NUIClearWatchStackPop())
 		{
-			// ----------------------------------------------------------------------------------------------------------
-			// - Debug OutPut
-			//
-			#ifdef _NOUT_SYS_EVENT
+// ----------------------------------------------------------------------------------------------------------
+// - Debug OutPut
+//
+#ifdef _NOUT_SYS_EVENT
 			printf("\n		|");
-			printf("\n		+--> UI#%d[0x%p] pops from Stack.",stacksize,pparent);
+			printf("\n		+--> UI#%d[0x%p] pops from Stack.", stacksize, pparent);
 			printf("\n				+");
 			printf("\n				|");
-			if(pparent->pName)
-				printf("\n				+--> Interception By Parent[0x%p][%s].Event_Proc()-->", pparent, pparent->pName );
+			if (pparent->pName)
+				printf("\n				+--> Interception By Parent[0x%p][%s].Event_Proc()-->", pparent, pparent->pName);
 			else
-				printf("\n				+--> Interception By Parent[0x%p].Event_Proc()-->", pparent );
-			#endif
+				printf("\n				+--> Interception By Parent[0x%p].Event_Proc()-->", pparent);
+#endif
 			// -
 			// ----------------------------------------------------------------------------------------------------------
 			// !!! UICore Event doesn't send event trough "pparent->UIEventToState_Proc(pparent,pevent)" for parent that intercept !!!
 
 			// Stop Event Dispatching ( request by parent )
-			if( ! NIS_UI_EVENT_RESULT_DISPATCH(pparent->Event_Proc(pparent,pevent)) )
+			if (!NIS_UI_EVENT_RESULT_DISPATCH(pparent->Event_Proc(pparent, pevent)))
 			{
-				#ifdef _NOUT_SYS_EVENT
-				printf("return 'NUI_EVENT_RESULT_PROCESSED'" );
+#ifdef _NOUT_SYS_EVENT
+				printf("return 'NUI_EVENT_RESULT_PROCESSED'");
 				printf("\n				|");
-				printf("\n				+--> INTERCEPTION CHAIN INTERRUPTED by USER" );
-				#endif
+				printf("\n				+--> INTERCEPTION CHAIN INTERRUPTED by USER");
+#endif
 
 				// Reset stack size to initial value:
-				NDecreaseUIClearWatchStackSize(stacksize-1);
+				NDecreaseUIClearWatchStackSize(stacksize - 1);
 				dispatch = NFALSE;
 				break;
 			}
-			#ifdef _NOUT_SYS_EVENT
+#ifdef _NOUT_SYS_EVENT
 			else
 			{
-				printf("return 'NUI_EVENT_RESULT_DISPATCH'" );
+				printf("return 'NUI_EVENT_RESULT_DISPATCH'");
 			}
-			#endif
+#endif
 		}
-		#ifdef _NOUT_SYS_EVENT
+#ifdef _NOUT_SYS_EVENT
 		else
 		{
 			printf("\n				|");
@@ -553,63 +548,62 @@ void NSendUICoreEvent(const NEVENT *pevent)
 			printf("\n					 This Parent failed to Intercept Event.");
 			printf("\n					 Interception Process Continuing.");
 		}
-		#endif
+#endif
 
 		stacksize--;
 	}
 
-	NErrorIf(NGetUIClearWatchStackSize()!=dbg_initial_clear_watch_stack_size, NERROR_SYSTEM_CHECK);
+	NErrorIf(NGetUIClearWatchStackSize() != dbg_initial_clear_watch_stack_size, NERROR_SYSTEM_CHECK);
 
-	// ----------------------------------------------------------------------------------------------------------
-	// - Debug OutPut
-	//
-	#ifdef _NOUT_SYS_EVENT
+// ----------------------------------------------------------------------------------------------------------
+// - Debug OutPut
+//
+#ifdef _NOUT_SYS_EVENT
 	printf("\n		|");
-	printf("\n		+--> END Interception Process." );
-	#endif
+	printf("\n		+--> END Interception Process.");
+#endif
 	// -
 	// ----------------------------------------------------------------------------------------------------------
-	if( pui == NUIClearWatchStackPop() )
+	if (pui == NUIClearWatchStackPop())
 	{
-		// ----------------------------------------------------------------------------------------------------------
-		// - Debug OutPut
-		//
-		#ifdef _NOUT_SYS_EVENT
+// ----------------------------------------------------------------------------------------------------------
+// - Debug OutPut
+//
+#ifdef _NOUT_SYS_EVENT
 		printf("\n		|");
-		printf("\n		+--> UI#%d[0x%p] pops from Stack.",stacksize,pui);
+		printf("\n		+--> UI#%d[0x%p] pops from Stack.", stacksize, pui);
 		printf("\n				+");
 		printf("\n				|");
-		printf("\n				+--> Send Event to UI Recipient[0x%p].UIEventToState_Proc()",pui );
-		#endif
+		printf("\n				+--> Send Event to UI Recipient[0x%p].UIEventToState_Proc()", pui);
+#endif
 		// -
 		// ----------------------------------------------------------------------------------------------------------
 
 		// !!! ALWAYS SEND UICORE EVENT TO UI RECIPIENT.UIEventToState_Proc !!!
-		pui->UIEventToState_Proc(pui,pevent);
+		pui->UIEventToState_Proc(pui, pevent);
 		// !!! SEND UICORE EVENT TO UI RECIPIENT.Event_Proc ONLY If user asked
-		if( dispatch  )
+		if (dispatch)
 		{
-			#ifdef _NOUT_SYS_EVENT
-			printf("\n				+--> Send Event to UI Recipient[0x%p].Event_Proc()",pui );
+#ifdef _NOUT_SYS_EVENT
+			printf("\n				+--> Send Event to UI Recipient[0x%p].Event_Proc()", pui);
 			printf("\n");
-			#endif
-			pui->Event_Proc(pui,pevent);
+#endif
+			pui->Event_Proc(pui, pevent);
 		}
-		#ifdef _NOUT_SYS_EVENT
+#ifdef _NOUT_SYS_EVENT
 		else
 		{
-			printf("\n				+--> Event NOT SENT to UI Recipient[0x%p].Event_Proc()",pui );
+			printf("\n				+--> Event NOT SENT to UI Recipient[0x%p].Event_Proc()", pui);
 			printf("\n");
 		}
-		#endif
-	#ifdef _NOUT_SYS_EVENT
+#endif
+#ifdef _NOUT_SYS_EVENT
 
 		printf("\n		+");
 		printf("\n		|");
-		printf("\n		+--> END Dispatch/Interception Process." );
+		printf("\n		+--> END Dispatch/Interception Process.");
 
-	#endif
-
+#endif
 	}
 }
 
@@ -617,400 +611,395 @@ void NSendUICoreEvent(const NEVENT *pevent)
 // void NSendUICommandEvent
 // ------------------------------------------------------------------------------------------
 // Description :
-//		!!! UICommand Event is ONLY Send trough "Event_Proc" for UI recipient and all its 
+//		!!! UICommand Event is ONLY Send trough "Event_Proc" for UI recipient and all its
 //		potential parent interceptors.
 //
-//		UICommand is NEVER send trough "UIEventToState_Proc" 
-//		
+//		UICommand is NEVER send trough "UIEventToState_Proc"
+//
 //		!!! UIRecipient doesn't receive the event if one of its parent refuse to continue dispatching.
 // ------------------------------------------------------------------------------------------
 // In	:
-// 
-// 
+//
+//
 // Out :
 //
 //
 // ------------------------------------------------------------------------------------------
 void NSendUICommandEvent(const NEVENT *pevent)
 {
-	NErrorIf(!pevent,NERROR_NULL_VALUE);
+	NErrorIf(!pevent, NERROR_NULL_VALUE);
 	NErrorIf(pevent->Head.RecipientCast != NEVENT_RECIPIENT_CAST_UI, NERROR_EVENT_INCONSISTENT_RECIPIENT);
 	// Check if event is "UI compatible"
-	NErrorIf(	NGET_EVENT_MAIN(pevent->Type)!=_UICOMMAND, NERROR_EVENT_INCONSISTENT_TYPE	);
+	NErrorIf(NGET_EVENT_MAIN(pevent->Type) != _UICOMMAND, NERROR_EVENT_INCONSISTENT_TYPE);
 	// Check UI is Active ! ONLY Active UI (Visible + Enable) can receive _UICOMMAND Event !
-	NErrorIf(	!NIsUIActive((NUI*)pevent->Head.pRecipient), NERROR_SYSTEM_CHECK	);
-	
-	// ----------------------------------------------------------------------------------------------------------
-	// - Debug OutPut
-	//
-	#ifdef _NOUT_SYS_EVENT
+	NErrorIf(!NIsUIActive((NUI *)pevent->Head.pRecipient), NERROR_SYSTEM_CHECK);
+
+// ----------------------------------------------------------------------------------------------------------
+// - Debug OutPut
+//
+#ifdef _NOUT_SYS_EVENT
 	Nu32 local_debug_id;
-	debug_id ++;
+	debug_id++;
 	local_debug_id = debug_id;
 	printf("\n \n -------------------------------------------------------------------------------------------------- ");
-	printf("\n[%d] + NSendUICommandEvent: ",local_debug_id);
+	printf("\n[%d] + NSendUICommandEvent: ", local_debug_id);
 	_debug_Printf_EVENT_NAME(pevent);
-	#endif
+#endif
 	//
 	// ----------------------------------------------------------------------------------------------------------
 
-	// 1)	Check for a potential UI Event Blocking. 
-	if( ISFLAG_ON(NEngineCoreFlags,FLAG_NENGINE_CORE_BLOCK_EVENT_TO_UI) )
+	// 1)	Check for a potential UI Event Blocking.
+	if (ISFLAG_ON(NEngineCoreFlags, FLAG_NENGINE_CORE_BLOCK_EVENT_TO_UI))
 	{
-		// ------------------------------------
-		// - Debug OutPut
-		#ifdef _NOUT_SYS_EVENT
+// ------------------------------------
+// - Debug OutPut
+#ifdef _NOUT_SYS_EVENT
 		printf("\n		|");
 		printf("\n		+--> Non Send.Blocked By Engine.");
 		printf("\n \n -------------------------------------------------------------------------------------------------- ");
-		#endif
+#endif
 		// ------------------------------------
 		return;
 	}
 
-	#ifdef _DEBUG	
+#ifdef _DEBUG
 	Nu32 dbg_initial_clear_watch_stack_size = NGetUIClearWatchStackSize();
-	#endif
+#endif
 
 	// Check UI address for using and Push them to StackSurvey to be aware of a potential UI delete
 
-	NUI		*pui						= (NUI*)pevent->Head.pRecipient;
-	Nu32	stacksize					= 0;
+	NUI *pui = (NUI *)pevent->Head.pRecipient;
+	Nu32 stacksize = 0;
 
 	// 2)	Push UI on the ClearWatchStack ...
 	//		( this push is not added to the stacksize counter...it's normal, it will pop AFTER the parent interception process which use the stacsize )
-	if( ISFLAG_ON(pui->Flags,FLAG_NUI_LISTEN_UICOMMAND_EVENT) )
+	if (ISFLAG_ON(pui->Flags, FLAG_NUI_LISTEN_UICOMMAND_EVENT))
 	{
-		NUIClearWatchStackPush( pui );
-		stacksize ++;
+		NUIClearWatchStackPush(pui);
+		stacksize++;
 	}
-
 
 	// 3)	Is UI Parents chain intercept this Kind of event ?
-	pui = (NUI*)pui->pParent;
-	while(pui)
+	pui = (NUI *)pui->pParent;
+	while (pui)
 	{
-		if( ISFLAG_ON(pui->Flags,FLAG_NUI_INTERCEPT_UICOMMAND_EVENT)  )
+		if (ISFLAG_ON(pui->Flags, FLAG_NUI_INTERCEPT_UICOMMAND_EVENT))
 		{
-			NUIClearWatchStackPush( pui );
-			stacksize ++;
+			NUIClearWatchStackPush(pui);
+			stacksize++;
 		}
-		pui = (NUI*)pui->pParent;
+		pui = (NUI *)pui->pParent;
 	}
 
-	// ----------------------------------------------------------------------------------------------------------
-	// - Debug OutPut
-	//
-	#ifdef _NOUT_SYS_EVENT
-	if( stacksize > 1 )
+// ----------------------------------------------------------------------------------------------------------
+// - Debug OutPut
+//
+#ifdef _NOUT_SYS_EVENT
+	if (stacksize > 1)
 	{
 		printf("\n		|");
-		printf("\n		+--> %d UI Pushed to NUIClearWatchStack.", stacksize );
-		printf("\n		+--> Start Dispatch/Interception Process: %d Parent Interception(s) planned before Sending to UI recipient.",(stacksize-1) );
+		printf("\n		+--> %d UI Pushed to NUIClearWatchStack.", stacksize);
+		printf("\n		+--> Start Dispatch/Interception Process: %d Parent Interception(s) planned before Sending to UI recipient.", (stacksize - 1));
 	}
-	else if( stacksize == 1)
+	else if (stacksize == 1)
 	{
 		printf("\n		|");
-		printf("\n		+--> %d UI Pushed to NUIClearWatchStack.", stacksize );
-		printf("\n		+--> Start Dispatch Process: No Parent Interception planned. Just UI Recipient Sent !" );
+		printf("\n		+--> %d UI Pushed to NUIClearWatchStack.", stacksize);
+		printf("\n		+--> Start Dispatch Process: No Parent Interception planned. Just UI Recipient Sent !");
 	}
 	else // (stacksize == 0)
 	{
 		printf("\n		|");
-		printf("\n		+--> %d UI Pushed to NUIClearWatchStack.", stacksize );
-		printf("\n		+--> Event NOT SENT to UI Recipient[0x%p].Event_Proc()",pui );
-		printf("\n		|	 Because UI doesn't Listen UICommand Event." );
-		printf("\n		|	 and NOT INTERCEPT by UI Parent(s), because no UI parent intercept UICommand Event." );
-
+		printf("\n		+--> %d UI Pushed to NUIClearWatchStack.", stacksize);
+		printf("\n		+--> Event NOT SENT to UI Recipient[0x%p].Event_Proc()", pui);
+		printf("\n		|	 Because UI doesn't Listen UICommand Event.");
+		printf("\n		|	 and NOT INTERCEPT by UI Parent(s), because no UI parent intercept UICommand Event.");
 	}
-	#endif
+#endif
 	// -
 	// ----------------------------------------------------------------------------------------------------------
 
-	while(stacksize)
+	while (stacksize)
 	{
-		if( pui = NUIClearWatchStackPop() )
+		if (pui = NUIClearWatchStackPop())
 		{
-			// ----------------------------------------------------------------------------------------------------------
-			// - Debug OutPut
-			//
-			#ifdef _NOUT_SYS_EVENT
+// ----------------------------------------------------------------------------------------------------------
+// - Debug OutPut
+//
+#ifdef _NOUT_SYS_EVENT
 			printf("\n		|");
-			printf("\n		+--> UI#%d[0x%p] pops from Stack.",stacksize,pui);
+			printf("\n		+--> UI#%d[0x%p] pops from Stack.", stacksize, pui);
 			printf("\n				+");
 			printf("\n				|");
 
-			if(pui->pName)
+			if (pui->pName)
 			{
-				if( pui == (NUI*)pevent->Head.pRecipient )
+				if (pui == (NUI *)pevent->Head.pRecipient)
 				{
-// 					printf("\n				+--> Listen By UIRecipient[0x%p][%s].UIEventToState_Proc()-->", pui, pui->pName );
-					printf("\n				+--> Listen By UIRecipient[0x%p][%s].Event_Proc()-->", pui, pui->pName );
+					// 					printf("\n				+--> Listen By UIRecipient[0x%p][%s].UIEventToState_Proc()-->", pui, pui->pName );
+					printf("\n				+--> Listen By UIRecipient[0x%p][%s].Event_Proc()-->", pui, pui->pName);
 				}
 				else
 				{
-// 					printf("\n				+--> Interception By Parent[0x%p][%s].UIEventToState_Proc()-->", pui, pui->pName );
-					printf("\n				+--> Interception By Parent[0x%p][%s].Event_Proc()-->", pui, pui->pName );
+					// 					printf("\n				+--> Interception By Parent[0x%p][%s].UIEventToState_Proc()-->", pui, pui->pName );
+					printf("\n				+--> Interception By Parent[0x%p][%s].Event_Proc()-->", pui, pui->pName);
 				}
 			}
 			else
 			{
-				if( pui == (NUI*)pevent->Head.pRecipient )
+				if (pui == (NUI *)pevent->Head.pRecipient)
 				{
-// 					printf("\n				+--> Listen By UIRecipient[0x%p].UIEventToState_Proc()-->", pui );
-					printf("\n				+--> Listen By UIRecipient[0x%p].Event_Proc()-->", pui );
+					// 					printf("\n				+--> Listen By UIRecipient[0x%p].UIEventToState_Proc()-->", pui );
+					printf("\n				+--> Listen By UIRecipient[0x%p].Event_Proc()-->", pui);
 				}
 				else
 				{
-// 					printf("\n				+--> Interception By Parent[0x%p].UIEventToState_Proc()-->", pui );
-					printf("\n				+--> Interception By Parent[0x%p].Event_Proc()-->", pui );
+					// 					printf("\n				+--> Interception By Parent[0x%p].UIEventToState_Proc()-->", pui );
+					printf("\n				+--> Interception By Parent[0x%p].Event_Proc()-->", pui);
 				}
 			}
-			#endif
+#endif
 			// -
 			// ----------------------------------------------------------------------------------------------------------
 			// !!! UICommand Event NEVER send event trough "pparent->UIEventToState_Proc(pparent,pevent)" neither for parent that intercept neither for listen UI !!!
 			// pui->UIEventToState_Proc(pui,pevent);
 			// Stop Event Dispatching ( request by parent )
-			if( ! NIS_UI_EVENT_RESULT_DISPATCH(pui->Event_Proc(pui,pevent)) )
+			if (!NIS_UI_EVENT_RESULT_DISPATCH(pui->Event_Proc(pui, pevent)))
 			{
-				#ifdef _NOUT_SYS_EVENT
-				printf("return 'NUI_EVENT_RESULT_PROCESSED'" );
-				if( pui != (NUI*)pevent->Head.pRecipient )
+#ifdef _NOUT_SYS_EVENT
+				printf("return 'NUI_EVENT_RESULT_PROCESSED'");
+				if (pui != (NUI *)pevent->Head.pRecipient)
 				{
 					printf("\n				|");
-					printf("\n				+--> INTERCEPTION CHAIN INTERRUPTED by USER" );
+					printf("\n				+--> INTERCEPTION CHAIN INTERRUPTED by USER");
 				}
-				#endif
+#endif
 
 				// Reset stack size to initial value:
-				NDecreaseUIClearWatchStackSize(stacksize-1);
+				NDecreaseUIClearWatchStackSize(stacksize - 1);
 				break;
 			}
-			#ifdef _NOUT_SYS_EVENT
+#ifdef _NOUT_SYS_EVENT
 			else
 			{
-				printf("return 'NUI_EVENT_RESULT_DISPATCH'" );
+				printf("return 'NUI_EVENT_RESULT_DISPATCH'");
 			}
-			#endif
+#endif
 		}
-		#ifdef _NOUT_SYS_EVENT
+#ifdef _NOUT_SYS_EVENT
 		else
 		{
 			printf("\n				|");
 			printf("\n				+--> UI deleted during event Interception Processing.");
 			printf("\n					 Dispatch/Interception Process Continuing.");
 		}
-		#endif
+#endif
 
 		stacksize--;
 	}
 
-	NErrorIf(NGetUIClearWatchStackSize()!=dbg_initial_clear_watch_stack_size, NERROR_SYSTEM_CHECK);
+	NErrorIf(NGetUIClearWatchStackSize() != dbg_initial_clear_watch_stack_size, NERROR_SYSTEM_CHECK);
 
-	// ----------------------------------------------------------------------------------------------------------
-	// - Debug OutPut
-	//
-	#ifdef _NOUT_SYS_EVENT
+// ----------------------------------------------------------------------------------------------------------
+// - Debug OutPut
+//
+#ifdef _NOUT_SYS_EVENT
 	printf("\n		+");
 	printf("\n		|");
-	printf("\n		+--> END Dispatch/Interception Process." );
-	#endif
+	printf("\n		+--> END Dispatch/Interception Process.");
+#endif
 	// -
 	// ----------------------------------------------------------------------------------------------------------
-
 }
 // ------------------------------------------------------------------------------------------
 // void NSendUINotifyEvent
 // ------------------------------------------------------------------------------------------
 // Description :
-//		!!! UINotify Event (like UICommand) is ONLY Send trough "Event_Proc" for UI recipient and all its 
+//		!!! UINotify Event (like UICommand) is ONLY Send trough "Event_Proc" for UI recipient and all its
 //		potential parent interceptors.
 //
-//		UINotify Event (like UICommand) is NEVER send trough "UIEventToState_Proc" 
-//		
+//		UINotify Event (like UICommand) is NEVER send trough "UIEventToState_Proc"
+//
 //		!!! UIRecipient doesn't receive the event if one of its parent refuse to continue dispatching.
 // ------------------------------------------------------------------------------------------
 // In	:
-// 
-// 
+//
+//
 // Out :
 //
 //
 // ------------------------------------------------------------------------------------------
 void NSendUINotifyEvent(const NEVENT *pevent)
 {
-	NErrorIf(!pevent,NERROR_NULL_VALUE);
+	NErrorIf(!pevent, NERROR_NULL_VALUE);
 	NErrorIf(pevent->Head.RecipientCast != NEVENT_RECIPIENT_CAST_UI, NERROR_EVENT_INCONSISTENT_RECIPIENT);
 	// Check if event is "UI compatible"
-	NErrorIf(	NGET_EVENT_MAIN(pevent->Type)!=_UINOTIFY, NERROR_EVENT_INCONSISTENT_TYPE	);
-	// ----------------------------------------------------------------------------------------------------------
-	// - Debug OutPut
-	//
-	#ifdef _NOUT_SYS_EVENT
+	NErrorIf(NGET_EVENT_MAIN(pevent->Type) != _UINOTIFY, NERROR_EVENT_INCONSISTENT_TYPE);
+// ----------------------------------------------------------------------------------------------------------
+// - Debug OutPut
+//
+#ifdef _NOUT_SYS_EVENT
 	Nu32 local_debug_id;
-	debug_id ++;
+	debug_id++;
 	local_debug_id = debug_id;
 	printf("\n \n -------------------------------------------------------------------------------------------------- ");
-	printf("\n[%d] + NSendUINotifyEvent: ",local_debug_id);
+	printf("\n[%d] + NSendUINotifyEvent: ", local_debug_id);
 	_debug_Printf_EVENT_NAME(pevent);
-	#endif
+#endif
 	//
 	// ----------------------------------------------------------------------------------------------------------
 
-	// 1)	Check for a potential UI Event Blocking. 
-	if( ISFLAG_ON(NEngineCoreFlags,FLAG_NENGINE_CORE_BLOCK_EVENT_TO_UI) )
+	// 1)	Check for a potential UI Event Blocking.
+	if (ISFLAG_ON(NEngineCoreFlags, FLAG_NENGINE_CORE_BLOCK_EVENT_TO_UI))
 	{
-		// ------------------------------------
-		// - Debug OutPut
-		#ifdef _NOUT_SYS_EVENT
+// ------------------------------------
+// - Debug OutPut
+#ifdef _NOUT_SYS_EVENT
 		printf("\n		|");
 		printf("\n		+--> Non Send.Blocked By Engine.");
 		printf("\n \n -------------------------------------------------------------------------------------------------- ");
-		#endif
+#endif
 		// ------------------------------------
 		return;
 	}
 
-	#ifdef _DEBUG	
+#ifdef _DEBUG
 	Nu32 dbg_initial_clear_watch_stack_size = NGetUIClearWatchStackSize();
-	#endif
+#endif
 
 	// Check UI address for using and Push them to StackSurvey to be aware of a potential UI delete
 
-	NUI		*pui						= (NUI*)pevent->Head.pRecipient;
-	Nu32	stacksize					= 0;
+	NUI *pui = (NUI *)pevent->Head.pRecipient;
+	Nu32 stacksize = 0;
 
 	// 2)	Push UI on the ClearWatchStack ...
 	//		( this push is not added to the stacksize counter...it's normal, it will pop AFTER the parent interception process which use the stacsize )
-	if( ISFLAG_ON(pui->Flags,FLAG_NUI_LISTEN_UINOTIFY_EVENT) )
+	if (ISFLAG_ON(pui->Flags, FLAG_NUI_LISTEN_UINOTIFY_EVENT))
 	{
-		NUIClearWatchStackPush( pui );
-		stacksize ++;
+		NUIClearWatchStackPush(pui);
+		stacksize++;
 	}
-
 
 	// 3)	Is UI Parents chain intercept this Kind of event ?
-	pui = (NUI*)pui->pParent;
-	while(pui)
+	pui = (NUI *)pui->pParent;
+	while (pui)
 	{
-		if( ISFLAG_ON(pui->Flags,FLAG_NUI_INTERCEPT_UINOTIFY_EVENT)  )
+		if (ISFLAG_ON(pui->Flags, FLAG_NUI_INTERCEPT_UINOTIFY_EVENT))
 		{
-			NUIClearWatchStackPush( pui );
-			stacksize ++;
+			NUIClearWatchStackPush(pui);
+			stacksize++;
 		}
-		pui = (NUI*)pui->pParent;
+		pui = (NUI *)pui->pParent;
 	}
 
-	// ----------------------------------------------------------------------------------------------------------
-	// - Debug OutPut
-	//
-	#ifdef _NOUT_SYS_EVENT
-	if( stacksize > 1 )
+// ----------------------------------------------------------------------------------------------------------
+// - Debug OutPut
+//
+#ifdef _NOUT_SYS_EVENT
+	if (stacksize > 1)
 	{
 		printf("\n		|");
-		printf("\n		+--> %d UI Pushed to NUIClearWatchStack.", stacksize );
-		printf("\n		+--> Start Dispatch/Interception Process: %d Parent Interception(s) planned before Sending to UI recipient.",(stacksize-1) );
+		printf("\n		+--> %d UI Pushed to NUIClearWatchStack.", stacksize);
+		printf("\n		+--> Start Dispatch/Interception Process: %d Parent Interception(s) planned before Sending to UI recipient.", (stacksize - 1));
 	}
-	else if( stacksize == 1)
+	else if (stacksize == 1)
 	{
 		printf("\n		|");
-		printf("\n		+--> %d UI Pushed to NUIClearWatchStack.", stacksize );
-		printf("\n		+--> Start Dispatch Process: No Parent Interception planned. Just UI Recipient Sent !" );
+		printf("\n		+--> %d UI Pushed to NUIClearWatchStack.", stacksize);
+		printf("\n		+--> Start Dispatch Process: No Parent Interception planned. Just UI Recipient Sent !");
 	}
 	else // (stacksize == 0)
 	{
 		printf("\n		|");
-		printf("\n		+--> %d UI Pushed to NUIClearWatchStack.", stacksize );
-		printf("\n		+--> Event NOT SENT to UI Recipient[0x%p].Event_Proc()",pui );
-		printf("\n		|	 Because UI doesn't Listen UICommand Event." );
-		printf("\n		|	 and NOT INTERCEPT by UI Parent(s), because no UI parent intercept UINotify Event." );
-
+		printf("\n		+--> %d UI Pushed to NUIClearWatchStack.", stacksize);
+		printf("\n		+--> Event NOT SENT to UI Recipient[0x%p].Event_Proc()", pui);
+		printf("\n		|	 Because UI doesn't Listen UICommand Event.");
+		printf("\n		|	 and NOT INTERCEPT by UI Parent(s), because no UI parent intercept UINotify Event.");
 	}
-	#endif
+#endif
 	// -
 	// ----------------------------------------------------------------------------------------------------------
 
-	while(stacksize)
+	while (stacksize)
 	{
-		if( pui = NUIClearWatchStackPop() )
+		if (pui = NUIClearWatchStackPop())
 		{
-			// ----------------------------------------------------------------------------------------------------------
-			// - Debug OutPut
-			//
-			#ifdef _NOUT_SYS_EVENT
+// ----------------------------------------------------------------------------------------------------------
+// - Debug OutPut
+//
+#ifdef _NOUT_SYS_EVENT
 			printf("\n		|");
-			printf("\n		+-->  UI#%d[0x%p] pops from Stack.",stacksize,pui);
+			printf("\n		+-->  UI#%d[0x%p] pops from Stack.", stacksize, pui);
 			printf("\n				+");
 			printf("\n				|");
 
-			if(pui->pName)
+			if (pui->pName)
 			{
-				if( pui == (NUI*)pevent->Head.pRecipient )
+				if (pui == (NUI *)pevent->Head.pRecipient)
 				{
-// 					printf("\n				+--> Listen By UIRecipient[0x%p][%s].UIEventToState_Proc()-->", pui, pui->pName );
-					printf("\n				+--> Listen By UIRecipient[0x%p][%s].Event_Proc()-->", pui, pui->pName );
+					// 					printf("\n				+--> Listen By UIRecipient[0x%p][%s].UIEventToState_Proc()-->", pui, pui->pName );
+					printf("\n				+--> Listen By UIRecipient[0x%p][%s].Event_Proc()-->", pui, pui->pName);
 				}
 				else
 				{
-// 					printf("\n				+--> Interception By Parent[0x%p][%s].UIEventToState_Proc()-->", pui, pui->pName );
-					printf("\n				+--> Interception By Parent[0x%p][%s].Event_Proc()-->", pui, pui->pName );
+					// 					printf("\n				+--> Interception By Parent[0x%p][%s].UIEventToState_Proc()-->", pui, pui->pName );
+					printf("\n				+--> Interception By Parent[0x%p][%s].Event_Proc()-->", pui, pui->pName);
 				}
 			}
 			else
 			{
-				if( pui == (NUI*)pevent->Head.pRecipient )
+				if (pui == (NUI *)pevent->Head.pRecipient)
 				{
-// 					printf("\n				+--> Listen By UIRecipient[0x%p].UIEventToState_Proc()-->", pui );
-					printf("\n				+--> Listen By UIRecipient[0x%p].Event_Proc()-->", pui );
+					// 					printf("\n				+--> Listen By UIRecipient[0x%p].UIEventToState_Proc()-->", pui );
+					printf("\n				+--> Listen By UIRecipient[0x%p].Event_Proc()-->", pui);
 				}
 				else
 				{
-// 					printf("\n				+--> Interception By Parent[0x%p].UIEventToState_Proc()-->", pui );
-					printf("\n				+--> Interception By Parent[0x%p].Event_Proc()-->", pui );
+					// 					printf("\n				+--> Interception By Parent[0x%p].UIEventToState_Proc()-->", pui );
+					printf("\n				+--> Interception By Parent[0x%p].Event_Proc()-->", pui);
 				}
 			}
-			#endif
+#endif
 			// -
 			// ----------------------------------------------------------------------------------------------------------
 			// !!! UI Notify Event NEVER send event trough "pparent->UIEventToState_Proc(pparent,pevent)" neither for parent that intercept neither for listen UI !!!
 			// pui->UIEventToState_Proc(pui,pevent);
 			// Stop Event Dispatching ( request by parent )
-			if( ! NIS_UI_EVENT_RESULT_DISPATCH(pui->Event_Proc(pui,pevent)) )
+			if (!NIS_UI_EVENT_RESULT_DISPATCH(pui->Event_Proc(pui, pevent)))
 			{
-				#ifdef _NOUT_SYS_EVENT
-				printf("return 'NUI_EVENT_RESULT_PROCESSED'" );
-				if( pui != (NUI*)pevent->Head.pRecipient )
+#ifdef _NOUT_SYS_EVENT
+				printf("return 'NUI_EVENT_RESULT_PROCESSED'");
+				if (pui != (NUI *)pevent->Head.pRecipient)
 				{
 					printf("\n				|");
-					printf("\n				+--> INTERCEPTION CHAIN INTERRUPTED by USER" );
+					printf("\n				+--> INTERCEPTION CHAIN INTERRUPTED by USER");
 				}
-				#endif
+#endif
 
 				// Reset stack size to initial value:
-				NDecreaseUIClearWatchStackSize(stacksize-1);
+				NDecreaseUIClearWatchStackSize(stacksize - 1);
 				break;
 			}
-			#ifdef _NOUT_SYS_EVENT
+#ifdef _NOUT_SYS_EVENT
 			else
 			{
-				printf("return 'NUI_EVENT_RESULT_DISPATCH'" );
+				printf("return 'NUI_EVENT_RESULT_DISPATCH'");
 			}
-			#endif
+#endif
 		}
-		#ifdef _NOUT_SYS_EVENT
+#ifdef _NOUT_SYS_EVENT
 		else
 		{
 			printf("\n				|");
 			printf("\n				+--> UI deleted during event Interception Processing.");
 			printf("\n					 Dispatch/Interception Process Continuing.");
 		}
-		#endif
+#endif
 
 		stacksize--;
 	}
 
-	NErrorIf(NGetUIClearWatchStackSize()!=dbg_initial_clear_watch_stack_size, NERROR_SYSTEM_CHECK);
+	NErrorIf(NGetUIClearWatchStackSize() != dbg_initial_clear_watch_stack_size, NERROR_SYSTEM_CHECK);
 
 	// ----------------------------------------------------------------------------------------------------------
 	// - Debug OutPut
@@ -1018,13 +1007,11 @@ void NSendUINotifyEvent(const NEVENT *pevent)
 #ifdef _NOUT_SYS_EVENT
 	printf("\n		+");
 	printf("\n		|");
-	printf("\n		+--> END Dispatch/Interception Process." );
+	printf("\n		+--> END Dispatch/Interception Process.");
 #endif
 	// -
 	// ----------------------------------------------------------------------------------------------------------
-
 }
-
 
 /*
 void NSendUIEvent(const NEVENT *pevent,const NUI *psendby)
@@ -1032,7 +1019,7 @@ void NSendUIEvent(const NEVENT *pevent,const NUI *psendby)
 	NErrorIf(!pevent,NERROR_NULL_VALUE);
 	NErrorIf(pevent->Head.pRecipient == psendby, NERROR_EVENT_INCONSISTENT_RECIPIENT);
 	NErrorIf(pevent->Head.RecipientCast != NEVENT_RECIPIENT_CAST_UI, NERROR_EVENT_INCONSISTENT_RECIPIENT);
-	
+
 	// Check if event is "UI compatible" ---------------------->
 	NErrorIf(	NGET_EVENT_MAIN(pevent->Type)==_SYSTEM, NERROR_EVENT_INCONSISTENT_TYPE	);
 	NErrorIf(	NGET_EVENT_MAIN(pevent->Type)==_TOUCH,  NERROR_EVENT_INCONSISTENT_TYPE	);
@@ -1046,7 +1033,7 @@ void NSendUIEvent(const NEVENT *pevent,const NUI *psendby)
 	_debug_Printf_EVENT_NAME(pevent);
 	#endif
 
-	// Check for a potential UI Event Blocking. 
+	// Check for a potential UI Event Blocking.
 	if( ISFLAG_ON(NEngineCoreFlags,FLAG_NENGINE_CORE_BLOCK_EVENT_TO_UI) )
 	{
 		#ifdef _DEBUG
@@ -1054,16 +1041,16 @@ void NSendUIEvent(const NEVENT *pevent,const NUI *psendby)
 		#endif
 		return;
 	}
-	
+
 	// Check UI address for using and Push them to StackSurvey to be aware of a potential UI delete
-	#ifdef _DEBUG	
+	#ifdef _DEBUG
 	Nu32 dbg_initial_clear_watch_stack_size = NGetUIClearWatchStackSize();
 	#endif
 
 	Nu32	stacksize					= 0;
 	NUI		*pui						= (NUI*)pevent->Head.pRecipient;
 
-	// "listen_interception_flags" retrieve the flags associated with the event type. 
+	// "listen_interception_flags" retrieve the flags associated with the event type.
 	// An UI must have the right flags set to ON to receive the event (listen and intercept).
 	// These flags are a combination of listen, intercept and activation flags.
 	Nu32	listen_interception_flags	= _get_uievent_listen_and_interception_flags(pevent->Type);
@@ -1075,8 +1062,8 @@ void NSendUIEvent(const NEVENT *pevent,const NUI *psendby)
 	{
 		NUIClearWatchStackPush( pui ); // --> stacksize	= 1;
 		stacksize++;
-	}	
-	
+	}
+
 	// Is UI Parents chain intercept this Kind of event ?
 	// keep  the flags use to determine if an ui is able to intercept the event.
 	listen_interception_flags = listen_interception_flags&(MASK_NSendUIEvent_INTERCEPT_EVENT|MASK_NUI_ACTIVE);
@@ -1090,8 +1077,8 @@ void NSendUIEvent(const NEVENT *pevent,const NUI *psendby)
 		}
 		pui = (NUI*)pui->pParent;
 	}
-		
-	
+
+
 #ifdef _DEBUG
 	if( stacksize )
 		printf(" +--> Sent Road Map: %d Interception(s) by Parent(s) before Sending to UI recipient.",(stacksize-1) );
@@ -1104,7 +1091,7 @@ void NSendUIEvent(const NEVENT *pevent,const NUI *psendby)
 		if( pui = NUIClearWatchStackPop() )
 		{
 			#ifdef _DEBUG
-			
+
 			if( pui == (NUI*)pevent->Head.pRecipient )
 				printf("\n[%d] - Send To UI Recipient (0x%X)----------------->",local_debug_id, (Nu32)pui );
 			else

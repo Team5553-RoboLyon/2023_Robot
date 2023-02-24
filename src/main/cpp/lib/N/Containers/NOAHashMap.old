@@ -7,10 +7,10 @@
 // **																					**
 // ***************************************************************************************
 // ***************************************************************************************
-#include "../NCStandard.h"
-#include "../NType.h"
-#include "../NMath.h"
-#include "NHashMap.h"
+#include "lib/N/NCStandard.h"
+#include "lib/N/NType.h"
+#include "lib/N/NMath.h"
+#include "lib/N/Containers/NHashMap.h"
 
 NOAHASHMAP	*NSetupOAHashMap(NOAHASHMAP *phashmap,  const NHASHMAP_DESC *pdesc)
 {
@@ -291,7 +291,7 @@ void* NLookupOAHashMapEntry(NOAHASHMAP *phashmap, const void *pkey)
 // Description :
 // It's not the purpose of "Hashmap" to be parsed as an array, from the first element to the last.
 // But, in some advanced programming it would be necessary to do this kind of thing. 
-// So, 'NGetOAHashMapIndexEntry' return the pData pointer of the bucket N° index. Be aware that this entry may
+// So, 'NGetOAHashMapIndexEntry' return the pData pointer of the bucket Nï¿½ index. Be aware that this entry may
 // be NULL ptr.
 // ------------------------------------------------------------------------------------------
 // In	:

@@ -5,12 +5,12 @@
 // **																					**
 // ***************************************************************************************
 // ***************************************************************************************
-#include "../NErrorHandling.h"
-#include "../File/NFile.h"
-#include "../Core/NSafeConversion.h"
-#include "../NString.h"
-#include "../NCore.h"
-#include "NAudio.h"
+#include "lib/N/NErrorHandling.h"
+#include "lib/N/File/NFile.h"
+#include "lib/N/Core/NSafeConversion.h"
+#include "lib/N/NString.h"
+#include "lib/N/NCore.h"
+#include "lib/N/Audio/NAudio.h"
 
 NAUDIOSOURCE*	NSetupAudioSource( NAUDIOSOURCE *pasource, const Nchar *paudiosource_name )
 {

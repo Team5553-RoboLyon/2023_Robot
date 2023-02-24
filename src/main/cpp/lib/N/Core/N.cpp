@@ -1,16 +1,16 @@
-#include "../NCStandard.h"
-#include "../GL/Ngl.h"
-#include "../NMath.h"
+#include "lib/N/NCStandard.h"
+#include "lib/N/GL/Ngl.h"
+#include "lib/N/NMath.h"
 #include "../Event/NEvent.h"
 #include "../NFlags.h"
-#include "../NType.h"
+#include "lib/N/NType.h"
 #include "../NScreenRect.h"
 #include "../NRectf32.h"
 #include "../NCamera.h"
 #include "../NViewport.h"
 #include "../GameLoop/NGameStates.h"
 #include "../NTransformationTree.h"
-#include "../Containers/NNode.h"
+#include "lib/N/Containers/NNode.h"
 #include "../Containers/NArray.h"
 #include "../BasicElements/NTextureAtlas.h"
 #include "../Geometry/NGeometryMisc.h"
@@ -23,7 +23,6 @@
 #ifdef _NLIBS
 #include "../Libraries/NLibraries.h"
 #endif
-
 
 // #if defined _NIOS || defined _NANDROID
 #include "../Event/NEventBuffer.h"
@@ -41,7 +40,7 @@
 #include "../NStructure.h"
 #include "../Render/Renderable/NRenderableScanner.h"
 #include "../Render/NFrustum_Culling.h"
-#include "../NErrorHandling.h"
+#include "lib/N/NErrorHandling.h"
 #include "../Utilities/NUT_Shape.h"
 #include "../Timer/NTimer.h"
 #include "../NCore.h"
@@ -49,40 +48,36 @@
 #include "../Touch/NTouch.h"
 #include "../Touch/NTouchEmulation.h"
 
-
 // TEMP
 #include "../Collectibles/NCollectibles.h"
 // TEMP
-
-
 
 // ==========================================================================================
 //
 // VARIABLES GLOBALES
 //
 // ==========================================================================================
-//static DWORD	VERSION=(6<<16 | 0<<8 | 0);
-//static char		Copyright[]={"N V0.0.0 (c) TERAZAN 2012"};
-//static char		Author[]={"Author : JJ.TERAZAN"};
+// static DWORD	VERSION=(6<<16 | 0<<8 | 0);
+// static char		Copyright[]={"N V0.0.0 (c) TERAZAN 2012"};
+// static char		Author[]={"Author : JJ.TERAZAN"};
 
-//#define			MAINTIMER_ACCURACY	1.0f/1000.0f
-// N GLobals
-
+// #define			MAINTIMER_ACCURACY	1.0f/1000.0f
+//  N GLobals
 
 // TEMP
 
-NTIME						MainTimer;
-NSTATESET					CurrentStateSet;
+NTIME MainTimer;
+NSTATESET CurrentStateSet;
 // NERROR						NLastError;
-Nu32						NEngineCoreFlags;
-extern NCOLOR				NClearSurfaceColorModulation;
-extern NARRAY				NTimerPtrArray;
+Nu32 NEngineCoreFlags;
+extern NCOLOR NClearSurfaceColorModulation;
+extern NARRAY NTimerPtrArray;
 
 /*
 #define FLAG_NTOUCH_ACTIVE								BIT_0
 #define FLAG_NTOUCH_UI_BLOCK_EVENT_TO_GAMESTATES		BIT_1
 
-typedef struct 
+typedef struct
 {
 	Nu32			Flags;
 	Nu32			SystemID;
@@ -94,36 +89,40 @@ NTOUCH						NTouch[CONSTANT_NTOUCH_MAX];
 */
 
 // Extern Globals (only accessible by their 'owner.cpp' and N.cpp)
-extern	NARRAY				NTimerArray;
-extern	NGAMESTATEMACHINE	NGameStateMachine;				// THE 'NGameState' machine
-extern	NTRANSFORM_HNODE	*pTransformationRoot;			// Root node of the transformation tree
-extern	NNODELIST			NTransformationTree;			// Nnodelist of all transformation trees
-extern	NARRAY				ActiveUIRootsList;				// Array with all the active UI. The one which can be modified during the loop.
-extern	NNODELIST			PostUpdateProcessList;			// Nnodelist of all postupdate process ... to be DELELETED
-extern	NPOSTUPDATE			*NpPostUpdates;
-extern	NGEOMETRY			*pNClearSurfaceGeometry;
+extern NARRAY NTimerArray;
+extern NGAMESTATEMACHINE NGameStateMachine;	  // THE 'NGameState' machine
+extern NTRANSFORM_HNODE *pTransformationRoot; // Root node of the transformation tree
+extern NNODELIST NTransformationTree;		  // Nnodelist of all transformation trees
+extern NARRAY ActiveUIRootsList;			  // Array with all the active UI. The one which can be modified during the loop.
+extern NNODELIST PostUpdateProcessList;		  // Nnodelist of all postupdate process ... to be DELELETED
+extern NPOSTUPDATE *NpPostUpdates;
+extern NGEOMETRY *pNClearSurfaceGeometry;
 
 // PRIVATE FUNCTIONS only used by NENGINE INIT and QUIT functions ...
 void NInit_ClearSurface();
 void NDisable_ClearSurface();
 
+void N_AskToQuit() { FLAG_OFF(NEngineCoreFlags, FLAG_NENGINE_CORE_CONTINUE); }
 
-
-void N_AskToQuit(){	FLAG_OFF(NEngineCoreFlags,FLAG_NENGINE_CORE_CONTINUE);}
-
-//Nbool N_IsRendering(){return bRendering;}
-Nbool N_IsRendering(){if(ISFLAG_ON( NEngineCoreFlags,FLAG_NENGINE_CORE_RENDERING ) ) return NTRUE; else return NFALSE;}
+// Nbool N_IsRendering(){return bRendering;}
+Nbool N_IsRendering()
+{
+	if (ISFLAG_ON(NEngineCoreFlags, FLAG_NENGINE_CORE_RENDERING))
+		return NTRUE;
+	else
+		return NFALSE;
+}
 /*
 void NInitializeMainTimer()
 {
 #ifdef _NWINDOWS
 	timeBeginPeriod(1);
-	MainTimer.Start = timeGetTime(); 
+	MainTimer.Start = timeGetTime();
 	MainTimer.Current = MainTimer.Start;
 	MainTimer.Previous = MainTimer.Start;
 	MainTimer.Delay = 0;
 
-	MainTimer.fStart = (Nf32)MainTimer.Start * MAINTIMER_ACCURACY; 
+	MainTimer.fStart = (Nf32)MainTimer.Start * MAINTIMER_ACCURACY;
 	MainTimer.fCurrent = MainTimer.fStart;
 	MainTimer.fPrevious = MainTimer.fStart;
 	MainTimer.Nf32_Delay = 0.0f;
@@ -132,7 +131,7 @@ void NInitializeMainTimer()
 	MainTimer.fStart = (float)CACurrentMediaTime();
 	MainTimer.fCurrent = MainTimer.fStart;
 	MainTimer.fPrevious = MainTimer.fStart;
-	MainTimer.Nf32_Delay = 0.0f;	
+	MainTimer.Nf32_Delay = 0.0f;
 #endif
 
 #ifdef _NANDROID
@@ -160,7 +159,7 @@ void NResetMainTimer()
 // N_Init
 // ------------------------------------------------------------------------------------------
 // Description :
-//	Initialize all the variables, lists, LUT, objects, used by N 
+//	Initialize all the variables, lists, LUT, objects, used by N
 // ------------------------------------------------------------------------------------------
 // In  :
 //
@@ -173,28 +172,24 @@ void N_Init()
 	// +					!!!	DEBUG ENGINE INIT TESTING SECTION !!!
 	// NEngine uses a lot of CONSTANTS and DEFAULT values which are all "#define". Engine version
 	// after engine version new CONSTANTS and DEFAULT appear or change, and because some of them could be
-	// "connected" in some ways... it's important to test the validity of these values. 
+	// "connected" in some ways... it's important to test the validity of these values.
 	// It's the purpose of this section ... but, for sure, only in debug mode.
 #ifdef _DEBUG
-	NErrorIf(CONSTANT_NAPPEARANCE_RAW_TEXTUREUNIT_NUMBER > CONSTANT_NAPPEARANCE_TEXTUREUNIT_NUMBER_MAX, NERROR_SYSTEM_INVALID_CONSTANT );
+	NErrorIf(CONSTANT_NAPPEARANCE_RAW_TEXTUREUNIT_NUMBER > CONSTANT_NAPPEARANCE_TEXTUREUNIT_NUMBER_MAX, NERROR_SYSTEM_INVALID_CONSTANT);
 #endif
 	// +
 	// ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-//#if defined _NIOS || defined _NANDROID
+	// #if defined _NIOS || defined _NANDROID
 	NInitEventBuffer();
-//#endif
+	// #endif
 
 	// Default FileSystem Path Mode:
 	NSwitchToFullPathFileSystem();
-	
+
 	// UI
 	NInitUIClearWatchStack();
 	// Event
 	NInitDelayedUIEventArray();
-	
-
-
-
 
 	NInitializeVertexSpecs();
 	NInitializePrimitiveSpecs();
@@ -202,12 +197,11 @@ void N_Init()
 	NInitializeAppearanceSpecs();
 	NInitializeGeometrySpecs();
 
-
 	NInitializeRenderableScannerArray();
 	NInitializeMathLUTs();
-//#ifdef _IOS
-//	NInitializeEventQueue();
-//#endif
+	// #ifdef _IOS
+	//	NInitializeEventQueue();
+	// #endif
 	NInitializeGameStateMachine();
 	NPostUpdatesInitialization();
 
@@ -218,22 +212,21 @@ void N_Init()
 	NInitMaterialsLibrary();
 #endif
 
-
 	NInitializeAtlas();
 
-/*
-	NInitializeParticleInfluencesList();
-	NInitializeParticleObstaclesList();
-*/
+	/*
+		NInitializeParticleInfluencesList();
+		NInitializeParticleObstaclesList();
+	*/
 
-// Touch System
+	// Touch System
 	NInitTouchCore();
 
-// UI	
-//	NInitializeUIStylesList();
+	// UI
+	//	NInitializeUIStylesList();
 	NInitializeFontsList();
 	NInitializeActiveUIRootsList();
-	NCreateRenderableScanner((void*)&ActiveUIRootsList,NRenderableScannerCallBack_UIs);
+	NCreateRenderableScanner((void *)&ActiveUIRootsList, NRenderableScannerCallBack_UIs);
 	NInit_Accumulators();
 	NSetupTime(&MainTimer);
 	NInitializeTimerPtrArray();
@@ -243,12 +236,12 @@ void N_Init()
 	NTransformationTree_RootInit();
 
 	// ENGINE CORE FLAGS
-	//bUpdateTransformationtree = NFALSE;
-	//pCurrentUIRoot = NULL;
-	//bUpdateContinue = NTRUE;
-	
-	FLAG_OFF(NEngineCoreFlags,FLAG_NENGINE_CORE_UPDATE_TRANSFORMATION_TREE);
-	FLAG_ON(NEngineCoreFlags,FLAG_NENGINE_CORE_CONTINUE);
+	// bUpdateTransformationtree = NFALSE;
+	// pCurrentUIRoot = NULL;
+	// bUpdateContinue = NTRUE;
+
+	FLAG_OFF(NEngineCoreFlags, FLAG_NENGINE_CORE_UPDATE_TRANSFORMATION_TREE);
+	FLAG_ON(NEngineCoreFlags, FLAG_NENGINE_CORE_CONTINUE);
 
 	// Opengl has been initialized (it should be)
 	// So, we can Pre-calculate ViewPort Constants
@@ -256,37 +249,35 @@ void N_Init()
 
 	// and ...
 	NInitializePhysicStructures();
-	
+
 	// Functions ptr LUT for setup/saving/loading:
 	NInitializeRenderableUpdateFCT_LUT();
 	NInitializeRenderableExtractFCT_LUT();
 
+	// NCreateRenderableScanner((void*)&NActivePhysicStructureList,NRenderableScannerCallBack_PhysicStructure);
 
-	//NCreateRenderableScanner((void*)&NActivePhysicStructureList,NRenderableScannerCallBack_PhysicStructure);
-	
 	NInit_ClearSurface();
 
 	// File System
 	NInitRWAppearanceCallBacks();
 
-	// Collectible Set	
-	NInitCollectiblePicking(8,3);	// find a way to interface these param outside the function N_Init.
-									// a .h with DEFINE used for init MAYBE !
-
+	// Collectible Set
+	NInitCollectiblePicking(8, 3); // find a way to interface these param outside the function N_Init.
+								   // a .h with DEFINE used for init MAYBE !
 
 #ifdef _NWINDOWS
-	NTouchEmulInit(8);	// Preallocation of 8 Touch Emul Structs 
+	NTouchEmulInit(8); // Preallocation of 8 Touch Emul Structs
 #endif
 
 	// END OF INITIALIZATION ...
-	FLAG_ON(NEngineCoreFlags,FLAG_NENGINE_CORE_INITIALIZED);
+	FLAG_ON(NEngineCoreFlags, FLAG_NENGINE_CORE_INITIALIZED);
 }
 
 // ------------------------------------------------------------------------------------------
 // N_Disable
 // ------------------------------------------------------------------------------------------
 // Description :
-//	Free properly all the lists allocated and used by N 
+//	Free properly all the lists allocated and used by N
 // ------------------------------------------------------------------------------------------
 // In  :
 //
@@ -295,13 +286,12 @@ void N_Init()
 // ------------------------------------------------------------------------------------------
 void N_Disable()
 {
-	// Starting by setting the Flag to OFF... 
-	FLAG_OFF(NEngineCoreFlags,FLAG_NENGINE_CORE_INITIALIZED);
+	// Starting by setting the Flag to OFF...
+	FLAG_OFF(NEngineCoreFlags, FLAG_NENGINE_CORE_INITIALIZED);
 
 #ifdef _NWINDOWS
 	NTouchEmulQuit();
 #endif
-
 
 	// Collectible Set
 	NQuitCollectiblePicking();
@@ -310,18 +300,18 @@ void N_Disable()
 
 	NClearTimerPtrArray();
 	NClearTime(&MainTimer);
-	
+
 	NDisable_Accumulators();
 
 	NDisableGameStateMachine();
 	NPostUpdatesDisable();
 
-/*
-	NDeleteParticleInfluencesList();
-	NDeleteParticleObstaclesList();
-*/
+	/*
+		NDeleteParticleInfluencesList();
+		NDeleteParticleObstaclesList();
+	*/
 
-//	NDeleteUIStylesList();
+	//	NDeleteUIStylesList();
 	NDeleteFontsList();
 	NClearActiveUIRootsList();
 	NDeleteTransformationTree();
@@ -329,8 +319,8 @@ void N_Disable()
 
 	// TODO >>> DELETE all UIframes of the UI list
 	// TODO >>> DELETE all GameStates
-	//NDeleteUITree();
-	//NDeleteGameStates();
+	// NDeleteUITree();
+	// NDeleteGameStates();
 	NClearAtlas();
 	// Initialize libraries (if activated with the right compiler flags)
 #ifdef _NLIBS
@@ -338,9 +328,9 @@ void N_Disable()
 	NDisableBlendsLibrary();
 	NDisableMaterialsLibrary();
 #endif
-//#ifdef _IOS
-//	NClearEventQueue();
-//#endif
+	// #ifdef _IOS
+	//	NClearEventQueue();
+	// #endif
 	NClearRenderableScannerArray();
 
 	NDisableVertexSpecs();
@@ -348,17 +338,16 @@ void N_Disable()
 	NDisableTextureUnitSpecs();
 	NDisableAppearanceSpecs();
 	NDisableGeometrySpecs();
-	
+
 	NQuitDelayedUIEventArray();
 	NQuitUIClearWatchStack();
-	
+
 	// Touch System
 	NQuitTouchCore();
 
-//#if defined _NIOS || defined _NANDROID
+	// #if defined _NIOS || defined _NANDROID
 	NQuitEventBuffer();
-//#endif
-
+	// #endif
 }
 
 /*
@@ -393,27 +382,26 @@ static inline void _apply_ui_postponedactions()
 // ------------------------------------------------------------------------------------------
 Nu32 N_Update()
 {
-	Nu32				i;
+	Nu32 i;
 
-	NGAMESTATE			*pcurrentstate;
-	NUI					**ptr;
-	
-	NPOSTUPDATE			*pup;
-	
+	NGAMESTATE *pcurrentstate;
+	NUI **ptr;
+
+	NPOSTUPDATE *pup;
+
 	// About Update Order:
 
-	//	Driven by		Order) Type 
+	//	Driven by		Order) Type
 	//  ------------------------------------
-	//	EVENT-Delayed	1a) UIs				|	
-	//	EVENT			1a')UIs				|_User Handles. User can perform important modifications !!!	
+	//	EVENT-Delayed	1a) UIs				|
+	//	EVENT			1a')UIs				|_User Handles. User can perform important modifications !!!
 	//	EVENT			1b) GameStates		|				Everything can happen !!!
 	//	TIME			2a) GameStates		|
 	//  ------------------------------------
 	//	TIME			2b) UIs				|
 	//	TIME			2c) Timers			|-Internal System Handles Only.User doesn't have the hand to make modification !!!
 	//	TIME			2d)	PostUpdates		|							   All potential generated Events are DELAYED !!!
-	//  ------------------------------------							   Everything is under control !!!		
-
+	//  ------------------------------------							   Everything is under control !!!
 
 	// ......................................................................................
 	// EVENT DRIVEN
@@ -422,28 +410,28 @@ Nu32 N_Update()
 	NDispatchDelayedUIEvent();
 
 	// Dispatch All Queued Events: to UI and GameState
-	
+
 #ifdef _NWINDOWS
-/*
-	NEVENT	nevent;
-	while( NWindowsPollEvent(&nevent) )
+	/*
+		NEVENT	nevent;
+		while( NWindowsPollEvent(&nevent) )
+		{
+			NDispatchEvent( &nevent );
+		}
+	*/
+	NEVENT *pevent;
+	while (pevent = NPollEvent())
 	{
-		NDispatchEvent( &nevent );
-	}
-*/
-	NEVENT	*pevent;
-	while( pevent = NPollEvent() )
-	{
-		NDispatchEvent( pevent );
+		NDispatchEvent(pevent);
 		NFreePolledEvent();
 	}
 #endif
 
 #if defined _NIOS || defined _NANDROID
-	NEVENT	*pevent;
-	while( pevent = NPollEvent() )
+	NEVENT *pevent;
+	while (pevent = NPollEvent())
 	{
-		NDispatchEvent( pevent );
+		NDispatchEvent(pevent);
 		NFreePolledEvent();
 	}
 #endif
@@ -453,56 +441,56 @@ Nu32 N_Update()
 	// ......................................................................................
 	// Update MainTimer
 	NUpdateTime(&MainTimer);
-	
+
 	// All the TimeDriven Handles of the current GameState are called
 	pcurrentstate = NGameStateMachine.pCurrentTimeRootGameState;
-	while(pcurrentstate)
+	while (pcurrentstate)
 	{
-		pcurrentstate->pTimeDrivenHandle(&MainTimer,pcurrentstate->User_Nu32);
+		pcurrentstate->pTimeDrivenHandle(&MainTimer, pcurrentstate->User_Nu32);
 		pcurrentstate = pcurrentstate->pCurrentTimeChild;
 	}
 
 	// Call of all the Current UIState Handles
 	// We have to call them now because UiFrame States are very often updating NTransformTree ...
-	// So its not possible to call the UIState handle inside the Renderable Update and Extract process which happens 
+	// So its not possible to call the UIState handle inside the Renderable Update and Extract process which happens
 	// AFTER the TransformTree Update.
-	ptr = (NUI**)ActiveUIRootsList.pFirst;
-	for(i=ActiveUIRootsList.Size;i!=0;i--,ptr++)
+	ptr = (NUI **)ActiveUIRootsList.pFirst;
+	for (i = ActiveUIRootsList.Size; i != 0; i--, ptr++)
 	{
-		NUpdateUIState_Recursive((NUI*)*ptr,&MainTimer);
+		NUpdateUIState_Recursive((NUI *)*ptr, &MainTimer);
 	}
 
 	// All the Timer are called:
 	//	1)Simple Timers
 	//	2)Elapsed Timers
 	//	3)TransformationHnodeAnimationPlayers
-	if(NTimerPtrArray.Size)
+	if (NTimerPtrArray.Size)
 	{
-		NTIMER **pptimer = (NTIMER**)NTimerPtrArray.pFirst;
-		for( i= NTimerPtrArray.Size;i!=0;i--,pptimer++ ) // By doing loop in that way, potential nested Timer creation are going to be ignored at this turn ... and that is exactly what we want !
+		NTIMER **pptimer = (NTIMER **)NTimerPtrArray.pFirst;
+		for (i = NTimerPtrArray.Size; i != 0; i--, pptimer++) // By doing loop in that way, potential nested Timer creation are going to be ignored at this turn ... and that is exactly what we want !
 		{
-			if(*pptimer)
+			if (*pptimer)
 			{
-				(*pptimer)->TimerHandle(*pptimer,&MainTimer);
+				(*pptimer)->TimerHandle(*pptimer, &MainTimer);
 			}
 		}
 
 		// If necessary, clean Timer Stack up ...
-		if( ISFLAG_ON(NEngineCoreFlags,FLAG_NENGINE_CORE_TIMERSTACK_TO_BE_CLEAN) )
+		if (ISFLAG_ON(NEngineCoreFlags, FLAG_NENGINE_CORE_TIMERSTACK_TO_BE_CLEAN))
 		{
-			pptimer = (NTIMER**)NTimerPtrArray.pFirst;
+			pptimer = (NTIMER **)NTimerPtrArray.pFirst;
 			Nu32 outsize = 0;
-			for( i=0;i<NTimerPtrArray.Size;i++,pptimer++ )
+			for (i = 0; i < NTimerPtrArray.Size; i++, pptimer++)
 			{
-				if(*pptimer != NULL)// was not deleted
+				if (*pptimer != NULL) // was not deleted
 				{
-					(*pptimer)->Index	= _SafeNu32ToNu16(outsize);
-					((NTIMER**)NTimerPtrArray.pFirst)[outsize] = *pptimer;
+					(*pptimer)->Index = _SafeNu32ToNu16(outsize);
+					((NTIMER **)NTimerPtrArray.pFirst)[outsize] = *pptimer;
 					outsize++;
 				}
 			}
 			NTimerPtrArray.Size = outsize;
-			FLAG_OFF(NEngineCoreFlags,FLAG_NENGINE_CORE_TIMERSTACK_TO_BE_CLEAN);
+			FLAG_OFF(NEngineCoreFlags, FLAG_NENGINE_CORE_TIMERSTACK_TO_BE_CLEAN);
 		}
 	}
 
@@ -510,19 +498,18 @@ Nu32 N_Update()
 	// POST UPDATE PROCESS
 	// Todo: remove them !!! and replace them by a better use of NUpdateAndExtract_Process
 	pup = NpPostUpdates;
-	for( i=NPOSTUPDATE_ENUM_SIZE;i!=0;i--,pup++ )
+	for (i = NPOSTUPDATE_ENUM_SIZE; i != 0; i--, pup++)
 	{
-		if( ISFLAG_ON(pup->Flags,FLAG_POSTUPDATE_PROCESS_ACTIVE) )
-			pup->pHandle(&MainTimer,pup->u32_DataA,pup->u32_DataB);
+		if (ISFLAG_ON(pup->Flags, FLAG_POSTUPDATE_PROCESS_ACTIVE))
+			pup->pHandle(&MainTimer, pup->u32_DataA, pup->u32_DataB);
 	}
 	// ......................................................................................
-	
+
 	NUpdateCollectiblePicking();
-	
+
 	// End of Update.
-	//return bUpdateContinue;
+	// return bUpdateContinue;
 	return (NEngineCoreFlags & FLAG_NENGINE_CORE_CONTINUE);
-	
 }
 
 // ------------------------------------------------------------------------------------------
@@ -538,27 +525,27 @@ Nu32 N_Update()
 // ------------------------------------------------------------------------------------------
 void N_Draw()
 {
-//	static	NACCUMULATOR_SETUP_DATA		CurrentAccSetUp;
-	Nu32						i;
-	NRENDERABLESCANNER			*pscan;
+	//	static	NACCUMULATOR_SETUP_DATA		CurrentAccSetUp;
+	Nu32 i;
+	NRENDERABLESCANNER *pscan;
 
 	// ---------------------------------- BEGINNING OF RENDERING
-	//bRendering = NTRUE;
-	FLAG_ON(NEngineCoreFlags,FLAG_NENGINE_CORE_RENDERING);
+	// bRendering = NTRUE;
+	FLAG_ON(NEngineCoreFlags, FLAG_NENGINE_CORE_RENDERING);
 	// ==================================================================
-	// FIRST OF ALL 
+	// FIRST OF ALL
 	// ==================================================================
 	NUpdateTransformationTree();
-	// Reset RenderCell Buffer 
+	// Reset RenderCell Buffer
 	pCurrentRenderCell = pRenderCellsBuffer;
 
 	// ==================================================================
 	// SCAN FOR FIND ALL RENDERABLE and 'UPDATE AND EXTRACT' ALL OF THEM
 	// ==================================================================
 	pscan = (NRENDERABLESCANNER *)NRenderableScanner.pFirst;
-	for(i=NRenderableScanner.Size;i!=0;i--,pscan++)
+	for (i = NRenderableScanner.Size; i != 0; i--, pscan++)
 	{
-		pscan->pScanner(pscan->pEntry,&MainTimer);
+		pscan->pScanner(pscan->pEntry, &MainTimer);
 	}
 
 	// ==================================================================
@@ -571,54 +558,54 @@ void N_Draw()
 	// ==================================================================
 	// Rendering Accumulators Loop
 	// ==================================================================
-	NACCUMULATOR *pacc		= NAccumulator;
-	for( i=NACCUM_ID_ENUM_SIZE;i!=0;i--,pacc++ ) 
+	NACCUMULATOR *pacc = NAccumulator;
+	for (i = NACCUM_ID_ENUM_SIZE; i != 0; i--, pacc++)
 	{
-		if( pacc->AccumulatedRenderCellsArray.Size )
+		if (pacc->AccumulatedRenderCellsArray.Size)
 		{
-			pacc->RenderAccumulator( pacc );
+			pacc->RenderAccumulator(pacc);
 			pacc->AccumulatedRenderCellsArray.Size = 0; // Cash ! But here we know what we do !
 		}
 	}
-	FLAG_OFF(NEngineCoreFlags,FLAG_NENGINE_CORE_RENDERING);
+	FLAG_OFF(NEngineCoreFlags, FLAG_NENGINE_CORE_RENDERING);
 	return;
 }
 
 void NClear(const Nu32 clear_flags)
 {
-	GLbitfield gl_flags = 0; 
+	GLbitfield gl_flags = 0;
 
-	if( ISFLAG_ON(clear_flags,FLAG_CLEAR_DEPTH_BUFFER) )
+	if (ISFLAG_ON(clear_flags, FLAG_CLEAR_DEPTH_BUFFER))
 	{
-		if( ISFLAG_OFF( NCurrentStateSet,FLAG_STATESET_ZWRITE) )
+		if (ISFLAG_OFF(NCurrentStateSet, FLAG_STATESET_ZWRITE))
 		{
-			FLAG_ON(NCurrentStateSet,FLAG_STATESET_ZWRITE);
+			FLAG_ON(NCurrentStateSet, FLAG_STATESET_ZWRITE);
 			glDepthMask(GL_TRUE);
 		}
 
 		gl_flags |= GL_DEPTH_BUFFER_BIT;
 	}
 
-	if(ISFLAG_ON(clear_flags,FLAG_CLEAR_COLOR_BUFFER))
+	if (ISFLAG_ON(clear_flags, FLAG_CLEAR_COLOR_BUFFER))
 	{
 		gl_flags |= GL_COLOR_BUFFER_BIT;
 	}
 
-	if(ISFLAG_ON(clear_flags,FLAG_CLEAR_STENCIL_BUFFER))
+	if (ISFLAG_ON(clear_flags, FLAG_CLEAR_STENCIL_BUFFER))
 	{
 		gl_flags |= GL_STENCIL_BUFFER_BIT;
 	}
 
 	glClear(gl_flags);
 
-	if( ISFLAG_ON(clear_flags,FLAG_CLEAR_SURFACE)/*&& pNClearSurfaceGeometry*/ )
+	if (ISFLAG_ON(clear_flags, FLAG_CLEAR_SURFACE) /*&& pNClearSurfaceGeometry*/)
 	{
 		NErrorIf(!pNClearSurfaceGeometry, NERROR_CLEAR_SURFACE_NULL);
-		
-		// Modulate 
-		if( ISFLAG_ON(clear_flags,FLAG_CLEAR_SURFACE_MODULATE) )
+
+		// Modulate
+		if (ISFLAG_ON(clear_flags, FLAG_CLEAR_SURFACE_MODULATE))
 		{
-			NModulateGeometryVertexRangeColor(pNClearSurfaceGeometry,NVERTEX_DATA_COLOR0,0,pNClearSurfaceGeometry->Mesh.VertexArray.Size,&NClearSurfaceColorModulation);
+			NModulateGeometryVertexRangeColor(pNClearSurfaceGeometry, NVERTEX_DATA_COLOR0, 0, pNClearSurfaceGeometry->Mesh.VertexArray.Size, &NClearSurfaceColorModulation);
 		}
 
 		NUpdateCurrentStateSet(NAccumulator[NGET_GEOMETRY_IDS_ACCUMULATOR_ID(pNClearSurfaceGeometry->Core.IDS)].StateSet & MASK_STATESET_APPEARANCE_AND_RESERVED);
@@ -633,18 +620,15 @@ void NClear(const Nu32 clear_flags)
 
 		// glOrthographicMatrix
 		// ---------------------
-	//	glOrtho( left,	right,								bottom,	top,	near,	far );
-		glOrtho( 0.0f,	NGetViewPort_AspectRatio(),	-1.0f,	0.0f,	-1.0f,	1.0f);
+		//	glOrtho( left,	right,								bottom,	top,	near,	far );
+		glOrtho(0.0f, NGetViewPort_AspectRatio(), -1.0f, 0.0f, -1.0f, 1.0f);
 		// NOrthoMatrixf(0.0f,NGetViewPort_AspectRatio(),-1.0f,0.0f,-1.0f,1.0f);
 		pNClearSurfaceGeometry->Core.RenderFunction(pNClearSurfaceGeometry);
-		// Restore Previous Matrix Context 
+		// Restore Previous Matrix Context
 		glMatrixMode(GL_MODELVIEW);
 		glPopMatrix();
 
 		glMatrixMode(GL_PROJECTION);
 		glPopMatrix();
 	}
-
 }
-
-

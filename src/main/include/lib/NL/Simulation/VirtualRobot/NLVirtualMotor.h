@@ -1,5 +1,5 @@
 #pragma once
-#include "../../../N/NType.h"
+#include "lib/N/NType.h"
 #include "../../MotionControl/DriveTrain/Characterization/NLMotorCharacterization.h"
 #include "NLVirtualOutPut.h"
 

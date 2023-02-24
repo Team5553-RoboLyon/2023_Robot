@@ -1,12 +1,12 @@
 #pragma once
-#include "../N/NType.h"
-#include "../N/Miscellaneous/NColor.h"
-#include "../N/Miscellaneous/NColorPalette.h"
-#include "../N/Utilities/Draw/NUT_Draw.h"
+#include "lib/N/NType.h"
+#include "lib/N/Miscellaneous/NColor.h"
+#include "lib/N/Miscellaneous/NColorPalette.h"
+#include "lib/N/Utilities/Draw/NUT_Draw.h"
 #define NLGFX_COLOR_TABLE_SIZE		16
-#define NLGFX_COLOR_TABLE_ID_MSK	0xF		// Mask associé permettant de sécurisé un id accédant directement à la palette de couleur comme ceci:  
+#define NLGFX_COLOR_TABLE_ID_MSK	0xF		// Mask associï¿½ permettant de sï¿½curisï¿½ un id accï¿½dant directement ï¿½ la palette de couleur comme ceci:  
 											// m_color[ id&NL2DOCS_COLOR_TABLE_ID_MSK ]
-											// par exemple avec un masque de 0xF soit 1111 la plus grande valeur possible après masquage sera 15 !
+											// par exemple avec un masque de 0xF soit 1111 la plus grande valeur possible aprï¿½s masquage sera 15 !
 											// !!! DONC, EN CAS DE MODIFICATION DE LA TAILLE DE LA PALETTE IL CONVIENT DE MODIFIER AUSSI LE MASK ASSOCIE !!!	
 											//	taille 8, mask 0x7 ... taille 16, mask 0xF ... taille 16, mask 0x1F ...
 #define NLGFX_TXTSZ_SIZE		8																				

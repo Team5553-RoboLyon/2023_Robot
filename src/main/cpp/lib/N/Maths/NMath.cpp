@@ -1,21 +1,19 @@
 
-#include "../NCStandard.h"
-#include "../GL/Ngl.h"
-#include "../NErrorHandling.h"
-#include "../NType.h"
-#include "../NMath.h"
-
+#include "lib/N/NCStandard.h"
+#include "lib/N/GL/Ngl.h"
+#include "lib/N/NErrorHandling.h"
+#include "lib/N/NType.h"
+#include "lib/N/NMath.h"
 
 // ==========================
 // LUT
 // ==========================
-long						SqrtLUT[256];			// Fast SquareRoot Look-Up Table
-Nf32						RandLUT[RANDLUT_SIZE];	// Fast Rand Look-Up Table
-Nf32						CosLUT[NANGLELUT_SIZE];	// Fast Cosine Look-Up Table
-Nf32						SinLUT[NANGLELUT_SIZE];	// Fast Sine Look-Up Table
+long SqrtLUT[256];			 // Fast SquareRoot Look-Up Table
+Nf32 RandLUT[RANDLUT_SIZE];	 // Fast Rand Look-Up Table
+Nf32 CosLUT[NANGLELUT_SIZE]; // Fast Cosine Look-Up Table
+Nf32 SinLUT[NANGLELUT_SIZE]; // Fast Sine Look-Up Table
 
-
-Nf32 NNewtoncbrtf32(const Nf32 x,const Nf32 err)
+Nf32 NNewtoncbrtf32(const Nf32 x, const Nf32 err)
 {
 	if (!x)
 		return 0.0f;
@@ -29,7 +27,7 @@ Nf32 NNewtoncbrtf32(const Nf32 x,const Nf32 err)
 			return a;
 		else
 		{
-			a = a - local_err / (3.0f*NPOW2(a));
+			a = a - local_err / (3.0f * NPOW2(a));
 			local_err = NPOW3(a) - x;
 			iter++;
 		}
@@ -99,23 +97,23 @@ Nf32 NFastcbrtf32(const Nf32 x)
 // ------------------------------------------------------------------------------------------
 Nf32 NFastSqrt(const Nf32 f)
 {
-	Ns32	e;
-	Nu32	*num;
+	Ns32 e;
+	Nu32 *num;
 
-	num = (Nu32*)&f;
+	num = (Nu32 *)&f;
 
-	if( f==0.0f )
+	if (f == 0.0f)
 		return 0.0f;
 
 	e = (*num >> 23) - 127;
 
 	*num &= 0x7fffff;
-	if( e & 0x01 )
+	if (e & 0x01)
 		*num |= 0x800000;
 
 	e >>= 1;
 
-	*num = ( (SqrtLUT[*num >> 16]) << 16) | ((e + 127) << 23);
+	*num = ((SqrtLUT[*num >> 16]) << 16) | ((e + 127) << 23);
 
 	return f;
 }
@@ -124,7 +122,7 @@ Nf32 NFastSqrt(const Nf32 f)
 // ------------------------------------------------------------------------------------------
 // Description :
 //	http://www.azillionmonkeys.com/qed/sqroot.html
-// 
+//
 //  !!! NEVER TESTED !!!
 // ------------------------------------------------------------------------------------------
 // In  :
@@ -132,18 +130,18 @@ Nf32 NFastSqrt(const Nf32 f)
 //
 // Out :
 //		square root result.
-//	
+//
 // ------------------------------------------------------------------------------------------
 Nf64 NFastSqrt64(const Nf64 y)
 {
 	double x, z, tempf;
-	unsigned long* tfptr = ((unsigned long*)&tempf) + 1;
+	unsigned long *tfptr = ((unsigned long *)&tempf) + 1;
 
 	tempf = y;
 	*tfptr = (0xbfcdd90a - *tfptr) >> 1; /* estimate of 1/sqrt(y) */
 	x = tempf;
-	z = y * 0.5;                        /* hoist out the “/2”    */
-	x = (1.5 * x) - (x * x) * (x * z);         /* iteration formula     */
+	z = y * 0.5;					   /* hoist out the ï¿½/2ï¿½    */
+	x = (1.5 * x) - (x * x) * (x * z); /* iteration formula     */
 	x = (1.5 * x) - (x * x) * (x * z);
 	x = (1.5 * x) - (x * x) * (x * z);
 	x = (1.5 * x) - (x * x) * (x * z);
@@ -156,7 +154,7 @@ Nf64 NFastSqrt64(const Nf64 y)
 // ------------------------------------------------------------------------------------------
 // Description :
 //	Calculate the Sine and the Cosine.
-//	
+//
 // ------------------------------------------------------------------------------------------
 // In  :
 //		angle		: the angle (rad).
@@ -208,10 +206,10 @@ fstp		dword ptr [ecx]
 //		square root result.
 //
 // ------------------------------------------------------------------------------------------
-static Nu32	RandLUTIndex;
+static Nu32 RandLUTIndex;
 Nf32 NFastRand()
 {
-	RandLUTIndex = ( RandLUTIndex +1 ) & (RANDLUT_SIZE-1);
+	RandLUTIndex = (RandLUTIndex + 1) & (RANDLUT_SIZE - 1);
 	return RandLUT[RandLUTIndex];
 }
 
@@ -219,20 +217,20 @@ Nf32 NFastRand()
 // void NFastRandRange
 // ------------------------------------------------------------------------------------------
 // Description :
-// 
+//
 // ------------------------------------------------------------------------------------------
 // In	:
 //			Nf32	*pfirst		A valid pointer on a Nf32 range.
-//		const Nu32	size		size of the range. 
-//								-->	Rule:	Size < RANDLUT_SIZE, if not it will be CRASH in debug mode ! 
+//		const Nu32	size		size of the range.
+//								-->	Rule:	Size < RANDLUT_SIZE, if not it will be CRASH in debug mode !
 //																 ... and will read unexpected memory in RELEASE mode.
 // Out :
 //
 //
 // ------------------------------------------------------------------------------------------
-void NFastRandRange(Nf32 *pfirst,const Nu32 size)
+void NFastRandRange(Nf32 *pfirst, const Nu32 size)
 {
-	NErrorIf(size>RANDLUT_SIZE-1,NERROR_FASTRAND_SIZE_OUTOFRANGE);
+	NErrorIf(size > RANDLUT_SIZE - 1, NERROR_FASTRAND_SIZE_OUTOFRANGE);
 	// index of the first read element :  RandLUTIndex + 1
 	// index of the last read element  : (RandLUTIndex + 1) + (size-1)
 	// LUT max Index				   : RANDLUT_SIZE-1
@@ -247,16 +245,16 @@ void NFastRandRange(Nf32 *pfirst,const Nu32 size)
 	//					or
 	// -->		  RandLUTIndex + size    >   RANDLUT_SIZE-1 which is better because RANDLUT_SIZE-1 is a constant !
 
-	if( (RandLUTIndex+size) > (RANDLUT_SIZE-1) )
+	if ((RandLUTIndex + size) > (RANDLUT_SIZE - 1))
 	{
 		RandLUTIndex = 0;
 	}
-	memcpy(pfirst,&RandLUT[RandLUTIndex+1],size);
+	memcpy(pfirst, &RandLUT[RandLUTIndex + 1], size);
 	RandLUTIndex += size;
 }
 
 // ------------------------------------------------------------------------------------------
-// Nf32 const * NGetFastRandRangePtr 
+// Nf32 const * NGetFastRandRangePtr
 // ------------------------------------------------------------------------------------------
 // Description :
 //	ADVANCED USER. To speed up your program, instead of calling "n successive times" the function
@@ -264,18 +262,18 @@ void NFastRandRange(Nf32 *pfirst,const Nu32 size)
 //	But, sometimes, you want manipulate each value before store it, so there is no benefit to call
 //  'NFastRandRange'. So instead of calling "n successive times" the function NFastRand you may ask a pointer
 //	on the LUT table, guarantee valid for the range you want and use it as a normal pointer n successive time !
-//	
+//
 // ------------------------------------------------------------------------------------------
 // In	:
-// 
-// 
+//
+//
 // Out :
 //
 //
 // ------------------------------------------------------------------------------------------
-Nf32* NGetFastRandRangePtr(const Nu32 size)
+Nf32 *NGetFastRandRangePtr(const Nu32 size)
 {
-	NErrorIf(size>RANDLUT_SIZE-1,NERROR_FASTRAND_SIZE_OUTOFRANGE);
+	NErrorIf(size > RANDLUT_SIZE - 1, NERROR_FASTRAND_SIZE_OUTOFRANGE);
 	// index of the first read element :  RandLUTIndex + 1
 	// index of the last read element  : (RandLUTIndex + 1) + (size-1)
 	// LUT max Index				   : RANDLUT_SIZE-1
@@ -290,19 +288,18 @@ Nf32* NGetFastRandRangePtr(const Nu32 size)
 	//					or
 	// -->		  RandLUTIndex + size    >   RANDLUT_SIZE-1 which is better because RANDLUT_SIZE-1 is a constant !
 
-	if( (RandLUTIndex+size) > (RANDLUT_SIZE-1) )
+	if ((RandLUTIndex + size) > (RANDLUT_SIZE - 1))
 	{
 		RandLUTIndex = 0;
 	}
-	Nf32 *ptr = &RandLUT[RandLUTIndex+1];
+	Nf32 *ptr = &RandLUT[RandLUTIndex + 1];
 	RandLUTIndex += size;
 	return ptr;
 }
 
-
 void NRewindFastRandLUT()
 {
-	RandLUTIndex =	0;
+	RandLUTIndex = 0;
 }
 
 Nf32 NFastSin(const Nu32 a)
@@ -315,14 +312,14 @@ Nf32 NFastCos(const Nu32 a)
 	return CosLUT[a & NANGLEMAX];
 }
 
-void NFastCosSin(Nu32 a,Nf32* co,Nf32* si)
+void NFastCosSin(Nu32 a, Nf32 *co, Nf32 *si)
 {
 	a &= NANGLEMAX;
 	*co = CosLUT[a];
 	*si = SinLUT[a];
 }
 
-void NFastVCosSin(Nu32 a,Nf32*cossin)
+void NFastVCosSin(Nu32 a, Nf32 *cossin)
 {
 	a &= NANGLEMAX;
 	cossin[0] = CosLUT[a];
@@ -342,12 +339,12 @@ void NFastVCosSin(Nu32 a,Nf32*cossin)
 // ------------------------------------------------------------------------------------------
 static void CalcCosSinLUT()
 {
-	Nu32	i;
-	Nf32	fa;
+	Nu32 i;
+	Nf32 fa;
 
-	for(i=0;i<NANGLELUT_SIZE;i++)
+	for (i = 0; i < NANGLELUT_SIZE; i++)
 	{
-		fa = (360.0f*(Nf32)i)/NANGLELUT_SIZE;
+		fa = (360.0f * (Nf32)i) / NANGLELUT_SIZE;
 		CosLUT[i] = cos(NDEGtoRAD(fa));
 		SinLUT[i] = sin(NDEGtoRAD(fa));
 	}
@@ -366,13 +363,13 @@ static void CalcCosSinLUT()
 // ------------------------------------------------------------------------------------------
 static void CalcSqrtLUT()
 {
-	Nu32	i;
-	Nf32	f;
-	Nu32	*fi;
+	Nu32 i;
+	Nf32 f;
+	Nu32 *fi;
 
-	fi = (Nu32*)&f;
+	fi = (Nu32 *)&f;
 
-	for(i = 0; i <= 0x7f; i++)
+	for (i = 0; i <= 0x7f; i++)
 	{
 		*fi = 0;
 
@@ -401,16 +398,16 @@ static void CalcSqrtLUT()
 // ------------------------------------------------------------------------------------------
 void CalcRandLUT()
 {
-	Nf32	*pval;
-	Nf32	normalizer;
-	Nu32	i;
+	Nf32 *pval;
+	Nf32 normalizer;
+	Nu32 i;
 
 	pval = RandLUT;
-	normalizer = 1.0f/RAND_MAX;
-	srand(13);// ;-)
-	for( i=0;i<RANDLUT_SIZE;i++,pval++ )
+	normalizer = 1.0f / RAND_MAX;
+	srand(13); // ;-)
+	for (i = 0; i < RANDLUT_SIZE; i++, pval++)
 	{
-		*pval = (Nf32)rand()*normalizer;
+		*pval = (Nf32)rand() * normalizer;
 	}
 }
 
@@ -434,19 +431,17 @@ void NInitializeMathLUTs()
 // ------------------------------------------------------------------------------------------
 void NFresnelIntegralsf32(const Nf32 s, Nf32 *cf, Nf32 *sf)
 {
-	Nf32 f = (1.0f + 0.926f*s) / (2.0f + 1.792f*s + 3.104f*s*s);
-	Nf32 g = 1.0f / (2.0f + 4.142f*s + 3.492f*s*s + 6.670f*s*s*s);
-	Nf32 an = (NF32_PI*s*s) / 2.0f;
+	Nf32 f = (1.0f + 0.926f * s) / (2.0f + 1.792f * s + 3.104f * s * s);
+	Nf32 g = 1.0f / (2.0f + 4.142f * s + 3.492f * s * s + 6.670f * s * s * s);
+	Nf32 an = (NF32_PI * s * s) / 2.0f;
 	Nf32 cn = cos(an);
 	Nf32 sn = sin(an);
 
 	//*cf = 0.5f + f * sn - g * cn;
 	//*sf = 0.5f - f * cn - g * sn;
-	
-	*cf = ( s > 0 )? (0.5f + f * sn - g * cn) : -(0.5f + f * sn - g * cn);
-	*sf = ( s > 0 )? (0.5f - f * cn - g * sn) : -(0.5f - f * cn - g * sn);
 
-
+	*cf = (s > 0) ? (0.5f + f * sn - g * cn) : -(0.5f + f * sn - g * cn);
+	*sf = (s > 0) ? (0.5f - f * cn - g * sn) : -(0.5f - f * cn - g * sn);
 }
 
 // ------------------------------------------------------------------------------------------
@@ -462,9 +457,9 @@ void NFresnelIntegralsf32(const Nf32 s, Nf32 *cf, Nf32 *sf)
 // ------------------------------------------------------------------------------------------
 void NFresnelIntegralsf64(const Nf64 s, Nf64 *cf, Nf64 *sf)
 {
-	Nf64 f = (1.0 + 0.926*s) / (2.0 + 1.792*s + 3.104*s*s);
-	Nf64 g = 1.0 / (2.0 + 4.142*s + 3.492*s*s + 6.670*s*s*s);
-	Nf64 an = (NF64_PI*s*s) / 2.0;
+	Nf64 f = (1.0 + 0.926 * s) / (2.0 + 1.792 * s + 3.104 * s * s);
+	Nf64 g = 1.0 / (2.0 + 4.142 * s + 3.492 * s * s + 6.670 * s * s * s);
+	Nf64 an = (NF64_PI * s * s) / 2.0;
 	Nf64 cn = cos(an);
 	Nf64 sn = sin(an);
 

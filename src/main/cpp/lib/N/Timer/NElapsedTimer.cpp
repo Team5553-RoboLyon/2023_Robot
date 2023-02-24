@@ -5,7 +5,7 @@
 // **																					**
 // ***************************************************************************************
 // ***************************************************************************************
-#include "../NErrorHandling.h"
+#include "lib/N/NErrorHandling.h"
 #include "NElapsedTimer.h"
 
 static void NElapsedTimerA_TimerHandle(NTIMER *ptimer, const NTIME *ptime)

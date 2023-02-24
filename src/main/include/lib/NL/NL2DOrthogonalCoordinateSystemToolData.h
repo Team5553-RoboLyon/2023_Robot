@@ -10,17 +10,17 @@
 // ***************************************************************************************
 // ***************************************************************************************
 //
-#include "../N/NType.h"
-#include "../N/Event/NEvent.h"
-#include "../N/Core/NTime.h"
-#include "../N/NEditor.h"
-#include "../N/Maths/NVec2f32.h"
-#include "../N/Utilities/NUT_GizmoRectf32.h"
+#include "lib/N/NType.h"
+#include "lib/N/Event/NEvent.h"
+#include "lib/N/Core/NTime.h"
+#include "lib/N/NEditor.h"
+#include "lib/N/Maths/NVec2f32.h"
+#include "lib/N/Utilities/NUT_GizmoRectf32.h"
 #include "NL2DOrthogonalCoordinateSystem.h"
 
 #ifdef _NEDITOR
 // -----------------------------------------------------------------------
-#define DEFAULT_NL2DOCS_TOOLDATA_ARRAY_OF_OCS_PTR_CAPACITY	4		// capacité de l'array de pointeur sur OCS à la création.
+#define DEFAULT_NL2DOCS_TOOLDATA_ARRAY_OF_OCS_PTR_CAPACITY	4		// capacitï¿½ de l'array de pointeur sur OCS ï¿½ la crï¿½ation.
 
 typedef struct NL2DOCS_TOOLDATA	NL2DOCS_TOOLDATA;
 struct NL2DOCS_TOOLDATA
@@ -40,7 +40,7 @@ struct NL2DOCS_TOOLDATA
 				return;
 			}
 		}
-		NErrorIf(1, NERROR_SYSTEM_CHECK); // si on passe ici , on a pas trouvé l'OCS à sortir de la liste....pas grave mais bon, si il n'est pas dans la liste pourquoi vouloir l'en sortir ?
+		NErrorIf(1, NERROR_SYSTEM_CHECK); // si on passe ici , on a pas trouvï¿½ l'OCS ï¿½ sortir de la liste....pas grave mais bon, si il n'est pas dans la liste pourquoi vouloir l'en sortir ?
 	}
 	inline void			unbindAllOcs() { NResizeArray(&m_ArrayOfOcsPtr, 0, NULL, NULL); }
 

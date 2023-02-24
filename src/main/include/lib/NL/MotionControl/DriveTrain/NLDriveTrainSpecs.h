@@ -1,15 +1,15 @@
 #pragma once
 
-#include "../../../N/NCStandard.h"
-#include "../../../N/NType.h"
-#include "../../../N/Core/NVersion.h"
+#include "lib/N/NCStandard.h"
+#include "lib/N/NType.h"
+#include "lib/N/Core/NVersion.h"
 
-#include "../../../N/File/NFile.h"
-#include "../../../N/Maths/NVec3f32.h"
-#include "../../MotionControl/NLKinLimits.h"
+#include "lib/N/File/NFile.h"
+#include "lib/N/Maths/NVec3f32.h"
+#include "lib/NL/MotionControl/NLKinLimits.h"
 
-#define EXTENSION_NLDRIVETRAINSPECS_TXT		".txt"
-#define SIGNATURE_NLDRIVETRAINSPECS			"drivetrainspecs"
+#define EXTENSION_NLDRIVETRAINSPECS_TXT ".txt"
+#define SIGNATURE_NLDRIVETRAINSPECS "drivetrainspecs"
 //					-----	-----	-----					+
 //				+---------------------------+				|			+
 //				|			 Left			|				|			|
@@ -21,16 +21,16 @@
 //				|			Right			|				|			|
 //				+---------------------------+				|			+
 //					-----	-----	-----					+
-	//				  +<--wheelbase-->+	
-//				+<-------FrameLength------->+		
-//													
+//				  +<--wheelbase-->+
+//				+<-------FrameLength------->+
+//
 #ifdef _NEDITOR
-#define DEFAULT_NLDRIVETRAINSPECS_WHEELBASE					0.609f		// Distance entre le centre de la roue avant et le centre de la roue arrière
-#define DEFAULT_NLDRIVETRAINSPECS_WHEEL_WIDTH				0.0127f		// Largeur d'une roue [=0.5 inch]
+#define DEFAULT_NLDRIVETRAINSPECS_WHEELBASE 0.609f	  // Distance entre le centre de la roue avant et le centre de la roue arriï¿½re
+#define DEFAULT_NLDRIVETRAINSPECS_WHEEL_WIDTH 0.0127f // Largeur d'une roue [=0.5 inch]
 
-#define DEFAULT_NLDRIVETRAINSPECS_FRAME_LENGTH				0.840f		// Longueur de la base	[ from Back to Front ] = size.x
-#define DEFAULT_NLDRIVETRAINSPECS_FRAME_WIDTH				0.560f		// Largeur de la base	[ from Left to Right ] = size.y
-#define DEFAULT_NLDRIVETRAINSPECS_FRAME_HEIGHT				0.70f		// Hauteur ( du robot ) [ from Bottom to Top ] = size.z
+#define DEFAULT_NLDRIVETRAINSPECS_FRAME_LENGTH 0.840f // Longueur de la base	[ from Back to Front ] = size.x
+#define DEFAULT_NLDRIVETRAINSPECS_FRAME_WIDTH 0.560f  // Largeur de la base	[ from Left to Right ] = size.y
+#define DEFAULT_NLDRIVETRAINSPECS_FRAME_HEIGHT 0.70f  // Hauteur ( du robot ) [ from Bottom to Top ] = size.z
 #endif
 
 #ifdef _NEDITOR
@@ -40,105 +40,139 @@ class NLPATH_WORKBENCH;
 class NLDRIVETRAINSPECS
 {
 	friend class NLTRAJECTORY_PACK;
+
 public:
 	NLDRIVETRAINSPECS() { Nmem0(this, NLDRIVETRAINSPECS); };
-	NLDRIVETRAINSPECS(const Nf32 mass, const NVEC3f32 *pcenterofmass,const Nf32 axletrack,const Nf32 wheelrad, const Nf32 staticfriction, const NLKINLIMITS *plimits);
+	NLDRIVETRAINSPECS(const Nf32 mass, const NVEC3f32 *pcenterofmass, const Nf32 axletrack, const Nf32 wheelrad, const Nf32 staticfriction, const NLKINLIMITS *plimits);
 	NLDRIVETRAINSPECS(const Nf32 mass, const NVEC3f32 *pcenterofmass, const Nf32 axletrack, const Nf32 wheelrad, const Nf32 staticfriction, const Nf32 velocity_max, const Nf32 accel_max, const Nf32 jerk_max);
 	NLDRIVETRAINSPECS(const Nf32 mass, const Nf32 centerofmass_x, const Nf32 centerofmass_y, const Nf32 centerofmass_z, const Nf32 axletrack, const Nf32 wheelrad, const Nf32 staticfriction, const Nf32 velocity_max, const Nf32 accel_max, const Nf32 jerk_max);
 
 #ifdef _NEDITOR
-	Nu32	read(NLPATH_WORKBENCH* pwb); // fonction read "spéciale" qui copie les données du path workbench passé en paramètre plutot
-#endif									 // ... que de les lire dans un fichier. Cela permet au code du simulateur de rester très proche du code "réel" du robot	
-										 // ... tout en permettant de recupérer directement les données du path workbench. 	
-	Nu32	read(FILE* pfile);
-	Nu32	write(FILE* pfile);
-	
-	Nu32	importTxt(const Nchar* ptxtfilename);
+	Nu32 read(NLPATH_WORKBENCH *pwb); // fonction read "spï¿½ciale" qui copie les donnï¿½es du path workbench passï¿½ en paramï¿½tre plutot
+#endif								  // ... que de les lire dans un fichier. Cela permet au code du simulateur de rester trï¿½s proche du code "rï¿½el" du robot
+									  // ... tout en permettant de recupï¿½rer directement les donnï¿½es du path workbench.
+	Nu32 read(FILE *pfile);
+	Nu32 write(FILE *pfile);
+
+	Nu32 importTxt(const Nchar *ptxtfilename);
 
 	//~NLDRIVETRAINSPECS();
-	void	setStaticFriction(const Nf32 static_friction) { m_staticFriction = static_friction; updateTurnInertiaCoefs();};
-	void	setCenterOfMass(const NVEC3f32* pcm) { if (pcm) { m_centerOfMass = *pcm; } else { NVec3Null(&m_centerOfMass); }updateTurnInertiaCoefs();};
-	void	setCenterOfMass(const Nf32 x, const Nf32 y, const Nf32 z) { m_centerOfMass.x = x;  m_centerOfMass.x = y; m_centerOfMass.x = z; updateTurnInertiaCoefs();};
-	void	setCenterOfMassX(const Nf32 x) { m_centerOfMass.x = x;updateTurnInertiaCoefs(); };
-	void	setCenterOfMassY(const Nf32 y) { m_centerOfMass.y = y; updateTurnInertiaCoefs(); };
-	void	setCenterOfMassZ(const Nf32 z) { m_centerOfMass.z = z; updateTurnInertiaCoefs(); };
+	void setStaticFriction(const Nf32 static_friction)
+	{
+		m_staticFriction = static_friction;
+		updateTurnInertiaCoefs();
+	};
+	void setCenterOfMass(const NVEC3f32 *pcm)
+	{
+		if (pcm)
+		{
+			m_centerOfMass = *pcm;
+		}
+		else
+		{
+			NVec3Null(&m_centerOfMass);
+		}
+		updateTurnInertiaCoefs();
+	};
+	void setCenterOfMass(const Nf32 x, const Nf32 y, const Nf32 z)
+	{
+		m_centerOfMass.x = x;
+		m_centerOfMass.x = y;
+		m_centerOfMass.x = z;
+		updateTurnInertiaCoefs();
+	};
+	void setCenterOfMassX(const Nf32 x)
+	{
+		m_centerOfMass.x = x;
+		updateTurnInertiaCoefs();
+	};
+	void setCenterOfMassY(const Nf32 y)
+	{
+		m_centerOfMass.y = y;
+		updateTurnInertiaCoefs();
+	};
+	void setCenterOfMassZ(const Nf32 z)
+	{
+		m_centerOfMass.z = z;
+		updateTurnInertiaCoefs();
+	};
 
-	Nf32		getStaticFriction() { return m_staticFriction; };
-	NVEC3f32*	getCenterOfMass(NVEC3f32* pcm) { *pcm = m_centerOfMass; return pcm; };
+	Nf32 getStaticFriction() { return m_staticFriction; };
+	NVEC3f32 *getCenterOfMass(NVEC3f32 *pcm)
+	{
+		*pcm = m_centerOfMass;
+		return pcm;
+	};
 
-	Nf32		getVelocity(const Nf32 k, const Nf32 max_cruise_velocity)const;
-	Nu32		compare(const NLDRIVETRAINSPECS* pdts);
+	Nf32 getVelocity(const Nf32 k, const Nf32 max_cruise_velocity) const;
+	Nu32 compare(const NLDRIVETRAINSPECS *pdts);
 
-	NLKINLIMITS		m_limits;			// Limites Cinématiques de la base roulante.
-	
-	Nf32			m_mass;				// Masse du robot ( en kg)
-	Nf32			m_weight;			// poids du Robot ( en Newton).
+	NLKINLIMITS m_limits; // Limites Cinï¿½matiques de la base roulante.
 
-	Nf32			m_axleTrack;		// distance (en mètres) entre le point de contact au sol de la roue centrale gauche et le point de contact au sol de la roue centrale droite.
+	Nf32 m_mass;   // Masse du robot ( en kg)
+	Nf32 m_weight; // poids du Robot ( en Newton).
 
-	Nf32			m_wheelRadius;		// rayon des roues (en Mètres). On assume que toutes les roues du robot on un rayon identique.
+	Nf32 m_axleTrack; // distance (en mï¿½tres) entre le point de contact au sol de la roue centrale gauche et le point de contact au sol de la roue centrale droite.
+
+	Nf32 m_wheelRadius; // rayon des roues (en Mï¿½tres). On assume que toutes les roues du robot on un rayon identique.
 #ifdef _NEDITOR
-	Nf32			m_wheelBase;		// Distance entre le point de contact au sol de la roue avant et de la roue arriere sur un même côté
-	Nf32			m_wheelWidth;		// largeur des roues
-	NVEC3f32		m_size;				// Taille de la base.
-										// !!! WARNING !!!
-										//		m_size.x représente la longueur du Robot [dist.entre l'arrière et l'avant]
-										//		m_size.y représente la largeur du Robot  [dist.entre la gauche et à droite]
-										//		m_size.z représente la hauteur du Robot  [dist.entre le sol et le point le plus haut du robot] 
-										//		... L'axe z du repere pointe vers le haut 
-										//		... ( Z = 0 signifie au niveau du sol ! Z > 0 représente la hauteur au dessus du sol)
+	Nf32 m_wheelBase;  // Distance entre le point de contact au sol de la roue avant et de la roue arriere sur un mï¿½me cï¿½tï¿½
+	Nf32 m_wheelWidth; // largeur des roues
+	NVEC3f32 m_size;   // Taille de la base.
+					   // !!! WARNING !!!
+					   //		m_size.x reprï¿½sente la longueur du Robot [dist.entre l'arriï¿½re et l'avant]
+					   //		m_size.y reprï¿½sente la largeur du Robot  [dist.entre la gauche et ï¿½ droite]
+					   //		m_size.z reprï¿½sente la hauteur du Robot  [dist.entre le sol et le point le plus haut du robot]
+					   //		... L'axe z du repere pointe vers le haut
+					   //		... ( Z = 0 signifie au niveau du sol ! Z > 0 reprï¿½sente la hauteur au dessus du sol)
 #endif
 
 private:
-	void	updateTurnInertiaCoefs();
-	Nf32			m_staticFriction;	// coefficient de friction Static des "tractions wheels" sur le sol.
-	NVEC3f32		m_centerOfMass;		// position du CG (en mètres) dans un repere direct dont l'origine se trouve au milieu du segment [axleTrack].
-										// !!! WARNING !!!
-										//		L'axe x du repere pointe vers l'avant du robot
-										//		L'axe y du repere pointe vers la roue gauche
-										//		L'axe z du repere pointe vers le haut ( Z = 0 signifie au niveau du sol ! Z > 0 représente la hauteur au dessus du sol)
+	void updateTurnInertiaCoefs();
+	Nf32 m_staticFriction;	 // coefficient de friction Static des "tractions wheels" sur le sol.
+	NVEC3f32 m_centerOfMass; // position du CG (en mï¿½tres) dans un repere direct dont l'origine se trouve au milieu du segment [axleTrack].
+							 // !!! WARNING !!!
+							 //		L'axe x du repere pointe vers l'avant du robot
+							 //		L'axe y du repere pointe vers la roue gauche
+							 //		L'axe z du repere pointe vers le haut ( Z = 0 signifie au niveau du sol ! Z > 0 reprï¿½sente la hauteur au dessus du sol)
 
-	Nf32			m_rightTurnInertiaCoef;
-	Nf32			m_leftTurnInertiaCoef;
+	Nf32 m_rightTurnInertiaCoef;
+	Nf32 m_leftTurnInertiaCoef;
 };
 
 // ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 // + FILE
 // +
 // File Extensions
-#define FILE_EXTENSION_NLDTSPECS				".rbs"							// RoBot Specifications
+#define FILE_EXTENSION_NLDTSPECS ".rbs" // RoBot Specifications
 // File Signatures
-#define FILE_SIGNATURE_NLDTSPECS				NMAKESIGNATURE('R','B','L','S')	// RoBo'Lyon Specifications
+#define FILE_SIGNATURE_NLDTSPECS NMAKESIGNATURE('R', 'B', 'L', 'S') // RoBo'Lyon Specifications
 
-#define VERSION_NLDTSPECS_HEADER				NMAKEVERSION(0,0,0)				// >>> 2021/04/03
-#define CONSTANT_NLDTSPECS_HEADER_NAME_SIZE		32
+#define VERSION_NLDTSPECS_HEADER NMAKEVERSION(0, 0, 0) // >>> 2021/04/03
+#define CONSTANT_NLDTSPECS_HEADER_NAME_SIZE 32
 typedef struct
 {
-	Nchar			m_name[CONSTANT_NLDTSPECS_HEADER_NAME_SIZE];			// Nom du robot sur 32 char.max ( 31 + null )
+	Nchar m_name[CONSTANT_NLDTSPECS_HEADER_NAME_SIZE]; // Nom du robot sur 32 char.max ( 31 + null )
 
 	// NKINLIMITS:
-	Nf32			m_limits_v;
-	Nf32			m_limits_a;
-	Nf32			m_limits_j;
+	Nf32 m_limits_v;
+	Nf32 m_limits_a;
+	Nf32 m_limits_j;
 
-	Nf32			m_staticFriction;	
-	Nf32			m_mass;				
-	Nf32			m_weight;			
-	NVEC3f32		m_centerOfMass;		
-										
-										
-										
+	Nf32 m_staticFriction;
+	Nf32 m_mass;
+	Nf32 m_weight;
+	NVEC3f32 m_centerOfMass;
 
-	Nf32			m_axleTrack;		
-	Nf32			m_wheelRadius;		
+	Nf32 m_axleTrack;
+	Nf32 m_wheelRadius;
 
-	Nu32			m_editorData;		
-}NLDTSPECS_HEADER;
+	Nu32 m_editorData;
+} NLDTSPECS_HEADER;
 
 typedef struct
 {
-	Nf32			m_wheelBase;		
-	Nf32			m_wheelWidth;		
-	NVEC3f32		m_size;				
-}NLDTSPECS_HEADER_NEDITOR;
-
+	Nf32 m_wheelBase;
+	Nf32 m_wheelWidth;
+	NVEC3f32 m_size;
+} NLDTSPECS_HEADER_NEDITOR;

@@ -1,6 +1,6 @@
-#include "../NCStandard.h"
-#include "../NType.h"
-#include "../Containers/NNode.h"
+#include "lib/N/NCStandard.h"
+#include "lib/N/NType.h"
+#include "lib/N/Containers/NNode.h"
 
 #include "../NStructure.h"
 #include "NUT_Structure.h"
@@ -34,7 +34,7 @@ NSTRUCTURE* NUTSetUpSpringyTowerStructure(NSTRUCTURE *pstructure,const NVEC3 *po
 	spbuilder.SpecialConstraintsArrayCapacity	= 0;
 	NVec3Copy(&spbuilder.vGravity,&pbuilder->vGravity);
 	NSetupPhysicStructure(pstructure,&spbuilder);
-	
+
 	// ==========================
 	// Create the Joints
 	// ==========================
@@ -42,7 +42,7 @@ NSTRUCTURE* NUTSetUpSpringyTowerStructure(NSTRUCTURE *pstructure,const NVEC3 *po
 	NVec3Copy( &jointbuilder.CurrentPosition,pos );
 	NVec3Copy( &jointbuilder.OldPosition,&jointbuilder.CurrentPosition );
 	NVec3Copy( &jointbuilder.shift_Vector,&pbuilder->ToNextLineShiftingVector );
-	NVec3Set( &jointbuilder.vSpeed,0,0,0 );		
+	NVec3Set( &jointbuilder.vSpeed,0,0,0 );
 	jointbuilder.fMass = pbuilder->JointMass;
 	jointbuilder.fRadius = pbuilder->JointRadius;
 	NCreateJointsRange( pstructure,pbuilder->StagesNb +1,&jointbuilder );
@@ -128,18 +128,18 @@ NSTRUCTURE* NUTCreateSpringyTowerStructure(const NVEC3 *pos,const NUT_SPRINGYSTR
 //
 //
 // ------------------------------------------------------------------------------------------
-// In	: 
-//				ptower:			a valid pointer on a structure created with the function 
+// In	:
+//				ptower:			a valid pointer on a structure created with the function
 //								'NUT_CreateSpringyTowerStructure'
 //
 //				updatedata:		NTRUE to update all structure data (joints position, speed,..)
 //								to match with the estimated rest state calculation.
 //								After processing the structure should be entirely into rest state.
 //
-//								NFALSE to only return the global structure length without any 
+//								NFALSE to only return the global structure length without any
 //								structure data updating
 // Out :
-//				(Nf32) Global structure rest length. 
+//				(Nf32) Global structure rest length.
 //
 // ------------------------------------------------------------------------------------------
 Nf32 NUT_EstimateSpringyTowerRestingState(NSTRUCTURE *ptower, Nbool updatedata )
@@ -160,7 +160,7 @@ Nf32 NUT_EstimateSpringyTowerRestingState(NSTRUCTURE *ptower, Nbool updatedata )
 
 	fl = 0.0f;
 	springstages= NGetArraySize(&ptower->JointArray)/2 - 1;				// Because a Springy Tower has 2 columns of joints, AND two vertical column of springs.
-	
+
 	// Pointers initialization
 	pspringA	= (NCONSTRAINT*)NGetFirstArrayPtr(&ptower->SpringArray);		// Into a springy tower, all the springs of  the first springs vertical column are in the beginning of the springs list ...
 	pspringB	= pspringA + springstages;//(NCONSTRAINT*)NGetArrayPtr(&ptower->SpringArray, springstages );		// pspringA + springstages;
@@ -182,7 +182,7 @@ Nf32 NUT_EstimateSpringyTowerRestingState(NSTRUCTURE *ptower, Nbool updatedata )
 		NVec3Sub(&vx,&pjB->CurrentPosition,&pjA->CurrentPosition);
 		NVec3CrossProduct(&vz,&vx,&vy);
 		f = NVec3Length(&vz);
-		
+
 		if(f<NF32EPSILON)
 			updatedata = NFALSE;
 		else
@@ -194,19 +194,19 @@ Nf32 NUT_EstimateSpringyTowerRestingState(NSTRUCTURE *ptower, Nbool updatedata )
 
 		if(updatedata)
 		{
-			NResetJointDynamic(pjA);			
-			NResetJointDynamic(pjB);			
+			NResetJointDynamic(pjA);
+			NResetJointDynamic(pjB);
 		}
-	}	
-	
-	
+	}
+
+
 	pjA ++; pjB ++;	// the first joint of the column is locked.
 	pspringH ++; // because we dont use the top edge of each "trapeze"
 
 	for(i=0;i<springstages;i++,pspringA++,pspringB++,pspringH++,pspringXA++,pspringXB++,pjAprev=pjA,pjBprev=pjB,pjA++,pjB++)
 	{
-		// We are going to replace (just for this calculation) 
-		// the 4 stage's springs by 1 unique spring, with: 
+		// We are going to replace (just for this calculation)
+		// the 4 stage's springs by 1 unique spring, with:
 		//	K = k1+k2+k3+k4.
 		//  notice that we ignore horizontal spring !  (pspringH)
 		k = pspringA->fK + pspringB->fK;// + pspringXA->fK + pspringXB->fK;
@@ -216,7 +216,7 @@ Nf32 NUT_EstimateSpringyTowerRestingState(NSTRUCTURE *ptower, Nbool updatedata )
 		//		i mean, the current joint positions can be "exotic" because of a hard collision or something else ...
 		//		... And the only sure thing we know that a springy tower was made in a way where all the springs restlength were calculated
 		//	so to calculate that we are going to use the "heron formula" and the "standard formula" to calculate the trapeze surface...
-		
+
 		// TRI 1:
 		s	= 0.5f*( pspringA->fRestLength + pspringXA->fRestLength + pspringH->fRestLength );
 		a	= sqrt( s*(s-pspringA->fRestLength)*(s-pspringXA->fRestLength)*(s-pspringH->fRestLength) );
@@ -229,15 +229,15 @@ Nf32 NUT_EstimateSpringyTowerRestingState(NSTRUCTURE *ptower, Nbool updatedata )
 
 		// if we have a symmetric Tower, h1 == h2. But... we would have a lot of unsymmetric Tower ...
 		// so ... just the simplest way to estimate ( maybe not the best one...)
-		if( (h1-h2)>NF32EPSILON ) 
+		if( (h1-h2)>NF32EPSILON )
 		{
 			h1=h1*h2*0.5f;
 		}
-			
+
 		// well done, right now we are going to use h1 as the unique spring rest length !
 		// now we need to know the global weight bellow this unique spring !
 		// All the joint below act on it with the sum of their mass
-		
+
 		pjAm=pjA;
 		pjBm=pjB;
 
@@ -246,7 +246,7 @@ Nf32 NUT_EstimateSpringyTowerRestingState(NSTRUCTURE *ptower, Nbool updatedata )
 		{
 			mass += (pjAm->fMass + pjBm->fMass);
 		}
-		
+
 		f = ( h1 + (mass*g)/k);
 		fl += f;
 
@@ -264,10 +264,10 @@ Nf32 NUT_EstimateSpringyTowerRestingState(NSTRUCTURE *ptower, Nbool updatedata )
 			NVec3Scale(&v,&vx,-f);
 			NVec3AddTo(&pjB->CurrentPosition,&v);
 
-			NResetJointDynamic(pjA);			
-			NResetJointDynamic(pjB);			
+			NResetJointDynamic(pjA);
+			NResetJointDynamic(pjB);
 		}
-		
+
 	}
 
 	return fl;

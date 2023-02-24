@@ -3,13 +3,13 @@
 // ------------------------------------------------------------------------------------------
 // Author  : Jean-Marie Nazaret
 // Created : 23/01/2012
-// revision: 
+// revision:
 // ------------------------------------------------------------------------------------------
 // Quaternions fonctions.
 // ==========================================================================================
-#include "../NCStandard.h"
-#include "../NType.h"
-#include "../NMath.h"
+#include "lib/N/NCStandard.h"
+#include "lib/N/NType.h"
+#include "lib/N/NMath.h"
 
 #include "../NQuaternion.h"
 
@@ -48,20 +48,20 @@ void NIdentityQuaternion(NQUATERNION *pquat)
 // Out :
 //
 // ------------------------------------------------------------------------------------------
-void NQuaternionAxisRotation(NQUATERNION *pquat, const NVEC3 *v, const Nf32 ang )
+void NQuaternionAxisRotation(NQUATERNION *pquat, const NVEC3 *v, const Nf32 ang)
 {
-	Nf32	si;
+	Nf32 si;
 
-	NCosSin( (ang*0.5f), &pquat->w, &si ); // Optimize  NCosSin function ASAP !!!!!
+	NCosSin((ang * 0.5f), &pquat->w, &si); // Optimize  NCosSin function ASAP !!!!!
 	pquat->x = si * v->x;
 	pquat->y = si * v->y;
 	pquat->z = si * v->z;
 }
-void NFastQuaternionAxisRotation(NQUATERNION *pquat, const NVEC3 *v, const Nu32 ang )
+void NFastQuaternionAxisRotation(NQUATERNION *pquat, const NVEC3 *v, const Nu32 ang)
 {
-	Nf32	si;
+	Nf32 si;
 
-	NFastCosSin( (ang/2), &pquat->w, &si); 
+	NFastCosSin((ang / 2), &pquat->w, &si);
 	pquat->x = si * v->x;
 	pquat->y = si * v->y;
 	pquat->z = si * v->z;
@@ -81,14 +81,13 @@ void NFastQuaternionAxisRotation(NQUATERNION *pquat, const NVEC3 *v, const Nu32 
 // Out :
 //
 // ------------------------------------------------------------------------------------------
-void NQuaternionRotation(NQUATERNION *pquat, const Nf32 rx, const Nf32 ry, const Nf32 rz )
+void NQuaternionRotation(NQUATERNION *pquat, const Nf32 rx, const Nf32 ry, const Nf32 rz)
 {
-	Nf32	cx,cy,cz,sx,sy,sz,cycz,sysz;
+	Nf32 cx, cy, cz, sx, sy, sz, cycz, sysz;
 
-
-	NCosSin( (rx*0.5f), &cx, &sx);
-	NCosSin( (ry*0.5f), &cy, &sy);
-	NCosSin( (rz*0.5f), &cz, &sz);
+	NCosSin((rx * 0.5f), &cx, &sx);
+	NCosSin((ry * 0.5f), &cy, &sy);
+	NCosSin((rz * 0.5f), &cz, &sz);
 
 	cycz = cy * cz;
 	sysz = sy * sz;
@@ -98,7 +97,6 @@ void NQuaternionRotation(NQUATERNION *pquat, const Nf32 rx, const Nf32 ry, const
 	pquat->y = cx * sy * cz + sx * cy * sz;
 	pquat->z = cx * cy * sz - sx * sy * cz;
 }
-
 
 // ------------------------------------------------------------------------------------------
 // NMatrixToQuaternion
@@ -113,16 +111,16 @@ void NQuaternionRotation(NQUATERNION *pquat, const Nf32 rx, const Nf32 ry, const
 // Out :
 //
 // ------------------------------------------------------------------------------------------
-void NMatrixToQuaternion(NQUATERNION *quat, const NMATRIX *mat )
+void NMatrixToQuaternion(NQUATERNION *quat, const NMATRIX *mat)
 {
-	Nf32	tr,s,q[4];
-	int		i,j,k;
-	int		nxt[3] = {1,2,0};
+	Nf32 tr, s, q[4];
+	int i, j, k;
+	int nxt[3] = {1, 2, 0};
 
 	tr = mat->f00 + mat->f11 + mat->f22;
 
-	if(tr > 0.0f)
-	{    
+	if (tr > 0.0f)
+	{
 		// ------------------
 		// Positive  Diagonal
 		// ------------------
@@ -139,9 +137,9 @@ void NMatrixToQuaternion(NQUATERNION *quat, const NMATRIX *mat )
 		// Negative Diagonal
 		// -----------------
 		i = 0;
-		if(mat->f11 > mat->f00) 
+		if (mat->f11 > mat->f00)
 			i = 1;
-		if(mat->f22 > mat->f11) 
+		if (mat->f22 > mat->f11)
 			i = 2;
 
 		j = nxt[i];
@@ -158,7 +156,7 @@ void NMatrixToQuaternion(NQUATERNION *quat, const NMATRIX *mat )
 		quat->x = q[0];
 		quat->y = q[1];
 		quat->z = q[2];
-		quat->w = q[3];  
+		quat->w = q[3];
 	}
 }
 
@@ -175,18 +173,24 @@ void NMatrixToQuaternion(NQUATERNION *quat, const NMATRIX *mat )
 // Out :
 //
 // ------------------------------------------------------------------------------------------
-void NQuaternionToMatrix(NMATRIX *mat, const NQUATERNION *quat )
+void NQuaternionToMatrix(NMATRIX *mat, const NQUATERNION *quat)
 {
-	Nf32	wx,wy,wz;
-	Nf32	xx,yy,yz,xy,xz,zz,x2,y2,z2;
+	Nf32 wx, wy, wz;
+	Nf32 xx, yy, yz, xy, xz, zz, x2, y2, z2;
 
-	x2 = quat->x + quat->x; 
-	y2 = quat->y + quat->y; 
+	x2 = quat->x + quat->x;
+	y2 = quat->y + quat->y;
 	z2 = quat->z + quat->z;
 
-	xx = quat->x * x2;   xy = quat->x * y2;   xz = quat->x * z2;
-	yy = quat->y * y2;   yz = quat->y * z2;   zz = quat->z * z2;
-	wx = quat->w * x2;   wy = quat->w * y2;   wz = quat->w * z2;
+	xx = quat->x * x2;
+	xy = quat->x * y2;
+	xz = quat->x * z2;
+	yy = quat->y * y2;
+	yz = quat->y * z2;
+	zz = quat->z * z2;
+	wx = quat->w * x2;
+	wy = quat->w * y2;
+	wz = quat->w * z2;
 
 	mat->f00 = 1.0f - (yy + zz);
 	mat->f01 = xy + wz;
@@ -227,9 +231,9 @@ void NQuaternionToMatrix(NMATRIX *mat, const NQUATERNION *quat )
 // Out :
 //
 // ------------------------------------------------------------------------------------------
-void NMulQuaternion( NQUATERNION *res, const NQUATERNION *q1, const NQUATERNION *q2 )
+void NMulQuaternion(NQUATERNION *res, const NQUATERNION *q1, const NQUATERNION *q2)
 {
-	NQUATERNION	calc;
+	NQUATERNION calc;
 
 	calc.x = q1->w * q2->x + q1->x * q2->w + q1->y * q2->z - q1->z * q2->y;
 	calc.y = q1->w * q2->y + q1->y * q2->w + q1->z * q2->x - q1->x * q2->z;
@@ -240,36 +244,36 @@ void NMulQuaternion( NQUATERNION *res, const NQUATERNION *q1, const NQUATERNION 
 	res->y = calc.y;
 	res->z = calc.z;
 	res->w = calc.w;
-/*
-    float A = (q1->w + q1->x) * (q2->w + q2->x);
-    float B = (q1->z - q1->y) * (q2->y - q2->z);
-    float C = (q1->x - q1->w) * (q2->y + q2->z);
-    float D = (q1->y + q1->z) * (q2->x - q2->w);
-    float E = (q1->x + q1->z) * (q2->x + q2->y);
-    float F = (q1->x - q1->z) * (q2->x - q2->y);
-    float G = (q1->w + q1->y) * (q2->w - q2->z);
-    float H = (q1->w - q1->y) * (q2->w + q2->z);
+	/*
+		float A = (q1->w + q1->x) * (q2->w + q2->x);
+		float B = (q1->z - q1->y) * (q2->y - q2->z);
+		float C = (q1->x - q1->w) * (q2->y + q2->z);
+		float D = (q1->y + q1->z) * (q2->x - q2->w);
+		float E = (q1->x + q1->z) * (q2->x + q2->y);
+		float F = (q1->x - q1->z) * (q2->x - q2->y);
+		float G = (q1->w + q1->y) * (q2->w - q2->z);
+		float H = (q1->w - q1->y) * (q2->w + q2->z);
 
-    float EpF = E + F, EmF = E - F;
-    float GpH = G + H, GmH = G - H;
+		float EpF = E + F, EmF = E - F;
+		float GpH = G + H, GmH = G - H;
 
-    res->w = B + 0.5f * (GpH - EpF);
-    res->x = A - 0.5f * (GpH + EpF);
-    res->y = -C + 0.5f * (EmF + GmH);
-    res->z = -D + 0.5f * (EmF - GmH);
-*/
+		res->w = B + 0.5f * (GpH - EpF);
+		res->x = A - 0.5f * (GpH + EpF);
+		res->y = -C + 0.5f * (EmF + GmH);
+		res->z = -D + 0.5f * (EmF - GmH);
+	*/
 }
 Nf32 NQuaternionLength(const NQUATERNION *q)
 {
-	return sqrt(q->w*q->w + q->x*q->x + q->y*q->y + q->z*q->z);
+	return sqrt(q->w * q->w + q->x * q->x + q->y * q->y + q->z * q->z);
 }
 
 Nf32 NQuaternionNormalize(NQUATERNION *q)
 {
 	Nf32 l;
 	Nf32 ls;
-	l = sqrt(q->w*q->w + q->x*q->x + q->y*q->y + q->z*q->z);
-	ls = 1.0f/l;
+	l = sqrt(q->w * q->w + q->x * q->x + q->y * q->y + q->z * q->z);
+	ls = 1.0f / l;
 
 	q->w *= ls;
 	q->x *= ls;
@@ -293,13 +297,13 @@ Nf32 NQuaternionNormalize(NQUATERNION *q)
 // Out :
 //
 // ------------------------------------------------------------------------------------------
-void NQuaternionSlerp(NQUATERNION *res, const NQUATERNION *from, const NQUATERNION *to, const Nf32 t )
+void NQuaternionSlerp(NQUATERNION *res, const NQUATERNION *from, const NQUATERNION *to, const Nf32 t)
 {
-	Nf32	to1[4];
-	Nf32	omega, cosomega, sinomega, scale0, scale1;
+	Nf32 to1[4];
+	Nf32 omega, cosomega, sinomega, scale0, scale1;
 
 	// ------------------------------------------------------
-	// Scalar product (to know the cosine of the angle 
+	// Scalar product (to know the cosine of the angle
 	// between "from" and "to")
 	// ------------------------------------------------------
 	cosomega = from->x * to->x + from->y * to->y + from->z * to->z + from->w * to->w;
@@ -307,14 +311,14 @@ void NQuaternionSlerp(NQUATERNION *res, const NQUATERNION *from, const NQUATERNI
 	// -----------------------------------------------------------------
 	// Sign adjustment if it's necessary to use the shortest path
 	// -----------------------------------------------------------------
-	if( cosomega < 0.0f )
-	{ 
-		cosomega = -cosomega; 
+	if (cosomega < 0.0f)
+	{
+		cosomega = -cosomega;
 		to1[0] = -to->x;
 		to1[1] = -to->y;
 		to1[2] = -to->z;
 		to1[3] = -to->w;
-	} 
+	}
 	else
 	{
 		to1[0] = to->x;
@@ -324,15 +328,15 @@ void NQuaternionSlerp(NQUATERNION *res, const NQUATERNION *from, const NQUATERNI
 	}
 
 	// ------------------------
-	// coefficients calculation 
+	// coefficients calculation
 	// ------------------------
-	if( cosomega < 0.9999f )	//if( (1.0f - cosom) > 0.0001f )
+	if (cosomega < 0.9999f) // if( (1.0f - cosom) > 0.0001f )
 	{
 		// ---------------------
 		// Standard Case (Slerp)
 		// ---------------------
-		omega = (Nf32)acos(cosomega);						// Angle between "from" & "to"
-		sinomega = (Nf32)sin(omega);						// Angle Sine
+		omega = (Nf32)acos(cosomega); // Angle between "from" & "to"
+		sinomega = (Nf32)sin(omega);  // Angle Sine
 		scale0 = (Nf32)sin((1.0f - t) * omega) / sinomega;
 		scale1 = (Nf32)sin(t * omega) / sinomega;
 	}
@@ -370,19 +374,25 @@ void NQuaternionSlerp(NQUATERNION *res, const NQUATERNION *from, const NQUATERNI
 // Out :
 //
 // ------------------------------------------------------------------------------------------
-void NMulVectorByQuat( NVEC3 *vr, const NVEC3 *v, const NQUATERNION *quat )
+void NMulVectorByQuat(NVEC3 *vr, const NVEC3 *v, const NQUATERNION *quat)
 {
-	Nf32			wx,wy,wz;
-	Nf32			xx,yy,yz,xy,xz,zz,x2,y2,z2;
-	NVEC3		vtmp;
+	Nf32 wx, wy, wz;
+	Nf32 xx, yy, yz, xy, xz, zz, x2, y2, z2;
+	NVEC3 vtmp;
 
-	x2 = quat->x + quat->x; 
-	y2 = quat->y + quat->y; 
+	x2 = quat->x + quat->x;
+	y2 = quat->y + quat->y;
 	z2 = quat->z + quat->z;
 
-	xx = quat->x * x2;   xy = quat->x * y2;   xz = quat->x * z2;
-	yy = quat->y * y2;   yz = quat->y * z2;   zz = quat->z * z2;
-	wx = quat->w * x2;   wy = quat->w * y2;   wz = quat->w * z2;
+	xx = quat->x * x2;
+	xy = quat->x * y2;
+	xz = quat->x * z2;
+	yy = quat->y * y2;
+	yz = quat->y * z2;
+	zz = quat->z * z2;
+	wx = quat->w * x2;
+	wy = quat->w * y2;
+	wz = quat->w * z2;
 
 	vtmp.x = (v->x * (1.0f - (yy + zz))) + (v->y * (xy - wz)) + (v->z * (xz + wy));
 	vtmp.y = (v->x * (xy + wz)) + (v->y * (1.0f - (xx + zz))) + (v->z * (yz - wx));

@@ -1,11 +1,10 @@
-#include "../NCStandard.h"
-#include "../GL/Ngl.h"
+#include "lib/N/NCStandard.h"
+#include "lib/N/GL/Ngl.h"
 #include "../Containers/NArray.h"
 #include "../NViewport.h"
 
 #include "NUT_3DMouse.h"
 #include "NUT_Pick.h"
-
 
 /*
 // ------------------------------------------------------------------------------------------
@@ -24,7 +23,7 @@
 //							which starts from the camera position and pass trough screen plane at the "pmouse2d" 2d point.
 //			pv:				a valid pointer on a NVEC3 (3coords of a 3D points)
 // Out :
-//			a positive Nf32 < pickradius if pv is close enough or -1 if is not. 		
+//			a positive Nf32 < pickradius if pv is close enough or -1 if is not.
 // ------------------------------------------------------------------------------------------
 Nf32 NUT_Pick3DPoint(const NVEC2s16 *pmouse2d,const Nf32 pickradius,const NVEC3 *pv)
 {
@@ -44,7 +43,7 @@ Nf32 NUT_Pick3DPoint(const NVEC2s16 *pmouse2d,const Nf32 pickradius,const NVEC3 
 	NVec3Scale(&OP,&vdir,fdot);
 	NVec3Add(&P,&OP,&O);
 	NVec3Sub(&PA,&A,&P);
-	fdist = NVec3FastNormalize(&PA); //fdist = NVec3Normalize(&u); 
+	fdist = NVec3FastNormalize(&PA); //fdist = NVec3Normalize(&u);
 	if(fdist <= pickradius)
 		return fdist;
 
@@ -59,29 +58,29 @@ Nf32 NUT_Pick3DPoint(const NVEC2s16 *pmouse2d,const Nf32 pickradius,const NVEC3 
 //		Use "NUT_Get3DMouseRay" to get "prayorigin" and "prayvdir" from a 2D screen point.
 // ------------------------------------------------------------------------------------------
 // In  :
-//			prayorigin:		a valid pointer on a 3d point, which the line pass trough. 
+//			prayorigin:		a valid pointer on a 3d point, which the line pass trough.
 //			prayvdir:		a valid pointer on a 3d normalized vector, which represent the direction of the line.
 //			pickradius:		maximum distance (3d) accepted between "pv" and the line
 //							which starts from the camera position and pass trough screen plane at the "pmouse2d" 2d point.
 //			pv:				a valid pointer on a NVEC3 (3coords of a 3D points)
 // Out :
-//			a positive Nf32 <= pickradius if pv is close enough or -1 if is not. 		
+//			a positive Nf32 <= pickradius if pv is close enough or -1 if is not.
 // ------------------------------------------------------------------------------------------
 Nf32 NUT_Pick3DPointEx(const NVEC3 *pray_origin,const NVEC3 *pray_vnormdir,const Nf32 pickradius,const NVEC3 *pA)
 {
 	NErrorIf( NABS(1.0f-NVec3Length(pray_vnormdir))>NF32_EPSILON_VECTOR_LENGTH,NERROR_NON_UNIT_VECTOR );
-	
+
 	NVEC3	OA,OP,PA;
 	NVEC3	P;
 	Nf32		fdot;
 	Nf32		fdist;
-	
+
 	NVec3Sub(&OA,pA,pray_origin);
 	fdot = NVec3DotProduct(pray_vnormdir,&OA);
 	NVec3Scale(&OP,pray_vnormdir,fdot);
 	NVec3Add(&P,&OP,pray_origin);
 	NVec3Sub(&PA,pA,&P);
-	fdist = NVec3FastNormalize(&PA); //fdist = NVec3Normalize(&u); 
+	fdist = NVec3FastNormalize(&PA); //fdist = NVec3Normalize(&u);
 	if(fdist <= pickradius)
 		return fdist;
 
@@ -97,13 +96,13 @@ Nf32 NUT_Pick3DPointEx(const NVEC3 *pray_origin,const NVEC3 *pray_vnormdir,const
 //		Use "NUT_Get3DMouseRay" to get "prayorigin" and "prayvdir" from a 2D screen point.
 // ------------------------------------------------------------------------------------------
 // In  :
-//			prayorigin:			a valid pointer on a 3d point, which the line pass trough. 
+//			prayorigin:			a valid pointer on a 3d point, which the line pass trough.
 //			prayvdir:			a valid pointer on a 3d vector, which represent the direction of the line.
 //			picksquareradius:	maximum "SQUARE distance" (3d) accepted between "pv" and the line
 //								which starts from the camera position and pass trough screen plane at the "pmouse2d" 2d point.
 //			pv:					a valid pointer on a NVEC3 (3coords of a 3D points)
 // Out :
-//			a positive Nf32 < picksquareradius if pv is close enough or -1 if is not. 		
+//			a positive Nf32 < picksquareradius if pv is close enough or -1 if is not.
 // ------------------------------------------------------------------------------------------
 Nf32 NUT_Pick3DPointEx_SquareDist(const NVEC3 *pray_origin,const NVEC3 *pray_vnormdir,const Nf32 picksquareradius,const NVEC3 *pA)
 {
@@ -131,76 +130,76 @@ Nf32 NUT_Pick3DPointEx_SquareDist(const NVEC3 *pray_origin,const NVEC3 *pray_vno
 // NUT_Pick3DSpline
 // ------------------------------------------------------------------------------------------
 // Description :
-// 
+//
 // ------------------------------------------------------------------------------------------
 // In	:
-// 
-// 
+//
+//
 // Out :
 //
 //
 // ------------------------------------------------------------------------------------------
-Nbool NUT_Pick3DSpline(NUT_PICKSPLINE *presult, const NVEC2s16 *pmouse2d,const Nf32 pickradius, const NSPLINE *pspline)
+Nbool NUT_Pick3DSpline(NUT_PICKSPLINE *presult, const NVEC2s16 *pmouse2d, const Nf32 pickradius, const NSPLINE *pspline)
 {
-	NVEC3		vdir;
-	NVEC3		OA,OP,PA;
-	NVEC3		O,A,P;
-	Nf32			fdot;
-	Nf32			fdist;
+	NVEC3 vdir;
+	NVEC3 OA, OP, PA;
+	NVEC3 O, A, P;
+	Nf32 fdot;
+	Nf32 fdist;
 
-	Nu32			i,j,bindex;
-	NSPLINEKNOT	*spa,*spb;
-	NVEC3		L1,L2,L3,L4,L5;
-	NVEC3		RA;
-	NVEC3		mta,mtb;
-	NVEC3		mtp;
-	Nf32			fr,fac;
-	Nf32			fmin,factor;
-	Nf32			fmdot;
+	Nu32 i, j, bindex;
+	NSPLINEKNOT *spa, *spb;
+	NVEC3 L1, L2, L3, L4, L5;
+	NVEC3 RA;
+	NVEC3 mta, mtb;
+	NVEC3 mtp;
+	Nf32 fr, fac;
+	Nf32 fmin, factor;
+	Nf32 fmdot;
 
-	NUT_Get3DMouseRay(&O,&vdir,NULL,pmouse2d);
+	NUT_Get3DMouseRay(&O, &vdir, NULL, pmouse2d);
 	NVec3Normalize(&vdir);
 
 	// Test all the spline points
 	// FIND nearest point in the "CURVE"
-	factor	= -1.0f;
-	fmdot	= 0.0f;
-	fmin	= pickradius;
+	factor = -1.0f;
+	fmdot = 0.0f;
+	fmin = pickradius;
 
-	spb =(NSPLINEKNOT*)NGetFirstArrayPtr(&pspline->KnotArray);
+	spb = (NSPLINEKNOT *)NGetFirstArrayPtr(&pspline->KnotArray);
 	spb++;
-	for(i=1;i<NGetArraySize(&pspline->KnotArray);i++,spb++)
+	for (i = 1; i < NGetArraySize(&pspline->KnotArray); i++, spb++)
 	{
-		spa = spb-1;
+		spa = spb - 1;
 
-		fr = fac = 1.0f/(Nf32)pspline->BezierAccuracy;
-		for( j = 0; j<=pspline->BezierAccuracy; j++,fr+=fac )
+		fr = fac = 1.0f / (Nf32)pspline->BezierAccuracy;
+		for (j = 0; j <= pspline->BezierAccuracy; j++, fr += fac)
 		{
-			NVec3Lerp(&L1,&spa->Position,&spa->TB,fr);
-			NVec3Lerp(&L2,&spa->TB,&spb->TA,fr);
-			NVec3Lerp(&L3,&spb->TA,&spb->Position,fr);
+			NVec3Lerp(&L1, &spa->Position, &spa->TB, fr);
+			NVec3Lerp(&L2, &spa->TB, &spb->TA, fr);
+			NVec3Lerp(&L3, &spb->TA, &spb->Position, fr);
 
-			NVec3Lerp(&L4,&L1,&L2,fr);
-			NVec3Lerp(&L5,&L2,&L3,fr);
+			NVec3Lerp(&L4, &L1, &L2, fr);
+			NVec3Lerp(&L5, &L2, &L3, fr);
 
-			NVec3Lerp(&RA,&L4,&L5,fr);
+			NVec3Lerp(&RA, &L4, &L5, fr);
 
 			// Distance from RA to MouseRay:
 			A = RA;
 
-			NVec3Sub(&OA,&A,&O);
-			fdot = NVec3DotProduct(&vdir,&OA);
-			NVec3Scale(&OP,&vdir,fdot);
-			NVec3Add(&P,&OP,&O);
-			NVec3Sub(&PA,&A,&P);
-			fdist = NVec3FastNormalize(&PA); //fdist = NVec3Normalize(&u); 
+			NVec3Sub(&OA, &A, &O);
+			fdot = NVec3DotProduct(&vdir, &OA);
+			NVec3Scale(&OP, &vdir, fdot);
+			NVec3Add(&P, &OP, &O);
+			NVec3Sub(&PA, &A, &P);
+			fdist = NVec3FastNormalize(&PA); // fdist = NVec3Normalize(&u);
 
-			if( fdist<fmin )
+			if (fdist < fmin)
 			{
 				fmin = fdist;
 				factor = fr;
 				fmdot = fdot;
-				bindex=i;
+				bindex = i;
 				mtp = RA;
 
 				// try to define/estimate TA and TB at this point ...
@@ -210,11 +209,11 @@ Nbool NUT_Pick3DSpline(NUT_PICKSPLINE *presult, const NVEC2s16 *pmouse2d,const N
 		}
 	}
 
-	if( factor != -1.0f  )
+	if (factor != -1.0f)
 	{
 		presult->BSplinePointIndex = bindex;
 		presult->LerpFactor = factor;
-		presult->fDot		= fmdot;
+		presult->fDot = fmdot;
 		presult->PickedPosition = mtp;
 		presult->EstimatedTA = mta;
 		presult->EstimatedTB = mtb;
@@ -229,68 +228,67 @@ Nbool NUT_Pick3DSpline(NUT_PICKSPLINE *presult, const NVEC2s16 *pmouse2d,const N
 // NUT_PickVector3Array
 // ------------------------------------------------------------------------------------------
 // Description :
-// 
+//
 // ------------------------------------------------------------------------------------------
 // In	:
-// 
-// 
+//
+//
 // Out :
 //		'NVOID' if there is no close enough element.
-//		or 
-//		The index of the closest element if there is one. 
+//		or
+//		The index of the closest element if there is one.
 //
 //		note:  0 < index < NArraySize(pv3array)
 //
 // ------------------------------------------------------------------------------------------
-Nu32	NUT_PickVector3Array(NUT_PICKV3ARRAY *presult, const NVEC2s16 *pmouse2d, const Nf32 pickradius, const NARRAY *pv3array)
+Nu32 NUT_PickVector3Array(NUT_PICKV3ARRAY *presult, const NVEC2s16 *pmouse2d, const Nf32 pickradius, const NARRAY *pv3array)
 {
-	NVEC3		vdir;
-	NVEC3		OA,OP,PA;
-	NVEC3		O,P;
-	Nf32			fdist;
+	NVEC3 vdir;
+	NVEC3 OA, OP, PA;
+	NVEC3 O, P;
+	Nf32 fdist;
 
-	Nu32			i,index;
-	Nf32			fmin;
-	Nf32			fdot;
-	NVEC3		*pv;
-	NVEC3		*pvresult;
-	Nbool			bresult;
+	Nu32 i, index;
+	Nf32 fmin;
+	Nf32 fdot;
+	NVEC3 *pv;
+	NVEC3 *pvresult;
+	Nbool bresult;
 
-	NUT_Get3DMouseRay(&O,&vdir,NULL,pmouse2d);
+	NUT_Get3DMouseRay(&O, &vdir, NULL, pmouse2d);
 	NVec3Normalize(&vdir);
 
 	// Test all the V3 Array Elements
 	// FIND the closest one with the 3DMouseRay
-	fmin		= pickradius;
-	index		= NVOID;
-	pvresult	= NULL;
-	bresult		= NFALSE;
+	fmin = pickradius;
+	index = NVOID;
+	pvresult = NULL;
+	bresult = NFALSE;
 
-	pv =(NVEC3*)NGetFirstArrayPtr(pv3array);
-	for(i=0;i<NGetArraySize(pv3array);i++,pv++)
+	pv = (NVEC3 *)NGetFirstArrayPtr(pv3array);
+	for (i = 0; i < NGetArraySize(pv3array); i++, pv++)
 	{
-		NVec3Sub(&OA,pv,&O);
-		fdot = NVec3DotProduct(&vdir,&OA);
-		NVec3Scale(&OP,&vdir,fdot);
-		NVec3Add(&P,&OP,&O);
-		NVec3Sub(&PA,pv,&P);
+		NVec3Sub(&OA, pv, &O);
+		fdot = NVec3DotProduct(&vdir, &OA);
+		NVec3Scale(&OP, &vdir, fdot);
+		NVec3Add(&P, &OP, &O);
+		NVec3Sub(&PA, pv, &P);
 		fdist = NVec3Length(&PA);
-		
-		if( fdist<fmin )
+
+		if (fdist < fmin)
 		{
-			fmin		= fdist;
-			index		= i;
-			pvresult	= pv;
-			bresult		= NTRUE;
+			fmin = fdist;
+			index = i;
+			pvresult = pv;
+			bresult = NTRUE;
 		}
 	}
 
-	if(presult)
+	if (presult)
 	{
-		presult->PickingDistance	= fmin;
+		presult->PickingDistance = fmin;
 		presult->PickedElementIndex = index;
-		presult->pPickedV3Element	= pvresult;
+		presult->pPickedV3Element = pvresult;
 	}
 	return bresult;
 }
-

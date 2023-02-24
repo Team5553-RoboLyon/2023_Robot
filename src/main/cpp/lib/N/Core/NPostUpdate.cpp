@@ -5,23 +5,22 @@
 // **																					**
 // ***************************************************************************************
 // ***************************************************************************************
-#include "../NCStandard.h"
+#include "lib/N/NCStandard.h"
 #include "../NFlags.h"
-#include "../NType.h"
+#include "lib/N/NType.h"
 #include "../Containers/NArray.h"
 #include "../Core/NTime.h"
 #include "../NCore.h"
 #include "../NPostUpdate.h"
 
-
-NPOSTUPDATE	*NpPostUpdates;
+NPOSTUPDATE *NpPostUpdates;
 
 Nbool NPostUpdatesInitialization()
 {
-	NpPostUpdates = (NPOSTUPDATE *)Nmalloc( sizeof(NPOSTUPDATE)*NPOSTUPDATE_ENUM_SIZE );
-	if(!NpPostUpdates)
+	NpPostUpdates = (NPOSTUPDATE *)Nmalloc(sizeof(NPOSTUPDATE) * NPOSTUPDATE_ENUM_SIZE);
+	if (!NpPostUpdates)
 		return NFALSE;
-	memset(NpPostUpdates,0,sizeof(NPOSTUPDATE)*NPOSTUPDATE_ENUM_SIZE);
+	memset(NpPostUpdates, 0, sizeof(NPOSTUPDATE) * NPOSTUPDATE_ENUM_SIZE);
 
 	return NTRUE;
 }
@@ -41,7 +40,7 @@ NPOSTUPDATE_HANDLE NBindPostUpdateHandle(const NPOSTUPDATEUID uid, const NPOSTUP
 	return oldproc;
 }
 
-Nu32 NBindPostUpdate_u32DataA(const NPOSTUPDATEUID uid,const Nu32 u32DataA)
+Nu32 NBindPostUpdate_u32DataA(const NPOSTUPDATEUID uid, const Nu32 u32DataA)
 {
 	Nu32 old;
 
@@ -51,7 +50,7 @@ Nu32 NBindPostUpdate_u32DataA(const NPOSTUPDATEUID uid,const Nu32 u32DataA)
 	return old;
 }
 
-Nu32 NBindPostUpdate_u32DataB(const NPOSTUPDATEUID uid,const Nu32 u32DataB)
+Nu32 NBindPostUpdate_u32DataB(const NPOSTUPDATEUID uid, const Nu32 u32DataB)
 {
 	Nu32 old;
 
@@ -63,14 +62,13 @@ Nu32 NBindPostUpdate_u32DataB(const NPOSTUPDATEUID uid,const Nu32 u32DataB)
 
 void NPostUpdatePause(const NPOSTUPDATEUID uid)
 {
-	FLAG_OFF(NpPostUpdates[uid].Flags,FLAG_POSTUPDATE_PROCESS_ACTIVE);
+	FLAG_OFF(NpPostUpdates[uid].Flags, FLAG_POSTUPDATE_PROCESS_ACTIVE);
 }
 
 void NPostUpdateResume(const NPOSTUPDATEUID uid)
 {
-	FLAG_ON(NpPostUpdates[uid].Flags,FLAG_POSTUPDATE_PROCESS_ACTIVE);
+	FLAG_ON(NpPostUpdates[uid].Flags, FLAG_POSTUPDATE_PROCESS_ACTIVE);
 }
-
 
 /*
 // Globales variables
@@ -129,6 +127,6 @@ Nbool NDeletePostUpdateProcess(NPOSTUPDATE_PROCESS*  ppup)
 void NArrayDestructor_PostUpdateProcess(NBYTE *ptr)
 {
 	NClearPostUpdateProcess( (NPOSTUPDATE_PROCESS*)ptr );
-	// !!! TODO: Manage the case : 'ClearFunction return NULL (clear aborts) ...'   
+	// !!! TODO: Manage the case : 'ClearFunction return NULL (clear aborts) ...'
 }
 */

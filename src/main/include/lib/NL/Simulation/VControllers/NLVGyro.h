@@ -1,20 +1,20 @@
 #pragma once
-#include "../../../N/NType.h"
-#include "../../../N/NFlags.h"
+#include "lib/N/NType.h"
+#include "lib/N/NFlags.h"
 
-#include "../VirtualRobot/NLVirtualGyro.h"
+#include "lib/NL/Simulation/VirtualRobot/NLVirtualGyro.h"
 
 #define FLAG_NLVGYRO_IS_CLOCKWISE				BIT_0 // sens anti-trigonometrique
-#define FLAG_NLVGYRO_IS_DEGREE					BIT_1 // la fonction get() retournera une valeur exprimée en degrés. ( l'unité par défaut est le radian )
+#define FLAG_NLVGYRO_IS_DEGREE					BIT_1 // la fonction get() retournera une valeur exprimï¿½e en degrï¿½s. ( l'unitï¿½ par dï¿½faut est le radian )
 #define MASK_NLVGYRO_ALL_FLAGS					(BIT_0|BIT_1) 
 
 
-class NLVIRTUAL_ROBOT;	// NLVIRTUAL_ROBOT 'possède' NLROBOT comme membre ... 
+class NLVIRTUAL_ROBOT;	// NLVIRTUAL_ROBOT 'possï¿½de' NLROBOT comme membre ... 
 						// ...	et la classe NLROBOT peut contenir un (ou plusieurs?)  NLVGYRO comme membre(s).
-						// Donc, pour éviter des "inclusions circulaires et/où des "error C2079" ( undefined class ... )
-						// il convient ici de déclarer la class NVIRTUAL_ROBOT en forward déclaration ( sans inclure NLVirtualRobot.h ) 
-						// ainsi le compilateur 'sait' que la class existe sans en connaitre encore le détail...
-						// ( NLVirtualRobot.h étant bien sûr inclu dans NLVGyro.cpp ) 
+						// Donc, pour ï¿½viter des "inclusions circulaires et/oï¿½ des "error C2079" ( undefined class ... )
+						// il convient ici de dï¿½clarer la class NVIRTUAL_ROBOT en forward dï¿½claration ( sans inclure NLVirtualRobot.h ) 
+						// ainsi le compilateur 'sait' que la class existe sans en connaitre encore le dï¿½tail...
+						// ( NLVirtualRobot.h ï¿½tant bien sï¿½r inclu dans NLVGyro.cpp ) 
 
 
 class NLVGYRO

@@ -1,9 +1,9 @@
 #pragma once
-#include "../N/NType.h"
-#include "../N/Miscellaneous/NColor.h"
-#include "../N/Miscellaneous/NColorPalette.h"
-#include "../N/Utilities/Draw/NUT_Draw.h"
-#include "../N/NObject.h"
+#include "lib/N/NType.h"
+#include "lib/N/Miscellaneous/NColor.h"
+#include "lib/N/Miscellaneous/NColorPalette.h"
+#include "lib/N/Utilities/Draw/NUT_Draw.h"
+#include "lib/N/NObject.h"
 
 #define NLPLAYGROUND_TEXTURE_NAME_SIZE			256
 

@@ -6,10 +6,10 @@
 // ***************************************************************************************
 // ***************************************************************************************
 //
-#include "../NCStandard.h"
-#include "../NType.h"
-#include "../NString.h"
-#include "../File/NFile.h"
+#include "lib/N/NCStandard.h"
+#include "lib/N/NType.h"
+#include "lib/N/NString.h"
+#include "lib/N/File/NFile.h"
 
 #ifdef _NANDROID
 #include "../System/NAndroid.h"
@@ -17,51 +17,51 @@
 
 #include "./NServiceMedia.h"
 
-void NPlayVideo(const Nchar* file_name)
+void NPlayVideo(const Nchar *file_name)
 {
-	#ifdef _NANDROID
+#ifdef _NANDROID
 	Nchar fullpathname[CONSTANT_NFILE_FULLDATAPATH_MAXSIZE];
-	NBuildJNICall_String ( "mr_PlayVideo", NGetFullFileName( fullpathname,file_name,0 ) );
-	#endif
+	NBuildJNICall_String("mr_PlayVideo", NGetFullFileName(fullpathname, file_name, 0));
+#endif
 }
 void NStopVideo()
 {
-	#ifdef _NANDROID
-	NBuildJNICall( "mr_StopVideo" );
-	#endif
+#ifdef _NANDROID
+	NBuildJNICall("mr_StopVideo");
+#endif
 }
 
-void NPlayMusic(const char* file_name)
+void NPlayMusic(const char *file_name)
 {
-	#ifdef _NANDROID
+#ifdef _NANDROID
 	Nchar fullpathname[CONSTANT_NFILE_FULLDATAPATH_MAXSIZE];
-	NBuildJNICall_String ( "mr_PlayMusic", NGetFullFileName( fullpathname,file_name,0 ) );
-	#endif
+	NBuildJNICall_String("mr_PlayMusic", NGetFullFileName(fullpathname, file_name, 0));
+#endif
 }
 
 void NStopMusic()
 {
-	#ifdef _NANDROID
-	NBuildJNICall( "mr_StopMusic" );
-	#endif
+#ifdef _NANDROID
+	NBuildJNICall("mr_StopMusic");
+#endif
 }
 void NPauseMusic()
 {
-	#ifdef _NANDROID
-	NBuildJNICall( "mr_PauseMusic" );
-	#endif
+#ifdef _NANDROID
+	NBuildJNICall("mr_PauseMusic");
+#endif
 }
 void NStartMusic()
 {
-	#ifdef _NANDROID
-	NBuildJNICall( "mr_StartMusic" );
-	#endif
+#ifdef _NANDROID
+	NBuildJNICall("mr_StartMusic");
+#endif
 }
-void NSetMusicVolume( const Nf32 vol)
+void NSetMusicVolume(const Nf32 vol)
 {
-	#ifdef _NANDROID
-	NBuildJNICall_Nf32 ( "mr_SetMusicVolume", vol );
-	#endif
+#ifdef _NANDROID
+	NBuildJNICall_Nf32("mr_SetMusicVolume", vol);
+#endif
 }
 
 //===============================================================================================================================================================================================
@@ -101,4 +101,3 @@ NztBool	AndroidIsMusicPlaying( void )
 	return bIsMusicPlaying;
 }
 */
-

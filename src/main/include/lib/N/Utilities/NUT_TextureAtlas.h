@@ -8,7 +8,7 @@
 // **																					**
 // ***************************************************************************************
 // ***************************************************************************************
-#include "../NType.h"
+#include "lib/N/NType.h"
 #include "../Maths/NVec3f32.h"
 #include "../BasicElements/NTextureAtlas.h"
 
@@ -25,11 +25,10 @@ extern "C"
 // **																																							**
 // ***************************************************************************************************************************************************************
 // ***************************************************************************************************************************************************************
-#define EXTENSION_ATLAS_LIST			".txt"				// Extension file for the text file which describe the list of 'Atlas' to load
-void NUT_LoadAtlasList(const char* filename, const Nbool using_texture_library, const NLOADATLASELEMENT_CALLBACK callback, Nu32 Nu32_param);
+#define EXTENSION_ATLAS_LIST ".txt" // Extension file for the text file which describe the list of 'Atlas' to load
+    void NUT_LoadAtlasList(const char *filename, const Nbool using_texture_library, const NLOADATLASELEMENT_CALLBACK callback, Nu32 Nu32_param);
 // ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 #ifdef __cplusplus
 }
-#endif	// __cpluplus
-#endif	// __NUT_TEXTURE_ATLAS_H
-
+#endif // __cpluplus
+#endif // __NUT_TEXTURE_ATLAS_H

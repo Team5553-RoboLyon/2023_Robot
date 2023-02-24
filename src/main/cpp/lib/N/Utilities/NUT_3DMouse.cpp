@@ -1,5 +1,5 @@
-#include "../NCStandard.h"
-#include "../GL/Ngl.h"
+#include "lib/N/NCStandard.h"
+#include "lib/N/GL/Ngl.h"
 #include "../NViewPort.h"
 
 #include "NUT_3DMouse.h"
@@ -11,20 +11,20 @@
 // Compute 3D World coordinates from a 2D Screen coord point
 // ------------------------------------------------------------------------------------------
 // In	:
-// 
-// 
+//
+//
 // Out :
 //
 //
 // ------------------------------------------------------------------------------------------
-void NUT_Get3DMouse(NVEC3 *pmouse3d, NCAMERA *pcam, const NVEC2s16 *pmouse2d )
+void NUT_Get3DMouse(NVEC3 *pmouse3d, NCAMERA *pcam, const NVEC2s16 *pmouse2d)
 {
-	NCAMERA				*pcamera;
-//	NVEC3				vx,vy,vz;
-	Nf32				xl,yl,zl;
-	Nf32				x,y;
+	NCAMERA *pcamera;
+	//	NVEC3				vx,vy,vz;
+	Nf32 xl, yl, zl;
+	Nf32 x, y;
 
-	if(pcam)
+	if (pcam)
 		pcamera = pcam;
 	else
 		pcamera = NGetCamera();
@@ -32,8 +32,8 @@ void NUT_Get3DMouse(NVEC3 *pmouse3d, NCAMERA *pcam, const NVEC2s16 *pmouse2d )
 	NUpdateCameraAxis(pcamera); // this function update Axis camera ONLY if it's necessary.
 
 	zl = pcamera->fZNear;
-	yl = zl*pcamera->PreCompute_Tangente;
-	xl = yl*NViewPort.AspectRatio; // Aspect Ratio is Width/Height
+	yl = zl * pcamera->PreCompute_Tangente;
+	xl = yl * NViewPort.AspectRatio; // Aspect Ratio is Width/Height
 
 	/*
 	 * Old version
@@ -49,7 +49,7 @@ void NUT_Get3DMouse(NVEC3 *pmouse3d, NCAMERA *pcam, const NVEC2s16 *pmouse2d )
 	NVec3AddTo(pmouse3d,&vy);
 	NVec3AddTo(pmouse3d,&vz);
 	*/
-	//New version ( same thing but no 'NVecAddTo' and no 'NVec3Scale' calls )
+	// New version ( same thing but no 'NVecAddTo' and no 'NVec3Scale' calls )
 	x = (((Nf32)pmouse2d->x - NViewPort.WidthOutOf2) / NViewPort.WidthOutOf2) * xl;
 	y = ((-(Nf32)pmouse2d->y + NViewPort.HeightOutOf2) / NViewPort.HeightOutOf2) * yl; // '-' due to the 2D screen base is inverted ( origin is LEFT/TOP corner )
 	pmouse3d->x = pcamera->Pos.x + pcamera->XAxis.x * x + pcamera->YAxis.x * y + pcamera->ZAxis.x * zl;
@@ -58,8 +58,8 @@ void NUT_Get3DMouse(NVEC3 *pmouse3d, NCAMERA *pcam, const NVEC2s16 *pmouse2d )
 }
 
 // ------------------------------------------------------------------------------------------
-/** 
- *	@brief	Compute a 3DWorld position of a 2D screen coordinates point 
+/**
+ *	@brief	Compute a 3DWorld position of a 2D screen coordinates point
  *			(mouse pointer coordinates for example).
  *
  *			There are 2 versions of this function:
@@ -70,33 +70,33 @@ void NUT_Get3DMouse(NVEC3 *pmouse3d, NCAMERA *pcam, const NVEC2s16 *pmouse2d )
  *			on the 3Dline pass through the cameraPos and this 2D point !
  *			To calculate 3DWorld coordinates we need to choose a from camera distance (to this "2Dpoint").
  *			This distance will be the Z component of the 3D point into the camera coordinates system ...
- *			So, that's the point! with the "NUT_Get3DMouse" function, this Z is set for you to "Cam ZNear" 
+ *			So, that's the point! with the "NUT_Get3DMouse" function, this Z is set for you to "Cam ZNear"
  *			...and in this version "NUT_Get3DMouseEx", you choose which Z (camera coord. system) you want.
  *
- *	@param	pmouse3d			a pointer on a NVEC3f32 struct where the function is going to write  the result.		
+ *	@param	pmouse3d			a pointer on a NVEC3f32 struct where the function is going to write  the result.
  *	@param	pcam				a pointer on a NVEC3f32 struct where the function is going to write  the result.
  *	@param	pmouse2d			a pointer on a NVEC3f32 struct where the function is going to write  the result.
  *	@param	z_camcoordsystem	this function is going to use this parameter instead of "pcamera->fZNear" as the z position of the "screenplane" where the 2D mouse is supposed to be.
  *								( function \e NUT_Get3DMouse is using "pcamera->fZNear" for that purpose )
  */
 // ------------------------------------------------------------------------------------------
-void NUT_Get3DMouseEx(NVEC3 *pmouse3d, NCAMERA *pcam, const NVEC2s16 *pmouse2d, const Nf32 z_camcoordsystem )
+void NUT_Get3DMouseEx(NVEC3 *pmouse3d, NCAMERA *pcam, const NVEC2s16 *pmouse2d, const Nf32 z_camcoordsystem)
 {
-	NCAMERA		*pcamera;
-//	NVEC3	vx,vy,vz;
-	Nf32		xl,yl/*,zl*/;
-	Nf32		x,y;
+	NCAMERA *pcamera;
+	//	NVEC3	vx,vy,vz;
+	Nf32 xl, yl /*,zl*/;
+	Nf32 x, y;
 
-	if(pcam)
+	if (pcam)
 		pcamera = pcam;
 	else
 		pcamera = NGetCamera();
 
 	NUpdateCameraAxis(pcamera); // this function update Axis camera ONLY if it's necessary.
 
-	//zl = z_camcoordsystem;
-	yl = /*zl*/z_camcoordsystem*pcamera->PreCompute_Tangente;
-	xl = yl*NViewPort.AspectRatio; // Aspect Ratio is Width/Height
+	// zl = z_camcoordsystem;
+	yl = /*zl*/ z_camcoordsystem * pcamera->PreCompute_Tangente;
+	xl = yl * NViewPort.AspectRatio; // Aspect Ratio is Width/Height
 
 	/*
 	 * Old version
@@ -114,7 +114,7 @@ void NUT_Get3DMouseEx(NVEC3 *pmouse3d, NCAMERA *pcam, const NVEC2s16 *pmouse2d, 
 	NVec3AddTo(pmouse3d,&vy);
 	NVec3AddTo(pmouse3d,&vz);
 	*/
-	//New version ( same thing but no 'NVecAddTo' and no 'NVec3Scale' calls )
+	// New version ( same thing but no 'NVecAddTo' and no 'NVec3Scale' calls )
 	x = (((Nf32)pmouse2d->x - NViewPort.WidthOutOf2) / NViewPort.WidthOutOf2) * xl;
 	y = ((-(Nf32)pmouse2d->y + NViewPort.HeightOutOf2) / NViewPort.HeightOutOf2) * yl; // '-' due to the 2D screen base is inverted ( origin is LEFT/TOP corner )
 	pmouse3d->x = pcamera->Pos.x + pcamera->XAxis.x * x + pcamera->YAxis.x * y + pcamera->ZAxis.x * z_camcoordsystem;
@@ -130,24 +130,24 @@ void NUT_Get3DMouseEx(NVEC3 *pmouse3d, NCAMERA *pcam, const NVEC2s16 *pmouse2d, 
 // Be aware that the resulting ray vector (pdirector) is not normalized !!!
 // ------------------------------------------------------------------------------------------
 // In	:
-// 
-// 
+//
+//
 // Out :
 //
 //
 // ------------------------------------------------------------------------------------------
-void NUT_Get3DMouseRay(NVEC3 *porigin, NVEC3 *pdirector, NCAMERA *pcam, const NVEC2s16 *pmouse2d )
+void NUT_Get3DMouseRay(NVEC3 *porigin, NVEC3 *pdirector, NCAMERA *pcam, const NVEC2s16 *pmouse2d)
 {
-	NCAMERA		*pcamera;
+	NCAMERA *pcamera;
 
-	if(pcam)
+	if (pcam)
 		pcamera = pcam;
 	else
 		pcamera = NGetCamera();
 
-	NUT_Get3DMouseEx(pdirector, pcamera,pmouse2d,1.0f); // 1.0f for a better precision (i guess) ...
-	//NVec3SubFrom(pdirector,&pcamera->Pos);
-	//NVec3Normalize(pdirector);
+	NUT_Get3DMouseEx(pdirector, pcamera, pmouse2d, 1.0f); // 1.0f for a better precision (i guess) ...
+	// NVec3SubFrom(pdirector,&pcamera->Pos);
+	// NVec3Normalize(pdirector);
 	pdirector->x -= pcamera->Pos.x;
 	pdirector->y -= pcamera->Pos.y;
 	pdirector->z -= pcamera->Pos.z;
@@ -161,24 +161,24 @@ void NUT_Get3DMouseRay(NVEC3 *porigin, NVEC3 *pdirector, NCAMERA *pcam, const NV
 // Be aware that the resulting ray vector (pdirector) is not normalized !!!
 // ------------------------------------------------------------------------------------------
 // In	:
-// 
-// 
+//
+//
 // Out :
 //
 //
 // ------------------------------------------------------------------------------------------
 void NUT_Get3DMouseRayEx(NVEC3 *porigin, NVEC3 *pdirector, NCAMERA *pcam, const NVEC2s16 *pmouse2d, const Nf32 z_camcoordsystem)
 {
-	NCAMERA		*pcamera;
+	NCAMERA *pcamera;
 
-	if(pcam)
+	if (pcam)
 		pcamera = pcam;
 	else
 		pcamera = NGetCamera();
 
-	NUT_Get3DMouseEx(pdirector, pcamera,pmouse2d,z_camcoordsystem);
-	//NVec3SubFrom(pdirector,&pcamera->Pos);
-	//NVec3Normalize(pdirector);
+	NUT_Get3DMouseEx(pdirector, pcamera, pmouse2d, z_camcoordsystem);
+	// NVec3SubFrom(pdirector,&pcamera->Pos);
+	// NVec3Normalize(pdirector);
 	pdirector->x -= pcamera->Pos.x;
 	pdirector->y -= pcamera->Pos.y;
 	pdirector->z -= pcamera->Pos.z;
@@ -188,50 +188,50 @@ void NUT_Get3DMouseRayEx(NVEC3 *porigin, NVEC3 *pdirector, NCAMERA *pcam, const 
 // void NUT_Get3DMouseSegment
 // ------------------------------------------------------------------------------------------
 // Description :
-// 
+//
 // ------------------------------------------------------------------------------------------
 // In	:
-// 
-// 
+//
+//
 // Out :
 //
 //
 // ------------------------------------------------------------------------------------------
-void NUT_Get3DMouseSegment(NVEC3 *psegA, NVEC3 *psegB, NCAMERA *pcam, const NVEC2s16 *pmouse2d )
+void NUT_Get3DMouseSegment(NVEC3 *psegA, NVEC3 *psegB, NCAMERA *pcam, const NVEC2s16 *pmouse2d)
 {
-	NCAMERA		*pcamera;
+	NCAMERA *pcamera;
 
-	if(pcam)
+	if (pcam)
 		pcamera = pcam;
 	else
 		pcamera = NGetCamera();
 
-	NUT_Get3DMouseEx(psegB, pcamera,pmouse2d,1.0f); // 1.0f for a better precision (i guess) ...
+	NUT_Get3DMouseEx(psegB, pcamera, pmouse2d, 1.0f); // 1.0f for a better precision (i guess) ...
 	*psegA = pcamera->Pos;
 }
 // ------------------------------------------------------------------------------------------
 // void NUT_Get3DMouseSegmentEx
 // ------------------------------------------------------------------------------------------
 // Description :
-// 
+//
 // ------------------------------------------------------------------------------------------
 // In	:
-// 
-// 
+//
+//
 // Out :
 //
 //
 // ------------------------------------------------------------------------------------------
-void NUT_Get3DMouseSegmentEx(NVEC3 *psegA, NVEC3 *psegB, NCAMERA *pcam, const NVEC2s16 *pmouse2d, const Nf32 z_camcoordsystem )
+void NUT_Get3DMouseSegmentEx(NVEC3 *psegA, NVEC3 *psegB, NCAMERA *pcam, const NVEC2s16 *pmouse2d, const Nf32 z_camcoordsystem)
 {
-	NCAMERA		*pcamera;
+	NCAMERA *pcamera;
 
-	if(pcam)
+	if (pcam)
 		pcamera = pcam;
 	else
 		pcamera = NGetCamera();
 
-	NUT_Get3DMouseEx(psegB, pcamera,pmouse2d,z_camcoordsystem); 
+	NUT_Get3DMouseEx(psegB, pcamera, pmouse2d, z_camcoordsystem);
 	*psegA = pcamera->Pos;
 }
 
@@ -544,7 +544,7 @@ void NUT_UnProject2DMouse(NVEC3 *pmouse3d, const NVEC2s16 *pmouse2d )
 	glGetIntegerv( GL_VIEWPORT, mviewport );
 
 	mwinx = (Nf32)pmouse2d->x;
-	mwiny = (Nf32)mviewport[3] - (Nf32)pmouse2d->y; // Hauteur ecran - y ( sinon y inversé )
+	mwiny = (Nf32)mviewport[3] - (Nf32)pmouse2d->y; // Hauteur ecran - y ( sinon y inversï¿½ )
 	mwinz = pcamera->fZNear;
 	_glhUnProjectf((Nf32*)pmouse3d,mwinx,mwiny,mwinz, mmodelview, mprojection, mviewport );
 	//printf("ByMat: x:%f Y:%f Z:%f\n",pmouse3d->x,pmouse3d->y,pmouse3d->z);
@@ -564,7 +564,7 @@ void NUT_UnProject2DMouse(NVEC3 *pmouse3d, const NVEC2s16 *pmouse2d )
 	glGetIntegerv( GL_VIEWPORT, viewport );
 
 	winx = (GLdouble)pmouse2d->x;
-	winy = (GLdouble)viewport[3] - (GLdouble)pmouse2d->y; // Hauteur ecran - y ( sinon y inversé )
+	winy = (GLdouble)viewport[3] - (GLdouble)pmouse2d->y; // Hauteur ecran - y ( sinon y inversï¿½ )
 	winz = pcamera->fZNear;
 	gluUnProject( winx, winy, winz, modelview, projection, viewport, &outx,&outy,&outz);
 

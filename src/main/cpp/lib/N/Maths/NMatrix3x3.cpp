@@ -3,11 +3,11 @@
 // ------------------------------------------------------------------------------------------
 // Author	: Jean-Marie Nazaret
 // Create	: 06/05/2016
-// Modified : 
+// Modified :
 // ==========================================================================================
-#include "../NCStandard.h"
-#include "../NType.h"
-#include "../NErrorHandling.h"
+#include "lib/N/NCStandard.h"
+#include "lib/N/NType.h"
+#include "lib/N/NErrorHandling.h"
 #include "../Utilities/Maths/NUT_MathsMisc.h"
 
 #include "NMatrix3x3.h"
@@ -27,9 +27,15 @@
 void NIdentityMatrix3x3(NMATRIX3x3 *mat)
 {
 	//	XAxis				YAxis				ZAxis
-		mat->f00 = 1.0f; 	mat->f10 = 0.0f;	mat->f20 = 0.0f;				
-		mat->f01 = 0.0f;	mat->f11 = 1.0f;	mat->f21 = 0.0f;	
-		mat->f02 = 0.0f;	mat->f12 = 0.0f;	mat->f22 = 1.0f;	
+	mat->f00 = 1.0f;
+	mat->f10 = 0.0f;
+	mat->f20 = 0.0f;
+	mat->f01 = 0.0f;
+	mat->f11 = 1.0f;
+	mat->f21 = 0.0f;
+	mat->f02 = 0.0f;
+	mat->f12 = 0.0f;
+	mat->f22 = 1.0f;
 }
 
 // ------------------------------------------------------------------------------------------
@@ -41,13 +47,13 @@ void NIdentityMatrix3x3(NMATRIX3x3 *mat)
 // ------------------------------------------------------------------------------------------
 // In  :
 //		matresult	: Result Matrix
-//		mat1		: The 1° matrix
-//		mat2		: The 2° matrix
+//		mat1		: The 1ï¿½ matrix
+//		mat2		: The 2ï¿½ matrix
 //
 // Out :
 //
 // ------------------------------------------------------------------------------------------
-void NMulMatrix3x3(NMATRIX3x3 *matresult, const NMATRIX3x3 *mat1, const NMATRIX3x3 *mat2 )
+void NMulMatrix3x3(NMATRIX3x3 *matresult, const NMATRIX3x3 *mat1, const NMATRIX3x3 *mat2)
 {
 	matresult->f00 = mat1->f00 * mat2->f00 + mat1->f01 * mat2->f10 + mat1->f02 * mat2->f20;
 	matresult->f01 = mat1->f00 * mat2->f01 + mat1->f01 * mat2->f11 + mat1->f02 * mat2->f21;
@@ -62,7 +68,6 @@ void NMulMatrix3x3(NMATRIX3x3 *matresult, const NMATRIX3x3 *mat1, const NMATRIX3
 	matresult->f22 = mat1->f20 * mat2->f02 + mat1->f21 * mat2->f12 + mat1->f22 * mat2->f22;
 }
 
-
 // ------------------------------------------------------------------------------------------
 // NScaleMatrix3x3f
 // ------------------------------------------------------------------------------------------
@@ -76,20 +81,30 @@ void NMulMatrix3x3(NMATRIX3x3 *matresult, const NMATRIX3x3 *mat1, const NMATRIX3
 // Out :
 //
 // ------------------------------------------------------------------------------------------
-void NScaleMatrix3x3f(NMATRIX3x3 *matresult,const Nf32 sx,const Nf32 sy,const Nf32 sz )
+void NScaleMatrix3x3f(NMATRIX3x3 *matresult, const Nf32 sx, const Nf32 sy, const Nf32 sz)
 {
-	matresult->f00 = sx;	matresult->f10 = 0.0f;	matresult->f20 = 0.0f;
-	matresult->f01 = 0.0f;	matresult->f11 = sy;	matresult->f21 = 0.0f;
-	matresult->f02 = 0.0f;	matresult->f12 = 0.0f;	matresult->f22 = sz;
-
+	matresult->f00 = sx;
+	matresult->f10 = 0.0f;
+	matresult->f20 = 0.0f;
+	matresult->f01 = 0.0f;
+	matresult->f11 = sy;
+	matresult->f21 = 0.0f;
+	matresult->f02 = 0.0f;
+	matresult->f12 = 0.0f;
+	matresult->f22 = sz;
 }
 void NScaleMatrix3x3(NMATRIX3x3 *matresult, const NVEC3 *s)
 {
-	matresult->f00 = s->x;	matresult->f10 = 0.0f;	matresult->f20 = 0.0f;
-	matresult->f01 = 0.0f;	matresult->f11 = s->y;	matresult->f21 = 0.0f;
-	matresult->f02 = 0.0f;	matresult->f12 = 0.0f;	matresult->f22 = s->z;
+	matresult->f00 = s->x;
+	matresult->f10 = 0.0f;
+	matresult->f20 = 0.0f;
+	matresult->f01 = 0.0f;
+	matresult->f11 = s->y;
+	matresult->f21 = 0.0f;
+	matresult->f02 = 0.0f;
+	matresult->f12 = 0.0f;
+	matresult->f22 = s->z;
 }
-
 
 // ------------------------------------------------------------------------------------------
 // NTransposeMatrixO
@@ -97,7 +112,7 @@ void NScaleMatrix3x3(NMATRIX3x3 *matresult, const NVEC3 *s)
 // Description :
 //	Perform a matrix 3x3 transposition.
 //	Optimized version ... ( one NMATRIX copy less )
-//	! pmatresult and pmat need to be different ! 
+//	! pmatresult and pmat need to be different !
 //	Use NTransposeMatrixO ONLY if you are sure that "pmatresult" is different than "pmat"
 //	Use NTransposeMatrix for all other cases.
 // ------------------------------------------------------------------------------------------
@@ -108,13 +123,19 @@ void NScaleMatrix3x3(NMATRIX3x3 *matresult, const NVEC3 *s)
 // Out :
 //
 // ------------------------------------------------------------------------------------------
-void NTransposeMatrix3x3O( NMATRIX3x3 *pmatresult, const NMATRIX3x3 *pmat )
+void NTransposeMatrix3x3O(NMATRIX3x3 *pmatresult, const NMATRIX3x3 *pmat)
 {
-	NErrorIf((NMATRIX3x3*)pmat == pmatresult, NERROR_MATRIX_IN_OUT_MATRIX_POINTERS_HAS_TO_BE_DIFFERENT);
+	NErrorIf((NMATRIX3x3 *)pmat == pmatresult, NERROR_MATRIX_IN_OUT_MATRIX_POINTERS_HAS_TO_BE_DIFFERENT);
 
-	pmatresult->f00 = pmat->f00;	pmatresult->f10 = pmat->f01;	pmatresult->f20 = pmat->f02;
-	pmatresult->f01 = pmat->f10;	pmatresult->f11 = pmat->f11;	pmatresult->f21 = pmat->f12;
-	pmatresult->f02 = pmat->f20;	pmatresult->f12 = pmat->f21;	pmatresult->f22 = pmat->f22;
+	pmatresult->f00 = pmat->f00;
+	pmatresult->f10 = pmat->f01;
+	pmatresult->f20 = pmat->f02;
+	pmatresult->f01 = pmat->f10;
+	pmatresult->f11 = pmat->f11;
+	pmatresult->f21 = pmat->f12;
+	pmatresult->f02 = pmat->f20;
+	pmatresult->f12 = pmat->f21;
+	pmatresult->f22 = pmat->f22;
 }
 
 // ------------------------------------------------------------------------------------------
@@ -129,17 +150,22 @@ void NTransposeMatrix3x3O( NMATRIX3x3 *pmatresult, const NMATRIX3x3 *pmat )
 // Out :
 //
 // ------------------------------------------------------------------------------------------
-void NTransposeMatrix3x3( NMATRIX3x3 *pmatresult, const NMATRIX3x3 *pmat )
+void NTransposeMatrix3x3(NMATRIX3x3 *pmatresult, const NMATRIX3x3 *pmat)
 {
-	NMATRIX3x3		tmp;
+	NMATRIX3x3 tmp;
 
-	tmp.f00 = pmat->f00;	tmp.f10 = pmat->f01;	tmp.f20 = pmat->f02;
-	tmp.f01 = pmat->f10;	tmp.f11 = pmat->f11;	tmp.f21 = pmat->f12;
-	tmp.f02 = pmat->f20;	tmp.f12 = pmat->f21;	tmp.f22 = pmat->f22;
+	tmp.f00 = pmat->f00;
+	tmp.f10 = pmat->f01;
+	tmp.f20 = pmat->f02;
+	tmp.f01 = pmat->f10;
+	tmp.f11 = pmat->f11;
+	tmp.f21 = pmat->f12;
+	tmp.f02 = pmat->f20;
+	tmp.f12 = pmat->f21;
+	tmp.f22 = pmat->f22;
 
 	*pmatresult = tmp;
 }
-
 
 // -------------------------------------------------------------------------------------------
 // NMulVector3ByMatrix3x3O
@@ -147,7 +173,7 @@ void NTransposeMatrix3x3( NMATRIX3x3 *pmatresult, const NMATRIX3x3 *pmat )
 // Description :
 //	Multiply a vector3 by a Matrix3x3.
 //	Optimized version ... ( one NVEC3 copy less )
-//	! vr and v need to be different ! 
+//	! vr and v need to be different !
 //	Use NMulVector3ByMatrixO ONLY if you are sure that "vr" is different than "v"
 //	Use NMulVector3ByMatrix for all other cases.
 // -------------------------------------------------------------------------------------------
@@ -161,11 +187,11 @@ void NTransposeMatrix3x3( NMATRIX3x3 *pmatresult, const NMATRIX3x3 *pmat )
 // -------------------------------------------------------------------------------------------
 void NMulVector3ByMatrix3x3O(NVEC3 *vr, const NMATRIX3x3 *mat, const NVEC3 *v)
 {
-	NErrorIf( vr == (NVEC3*)v, NERROR_MATRIX_IN_OUT_VECTOR3_POINTERS_HAS_TO_BE_DIFFERENT);
+	NErrorIf(vr == (NVEC3 *)v, NERROR_MATRIX_IN_OUT_VECTOR3_POINTERS_HAS_TO_BE_DIFFERENT);
 
-	vr->x	= v->x * mat->f00 + v->y * mat->f10 + v->z * mat->f20;
-	vr->y	= v->x * mat->f01 + v->y * mat->f11 + v->z * mat->f21;
-	vr->z	= v->x * mat->f02 + v->y * mat->f12 + v->z * mat->f22;
+	vr->x = v->x * mat->f00 + v->y * mat->f10 + v->z * mat->f20;
+	vr->y = v->x * mat->f01 + v->y * mat->f11 + v->z * mat->f21;
+	vr->z = v->x * mat->f02 + v->y * mat->f12 + v->z * mat->f22;
 }
 
 // -------------------------------------------------------------------------------------------
@@ -185,11 +211,11 @@ void NMulVector3ByMatrix3x3O(NVEC3 *vr, const NMATRIX3x3 *mat, const NVEC3 *v)
 // -------------------------------------------------------------------------------------------
 void NMulVector3ByMatrix3x3(NVEC3 *vr, const NMATRIX3x3 *mat, const NVEC3 *v)
 {
-	NVEC3	vtmp;
-	
-	vtmp.x	= v->x * mat->f00 + v->y * mat->f10 + v->z * mat->f20;
-	vtmp.y	= v->x * mat->f01 + v->y * mat->f11 + v->z * mat->f21;
-	vtmp.z	= v->x * mat->f02 + v->y * mat->f12 + v->z * mat->f22;
+	NVEC3 vtmp;
+
+	vtmp.x = v->x * mat->f00 + v->y * mat->f10 + v->z * mat->f20;
+	vtmp.y = v->x * mat->f01 + v->y * mat->f11 + v->z * mat->f21;
+	vtmp.z = v->x * mat->f02 + v->y * mat->f12 + v->z * mat->f22;
 
 	*vr = vtmp;
 }
@@ -199,7 +225,7 @@ void NMulVector3ByMatrix3x3(NVEC3 *vr, const NMATRIX3x3 *mat, const NVEC3 *v)
 // Description :
 //	Multiply a vector2 by a Matrix3x3.
 //	Optimized version ... ( one NVEC2 copy less )
-//	! vr and v need to be different ! 
+//	! vr and v need to be different !
 //	Use NMulVector2ByMatrixO ONLY if you are sure that "vr" is different than "v"
 //	Use NMulVector2ByMatrix for all other cases.
 // -------------------------------------------------------------------------------------------
@@ -213,19 +239,18 @@ void NMulVector3ByMatrix3x3(NVEC3 *vr, const NMATRIX3x3 *mat, const NVEC3 *v)
 // -------------------------------------------------------------------------------------------
 void NMulVector2ByMatrix3x3O(NVEC2 *vr, const NMATRIX3x3 *mat, const NVEC2 *v)
 {
-	NErrorIf( vr == (NVEC2*)v, NERROR_MATRIX_IN_OUT_VECTOR2_POINTERS_HAS_TO_BE_DIFFERENT);
+	NErrorIf(vr == (NVEC2 *)v, NERROR_MATRIX_IN_OUT_VECTOR2_POINTERS_HAS_TO_BE_DIFFERENT);
 
-	vr->x	= v->x * mat->f00 + v->y * mat->f10 + mat->f20;// v->z = 1 ! (Homogeneous 2D coordinates ...)
-	vr->y	= v->x * mat->f01 + v->y * mat->f11 + mat->f21;// v->z = 1 ! (Homogeneous 2D coordinates ...) 
-	Nf32 z	= v->x * mat->f02 + v->y * mat->f12 + mat->f22;// v->z = 1 !  (Homogeneous 2D coordinates ...)
+	vr->x = v->x * mat->f00 + v->y * mat->f10 + mat->f20;  // v->z = 1 ! (Homogeneous 2D coordinates ...)
+	vr->y = v->x * mat->f01 + v->y * mat->f11 + mat->f21;  // v->z = 1 ! (Homogeneous 2D coordinates ...)
+	Nf32 z = v->x * mat->f02 + v->y * mat->f12 + mat->f22; // v->z = 1 !  (Homogeneous 2D coordinates ...)
 
-	NErrorIf(z == 0.0f,NERROR_MATRIX_NULL_Z);
-	if(z != 1.0f)
+	NErrorIf(z == 0.0f, NERROR_MATRIX_NULL_Z);
+	if (z != 1.0f)
 	{
 		vr->x /= z;
 		vr->y /= z;
 	}
-
 }
 
 // -------------------------------------------------------------------------------------------
@@ -245,17 +270,17 @@ void NMulVector2ByMatrix3x3O(NVEC2 *vr, const NMATRIX3x3 *mat, const NVEC2 *v)
 // -------------------------------------------------------------------------------------------
 void NMulVector2ByMatrix3x3(NVEC2 *vr, const NMATRIX3x3 *mat, const NVEC2 *v)
 {
-	NVEC2	vtmp;
+	NVEC2 vtmp;
 
-	vtmp.x	= v->x * mat->f00 + v->y * mat->f10 + mat->f20;// v->z = 1 ! (Homogeneous 2D coordinates ...)
-	vtmp.y	= v->x * mat->f01 + v->y * mat->f11 + mat->f21;// v->z = 1 ! (Homogeneous 2D coordinates ...) 
-	Nf32 z	= v->x * mat->f02 + v->y * mat->f12 + mat->f22;// v->z = 1 !  (Homogeneous 2D coordinates ...)
+	vtmp.x = v->x * mat->f00 + v->y * mat->f10 + mat->f20; // v->z = 1 ! (Homogeneous 2D coordinates ...)
+	vtmp.y = v->x * mat->f01 + v->y * mat->f11 + mat->f21; // v->z = 1 ! (Homogeneous 2D coordinates ...)
+	Nf32 z = v->x * mat->f02 + v->y * mat->f12 + mat->f22; // v->z = 1 !  (Homogeneous 2D coordinates ...)
 
-	NErrorIf(z == 0.0f,NERROR_MATRIX_NULL_Z);
-	if(z != 1.0f)
+	NErrorIf(z == 0.0f, NERROR_MATRIX_NULL_Z);
+	if (z != 1.0f)
 	{
-		vr->x = vtmp.x/z;
-		vr->y = vtmp.y/z;
+		vr->x = vtmp.x / z;
+		vr->y = vtmp.y / z;
 	}
 	else
 	{
@@ -276,22 +301,34 @@ void NMulVector2ByMatrix3x3(NVEC2 *vr, const NMATRIX3x3 *mat, const NVEC2 *v)
 // Out :
 //
 // ------------------------------------------------------------------------------------------
-void NRotationMatrix3x3_AxisX(NMATRIX3x3 *pmat, Nf32 angx_rad )
+void NRotationMatrix3x3_AxisX(NMATRIX3x3 *pmat, Nf32 angx_rad)
 {
-	Nf32	co,si;
+	Nf32 co, si;
 	NCosSin(angx_rad, &co, &si);
-	pmat->f00=1.0f;		pmat->f10=0.0f;		pmat->f20=0.0f;	
-	pmat->f01=0.0f;		pmat->f11=co;		pmat->f21=-si; 	
-	pmat->f02=0.0f;		pmat->f12=si;		pmat->f22=co;  	
+	pmat->f00 = 1.0f;
+	pmat->f10 = 0.0f;
+	pmat->f20 = 0.0f;
+	pmat->f01 = 0.0f;
+	pmat->f11 = co;
+	pmat->f21 = -si;
+	pmat->f02 = 0.0f;
+	pmat->f12 = si;
+	pmat->f22 = co;
 }
 // Same function but with NFast Angle System
-void NFastRotationMatrix3x3_AxisX(NMATRIX3x3 *pmat, Nu32 nanglex )
+void NFastRotationMatrix3x3_AxisX(NMATRIX3x3 *pmat, Nu32 nanglex)
 {
-	Nf32	co,si;
+	Nf32 co, si;
 	NFastCosSin(nanglex, &co, &si);
-	pmat->f00=1.0f;		pmat->f10=0.0f;		pmat->f20=0.0f;		
-	pmat->f01=0.0f;		pmat->f11=co;		pmat->f21=-si; 		
-	pmat->f02=0.0f;		pmat->f12=si;		pmat->f22=co;  		
+	pmat->f00 = 1.0f;
+	pmat->f10 = 0.0f;
+	pmat->f20 = 0.0f;
+	pmat->f01 = 0.0f;
+	pmat->f11 = co;
+	pmat->f21 = -si;
+	pmat->f02 = 0.0f;
+	pmat->f12 = si;
+	pmat->f22 = co;
 }
 
 // ------------------------------------------------------------------------------------------
@@ -307,24 +344,36 @@ void NFastRotationMatrix3x3_AxisX(NMATRIX3x3 *pmat, Nu32 nanglex )
 // Out :
 //
 // ------------------------------------------------------------------------------------------
-void NRotationMatrix3x3_AxisY(NMATRIX3x3 *pmat, Nf32 angy_rad )
+void NRotationMatrix3x3_AxisY(NMATRIX3x3 *pmat, Nf32 angy_rad)
 {
-	Nf32		co,si;
-	NCosSin(angy_rad,&co,&si);
+	Nf32 co, si;
+	NCosSin(angy_rad, &co, &si);
 
-	pmat->f00=co;		pmat->f10=0.0f;		pmat->f20=si;	
-	pmat->f01=0.0f;		pmat->f11=1.0f;		pmat->f21=0.0f;	
-	pmat->f02=-si;		pmat->f12=0.0f;		pmat->f22=co;	
+	pmat->f00 = co;
+	pmat->f10 = 0.0f;
+	pmat->f20 = si;
+	pmat->f01 = 0.0f;
+	pmat->f11 = 1.0f;
+	pmat->f21 = 0.0f;
+	pmat->f02 = -si;
+	pmat->f12 = 0.0f;
+	pmat->f22 = co;
 }
 // Same function but with NFast Angle System
-void NFastRotationMatrix3x3_AxisY(NMATRIX3x3 *pmat, Nu32 nangley )
+void NFastRotationMatrix3x3_AxisY(NMATRIX3x3 *pmat, Nu32 nangley)
 {
-	Nf32		co,si;
-	NFastCosSin(nangley,&co,&si);
+	Nf32 co, si;
+	NFastCosSin(nangley, &co, &si);
 
-	pmat->f00=co;		pmat->f10=0.0f;		pmat->f20=si;	
-	pmat->f01=0.0f;		pmat->f11=1.0f;		pmat->f21=0.0f;	
-	pmat->f02=-si;		pmat->f12=0.0f;		pmat->f22=co;	
+	pmat->f00 = co;
+	pmat->f10 = 0.0f;
+	pmat->f20 = si;
+	pmat->f01 = 0.0f;
+	pmat->f11 = 1.0f;
+	pmat->f21 = 0.0f;
+	pmat->f02 = -si;
+	pmat->f12 = 0.0f;
+	pmat->f22 = co;
 }
 
 // ------------------------------------------------------------------------------------------
@@ -340,24 +389,36 @@ void NFastRotationMatrix3x3_AxisY(NMATRIX3x3 *pmat, Nu32 nangley )
 // Out :
 //
 // ------------------------------------------------------------------------------------------
-void NRotationMatrix3x3_AxisZ(NMATRIX3x3 *pmat, Nf32 angz_rad )
+void NRotationMatrix3x3_AxisZ(NMATRIX3x3 *pmat, Nf32 angz_rad)
 {
-	Nf32		co,si;
-	NCosSin(angz_rad,&co,&si);
+	Nf32 co, si;
+	NCosSin(angz_rad, &co, &si);
 
-	pmat->f00=co;		pmat->f10=-si;		pmat->f20=0.0f;	
-	pmat->f01=si;		pmat->f11=co;		pmat->f21=0.0f;	
-	pmat->f02=0.0f;		pmat->f12=0.0f;		pmat->f22=1.0;	
+	pmat->f00 = co;
+	pmat->f10 = -si;
+	pmat->f20 = 0.0f;
+	pmat->f01 = si;
+	pmat->f11 = co;
+	pmat->f21 = 0.0f;
+	pmat->f02 = 0.0f;
+	pmat->f12 = 0.0f;
+	pmat->f22 = 1.0;
 }
 // Same function but with NFast Angle System
-void NFastRotationMatrix3x3_AxisZ(NMATRIX3x3 *pmat, Nu32 nanglez )
+void NFastRotationMatrix3x3_AxisZ(NMATRIX3x3 *pmat, Nu32 nanglez)
 {
-	Nf32		co,si;
-	NFastCosSin(nanglez,&co,&si);
+	Nf32 co, si;
+	NFastCosSin(nanglez, &co, &si);
 
-	pmat->f00=co;		pmat->f10=-si;		pmat->f20=0.0f;	
-	pmat->f01=si;		pmat->f11=co;		pmat->f21=0.0f;	
-	pmat->f02=0.0f;		pmat->f12=0.0f;		pmat->f22=1.0;	
+	pmat->f00 = co;
+	pmat->f10 = -si;
+	pmat->f20 = 0.0f;
+	pmat->f01 = si;
+	pmat->f11 = co;
+	pmat->f21 = 0.0f;
+	pmat->f02 = 0.0f;
+	pmat->f12 = 0.0f;
+	pmat->f22 = 1.0;
 }
 
 /*
@@ -393,9 +454,9 @@ void NForwardVectorMatrix3x3Ex(NMATRIX3x3 *pbase, const NVEC3 *pto, const NVEC3 
 		// notes:
 		// forward and up have both a length of 1. so side = 1 x 1 x sin(up,forward)
 		// so if length = 0.001f that means sin(up,forward)= 0.01f !
-		// ... and that means the angle between up and forward = 0.057 deg 
+		// ... and that means the angle between up and forward = 0.057 deg
 		// ... close to be collinear isn't it ? So imagine for a length value < NF32_EPSILON_VECTOR_LENGTH !
-		NVec3ScaleBy(&pbase->Side,1.0f/length); // normalize 
+		NVec3ScaleBy(&pbase->Side,1.0f/length); // normalize
 	}
 	else
 	{
@@ -440,7 +501,7 @@ void NForwardVectorMatrix3x3(NMATRIX3x3 *pbase, const NVEC3 *punit_forward)
 //	Calcule la matrice de rotation autour d'un axe.
 // ------------------------------------------------------------------------------------------
 // In  :
-//		v			: Vecteur décrivant l'axe.
+//		v			: Vecteur dï¿½crivant l'axe.
 //		rot			: Angle de rotation.
 //		mat			: La matrice.
 //
@@ -481,11 +542,11 @@ void AGLRotationAxisMatrix(PAGLVECTOR v, float rot, PAGLMATRIX mat)
 // AGLRotationXMatrix
 // ------------------------------------------------------------------------------------------
 // Description :
-//	Crée une matrice de rotations selon l'axe des X.
+//	Crï¿½e une matrice de rotations selon l'axe des X.
 // ------------------------------------------------------------------------------------------
 // In  :
 //		rx			: Angle (radian) de rotation selon l'axe des X.
-//		matd		: La matrice de destination. Elle est complétement initialisée !!!
+//		matd		: La matrice de destination. Elle est complï¿½tement initialisï¿½e !!!
 //
 // Out :
 //
@@ -506,11 +567,11 @@ void AGLRotationXMatrix(float rx, PAGLMATRIX matd)
 // AGLRotationYMatrix
 // ------------------------------------------------------------------------------------------
 // Description :
-//	Crée une matrice de rotations selon l'axe des Y.
+//	Crï¿½e une matrice de rotations selon l'axe des Y.
 // ------------------------------------------------------------------------------------------
 // In  :
 //		ry			: Angle (radian) de rotation selon l'axe des Y.
-//		matd		: La matrice de destination. Elle est complétement initialisée !!!
+//		matd		: La matrice de destination. Elle est complï¿½tement initialisï¿½e !!!
 //
 // Out :
 //
@@ -531,11 +592,11 @@ void AGLRotationYMatrix(float ry, PAGLMATRIX matd)
 // AGLRotationZMatrix
 // ------------------------------------------------------------------------------------------
 // Description :
-//	Crée une matrice de rotations selon l'axe des Z.
+//	Crï¿½e une matrice de rotations selon l'axe des Z.
 // ------------------------------------------------------------------------------------------
 // In  :
 //		rz			: Angle (radian) de rotation selon l'axe des Z.
-//		matd		: La matrice de destination. Elle est complétement initialisée !!!
+//		matd		: La matrice de destination. Elle est complï¿½tement initialisï¿½e !!!
 //
 // Out :
 //
@@ -556,11 +617,11 @@ void AGLRotationZMatrix(float rz, PAGLMATRIX matd)
 // AGLRotationMatrix
 // ------------------------------------------------------------------------------------------
 // Description :
-//	Crée une matrice de rotations selon 3 angles.
+//	Crï¿½e une matrice de rotations selon 3 angles.
 // ------------------------------------------------------------------------------------------
 // In  :
 //		rx,ry,rz	: Angles de rotation. (en radian).
-//		matd		: La matrice de destination. Elle est complétement initialisée !!!
+//		matd		: La matrice de destination. Elle est complï¿½tement initialisï¿½e !!!
 //
 // Out :
 //
@@ -609,13 +670,13 @@ void AGLRotationMatrix(float rx, float ry, float rz, PAGLMATRIX matd)
 // Det2x2
 // ------------------------------------------------------------------------------------------
 // Description :
-//	Retrouve le déterminant d'une matrice 2x2.
+//	Retrouve le dï¿½terminant d'une matrice 2x2.
 // ------------------------------------------------------------------------------------------
 // In  :
 //		matrice.
 //
 // Out :
-//		Déterminant.
+//		Dï¿½terminant.
 //
 // ------------------------------------------------------------------------------------------
 static float Det2x2(float a,float b,float c,float d)
@@ -631,7 +692,7 @@ static float Det2x2(float a,float b,float c,float d)
 // Det3x3
 // ------------------------------------------------------------------------------------------
 // Description :
-//	Retrouve le déterminant d'une matrice 3x3 de la forme :
+//	Retrouve le dï¿½terminant d'une matrice 3x3 de la forme :
 //
 //		| a1, b1, c1 |
 //		| a2, b2, c2 |
@@ -642,7 +703,7 @@ static float Det2x2(float a,float b,float c,float d)
 //		matrice.
 //
 // Out :
-//		Déterminant.
+//		Dï¿½terminant.
 //
 // ------------------------------------------------------------------------------------------
 static float Det3x3(float a1,float a2,float a3,float b1,float b2,float b3,float c1,float c2,float c3)
@@ -660,13 +721,13 @@ static float Det3x3(float a1,float a2,float a3,float b1,float b2,float b3,float 
 // Det4x4
 // ------------------------------------------------------------------------------------------
 // Description :
-//	Retrouve le déterminant d'une matrice 4x4.
+//	Retrouve le dï¿½terminant d'une matrice 4x4.
 // ------------------------------------------------------------------------------------------
 // In  :
 //		mat	: Matrice.
 //
 // Out :
-//		Déterminant.
+//		Dï¿½terminant.
 //
 // ------------------------------------------------------------------------------------------
 static float Det4x4(PAGLMATRIX mat)
@@ -704,7 +765,7 @@ static float Det4x4(PAGLMATRIX mat)
 //	Retrouve la matrice adjointe d'une matrice.
 // ------------------------------------------------------------------------------------------
 // In  :
-//		mat		: La matrice source à inverser.
+//		mat		: La matrice source ï¿½ inverser.
 //		adj		: La matrice de destination.
 //
 // Out :
@@ -757,7 +818,7 @@ static void AdjointMatrix(PAGLMATRIX mat, PAGLMATRIX adj)
 //	Calcule l'inverse d'une matrice.
 // ------------------------------------------------------------------------------------------
 // In  :
-//		mat		: La matrice source à inverser.
+//		mat		: La matrice source ï¿½ inverser.
 //		inv		: La matrice de destination.
 //
 // Out :
@@ -775,14 +836,14 @@ long AGLInverseMatrix(PAGLMATRIX mat, PAGLMATRIX inv)
 	AdjointMatrix(mat, inv);
 
 	// -----------------
-	// Déterminant 4x4
+	// Dï¿½terminant 4x4
 	// -----------------
 	det = Det4x4(mat);
 	if( det==0.0f )
 		return AGLERROR(AGL_CANTDOTHAT);
 
 	// --------------------------------------------------
-	// Multiplie la matrice adjointe par le déterminant
+	// Multiplie la matrice adjointe par le dï¿½terminant
 	// pour avoir la matrice inverse
 	// --------------------------------------------------
 	for(j=0;j<4;j++)

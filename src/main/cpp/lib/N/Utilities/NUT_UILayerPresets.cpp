@@ -1,4 +1,4 @@
-#include "../NCStandard.h"
+#include "lib/N/NCStandard.h"
 #include "../UI/NUI.h"
 #include "../UI/NUINull.h"
 
@@ -12,7 +12,7 @@ Obsolete ...
 // NUT_CreateUILayer
 // ------------------------------------------------------------------------------------------
 //	Description :
-//	
+//
 //				A Simple layer,
 //				Is not Visible
 //				Has no graphic representation
@@ -24,28 +24,28 @@ Obsolete ...
 //
 //	List of NUT_UiCreationSet Properties Flags used by this controller creation process.
 //	-----------------------------------------------------------------------------------------
-//		FLAG_NUT_UIDESKSET_USE_BKGD_BLEND_MATERIAL			Not Used.	|		
-//		FLAG_NUT_UIDESKSET_USE_BKGD_ALTERNATIVECOLOR		Not Used.	|	
-//		FLAG_NUT_UIDESKSET_USE_ICON_BLEND_MATERIAL			Not Used.	|	
-//		FLAG_NUT_UIDESKSET_USE_ICON_ALTERNATIVECOLOR		Not Used.	|_ To use BLEND/MATERIAL and ALTERNATIVE COLOR, element by element.	
+//		FLAG_NUT_UIDESKSET_USE_BKGD_BLEND_MATERIAL			Not Used.	|
+//		FLAG_NUT_UIDESKSET_USE_BKGD_ALTERNATIVECOLOR		Not Used.	|
+//		FLAG_NUT_UIDESKSET_USE_ICON_BLEND_MATERIAL			Not Used.	|
+//		FLAG_NUT_UIDESKSET_USE_ICON_ALTERNATIVECOLOR		Not Used.	|_ To use BLEND/MATERIAL and ALTERNATIVE COLOR, element by element.
 //		FLAG_NUT_UIDESKSET_USE_TEXT_BLEND_MATERIAL			Not Used.	|
 //		FLAG_NUT_UIDESKSET_USE_TEXT_ALTERNATIVECOLOR		Not Used.	|
 //		FLAG_NUT_UIDESKSET_USE_MISC_BLEND_MATERIAL			Not Used.	|
 //		FLAG_NUT_UIDESKSET_USE_MISC_ALTERNATIVECOLOR		Not Used.	|
-//		FLAG_NUT_UIDESKSET_USE_TOUCH_MODE					Not Used. Use Specified Touch Mode ? Or let UI Using it's own default ...	
+//		FLAG_NUT_UIDESKSET_USE_TOUCH_MODE					Not Used. Use Specified Touch Mode ? Or let UI Using it's own default ...
 //		FLAG_NUT_UIDESKSET_INDEPENDENT_TEXT					Not Used. Define the Text object linked THN. ( ON: it will be the UI Renderable THN. OFF: It will be the UI THN ).
-//		FLAG_NUT_UIDESKSET_COLOR_UPDATE						Not Used. Color Updating ( according with UI main states - ENABLE/DISABLE/FOCUSED )			
-//		FLAG_NUT_UIDESKSET_PUSH								Not Used. Push ?			
-//		FLAG_NUT_UIDESKSET_DEFAULT_BKGD						Not Used. Default BKG if no BKG Atlas Element definition ?	
-//		FLAG_NUT_UIDESKSET_X_DISTRIBUTION					Not Used.	|	
+//		FLAG_NUT_UIDESKSET_COLOR_UPDATE						Not Used. Color Updating ( according with UI main states - ENABLE/DISABLE/FOCUSED )
+//		FLAG_NUT_UIDESKSET_PUSH								Not Used. Push ?
+//		FLAG_NUT_UIDESKSET_DEFAULT_BKGD						Not Used. Default BKG if no BKG Atlas Element definition ?
+//		FLAG_NUT_UIDESKSET_X_DISTRIBUTION					Not Used.	|
 //		FLAG_NUT_UIDESKSET_Y_DISTRIBUTION					Not Used.	|_DISTRIBUTION
 //		FLAG_NUT_UIDESKSET_Z_DISTRIBUTION					Not Used.	|
 //		FLAG_NUT_UIDESKSET_REVERSE_DISTRIBUTION				Not Used.	|
-//		FLAG_NUT_UIDESKSET_KEEP_BKG_TEXTURE_SIZE			Not Used. |	
-//		FLAG_NUT_UIDESKSET_KEEP_BKG_TEXTURE_PROPORTIONS		Not Used. |	
-//		FLAG_NUT_UIDESKSET_SIZECONSTRAINTS_IS_SIZE			Not Used. |- Size Constraints	
-//		FLAG_NUT_UIDESKSET_SIZECONSTRAINTS_IS_SIZEMIN		Not Used. |	
-//		FLAG_NUT_UIDESKSET_SIZECONSTRAINTS_IS_SIZEMAX		Not Used. |		
+//		FLAG_NUT_UIDESKSET_KEEP_BKG_TEXTURE_SIZE			Not Used. |
+//		FLAG_NUT_UIDESKSET_KEEP_BKG_TEXTURE_PROPORTIONS		Not Used. |
+//		FLAG_NUT_UIDESKSET_SIZECONSTRAINTS_IS_SIZE			Not Used. |- Size Constraints
+//		FLAG_NUT_UIDESKSET_SIZECONSTRAINTS_IS_SIZEMIN		Not Used. |
+//		FLAG_NUT_UIDESKSET_SIZECONSTRAINTS_IS_SIZEMAX		Not Used. |
 //
 //	List of NUT_UiCreationSet Params effectively used by this controller creation process.
 //	-----------------------------------------------------------------------------------------
@@ -80,7 +80,7 @@ NUI* NUT_CreateUILayer(NUI *parent, const NUI_EVENT_HANDLE event_handle, const N
 // NUT_CreateUIFramedLayer
 // ------------------------------------------------------------------------------------------
 //	Description :
-//	
+//
 //				A Simple Framed Layer,
 //				Is exactly like a Simple Layer PLUS,
 //				Its BoundingBox surround its children Bounding Boxes and is updated each time one (or more) children bounding changes.
@@ -90,28 +90,28 @@ NUI* NUT_CreateUILayer(NUI *parent, const NUI_EVENT_HANDLE event_handle, const N
 //
 //	List of NUT_UiCreationSet Properties Flags used by this controller creation process.
 //	-----------------------------------------------------------------------------------------
-//		FLAG_NUT_UIDESKSET_USE_BKGD_BLEND_MATERIAL			Not Used.	|		
-//		FLAG_NUT_UIDESKSET_USE_BKGD_ALTERNATIVECOLOR		Not Used.	|	
-//		FLAG_NUT_UIDESKSET_USE_ICON_BLEND_MATERIAL			Not Used.	|	
-//		FLAG_NUT_UIDESKSET_USE_ICON_ALTERNATIVECOLOR		Not Used.	|_ To use BLEND/MATERIAL and ALTERNATIVE COLOR, element by element.	
+//		FLAG_NUT_UIDESKSET_USE_BKGD_BLEND_MATERIAL			Not Used.	|
+//		FLAG_NUT_UIDESKSET_USE_BKGD_ALTERNATIVECOLOR		Not Used.	|
+//		FLAG_NUT_UIDESKSET_USE_ICON_BLEND_MATERIAL			Not Used.	|
+//		FLAG_NUT_UIDESKSET_USE_ICON_ALTERNATIVECOLOR		Not Used.	|_ To use BLEND/MATERIAL and ALTERNATIVE COLOR, element by element.
 //		FLAG_NUT_UIDESKSET_USE_TEXT_BLEND_MATERIAL			Not Used.	|
 //		FLAG_NUT_UIDESKSET_USE_TEXT_ALTERNATIVECOLOR		Not Used.	|
 //		FLAG_NUT_UIDESKSET_USE_MISC_BLEND_MATERIAL			Not Used.	|
 //		FLAG_NUT_UIDESKSET_USE_MISC_ALTERNATIVECOLOR		Not Used.	|
-//		FLAG_NUT_UIDESKSET_USE_TOUCH_MODE					Not Used. Use Specified Touch Mode ? Or let UI Using it's own default ...	
+//		FLAG_NUT_UIDESKSET_USE_TOUCH_MODE					Not Used. Use Specified Touch Mode ? Or let UI Using it's own default ...
 //		FLAG_NUT_UIDESKSET_INDEPENDENT_TEXT					Not Used. Define the Text object linked THN. ( ON: it will be the UI Renderable THN. OFF: It will be the UI THN ).
-//		FLAG_NUT_UIDESKSET_COLOR_UPDATE						Not Used. Color Updating ( according with UI main states - ENABLE/DISABLE/FOCUSED )			
-//		FLAG_NUT_UIDESKSET_PUSH								Not Used. Push ?			
-//		FLAG_NUT_UIDESKSET_DEFAULT_BKGD						Not Used. Default BKG if no BKG Atlas Element definition ?	
-//		FLAG_NUT_UIDESKSET_X_DISTRIBUTION					Not Used.	|	
+//		FLAG_NUT_UIDESKSET_COLOR_UPDATE						Not Used. Color Updating ( according with UI main states - ENABLE/DISABLE/FOCUSED )
+//		FLAG_NUT_UIDESKSET_PUSH								Not Used. Push ?
+//		FLAG_NUT_UIDESKSET_DEFAULT_BKGD						Not Used. Default BKG if no BKG Atlas Element definition ?
+//		FLAG_NUT_UIDESKSET_X_DISTRIBUTION					Not Used.	|
 //		FLAG_NUT_UIDESKSET_Y_DISTRIBUTION					Not Used.	|_DISTRIBUTION
 //		FLAG_NUT_UIDESKSET_Z_DISTRIBUTION					Not Used.	|
 //		FLAG_NUT_UIDESKSET_REVERSE_DISTRIBUTION				Not Used.	|
-//		FLAG_NUT_UIDESKSET_KEEP_BKG_TEXTURE_SIZE			Not Used. |	
-//		FLAG_NUT_UIDESKSET_KEEP_BKG_TEXTURE_PROPORTIONS		Not Used. |	
-//		FLAG_NUT_UIDESKSET_SIZECONSTRAINTS_IS_SIZE			Not Used. |- Size Constraints	
-//		FLAG_NUT_UIDESKSET_SIZECONSTRAINTS_IS_SIZEMIN		Not Used. |	
-//		FLAG_NUT_UIDESKSET_SIZECONSTRAINTS_IS_SIZEMAX		Not Used. |		
+//		FLAG_NUT_UIDESKSET_KEEP_BKG_TEXTURE_SIZE			Not Used. |
+//		FLAG_NUT_UIDESKSET_KEEP_BKG_TEXTURE_PROPORTIONS		Not Used. |
+//		FLAG_NUT_UIDESKSET_SIZECONSTRAINTS_IS_SIZE			Not Used. |- Size Constraints
+//		FLAG_NUT_UIDESKSET_SIZECONSTRAINTS_IS_SIZEMIN		Not Used. |
+//		FLAG_NUT_UIDESKSET_SIZECONSTRAINTS_IS_SIZEMAX		Not Used. |
 //
 //	List of NUT_UiCreationSet Params effectively used by this controller creation process.
 //	-----------------------------------------------------------------------------------------
@@ -139,13 +139,13 @@ NUI* NUT_CreateUIFramedLayer(NUI *parent, const NUI_EVENT_HANDLE event_handle, c
 {
 	// Notice:
 	//	Layer is not going to be managed by NUT_UIdesk ... tools for placement. Obviously, its a layer !
-	
+
 	// Check that only listen and/or intercept uidesc_style flags are used ...
 	NErrorIf(!FLAGS_TEST(listen_intercept_flags_style,MASK_NUIDS_LISTEN_EVENT|MASK_NUIDS_INTERCEPT_EVENT,listen_intercept_flags_style), NERROR_INCONSISTENT_PARAMETERS);
 	// UINull needs an event_handle to listen and/or intercept events ...
 	NErrorIf(listen_intercept_flags_style && !event_handle, NERROR_INCONSISTENT_PARAMETERS);
 	// If user define "touch_mode", he has to set FLAG_NUIDS_USEPARAM_LISTEN_TOUCH_MODE to ON !
-	NErrorIf(ISFLAG_OFF(listen_intercept_flags_style,FLAG_NUIDS_USEPARAM_LISTEN_TOUCH_MODE) && touch_mode, NERROR_INCONSISTENT_PARAMETERS);	
+	NErrorIf(ISFLAG_OFF(listen_intercept_flags_style,FLAG_NUIDS_USEPARAM_LISTEN_TOUCH_MODE) && touch_mode, NERROR_INCONSISTENT_PARAMETERS);
 
 	NUI_DESC	uidesc;
 
@@ -153,7 +153,7 @@ NUI* NUT_CreateUIFramedLayer(NUI *parent, const NUI_EVENT_HANDLE event_handle, c
 	uidesc.Event_Proc = event_handle;
 	FLAG_ON(uidesc.Flags_Style,FLAG_NUIDS_NO_GEOMETRY_EXTRACTION);
 	FLAG_ON(uidesc.Flags_Style,listen_intercept_flags_style);
-	
+
 	if(pbbox)
 	{
 		uidesc.BoundingBox = *pbbox;
