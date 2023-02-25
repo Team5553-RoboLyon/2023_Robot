@@ -9,6 +9,7 @@
 #include <frc/Joystick.h>
 #include <frc/smartdashboard/SmartDashboard.h>
 #include <frc/Encoder.h>
+#include <frc/doublesolenoid.h>
 
 class Robot : public frc::TimedRobot
 {
@@ -31,10 +32,13 @@ public:
   void SimulationInit() override;
   void SimulationPeriodic() override;
 
+  void ChangePosition();
+
 private:
   rev::CANSparkMax m_motor{1, rev::CANSparkMax::MotorType::kBrushless};
   frc::Joystick m_stick{0};
   frc::Encoder m_encoder{0, 1};
+  frc::DoubleSolenoid m_solenoid{frc::PneumaticsModuleType::REVPH, 0, 1};
   double m_clamp;
   double m_lastDistance;
   double m_encoderGetDistance;
