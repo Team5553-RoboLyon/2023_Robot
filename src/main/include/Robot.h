@@ -36,7 +36,7 @@ public:
   void ChangePosition();
 
 private:
-  rev::CANSparkMax m_motor{1, rev::CANSparkMax::MotorType::kBrushless};
+  rev::CANSparkMax m_motor{10, rev::CANSparkMax::MotorType::kBrushless};
   frc::Joystick m_stick{0};
   frc::Encoder m_encoder{0, 1};
   frc::DoubleSolenoid m_solenoid{frc::PneumaticsModuleType::REVPH, 12, 13};
