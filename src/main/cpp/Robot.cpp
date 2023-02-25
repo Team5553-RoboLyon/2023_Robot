@@ -37,6 +37,7 @@ void Robot::TeleopInit()
 }
 void Robot::TeleopPeriodic()
 {
+  m_compressor.EnableDigital();
   // if (m_encoder.GetDistance() < 0)
   // {
   //   m_motor.Set(0.0);
@@ -65,9 +66,14 @@ void Robot::TeleopPeriodic()
   // m_clamp = frc::SmartDashboard::GetNumber("clamp", 0.0);
   // m_lastDistance = m_encoderGetDistance;
 
-  if (m_stick.GetRawButton(1))
+  if (m_stick.GetRawButtonPressed(1))
   {
-    ChangePosition();
+    m_solenoid.Set(frc::DoubleSolenoid::Value::kReverse);
+  }
+
+  if (m_stick.GetRawButtonPressed(2))
+  {
+    m_solenoid.Set(frc::DoubleSolenoid::Value::kForward);
   }
 }
 
