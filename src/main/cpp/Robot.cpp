@@ -48,6 +48,7 @@ void Robot::TeleopPeriodic()
   }
   frc::SmartDashboard::PutNumber("encoder", m_encoder.GetDistance());
   frc::SmartDashboard::PutNumber("vitesse", m_vitesse);
+  frc::SmartDashboard::PutNumber("current", m_motor.GetOutputCurrent());
   // frc::SmartDashboard::PutNumber("");
   m_clamp = frc::SmartDashboard::GetNumber("clamp", 0.0);
   m_lastDistance = m_encoderGetDistance;
