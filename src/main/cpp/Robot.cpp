@@ -26,6 +26,14 @@ void Robot::AutonomousPeriodic() {}
 
 void Robot::TeleopInit()
 {
+  //**************************LOGGING**************************
+  m_logCSV.open("home/lvuser/");
+  m_voltage = units::volt_t{0.0};
+  m_voltageDouble = m_voltage.to<double>();
+
+  m_logCSV.setItem(1, "voltage", 5, &m_voltageDouble);
+
+  //*******************************************************
   m_encoder.Reset();
   m_encoder.SetDistancePerPulse(1.0 / 2048.0);
 
@@ -37,38 +45,40 @@ void Robot::TeleopInit()
 }
 void Robot::TeleopPeriodic()
 {
-  if (m_stick.GetRawButtonPressed(1))
+  //******************LOGGING******************
+
+  frc::SmartDashboard::PutNumber("voltage", m_voltage.to<double>());
+  if (m_stick.GetRawButtonPressed(2))
   {
     m_voltage += 0.2;
   }
 
-  m_compressor.EnableDigital();
-  m_clamp = frc::SmartDashboard::GetNumber("clamp", 0.0);
-  // if (m_encoder.GetDistance() < 0)
+  if (m_stick.GetRawButtonPressed(1))
+  {
+    m_motor.SetVoltage(m_voltage);
+  }
+  m_voltageDouble = m_voltage.to<double>();
+
+  m_logCSV.write();
+  //********************************************************************************
+
+  // m_compressor.EnableDigital();
+
+  // if (m_stick.GetRawButton(1))
   // {
-  //   m_motor.Set(0.0);
+  //   if (m_encoder.GetDistance() < 2)
+  //   {
+  //     m_motor.Set(-0.8);
+  //   }
+  //   else
+  //   {
+  //     m_motor.Set(0.0);
+  //   }
   // }
-  m_encoderGetDistance = m_encoder.GetDistance();
-  m_vitesse = (m_encoderGetDistance - m_lastDistance) / 0.02;
-  if (m_stick.GetRawButton(1))
-  {
-    if (m_encoder.GetDistance() < 2)
-    {
-      m_motor.Set(-0.8);
-    }
-    else
-    {
-      m_motor.Set(0.0);
-    }
-  }
-  else
-  {
-    m_motor.Set(m_stick.GetY() * m_clamp);
-  }
-  frc::SmartDashboard::PutNumber("encoder", m_encoder.GetDistance());
-  frc::SmartDashboard::PutNumber("vitesse", m_vitesse);
-  frc::SmartDashboard::PutNumber("current", m_motor.GetOutputCurrent());
-  m_lastDistance = m_encoderGetDistance;
+  // else
+  // {
+  //   m_motor.Set(m_stick.GetY() * m_clamp);
+  // }
 
   // if (m_stick.GetRawButtonPressed(1))
   // {
@@ -79,9 +89,22 @@ void Robot::TeleopPeriodic()
   // {
   //   m_solenoid.Set(frc::DoubleSolenoid::Value::kForward);
   // }
+
+  //******************smartdashboard******************
+
+  m_clamp = frc::SmartDashboard::GetNumber("clamp", 0.0);
+  m_encoderGetDistance = m_encoder.GetDistance();
+  m_vitesse = (m_encoderGetDistance - m_lastDistance) / 0.02;
+  frc::SmartDashboard::PutNumber("encoder", m_encoder.GetDistance());
+  frc::SmartDashboard::PutNumber("vitesse", m_vitesse);
+  frc::SmartDashboard::PutNumber("current", m_motor.GetOutputCurrent());
+  m_lastDistance = m_encoderGetDistance;
 }
 
-void Robot::DisabledInit() {}
+void Robot::DisabledInit()
+{
+  m_logCSV.close();
+}
 void Robot::DisabledPeriodic() {}
 
 void Robot::TestInit() {}

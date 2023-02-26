@@ -11,6 +11,7 @@
 #include <frc/Encoder.h>
 #include <frc/doublesolenoid.h>
 #include <frc/Compressor.h>
+#include <lib/NLCsv.h>
 
 class Robot : public frc::TimedRobot
 {
@@ -46,5 +47,8 @@ private:
   double m_encoderGetDistance;
   double m_vitesse;
 
+  NLCSV m_logCSV{10};
+
   units::volt_t m_voltage{0.0};
+  double m_voltageDouble;
 };
