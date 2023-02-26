@@ -32,6 +32,9 @@ void Robot::TeleopInit()
   m_voltageDouble = m_voltage.to<double>();
 
   m_logCSV.setItem(1, "voltage", 5, &m_voltageDouble);
+  m_logCSV.setItem(2, "current", 5, &m_current);
+  m_logCSV.setItem(3, "encoder", 5, &m_encoderGetDistance);
+  m_logCSV.setItem(4, "vitesse", 5, &m_vitesse);
 
   //*******************************************************
   m_encoder.Reset();
@@ -50,7 +53,7 @@ void Robot::TeleopPeriodic()
   frc::SmartDashboard::PutNumber("voltage", m_voltage.to<double>());
   if (m_stick.GetRawButtonPressed(2))
   {
-    m_voltage += 0.2;
+    m_voltage += units::volt_t{0.2};
   }
 
   if (m_stick.GetRawButtonPressed(1))
@@ -95,9 +98,10 @@ void Robot::TeleopPeriodic()
   m_clamp = frc::SmartDashboard::GetNumber("clamp", 0.0);
   m_encoderGetDistance = m_encoder.GetDistance();
   m_vitesse = (m_encoderGetDistance - m_lastDistance) / 0.02;
-  frc::SmartDashboard::PutNumber("encoder", m_encoder.GetDistance());
+  m_current = m_motor.GetOutputCurrent();
+  frc::SmartDashboard::PutNumber("encoder", m_encoderGetDistance);
   frc::SmartDashboard::PutNumber("vitesse", m_vitesse);
-  frc::SmartDashboard::PutNumber("current", m_motor.GetOutputCurrent());
+  frc::SmartDashboard::PutNumber("current", m_current);
   m_lastDistance = m_encoderGetDistance;
 }
 

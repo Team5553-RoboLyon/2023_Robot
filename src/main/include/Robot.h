@@ -46,8 +46,9 @@ private:
   double m_lastDistance;
   double m_encoderGetDistance;
   double m_vitesse;
+  double m_current;
 
-  NLCSV m_logCSV{10};
+  NLCSV m_logCSV{4};
 
   units::volt_t m_voltage{0.0};
   double m_voltageDouble;
