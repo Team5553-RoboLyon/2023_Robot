@@ -37,6 +37,11 @@ void Robot::TeleopInit()
 }
 void Robot::TeleopPeriodic()
 {
+  if (m_stick.GetRawButtonPressed(1))
+  {
+    m_voltage += 0.2;
+  }
+
   m_compressor.EnableDigital();
   m_clamp = frc::SmartDashboard::GetNumber("clamp", 0.0);
   // if (m_encoder.GetDistance() < 0)

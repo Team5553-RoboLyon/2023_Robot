@@ -45,4 +45,6 @@ private:
   double m_lastDistance;
   double m_encoderGetDistance;
   double m_vitesse;
+
+  units::volt_t m_voltage{0.0};
 };
