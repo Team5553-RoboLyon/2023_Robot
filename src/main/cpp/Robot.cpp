@@ -1,6 +1,7 @@
 // Copyright (c) FIRST and other WPILib contributors.
 // Open Source Software; you can modify and/or share it under the terms of
 // the WPILib BSD license file in the root directory of this project.
+
 #include "lib/N/NMemory.h"
 #include "lib/N/NMath.h"
 #include "lib/N/Miscellaneous/NColor.h"
@@ -59,7 +60,7 @@ void Robot::RobotPeriodic(const Nf32 dt)
     */
     // backward:
     // m_estimatedPose.odometryUpdate(&m_DriveTrainSpecs, -dr, -dl, m_gyro.get());
-    m_follower.estimate(m_leftGearboxEncoder.GetRaw() / 8192.0f, m_rightGearboxEncoder.GetRaw() / 8192.0f, m_gyro.GetAngle());//anciennement m_gyro.get() quelles get ?
+    m_follower.estimate(m_leftGearboxEncoder.GetRaw() / 8192.0f, m_rightGearboxEncoder.GetRaw() / 8192.0f, m_gyro.GetAngle()); // anciennement m_gyro.get() quelles get ?
 
     /*
     // B) Feed forward : State ( full )

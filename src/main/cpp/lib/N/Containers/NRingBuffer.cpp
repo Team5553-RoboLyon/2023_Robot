@@ -9,7 +9,7 @@
 #include "lib/N/NCStandard.h"
 #include "lib/N/NType.h"
 
-#include "NRingBuffer.h"
+#include "lib/N/Containers/NRingBuffer.h"
 
 #define _RB_HEAD_WRITE(prb, pin) \
 	memcpy((prb)->pHead, pin, (prb)->ElementSize);

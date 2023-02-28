@@ -2,10 +2,10 @@
 #include "lib/N/GL/Ngl.h"
 
 #include "lib/N/Geometry/NGeometry.h"
-#include "../NObject.h"
+#include "lib/N/NObject.h"
 #include "lib/N/Containers/NNode.h"
-#include "../Render/Renderable/NRenderable_UpdateAndExtract_LUT.h"
-#include "../Render/NFrustum_Culling.h"
+#include "lib/N/Render/Renderable/NRenderable_UpdateAndExtract_LUT.h"
+#include "lib/N/Render/NFrustum_Culling.h"
 // extern NNODELIST NRenderableEntitiesList[NRENDERABLE_LISTSIZE];
 
 // NNODELIST	Active3DObjectsList;

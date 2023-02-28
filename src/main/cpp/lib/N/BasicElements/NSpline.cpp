@@ -1,7 +1,7 @@
 #include "lib/N/NCStandard.h"
 #include "lib/N/NType.h"
 #include "lib/N/Containers/NNode.h"
-#include "../NSpline.h"
+#include "lib/N/NSpline.h"
 
 // N Used this LUT to build in SplineKnot tangents there are 15 useful values of 16. Actually, the last one (value 16) is not used
 // but to stay coherent with the number of values usable with 4 bits we keep a LUT of 16 values ...

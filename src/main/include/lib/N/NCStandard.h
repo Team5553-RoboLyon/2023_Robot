@@ -2,6 +2,7 @@
 #define __NCSTANDARD_H
 
 #include "NCompilerPragma.h"
+#include "lib/N/NCompilerPragma.h"
 
 #ifdef _NWINDOWS
 // standard libraries for WINDOWS
@@ -45,5 +46,4 @@ extern "C"
 }
 #endif	// __cpluplus
 */
-#endif  // __NCSTANDARD_H 
-
+#endif // __NCSTANDARD_H

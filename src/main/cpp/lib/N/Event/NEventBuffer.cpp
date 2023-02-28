@@ -2,10 +2,10 @@
 #include "lib/N/NCStandard.h"
 #include "lib/N/NType.h"
 #include "lib/N/NErrorHandling.h"
-#include "../NCore.h"
-#include "../Containers/NRingBuffer.h"
-#include "../Event/NEvent.h"
-#include "./NEventBuffer.h"
+#include "lib/N/NCore.h"
+#include "lib/N/Containers/NRingBuffer.h"
+#include "lib/N/Event/NEvent.h"
+#include "lib/N/Event/NEventBuffer.h"
 
 extern Nu32 NEngineCoreFlags;
 

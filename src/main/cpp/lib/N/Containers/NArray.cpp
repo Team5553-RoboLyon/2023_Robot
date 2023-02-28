@@ -1,9 +1,9 @@
 #include "lib/N/NCStandard.h"
 #include "lib/N/NType.h"
 #include "lib/N/NMath.h"
-#include "../NFlags.h"
+#include "lib/N/NFlags.h"
 #include "lib/N/NErrorHandling.h"
-#include "NArray.h"
+#include "lib/N/Containers/NArray.h"
 // ------------------------------------------------------------------------------------------
 // NClearArray
 // ------------------------------------------------------------------------------------------
