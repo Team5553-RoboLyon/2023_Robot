@@ -42,16 +42,16 @@ private:
   frc::Encoder m_encoder{0, 1, true};
   frc::DoubleSolenoid m_solenoid{frc::PneumaticsModuleType::REVPH, 12, 13};
   frc::Compressor m_compressor{frc::PneumaticsModuleType::REVPH};
-  double m_clamp;
-  double m_lastDistance;
-  double m_encoderGetDistance;
-  double m_vitesse;
-  double m_current;
-  double m_appliedOutput;
-  double m_busVoltage;
+  double m_clamp = 0.0;
+  double m_lastDistance = 0.0;
+  double m_encoderGetDistance = 0.0;
+  double m_vitesse = 0.0;
+  double m_current = 0.0;
+  double m_appliedOutput = 0.0;
+  double m_busVoltage = 0.0;
 
-  NLCSV m_logCSV{6};
+  NLCSV m_logCSV{7};
 
   units::volt_t m_voltage{0.0};
-  double m_voltageDouble;
+  double m_voltageDouble = 0.0;
 };

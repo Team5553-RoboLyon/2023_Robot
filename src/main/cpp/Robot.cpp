@@ -29,14 +29,6 @@ void Robot::TeleopInit()
   //**************************LOGGING**************************
   m_logCSV.open("home/lvuser/", true);
   m_voltage = units::volt_t{0.0};
-  m_voltageDouble = m_voltage.to<double>();
-
-  m_logCSV.setItem(0, "voltage", 5, &m_voltageDouble);
-  m_logCSV.setItem(1, "current", 5, &m_current);
-  m_logCSV.setItem(2, "encoder", 5, &m_encoderGetDistance);
-  m_logCSV.setItem(3, "vitesse_encodeur", 5, &m_vitesse);
-  m_logCSV.setItem(4, "getAppliedOutput", 5, &m_appliedOutput);
-  m_logCSV.setItem(5, "busVoltage", 5, &m_busVoltage);
 
   //*******************************************************
   m_encoder.Reset();
@@ -47,6 +39,13 @@ void Robot::TeleopInit()
   m_motor.EnableVoltageCompensation(12);
   m_motor.SetIdleMode(rev::CANSparkMax::IdleMode::kBrake);
   frc::SmartDashboard::PutNumber("clamp", 0.0);
+
+  m_logCSV.setItem(1, "voltage", 5, &m_voltageDouble);
+  m_logCSV.setItem(2, "current", 5, &m_current);
+  m_logCSV.setItem(3, "encoder", 5, &m_encoderGetDistance);
+  m_logCSV.setItem(4, "vitesse_encodeur", 5, &m_vitesse);
+  m_logCSV.setItem(5, "getAppliedOutput", 5, &m_appliedOutput);
+  m_logCSV.setItem(6, "busVoltage", 5, &m_busVoltage);
 }
 void Robot::TeleopPeriodic()
 {
@@ -71,6 +70,7 @@ void Robot::TeleopPeriodic()
   if (m_stick.GetRawButtonPressed(2))
   {
     m_voltage += units::volt_t{0.1};
+    m_voltageDouble += 0.1;
   }
   if (m_encoderGetDistance < 3.4)
   {
@@ -87,8 +87,6 @@ void Robot::TeleopPeriodic()
   {
     m_motor.Set(0.0);
   }
-
-  m_voltageDouble = m_voltage.to<double>();
 
   m_logCSV.write();
   //********************************************************************************
