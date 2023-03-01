@@ -27,7 +27,7 @@ void Robot::AutonomousPeriodic() {}
 void Robot::TeleopInit()
 {
   //**************************LOGGING**************************
-  m_logCSV.open("home/lvuser/");
+  m_logCSV.open("home/lvuser/", true);
   m_voltage = units::volt_t{0.0};
   m_voltageDouble = m_voltage.to<double>();
 
