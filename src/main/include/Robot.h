@@ -39,7 +39,7 @@ public:
 private:
   rev::CANSparkMax m_motor{10, rev::CANSparkMax::MotorType::kBrushless};
   frc::Joystick m_stick{0};
-  frc::Encoder m_encoder{0, 1};
+  frc::Encoder m_encoder{0, 1, true};
   frc::DoubleSolenoid m_solenoid{frc::PneumaticsModuleType::REVPH, 12, 13};
   frc::Compressor m_compressor{frc::PneumaticsModuleType::REVPH};
   double m_clamp;
@@ -47,8 +47,10 @@ private:
   double m_encoderGetDistance;
   double m_vitesse;
   double m_current;
+  double m_appliedOutput;
+  double m_busVoltage;
 
-  NLCSV m_logCSV{4};
+  NLCSV m_logCSV{6};
 
   units::volt_t m_voltage{0.0};
   double m_voltageDouble;
