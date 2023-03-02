@@ -13,9 +13,9 @@ NLVIRTUAL_ROBOT::NLVIRTUAL_ROBOT()
 	Nmem0(this, NLVIRTUAL_ROBOT);
 	m_robot.setVirtualRobot(this);
 }
-NLVIRTUAL_ROBOT::NLVIRTUAL_ROBOT(const NLDRIVETRAINSPECS* pspecs, const NCOLOR* pframecolor, const NCOLOR* pwheelcolor)
+NLVIRTUAL_ROBOT::NLVIRTUAL_ROBOT(const NLDRIVETRAINSPECS *pspecs, const NCOLOR *pframecolor, const NCOLOR *pwheelcolor)
 {
-	m_pSpecifications = (NLDRIVETRAINSPECS*)pspecs;
+	m_pSpecifications = (NLDRIVETRAINSPECS *)pspecs;
 	m_robot.setVirtualRobot(this);
 
 	if (pframecolor)
@@ -32,7 +32,7 @@ NLVIRTUAL_ROBOT::NLVIRTUAL_ROBOT(const NLDRIVETRAINSPECS* pspecs, const NCOLOR* 
 	m_prevRight = 0.0f;
 
 	NIdentityMatrix3x3(&m_matrix);
-	//NRotationMatrix3x3_AxisZ(&m_matrix, - NF32_PI_2);
+	// NRotationMatrix3x3_AxisZ(&m_matrix, - NF32_PI_2);
 
 	m_angle = 0.0f;
 	m_position.x = 0.0f;
@@ -40,29 +40,26 @@ NLVIRTUAL_ROBOT::NLVIRTUAL_ROBOT(const NLDRIVETRAINSPECS* pspecs, const NCOLOR* 
 	m_position.z = 0.0f;
 
 	m_centerPos = m_position;
-
-
-
 }
 void NLVIRTUAL_ROBOT::Init()
 {
-	NLCHARACTERIZATION_TABLE	characterization_table(4);
-	NLMOTOR_CHARACTERIZATION	chz;
+	NLCHARACTERIZATION_TABLE characterization_table(4);
+	NLMOTOR_CHARACTERIZATION chz;
 	characterization_table.importTxt("D:/_PROJETS/FIRST/C++/Simulateur/Simulateur/data/characterization_MultiVarLinearRegression.txt");
 	// Definir ici toutes les parties MECHANICS du robot
 	// DT Gearbox
-	RegisterGearBox( 0, 10.8f );
-	RegisterGearBox( 1, 10.8f );
+	RegisterGearBox(0, 10.8f);
+	RegisterGearBox(1, 10.8f);
 	// DT Motors
-	RegisterMotor( 0, characterization_table.get(&chz, "L1", NTRUE), PRESET_NLMOTOR_SPECS_NEO,	0 ); // moteur NEO L1 dans gearbox 0
-	RegisterMotor( 1, characterization_table.get(&chz, "L2", NTRUE), PRESET_NLMOTOR_SPECS_NEO,	0 ); // moteur NEO L2 dans gearbox 0
-	RegisterMotor( 2, characterization_table.get(&chz, "R1", NTRUE), PRESET_NLMOTOR_SPECS_NEO,	1 ); // moteur NEO R1 dans gearbox 1
-	RegisterMotor( 3, characterization_table.get(&chz, "R2", NTRUE), PRESET_NLMOTOR_SPECS_NEO,	1 ); // moteur NEO R2 dans gearbox 1
-	//Encoders
-	RegisterEncoder( 0,2048,0,NFALSE);	// encodeur 0 d'une resolution de 2048 ( x 4 = 8192 en k4x !) branché sur la sortie de la gearbox 0
-	RegisterEncoder( 1,2048,1,NFALSE );	// encodeur 1 d'une resolution de 2048 ( x 4 = 8192 en k4x !) branché sur la sortie de la gearbox 1
-	//Gyro
-	RegisterGyro(/*NLVIRTUAL_GYRO_DRIFT_5_DEG_PER_MIN*/0.0f);
+	RegisterMotor(0, characterization_table.get(&chz, "L1", NTRUE), PRESET_NLMOTOR_SPECS_NEO, 0); // moteur NEO L1 dans gearbox 0
+	RegisterMotor(1, characterization_table.get(&chz, "L2", NTRUE), PRESET_NLMOTOR_SPECS_NEO, 0); // moteur NEO L2 dans gearbox 0
+	RegisterMotor(2, characterization_table.get(&chz, "R1", NTRUE), PRESET_NLMOTOR_SPECS_NEO, 1); // moteur NEO R1 dans gearbox 1
+	RegisterMotor(3, characterization_table.get(&chz, "R2", NTRUE), PRESET_NLMOTOR_SPECS_NEO, 1); // moteur NEO R2 dans gearbox 1
+	// Encoders
+	RegisterEncoder(0, 2048, 0, NFALSE); // encodeur 0 d'une resolution de 2048 ( x 4 = 8192 en k4x !) branchï¿½ sur la sortie de la gearbox 0
+	RegisterEncoder(1, 2048, 1, NFALSE); // encodeur 1 d'une resolution de 2048 ( x 4 = 8192 en k4x !) branchï¿½ sur la sortie de la gearbox 1
+	// Gyro
+	RegisterGyro(/*NLVIRTUAL_GYRO_DRIFT_5_DEG_PER_MIN*/ 0.0f);
 }
 
 void NLVIRTUAL_ROBOT::reset()
@@ -70,44 +67,64 @@ void NLVIRTUAL_ROBOT::reset()
 	m_prevLeft = 0.0f;
 	m_prevRight = 0.0f;
 
-	m_angle		 = 0.0f; // NF32_PI
+	m_angle = 0.0f; // NF32_PI
 	m_position.x = 0.0f;
 	m_position.y = 0.0f;
 	m_position.z = 0.0f;
 
 	m_centerPos = m_position;
 
-	// !!!! WARNING !!!! La matrice du robot DOIT ABSOLUMENT être reset AVANT le reset du gyro !!! car le reset du gyro fait une copie
+	// !!!! WARNING !!!! La matrice du robot DOIT ABSOLUMENT ï¿½tre reset AVANT le reset du gyro !!! car le reset du gyro fait une copie
 	// de l'axe Y de la matrice ...
 	// Notes:
-	// "NLVIRTUAL_ROBOT.m_angle" correspond à l'angle que fait le robot par rapport à l'axe X monde.
-	// Cette valeur est ABSOLUE !!! ( c'est à dire pas relative à une position de départ, comme peut l'être le m_angle du Gyro )
-	// AINSI, ... 
-	//		  ... si le robot démarre en mode forward,  alors m_angle = 0
-	//		  ... si le robot démarre en mode backward, alors m_angle = NF32_PI
+	// "NLVIRTUAL_ROBOT.m_angle" correspond ï¿½ l'angle que fait le robot par rapport ï¿½ l'axe X monde.
+	// Cette valeur est ABSOLUE !!! ( c'est ï¿½ dire pas relative ï¿½ une position de dï¿½part, comme peut l'ï¿½tre le m_angle du Gyro )
+	// AINSI, ...
+	//		  ... si le robot dï¿½marre en mode forward,  alors m_angle = 0
+	//		  ... si le robot dï¿½marre en mode backward, alors m_angle = NF32_PI
 	//
 	NRotationMatrix3x3_AxisZ(&m_matrix, m_angle);
 
-	//m_battery.reset();
+	// m_battery.reset();
 	Nu8 i;
-	// reset des ensembles de systèmes
-	for (i = 0; i < m_motorCount; i++) { if (BITGET(m_isMotorActive, i)) { m_motor[i].reset(); } }			// reset moteurs
-	for (i = 0; i < m_gearboxCount; i++) { if (BITGET(m_isGearBoxActive, i)) { m_gearbox[i].reset(); } }	// reset gearboxes pour le moment inutile car NLVIRTUAL_GEARBOX.reset() reset uniquement tous ses driveinput... soit les output des moteurs, déjà reset par les moteurs eux-mêmes
-	for (i = 0; i < m_encoderCount; i++) { if (BITGET(m_isEncoderActive, i)) { m_encoder[i].reset(); } }	// reset encoders
-	if (BITGET(m_isGyroActive, 0)) { m_gyro.reset(); }
-
+	// reset des ensembles de systï¿½mes
+	for (i = 0; i < m_motorCount; i++)
+	{
+		if (BITGET(m_isMotorActive, i))
+		{
+			m_motor[i].reset();
+		}
+	} // reset moteurs
+	for (i = 0; i < m_gearboxCount; i++)
+	{
+		if (BITGET(m_isGearBoxActive, i))
+		{
+			m_gearbox[i].reset();
+		}
+	} // reset gearboxes pour le moment inutile car NLVIRTUAL_GEARBOX.reset() reset uniquement tous ses driveinput... soit les output des moteurs, dï¿½jï¿½ reset par les moteurs eux-mï¿½mes
+	for (i = 0; i < m_encoderCount; i++)
+	{
+		if (BITGET(m_isEncoderActive, i))
+		{
+			m_encoder[i].reset();
+		}
+	} // reset encoders
+	if (BITGET(m_isGyroActive, 0))
+	{
+		m_gyro.reset();
+	}
 }
 
-void NLVIRTUAL_ROBOT::RegisterMotor(const Nu8 channelid, const NLMOTOR_CHARACTERIZATION * pcharacterization, const Nf32 nominal_voltage, const Nf32 free_speed, const Nf32 free_current, const Nf32 stall_current, const Nf32 stall_torque, const Ns32 gearbox)
+void NLVIRTUAL_ROBOT::RegisterMotor(const Nu8 channelid, const NLMOTOR_CHARACTERIZATION *pcharacterization, const Nf32 nominal_voltage, const Nf32 free_speed, const Nf32 free_current, const Nf32 stall_current, const Nf32 stall_torque, const Ns32 gearbox)
 {
-	NErrorIf(channelid >= CONSTANT_NLVIRTUAL_ROBOT_MAX_NUMBER_OF_MOTOR, NERROR_VALUE_OUTOFRANGE);	// channelid trop grand
-	NErrorIf(BITGET(m_isMotorActive,channelid), NERROR_INCONSISTENT_REQUEST);					// channelid déjà occupé !
-	
-	BITSET(m_isMotorActive,channelid);
-	m_motor[channelid].SetSpecs(nominal_voltage,free_speed,free_current,stall_current,stall_torque);
+	NErrorIf(channelid >= CONSTANT_NLVIRTUAL_ROBOT_MAX_NUMBER_OF_MOTOR, NERROR_VALUE_OUTOFRANGE); // channelid trop grand
+	NErrorIf(BITGET(m_isMotorActive, channelid), NERROR_INCONSISTENT_REQUEST);					  // channelid dï¿½jï¿½ occupï¿½ !
+
+	BITSET(m_isMotorActive, channelid);
+	m_motor[channelid].SetSpecs(nominal_voltage, free_speed, free_current, stall_current, stall_torque);
 	m_motor[channelid].SetInternalCharacterization(pcharacterization);
 
-	if ((gearbox >= 0) && (gearbox< CONSTANT_NLVIRTUAL_ROBOT_MAX_NUMBER_OF_GEARBOX))
+	if ((gearbox >= 0) && (gearbox < CONSTANT_NLVIRTUAL_ROBOT_MAX_NUMBER_OF_GEARBOX))
 	{
 		m_gearbox[gearbox].addDriveInput(&m_motor[channelid].m_output);
 	}
@@ -116,9 +133,9 @@ void NLVIRTUAL_ROBOT::RegisterMotor(const Nu8 channelid, const NLMOTOR_CHARACTER
 
 void NLVIRTUAL_ROBOT::UnregisterMotor(const Nu8 channelid)
 {
-	NErrorIf(channelid >= CONSTANT_NLVIRTUAL_ROBOT_MAX_NUMBER_OF_MOTOR, NERROR_VALUE_OUTOFRANGE);	// channelid trop grand
-	NErrorIf(!BITGET(m_isMotorActive, channelid), NERROR_INCONSISTENT_REQUEST);						// channelid non occupé !
-	
+	NErrorIf(channelid >= CONSTANT_NLVIRTUAL_ROBOT_MAX_NUMBER_OF_MOTOR, NERROR_VALUE_OUTOFRANGE); // channelid trop grand
+	NErrorIf(!BITGET(m_isMotorActive, channelid), NERROR_INCONSISTENT_REQUEST);					  // channelid non occupï¿½ !
+
 	BITCLEAR(m_isMotorActive, channelid);
 	m_motor[channelid].Clear();
 	m_motorCount--;
@@ -126,9 +143,9 @@ void NLVIRTUAL_ROBOT::UnregisterMotor(const Nu8 channelid)
 
 void NLVIRTUAL_ROBOT::RegisterGearBox(const Nu8 channelid, const Nf32 gearbox_ratio)
 {
-	NErrorIf(channelid >= CONSTANT_NLVIRTUAL_ROBOT_MAX_NUMBER_OF_GEARBOX, NERROR_VALUE_OUTOFRANGE);	// channelid trop grand
-	NErrorIf(BITGET(m_isGearBoxActive, channelid), NERROR_INCONSISTENT_REQUEST);					// channelid déjà occupé !
-	
+	NErrorIf(channelid >= CONSTANT_NLVIRTUAL_ROBOT_MAX_NUMBER_OF_GEARBOX, NERROR_VALUE_OUTOFRANGE); // channelid trop grand
+	NErrorIf(BITGET(m_isGearBoxActive, channelid), NERROR_INCONSISTENT_REQUEST);					// channelid dï¿½jï¿½ occupï¿½ !
+
 	BITSET(m_isGearBoxActive, channelid);
 	m_gearbox[channelid].setGearBoxRatio(gearbox_ratio);
 	m_gearboxCount++;
@@ -136,19 +153,18 @@ void NLVIRTUAL_ROBOT::RegisterGearBox(const Nu8 channelid, const Nf32 gearbox_ra
 
 void NLVIRTUAL_ROBOT::UnregisterGearBox(const Nu8 channelid)
 {
-	NErrorIf(channelid >= CONSTANT_NLVIRTUAL_ROBOT_MAX_NUMBER_OF_GEARBOX, NERROR_VALUE_OUTOFRANGE);	// channelid trop grand
-	NErrorIf(!BITGET(m_isGearBoxActive, channelid), NERROR_INCONSISTENT_REQUEST);					// channelid non occupé !
+	NErrorIf(channelid >= CONSTANT_NLVIRTUAL_ROBOT_MAX_NUMBER_OF_GEARBOX, NERROR_VALUE_OUTOFRANGE); // channelid trop grand
+	NErrorIf(!BITGET(m_isGearBoxActive, channelid), NERROR_INCONSISTENT_REQUEST);					// channelid non occupï¿½ !
 
 	BITCLEAR(m_isGearBoxActive, channelid);
 	m_gearbox[channelid].clear();
 	m_gearboxCount--;
 }
 
-void NLVIRTUAL_ROBOT::RegisterEncoder(const Nu8 channelid, const Nu32 pulse_per_revolution,const Nu32 trackedchannel, const Nbool isconnectedtoamotor)
+void NLVIRTUAL_ROBOT::RegisterEncoder(const Nu8 channelid, const Nu32 pulse_per_revolution, const Nu32 trackedchannel, const Nbool isconnectedtoamotor)
 {
-	NErrorIf(channelid >= CONSTANT_NLVIRTUAL_ROBOT_MAX_NUMBER_OF_ENCODER, NERROR_VALUE_OUTOFRANGE);	// channelid trop grand
-	NErrorIf(BITGET(m_isEncoderActive, channelid), NERROR_INCONSISTENT_REQUEST);					// channelid déjà occupé !
-
+	NErrorIf(channelid >= CONSTANT_NLVIRTUAL_ROBOT_MAX_NUMBER_OF_ENCODER, NERROR_VALUE_OUTOFRANGE); // channelid trop grand
+	NErrorIf(BITGET(m_isEncoderActive, channelid), NERROR_INCONSISTENT_REQUEST);					// channelid dï¿½jï¿½ occupï¿½ !
 
 	BITSET(m_isEncoderActive, channelid);
 	m_encoder[channelid].setup(pulse_per_revolution);
@@ -158,12 +174,12 @@ void NLVIRTUAL_ROBOT::RegisterEncoder(const Nu8 channelid, const Nu32 pulse_per_
 		{
 			m_encoder[channelid].SetDriveInput(&m_motor[trackedchannel].m_output);
 		}
-		#ifdef _DEBUG
+#ifdef _DEBUG
 		else
 		{
-			NErrorIf(1, NERROR_INCONSISTENT_REQUEST); // moteur non connecté
+			NErrorIf(1, NERROR_INCONSISTENT_REQUEST); // moteur non connectï¿½
 		}
-		#endif
+#endif
 	}
 	else
 	{
@@ -174,7 +190,7 @@ void NLVIRTUAL_ROBOT::RegisterEncoder(const Nu8 channelid, const Nu32 pulse_per_
 #ifdef _DEBUG
 		else
 		{
-			NErrorIf(1, NERROR_INCONSISTENT_REQUEST); // moteur non connecté
+			NErrorIf(1, NERROR_INCONSISTENT_REQUEST); // moteur non connectï¿½
 		}
 #endif
 	}
@@ -183,28 +199,28 @@ void NLVIRTUAL_ROBOT::RegisterEncoder(const Nu8 channelid, const Nu32 pulse_per_
 
 void NLVIRTUAL_ROBOT::UnregisterEncoder(const Nu8 channelid)
 {
-	NErrorIf(channelid >= CONSTANT_NLVIRTUAL_ROBOT_MAX_NUMBER_OF_ENCODER, NERROR_VALUE_OUTOFRANGE);	// channelid trop grand
-	NErrorIf(!BITGET(m_isEncoderActive, channelid), NERROR_INCONSISTENT_REQUEST);						// channelid non occupé !
+	NErrorIf(channelid >= CONSTANT_NLVIRTUAL_ROBOT_MAX_NUMBER_OF_ENCODER, NERROR_VALUE_OUTOFRANGE); // channelid trop grand
+	NErrorIf(!BITGET(m_isEncoderActive, channelid), NERROR_INCONSISTENT_REQUEST);					// channelid non occupï¿½ !
 
 	BITCLEAR(m_isEncoderActive, channelid);
 	m_encoder[channelid].Clear();
 	m_encoderCount--;
 }
 
-void NLVIRTUAL_ROBOT::RegisterGyro(/*const Nu8 channelid,*/const Nf32 drift)
+void NLVIRTUAL_ROBOT::RegisterGyro(/*const Nu8 channelid,*/ const Nf32 drift)
 {
-	//NErrorIf(channelid >= CONSTANT_NLVIRTUAL_ROBOT_MAX_NUMBER_OF_GYRO, NERROR_VALUE_OUTOFRANGE);	// channelid trop grand
-	NErrorIf(BITGET(m_isGyroActive, /*channelid*/0), NERROR_INCONSISTENT_REQUEST);					// channelid déjà occupé !
+	// NErrorIf(channelid >= CONSTANT_NLVIRTUAL_ROBOT_MAX_NUMBER_OF_GYRO, NERROR_VALUE_OUTOFRANGE);	// channelid trop grand
+	NErrorIf(BITGET(m_isGyroActive, /*channelid*/ 0), NERROR_INCONSISTENT_REQUEST); // channelid dï¿½jï¿½ occupï¿½ !
 
-	BITSET(m_isGyroActive, /*channelid*/0);
-	//m_gyro[channelid].setup(...);
-	m_gyro.setup((NVEC2f32*)&m_matrix.XAxis, drift);
-	//m_gyroCount++;
+	BITSET(m_isGyroActive, /*channelid*/ 0);
+	// m_gyro[channelid].setup(...);
+	m_gyro.setup((NVEC2f32 *)&m_matrix.XAxis, drift);
+	// m_gyroCount++;
 }
 
 void NLVIRTUAL_ROBOT::UnregisterGyro(/*const Nu8 channelid*/)
 {
-	BITCLEAR(m_isGyroActive, 0);// il n'y a qu'un seul Gyro pour le moment doncc channelid = 0
+	BITCLEAR(m_isGyroActive, 0); // il n'y a qu'un seul Gyro pour le moment doncc channelid = 0
 	m_gyro.Clear();
 	// m_gyroCount--;			//... Un seul gyro donc compteur inutile pour l'instant
 }
@@ -224,143 +240,188 @@ void NLVIRTUAL_ROBOT::Stop()
 }
 */
 
-
 // ------------------------------------------------------------------------------------------
 /**
- *	@brief	Mise sous tension du Robot Virtuel. Correspond à la mise sous tension du 'VRAI' robot.
+ *	@brief	Mise sous tension du Robot Virtuel. Correspond ï¿½ la mise sous tension du 'VRAI' robot.
  */
- // ------------------------------------------------------------------------------------------
-void NLVIRTUAL_ROBOT::switchOn(NLPATH_WORKBENCH* pwb)
+// ------------------------------------------------------------------------------------------
+void NLVIRTUAL_ROBOT::switchOn(NLPATH_WORKBENCH *pwb, const Nf32 time)
 {
+	NErrorIf(ISFLAG_ON(m_flags, FLAG_NLVIRTUAL_ROBOT_IS_ON), NERROR_FLAG_INCONSISTENCY);		  // Le robot est dï¿½jï¿½ sous tension !!!
+	NErrorIf(ISFLAG_ON(m_robot.m_flags, FLAG_NLROBOT_IS_INITIALIZED), NERROR_FLAG_INCONSISTENCY); // Le robot dï¿½jï¿½ initializï¿½ !!
 
-	// Reset "matériel" à effectuer à l'allumage du robot:
-	NErrorIf(ISFLAG_ON(m_flags, FLAG_NLVIRTUAL_ROBOT_IS_ON), NERROR_FLAG_INCONSISTENCY); // Le robot est déjà sous tension !!!
-	reset();
-	FLAG_ON(m_flags, FLAG_NLVIRTUAL_ROBOT_IS_ON);
+	if (time > 0.0f)
+	{
+		m_SimulationLeftTime = time;
+		// Reset "matï¿½riel" ï¿½ effectuer ï¿½ l'allumage du robot:
+		reset();
+		FLAG_ON(m_flags, FLAG_NLVIRTUAL_ROBOT_IS_ON);
 
-	// Initialisation de la classe Robot:
-	NErrorIf(ISFLAG_ON(m_robot.m_flags, FLAG_NLROBOT_IS_INITIALIZED), NERROR_FLAG_INCONSISTENCY); // Le robot déjà initializé !!
-	m_robot.RobotInit(pwb);
-	FLAG_ON(m_robot.m_flags, FLAG_NLROBOT_IS_INITIALIZED);
+		// Initialisation de la classe Robot:
+		m_robot.RobotInit(pwb);
+		FLAG_ON(m_robot.m_flags, FLAG_NLROBOT_IS_INITIALIZED);
+	}
+#ifdef _DEBUG
+	else
+	{
+		NErrorIf(1, NERROR_SYSTEM_GURU_MEDITATION);
+	}
+#endif
 }
 // ------------------------------------------------------------------------------------------
 /**
-*	@brief	Arrêt du Robot Virtuel ( hors tension ). Correspond à l'arrêt du 'VRAI' robot.
-*/
+ *	@brief	Arrï¿½t du Robot Virtuel ( hors tension ). Correspond ï¿½ l'arrï¿½t du 'VRAI' robot.
+ */
 // ------------------------------------------------------------------------------------------
 void NLVIRTUAL_ROBOT::switchOff()
 {
-	NErrorIf(ISFLAG_OFF(m_flags, FLAG_NLVIRTUAL_ROBOT_IS_ON), NERROR_FLAG_INCONSISTENCY); // Le robot est déjà hors tension !!!
-	//reset();
+	NErrorIf(ISFLAG_OFF(m_flags, FLAG_NLVIRTUAL_ROBOT_IS_ON), NERROR_FLAG_INCONSISTENCY);		   // Le robot est dï¿½jï¿½ hors tension !!!
+	NErrorIf(ISFLAG_OFF(m_robot.m_flags, FLAG_NLROBOT_IS_INITIALIZED), NERROR_FLAG_INCONSISTENCY); // Le robot est dï¿½jï¿½ off !!
+
 	FLAG_OFF(m_flags, FLAG_NLVIRTUAL_ROBOT_IS_ON);
-
-	NErrorIf(ISFLAG_OFF(m_robot.m_flags, FLAG_NLROBOT_IS_INITIALIZED), NERROR_FLAG_INCONSISTENCY); // Le robot est déjà off !!
-	//m_robot.end();
 	FLAG_OFF(m_robot.m_flags, FLAG_NLROBOT_IS_INITIALIZED);
-
+	m_SimulationLeftTime = 0.0f;
 }
 
-
-
-void NLVIRTUAL_ROBOT::update(const Nf32 dt)
+Nu32 NLVIRTUAL_ROBOT::update(const Nf32 dt)
 {
-	NErrorIf(ISFLAG_OFF(m_flags, FLAG_NLVIRTUAL_ROBOT_IS_ON), NERROR_FLAG_INCONSISTENCY); // Le robot est  hors tension !!!
-	NErrorIf(ISFLAG_OFF(m_robot.m_flags, FLAG_NLROBOT_IS_INITIALIZED), NERROR_FLAG_INCONSISTENCY); // Le robot est  hors tension !!!
-	
-	m_robot.RobotPeriodic(dt);
-
-	// update batteries, moteurs, encodeurs, position ... etc
-	// le tout à une frequence "élevée" :
-	//	Pour se faire on découpe l'intervalle dt en sous intervalles de "CONSTANT_NLVIRTUAL_DRIVE_TRAIN_INTEGRATION_DT secondes"
-	Nu32 iter = (Nu32)(dt / CONSTANT_NLVIRTUAL_ROBOT_INTEGRATION_DT) + 1;
-	Nf32 ddt = dt / (Nf32)iter;
-	Nf32 left = 0.0f;
-	Nf32 right = 0.0f;
-	Nf32 l, r;
-
-	Nf32 v, w;
-	Nu8	m, g, e; 
-
-
-	for (Nu32 i = iter; i > 0; i--)
+	// if (m_SimulationLeftTime)
+	if (ISFLAG_ON(m_flags, FLAG_NLVIRTUAL_ROBOT_IS_ON))
 	{
-		//m_battery.update(ddt);
+		NErrorIf(ISFLAG_OFF(m_flags, FLAG_NLVIRTUAL_ROBOT_IS_ON), NERROR_FLAG_INCONSISTENCY);		   // Le robot est  hors tension !!!
+		NErrorIf(ISFLAG_OFF(m_robot.m_flags, FLAG_NLROBOT_IS_INITIALIZED), NERROR_FLAG_INCONSISTENCY); // Le robot est  hors tension !!!
 
-		// Update des ensembles de systèmes
-		for (m = 0; m < m_motorCount; m++) { if (BITGET(m_isMotorActive, m)) { m_motor[m].update(ddt); } }			// update moteurs
-		for (g = 0; g < m_gearboxCount; g++) { if (BITGET(m_isGearBoxActive, g)) { m_gearbox[g].update(ddt); } }	// update gearboxes
-		for (e = 0; e < m_encoderCount; e++) { if (BITGET(m_isEncoderActive, e)) { m_encoder[e].update(ddt); } }	// update encoders
+		Nf32 udt = NMIN(m_SimulationLeftTime, dt);
+		NErrorIf(udt <= 0.0f, NERROR_WRONG_VALUE); // udt doit ï¿½tre non null positif , c'est un intervalle de temps !
 
-		// 
-		l	= m_gearbox[0].m_output.m_angularPosition*m_pSpecifications->m_wheelRadius; // l est la distance parcourue par la roue 
-		r	= m_gearbox[1].m_output.m_angularPosition*m_pSpecifications->m_wheelRadius;
+		m_robot.RobotPeriodic(udt);
 
-		left	= l - m_prevLeft;
-		right	= r - m_prevRight;
+		// update batteries, moteurs, encodeurs, position ... etc
+		// le tout ï¿½ une frequence "ï¿½levï¿½e" :
+		//	Pour se faire on dï¿½coupe l'intervalle dt en sous intervalles de "CONSTANT_NLVIRTUAL_DRIVE_TRAIN_INTEGRATION_DT secondes"
+		Nu32 iter = (Nu32)(udt / CONSTANT_NLVIRTUAL_ROBOT_INTEGRATION_DT) + 1;
+		Nf32 ddt = udt / (Nf32)iter;
+		Nf32 left = 0.0f;
+		Nf32 right = 0.0f;
+		Nf32 l, r;
 
-		m_prevLeft = l;
-		m_prevRight= r;
+		Nf32 v, w;
+		Nu8 m, g, e;
 
-		// Méthode simplifiée:
-		v = NLODOMETRY_DRIVETRAIN_V_FROM_WHEELS(left, right);
-		w = NLODOMETRY_DRIVETRAIN_W_FROM_WHEELS(left, right, m_pSpecifications->m_axleTrack);
-		m_angle += w;
-
-		m_position.x += cos(m_angle)*v;
-		m_position.y += sin(m_angle)*v;
-		m_position.z = 0.0f;
-
-		m_centerPos = m_position;	
-		
-		/*
-		// Méthode complète:
-		v = NLODOMETRY_DRIVETRAIN_V_FROM_WHEELS(left, right);
-		w = NLODOMETRY_DRIVETRAIN_W_FROM_WHEELS(left, right, m_pSpecifications->m_axleTrack);
-
-		if (w == 0.0f)
+		for (Nu32 i = iter; i > 0; i--)
 		{
-			m_position.x += cos(m_angle)*v*ddt;
-			m_position.y += sin(m_angle)*v*ddt;
+			// m_battery.update(ddt);
+
+			// Update des ensembles de systï¿½mes
+			for (m = 0; m < m_motorCount; m++)
+			{
+				if (BITGET(m_isMotorActive, m))
+				{
+					m_motor[m].update(ddt);
+				}
+			} // update moteurs
+			for (g = 0; g < m_gearboxCount; g++)
+			{
+				if (BITGET(m_isGearBoxActive, g))
+				{
+					m_gearbox[g].update(ddt);
+				}
+			} // update gearboxes
+			for (e = 0; e < m_encoderCount; e++)
+			{
+				if (BITGET(m_isEncoderActive, e))
+				{
+					m_encoder[e].update(ddt);
+				}
+			} // update encoders
+
+			//
+			l = m_gearbox[0].m_output.m_angularPosition * m_pSpecifications->m_wheelRadius; // l est la distance parcourue par la roue
+			r = m_gearbox[1].m_output.m_angularPosition * m_pSpecifications->m_wheelRadius;
+
+			left = l - m_prevLeft;
+			right = r - m_prevRight;
+
+			m_prevLeft = l;
+			m_prevRight = r;
+
+			// Mï¿½thode simplifiï¿½e:
+			v = NLODOMETRY_DRIVETRAIN_V_FROM_WHEELS(left, right);
+			w = NLODOMETRY_DRIVETRAIN_W_FROM_WHEELS(left, right, m_pSpecifications->m_axleTrack);
+			m_angle += w;
+
+			m_position.x += cos(m_angle) * v;
+			m_position.y += sin(m_angle) * v;
 			m_position.z = 0.0f;
+
 			m_centerPos = m_position;
-		}
-		else
-		{
-			rcenter = v / w;
-			m_centerPos.x = m_position.x - rcenter * sin(m_angle);//  ==m_position.x - rcenter *cos(m_angle - NF32_PI_2);
-			m_centerPos.y = m_position.y + rcenter * cos(m_angle);//  ==m_position.y - rcenter *sin(m_angle - NF32_PI_2);
-			m_centerPos.z = 0.0f;
 
-			m_angle += w*ddt;
-			m_position.x = m_centerPos.x + rcenter * cos(m_angle - NF32_PI_2);
-			m_position.y = m_centerPos.y + rcenter * sin(m_angle - NF32_PI_2);
-			m_position.z = 0.0f;
-		}Votre position
-		*/
+			/*
+			// Mï¿½thode complï¿½te:
+			v = NLODOMETRY_DRIVETRAIN_V_FROM_WHEELS(left, right);
+			w = NLODOMETRY_DRIVETRAIN_W_FROM_WHEELS(left, right, m_pSpecifications->m_axleTrack);
+			if (w == 0.0f)
+			{
+				m_position.x += cos(m_angle)*v*ddt;
+				m_position.y += sin(m_angle)*v*ddt;
+				m_position.z = 0.0f;
+				m_centerPos = m_position;
+			}
+			else
+			{
+				rcenter = v / w;
+				m_centerPos.x = m_position.x - rcenter * sin(m_angle);//  ==m_position.x - rcenter *cos(m_angle - NF32_PI_2);
+				m_centerPos.y = m_position.y + rcenter * cos(m_angle);//  ==m_position.y - rcenter *sin(m_angle - NF32_PI_2);
+				m_centerPos.z = 0.0f;
+
+				m_angle += w*ddt;
+				m_position.x = m_centerPos.x + rcenter * cos(m_angle - NF32_PI_2);
+				m_position.y = m_centerPos.y + rcenter * sin(m_angle - NF32_PI_2);
+				m_position.z = 0.0f;
+			}
+			*/
+		}
+		// Mise ï¿½ jour de la matrice ( orientation "rï¿½elle" du robot )
+		NRotationMatrix3x3_AxisZ(&m_matrix, m_angle);
+		if (BITGET(m_isGyroActive, 0))
+			m_gyro.update(udt);
+
+		m_SimulationLeftTime -= udt;
+		if (m_SimulationLeftTime <= 0.0f)
+		{
+			switchOff();
+		}
+		return 1;
 	}
-	// Mise à jour de la matrice ( orientation "réelle" du robot )
-	//NRotationMatrix3x3_AxisZ(&m_matrix, m_angle);
-	NRotationMatrix3x3_AxisZ(&m_matrix, m_angle);
-	if (BITGET(m_isGyroActive, 0))
-		m_gyro.update(dt);
+	else
+		return 0;
 }
 
 void NLVIRTUAL_ROBOT::draw()
 {
-	
-	NVEC3	pos;
 
-	// on trace la DT à sa position "Réelle" ( en opposition à la position estimée par odometrie )
-	pos.x = m_position.x ;//- m_pSpecifications->m_centerOfMass.x;
-	pos.y = m_position.y ;//- m_pSpecifications->m_centerOfMass.y;
-	pos.z = m_position.z ;//- m_pSpecifications->m_centerOfMass.z;
+	NVEC3 pos;
+
+	// on trace la DT ï¿½ sa position "Rï¿½elle" ( en opposition ï¿½ la position estimï¿½e par odometrie )
+	pos.x = m_position.x; //- m_pSpecifications->m_centerOfMass.x;
+	pos.y = m_position.y; //- m_pSpecifications->m_centerOfMass.y;
+	pos.z = m_position.z; //- m_pSpecifications->m_centerOfMass.z;
 	// tracage du cadre
 	drawRobotShape(&m_robot.m_TrajectoryPack.m_matrix, &m_matrix, &pos, &m_frameColor);
-	
-
 
 	m_robot.draw();
 }
+void NLVIRTUAL_ROBOT::drawDashBoard(NL2DOCS *p2docs, const NCOLORPICKPACK pickpack)
+{
+	m_robot.drawDashBoard(p2docs, pickpack);
+
+	NVEC3 o;
+	o.x = p2docs->m_Origin.x;
+	o.y = p2docs->m_Origin.y;
+	o.z = 0.0f;
+	m_gyro.draw(&o);
+}
+
 /*
 void NLVIRTUAL_ROBOT::drawRobotShape( const NMATRIX3x3 *prot, const NVEC3* ppos, const NCOLOR *pcolor)
 {
@@ -378,7 +439,7 @@ void NLVIRTUAL_ROBOT::drawRobotShape( const NMATRIX3x3 *prot, const NVEC3* ppos,
 	xtd.x = m_pSpecifications->m_wheelRadius;
 	xtd.y = m_pSpecifications->m_wheelWidth;
 
-	// côté droit
+	// cï¿½tï¿½ droit
 	// ------------------------------
 	pos.x = ppos->x + prot->XAxis.x * m_pSpecifications->m_wheelBase * 0.5f + prot->YAxis.x * m_pSpecifications->m_axleTrack * 0.5f;
 	pos.y = ppos->y + prot->XAxis.y * m_pSpecifications->m_wheelBase * 0.5f + prot->YAxis.y * m_pSpecifications->m_axleTrack * 0.5f;
@@ -392,7 +453,7 @@ void NLVIRTUAL_ROBOT::drawRobotShape( const NMATRIX3x3 *prot, const NVEC3* ppos,
 	pos.y = ppos->y + prot->XAxis.y * m_pSpecifications->m_wheelBase * 0.5f - prot->YAxis.y * m_pSpecifications->m_axleTrack * 0.5f;
 	NUT_Draw_Quad(&pos, &xtd, pcolor);
 
-	// côté gauche
+	// cï¿½tï¿½ gauche
 	// ------------------------------
 	pos.x = ppos->x - prot->XAxis.x *m_pSpecifications->m_axleTrack*0.5f + prot->YAxis.x*m_pSpecifications->m_wheelBase*0.5f;
 	pos.y = ppos->y - prot->XAxis.y *m_pSpecifications->m_axleTrack*0.5f + prot->YAxis.y*m_pSpecifications->m_wheelBase*0.5f;
@@ -406,12 +467,12 @@ void NLVIRTUAL_ROBOT::drawRobotShape( const NMATRIX3x3 *prot, const NVEC3* ppos,
 	pos.y = ppos->y - prot->XAxis.y *m_pSpecifications->m_axleTrack*0.5f - prot->YAxis.y*m_pSpecifications->m_wheelBase*0.5f;
 	NUT_Draw_Quad(&pos, &xtd, pcolor);
 
-	// cadre intérieur
+	// cadre intï¿½rieur
 	xtd.x = m_pSpecifications->m_size.x*0.5f;
 	xtd.y = m_pSpecifications->m_size.y*0.5f;
 	NUT_Draw_Quad(ppos, &xtd, pcolor);
 
-	// cadre extérieur
+	// cadre extï¿½rieur
 	xtd.x = m_pSpecifications->m_size.x*0.5f + 0.1f;
 	xtd.y = m_pSpecifications->m_size.y*0.5f + 0.1f;
 	NUT_Draw_Quad(ppos, &xtd, pcolor);
@@ -423,18 +484,24 @@ void NLVIRTUAL_ROBOT::drawRobotShape( const NMATRIX3x3 *prot, const NVEC3* ppos,
 	* /
 }
 */
-void NLVIRTUAL_ROBOT::drawRobotShape(const NMATRIX* pbase, const NMATRIX3x3* prot, const NVEC3* ppos, const NCOLOR* pcolor)
+void NLVIRTUAL_ROBOT::drawRobotShape(const NMATRIX *pbase, const NMATRIX3x3 *prot, const NVEC3 *ppos, const NCOLOR *pcolor)
 {
-	NMATRIX mx,mxr;
+	NMATRIX mx, mxr;
 	NComposeMatrix(&mx, prot, ppos);
 	NMulMatrix(&mxr, &mx, pbase);
 
-	NMATRIX3x3	mx3;
-	NVEC3f32	o;
+	NMATRIX3x3 mx3;
+	NVEC3f32 o;
 	// extract
-	mx3.f00 = mxr.f00;	mx3.f10 = mxr.f10;	mx3.f20 = mxr.f20;
-	mx3.f01 = mxr.f01;	mx3.f11 = mxr.f11;	mx3.f21 = mxr.f21;
-	mx3.f02 = mxr.f02;	mx3.f12 = mxr.f12;	mx3.f22 = mxr.f22;
+	mx3.f00 = mxr.f00;
+	mx3.f10 = mxr.f10;
+	mx3.f20 = mxr.f20;
+	mx3.f01 = mxr.f01;
+	mx3.f11 = mxr.f11;
+	mx3.f21 = mxr.f21;
+	mx3.f02 = mxr.f02;
+	mx3.f12 = mxr.f12;
+	mx3.f22 = mxr.f22;
 	o.x = mxr.f30;
 	o.y = mxr.f31;
 	o.z = mxr.f32;
@@ -444,15 +511,15 @@ void NLVIRTUAL_ROBOT::drawRobotShape(const NMATRIX* pbase, const NMATRIX3x3* pro
 
 	// Tracage des 6 roues
 
-	NVEC3f32	pos;
-	NVEC2f32	xtd;
+	NVEC3f32 pos;
+	NVEC2f32 xtd;
 
 	pos.z = 0.0f;
 	// Xtend d'une traction wheel
 	xtd.x = m_pSpecifications->m_wheelRadius;
 	xtd.y = m_pSpecifications->m_wheelWidth;
 
-	// côté droit
+	// cï¿½tï¿½ droit
 	// ------------------------------
 	pos.x = o.x + mx3.XAxis.x * m_pSpecifications->m_wheelBase * 0.5f + mx3.YAxis.x * m_pSpecifications->m_axleTrack * 0.5f;
 	pos.y = o.y + mx3.XAxis.y * m_pSpecifications->m_wheelBase * 0.5f + mx3.YAxis.y * m_pSpecifications->m_axleTrack * 0.5f;
@@ -466,7 +533,7 @@ void NLVIRTUAL_ROBOT::drawRobotShape(const NMATRIX* pbase, const NMATRIX3x3* pro
 	pos.y = o.y - mx3.XAxis.y * m_pSpecifications->m_wheelBase * 0.5f + mx3.YAxis.y * m_pSpecifications->m_axleTrack * 0.5f;
 	NUT_Draw_Quad(&pos, &xtd, pcolor);
 
-	// côté gauche
+	// cï¿½tï¿½ gauche
 	// ------------------------------
 	pos.x = o.x - mx3.XAxis.x * m_pSpecifications->m_wheelBase * 0.5f - mx3.YAxis.x * m_pSpecifications->m_axleTrack * 0.5f;
 	pos.y = o.y - mx3.XAxis.y * m_pSpecifications->m_wheelBase * 0.5f - mx3.YAxis.y * m_pSpecifications->m_axleTrack * 0.5f;
@@ -482,17 +549,15 @@ void NLVIRTUAL_ROBOT::drawRobotShape(const NMATRIX* pbase, const NMATRIX3x3* pro
 
 	pos.x = o.x;
 	pos.y = o.y;
-	// cadre intérieur
+	// cadre intï¿½rieur
 	xtd.x = m_pSpecifications->m_size.x * 0.5f;
 	xtd.y = m_pSpecifications->m_size.y * 0.5f;
 	NUT_Draw_Quad(&pos, &xtd, pcolor);
 
-	// cadre extérieur
+	// cadre extï¿½rieur
 	xtd.x = m_pSpecifications->m_size.x * 0.5f + 0.1f;
 	xtd.y = m_pSpecifications->m_size.y * 0.5f + 0.1f;
 	NUT_Draw_Quad(&pos, &xtd, pcolor);
-
-
 
 	/*
 	// Vecteur Y+
@@ -501,7 +566,6 @@ void NLVIRTUAL_ROBOT::drawRobotShape(const NMATRIX* pbase, const NMATRIX3x3* pro
 	NUT_Draw_Segment(ppos, &pos, pcolor);
 	*/
 }
-
 
 /*
 
@@ -544,7 +608,7 @@ void NLDifferentialDriveBase::update(const Nf32 dt)
 	// Update des moteurs virtuels
 	Nf32 ml = m_leftMotor.m_power	*m_leftMotor.m_rps	* dt;
 	Nf32 mr = m_rightMotor.m_power * m_rightMotor.m_rps	* dt;
-	
+
 	// update des encodeurs.
 	m_leftEncoder.update( ml );
 	m_rightEncoder.update( mr );
@@ -555,9 +619,9 @@ void NLDifferentialDriveBase::update(const Nf32 dt)
 	lr = NF32_2PI * mr	* m_rightWheelRadius;	//m_rightEncoder.m_deltaRad	* m_rightWheelRadius;
 	// Rotation de la base
 	m_dang = NLODOMETRY_WBASE_FROM_WHEELS(ll, lr, m_axleTrack);// (lr - ll) / m_frameExtend.x;
-	// Déplacement de la base
+	// Dï¿½placement de la base
 	m_dd = NLODOMETRY_VBASE_FROM_WHEELS(ll, lr); ;//  (lr + ll) / 2.0f;
-	// Déplacement total et Orientation de la base 
+	// Dï¿½placement total et Orientation de la base
 	m_s		+= m_dd;
 	m_ang	+= m_dang;
 	// vitesse de la base
@@ -567,15 +631,15 @@ void NLDifferentialDriveBase::update(const Nf32 dt)
 	m_pos.x += m_v.x;
 	m_pos.y += m_v.y;
 
-	// Update des valeurs "estimées" par encodeur de la Drivebase Virtuelle
+	// Update des valeurs "estimï¿½es" par encodeur de la Drivebase Virtuelle
 	// Distances (arcs) parcourues par la roue gauche d'une part (ll) et la roue droite d'autre part (lr)
 	ll = m_leftEncoder.m_deltaRad	* m_leftWheelRadius;
 	lr = m_rightEncoder.m_deltaRad	* m_rightWheelRadius;
 	// Rotation de la base
 	m_encod_dang = NLODOMETRY_WBASE_FROM_WHEELS(ll, lr, m_axleTrack);// (lr - ll) / m_frameExtend.x;
-	// Déplacement de la base
+	// Dï¿½placement de la base
 	m_encod_dd = NLODOMETRY_VBASE_FROM_WHEELS(ll, lr); ;//  (lr + ll) / 2.0f;
-	// Déplacement total et Orientation de la base 
+	// Dï¿½placement total et Orientation de la base
 	m_encod_d += m_encod_dd;
 	m_encod_ang += m_encod_dang;
 	// vitesse de la base
@@ -597,7 +661,7 @@ void NLDifferentialDriveBase::initialPose(const Nf32 orient, const Nf32 x, const
 	m_pos.x = x;
 	m_pos.y = y;
 	m_ang	= orient;
-	
+
 	// encodeurs
 	m_encod_v.x = 0.0f;
 	m_encod_v.y = 0.0f;
@@ -622,12 +686,12 @@ void NLDifferentialDriveBase::draw(const NCOLOR *pcolor1, const NCOLOR *pcolor2,
 	NVEC3f32		fd,fg,bd,bg;	// les 4 angles de la base ( avant(front) droit, avant gauche, arriere(back) droit, arriere gauche )
 	Nf32			axe_scale;
 
-	if (real) // use "real" position of the "virtual" robot 
+	if (real) // use "real" position of the "virtual" robot
 	{
 		_cos = cos(m_ang);
 		_sin = sin(m_ang);
 	}
-	else // use "estimated" position of the "virtual" robot ( estimée avec les valeurs mesurées aux encodeurs ) 
+	else // use "estimated" position of the "virtual" robot ( estimï¿½e avec les valeurs mesurï¿½es aux encodeurs )
 	{
 		_cos = cos(m_encod_ang);
 		_sin = sin(m_encod_ang);
@@ -635,7 +699,7 @@ void NLDifferentialDriveBase::draw(const NCOLOR *pcolor1, const NCOLOR *pcolor2,
 
 	axe_x.x = _cos*scale;		axe_y.x = -_sin*scale;
 	axe_x.y = _sin*scale;		axe_y.y =  _cos*scale;
-	
+
 	if(pcolor1)
 		R.Color0_4f = *pcolor1;
 	else
@@ -679,11 +743,11 @@ void NLDifferentialDriveBase::draw(const NCOLOR *pcolor1, const NCOLOR *pcolor2,
 	}
 
 
-	// longueur ( l'axe x est aligné sur la direction du robot )
+	// longueur ( l'axe x est alignï¿½ sur la direction du robot )
 	l.x = axe_x.x*m_frameExtend.y*0.5f;
 	l.y = axe_x.y*m_frameExtend.y*0.5f;
 	l.z = 0.0f;
-	// largeur ( l'axe y est perpendiculaire à la direction du robot )
+	// largeur ( l'axe y est perpendiculaire ï¿½ la direction du robot )
 	w.x = axe_y.x*m_frameExtend.x*0.5f;
 	w.y = axe_y.y*m_frameExtend.x*0.5f;
 	w.z = 0.0f;

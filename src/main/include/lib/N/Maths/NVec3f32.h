@@ -10,7 +10,7 @@
 #include "lib/N/NCStandard.h"
 #include "lib/N/NType.h"
 #include "lib/N/NMath.h"
-#include "NVecLimits.h"
+#include "lib/N/Maths/NVecLimits.h"
 
 #ifdef __cplusplus
 extern "C"

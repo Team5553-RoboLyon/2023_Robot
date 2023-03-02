@@ -1,16 +1,14 @@
 #include "../../NL2DOrthogonalCoordinateSystem_MotionProfileFlags.h"
 #include "NLTrajectoryPointDesc.h"
 
-
-
-void NLTRJPOINT_DESC::draw(NL2DOCS* p2docs, const NCOLORPICKPACK pickpack, const NLTRJPOINT_DESC* p0)
+void NLTRJPOINT_DESC::draw(NL2DOCS *p2docs, const NCOLORPICKPACK pickpack, const NLTRJPOINT_DESC *p0)
 {
 	NVEC2 o;
 
 	if (!p0)
 	{
 		NLKIN k0;
-		if (ISFLAG_ON(m_flags, FLAG_NLTRJPOINT_DESC_KTYPE_TRAVELING) || ISFLAG_ON(p2docs->m_Flags, FLAG_NL2DOCS_MOTIONPROFILE_LAYER_VIEW_FT) )
+		if (ISFLAG_ON(m_flags, FLAG_NLTRJPOINT_DESC_KTYPE_TRAVELING) || ISFLAG_ON(p2docs->m_userFlags, FLAG_NL2DOCS_DASHBOARD_MP_FT))
 			m_kin.draw(p2docs, pickpack, &k0);
 		else
 		{
@@ -21,7 +19,7 @@ void NLTRJPOINT_DESC::draw(NL2DOCS* p2docs, const NCOLORPICKPACK pickpack, const
 	}
 	else
 	{
-		if (ISFLAG_ON(m_flags, FLAG_NLTRJPOINT_DESC_KTYPE_TRAVELING) || ISFLAG_ON(p2docs->m_Flags, FLAG_NL2DOCS_MOTIONPROFILE_LAYER_VIEW_FT))
+		if (ISFLAG_ON(m_flags, FLAG_NLTRJPOINT_DESC_KTYPE_TRAVELING) || ISFLAG_ON(p2docs->m_userFlags, FLAG_NL2DOCS_DASHBOARD_MP_FT))
 			m_kin.draw(p2docs, pickpack, &p0->m_kin);
 		else
 		{

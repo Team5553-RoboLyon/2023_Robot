@@ -1,7 +1,6 @@
 #ifndef __NCSTANDARD_H
 #define __NCSTANDARD_H
 
-#include "NCompilerPragma.h"
 #include "lib/N/NCompilerPragma.h"
 
 #ifdef _NWINDOWS
@@ -33,7 +32,7 @@
 #include <math.h>
 #endif
 
-#include "NMemory.h"
+#include "lib/N/NMemory.h"
 
 /*
 #ifdef __cplusplus

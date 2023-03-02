@@ -4,7 +4,7 @@
 
 class NLKINLIMITS
 {
-	friend class NLMOTIONCONTROLER;
+	//	friend class NLMOTIONCONTROLER;
 	friend class NLKIN;
 	// friend class NLMOTIONPROFILE;
 	friend class NLTRAJECTORY;

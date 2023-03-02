@@ -34,7 +34,7 @@ void NLTRAJECTORY_CHUNK_R::initializePersistentData(NLTRAJECTORY_PACK_GETPOINT_P
 void NLTRAJECTORY_CHUNK_R::getPoint(NLTRAJECTORY_PACK_GETPOINT_PERSISTENT_RESULT* presult, const NLPATH_GEOMETRY* ppathgeometry, const Nf32 t)
 {
 	presult->m_result.m_p = m_pathPoint.p;
-	presult->m_result.m_k = NF32_MAX; // Modification spécifique au CHUNK_R qui decrit ce qui se passe autour d'un point fixe 
+	presult->m_result.m_k = NF32_MAX; // Modification spï¿½cifique au CHUNK_R qui decrit ce qui se passe autour d'un point fixe
 	presult->m_result.m_u = m_pathPoint.u;
 
 	NErrorIf(!NIsValidArrayElementPtr(&m_kinsArray, (NBYTE*)presult->m_pChunkR_Kin), NERROR_SYSTEM_GURU_MEDITATION);
@@ -66,7 +66,7 @@ Nu32 NLTRAJECTORY_CHUNK_R::write(FILE* pfile)
 
 void NLTRAJECTORY_CHUNK_R::draw(NL2DOCS* p2docs, const NCOLORPICKPACK pickpack)
 {
-	if (ISFLAG_ON(p2docs->m_Flags, FLAG_NL2DOCS_MOTIONPROFILE_LAYER_VIEW_CHUNK_R))
+	if (ISFLAG_ON(p2docs->m_Flags, FLAG_NL2DOCS_DASHBOARD_MP_CHUNK_R))
 	{
 		NLKIN* pk = (NLKIN*)m_kinsArray.pFirst; pk++;
 		for (Nu32 i = 1; i < m_kinsArray.Size; i++, pk++)
@@ -83,24 +83,23 @@ Nu32 NLTRAJECTORY_CHUNK_R::read(NLPATH_WORKBENCH* pwb)
 }
 */
 
-
 // ------------------------------------------------------------------------------------------
 /**
- *	@brief	Renvoie la date t associée à l'abscisse s passée en parametre de fonction.
- *			Un chunkR est particulier puisqu'il décrit ce qui se passe quand le robot 
- *			reste en place sur un point. Il est alors soit à l'arrêt pour une durée m_t1 - m_t0
- *			soit en train de tourner sur lui-même.
+ *	@brief	Renvoie la date t associï¿½e ï¿½ l'abscisse s passï¿½e en parametre de fonction.
+ *			Un chunkR est particulier puisqu'il dï¿½crit ce qui se passe quand le robot
+ *			reste en place sur un point. Il est alors soit ï¿½ l'arrï¿½t pour une durï¿½e m_t1 - m_t0
+ *			soit en train de tourner sur lui-mï¿½me.
  *			On notera que pour un chunk R on a systematiquement m_s0 = m_s1 !
- * 
- *			Rmq: Pour un chunkR la version de getTime renvoyant un intervalle de temps est plus appropriée.
+ *
+ *			Rmq: Pour un chunkR la version de getTime renvoyant un intervalle de temps est plus appropriï¿½e.
  *
  *	@param	s abscisse curviligne dont on veut connaitre la date
- * 
- *	@return la date t en secondes associée à l'abscisse s, dans le domaine couvert par le chunk.
- *			Ainsi, si s est inférieur ou égale à m_s0 (= m_s1) alors la fonction retournera la valeur de m_t0
+ *
+ *	@return la date t en secondes associï¿½e ï¿½ l'abscisse s, dans le domaine couvert par le chunk.
+ *			Ainsi, si s est infï¿½rieur ou ï¿½gale ï¿½ m_s0 (= m_s1) alors la fonction retournera la valeur de m_t0
  *			et retournera m_t1 sinon.
  */
- // ------------------------------------------------------------------------------------------
+// ------------------------------------------------------------------------------------------
 /*
 Nf32 NLTRAJECTORY_CHUNK_R::getTime(const Nf32 s)
 {
@@ -110,27 +109,27 @@ Nf32 NLTRAJECTORY_CHUNK_R::getTime(const Nf32 s)
 */
 // ------------------------------------------------------------------------------------------
 /**
- *	@brief	Calcule l'intervalle de temps ( start, end ) associé à l'abscisse curviligne s.
-  *			Un chunkR est particulier puisqu'il décrit ce qui se passe quand le robot
- *			reste en place sur un point. Il est alors soit à l'arrêt pour une durée m_t1 - m_t0
- *			soit en train de tourner sur lui-même.
+ *	@brief	Calcule l'intervalle de temps ( start, end ) associï¿½ ï¿½ l'abscisse curviligne s.
+ *			Un chunkR est particulier puisqu'il dï¿½crit ce qui se passe quand le robot
+ *			reste en place sur un point. Il est alors soit ï¿½ l'arrï¿½t pour une durï¿½e m_t1 - m_t0
+ *			soit en train de tourner sur lui-mï¿½me.
  *			On notera que pour un chunk R on a systematiquement m_s0 = m_s1 !
-*
- *	@param	ptimerange est un pointeur sur une structure NINTERVALf32 qui sera 'remplie' par la fonction.
- *	@param	s est l'abscisse curviligne pour laquelle on veut connaitre l'intervalle de temps associé.
- *	@return	Théoriquement les fonctions NLTRAJECTORY_CHUNK.getTime() retournent une valeur parmis les 4 suivantes:
- * 				NLTRAJECTORY_CHUNK_GETTIME_UNIQUE		(= 0 )	s est associé à une date unique t l'intervalle retourné est [t,t]
- *			 	NLTRAJECTORY_CHUNK_GETTIME_INTERVAL		(= 1 )	s est associé à un intervalle de temps, l'intervalle retourné est [start,end]
- * 				NLTRAJECTORY_CHUNK_GETTIME_BEFORE		(=-1 )	s est située 'avant' chunkT et n'est n'associée à aucune date de chunkT. l'intervalle retourné est [thischunkT.m_t0,thischunkT.m_t0]
- * 				NLTRAJECTORY_CHUNK_GETTIME_AFTER		(=-2 )	s est située 'après' chunkT et n'est n'associée à aucune date de chunkT. l'intervalle retourné est [thischunkT.m_t1,thischunkT.m_t1]
  *
- *			Plus spécifiquement, la fonction getTime de NLTRAJECTORY_CHUNK_R ne renverra jamais la valeur NLTRAJECTORY_CHUNK_GETTIME_UNIQUE car s
- *			ne peut être que soit avant le CHUNK_T (la fonction renvoie alors NLTRAJECTORY_CHUNK_GETTIME_BEFORE), soit après (NLTRAJECTORY_CHUNK_GETTIME_AFTER), soit
- *			incluse dans l'intervalle couvert [m_s0,m_s1] par le chunk, dans ce dernier cas et parceque le chunkR EST un chunkR , S est associé à toutes les valeurs de t
+ *	@param	ptimerange est un pointeur sur une structure NINTERVALf32 qui sera 'remplie' par la fonction.
+ *	@param	s est l'abscisse curviligne pour laquelle on veut connaitre l'intervalle de temps associï¿½.
+ *	@return	Thï¿½oriquement les fonctions NLTRAJECTORY_CHUNK.getTime() retournent une valeur parmis les 4 suivantes:
+ * 				NLTRAJECTORY_CHUNK_GETTIME_UNIQUE		(= 0 )	s est associï¿½ ï¿½ une date unique t l'intervalle retournï¿½ est [t,t]
+ *			 	NLTRAJECTORY_CHUNK_GETTIME_INTERVAL		(= 1 )	s est associï¿½ ï¿½ un intervalle de temps, l'intervalle retournï¿½ est [start,end]
+ * 				NLTRAJECTORY_CHUNK_GETTIME_BEFORE		(=-1 )	s est situï¿½e 'avant' chunkT et n'est n'associï¿½e ï¿½ aucune date de chunkT. l'intervalle retournï¿½ est [thischunkT.m_t0,thischunkT.m_t0]
+ * 				NLTRAJECTORY_CHUNK_GETTIME_AFTER		(=-2 )	s est situï¿½e 'aprï¿½s' chunkT et n'est n'associï¿½e ï¿½ aucune date de chunkT. l'intervalle retournï¿½ est [thischunkT.m_t1,thischunkT.m_t1]
+ *
+ *			Plus spï¿½cifiquement, la fonction getTime de NLTRAJECTORY_CHUNK_R ne renverra jamais la valeur NLTRAJECTORY_CHUNK_GETTIME_UNIQUE car s
+ *			ne peut ï¿½tre que soit avant le CHUNK_T (la fonction renvoie alors NLTRAJECTORY_CHUNK_GETTIME_BEFORE), soit aprï¿½s (NLTRAJECTORY_CHUNK_GETTIME_AFTER), soit
+ *			incluse dans l'intervalle couvert [m_s0,m_s1] par le chunk, dans ce dernier cas et parceque le chunkR EST un chunkR , S est associï¿½ ï¿½ toutes les valeurs de t
  *			incluses dans l'intervalle [m_t0,m_t1]
  *			et dans ce cas la valeur de retour sera donc NLTRAJECTORY_CHUNK_GETTIME_INTERVAL.
  */
- // ------------------------------------------------------------------------------------------
+// ------------------------------------------------------------------------------------------
 /*
 Ns32 NLTRAJECTORY_CHUNK_R::getTime(NINTERVALf32* ptimerange, const Nf32 s)
 {
@@ -155,14 +154,14 @@ Ns32 NLTRAJECTORY_CHUNK_R::getTime(NINTERVALf32* ptimerange, const Nf32 s)
 /*
 void NLTRAJECTORY_CHUNK_R::build(const NARRAY* pkinsarray, const Nu32 firstkinid, const Nu32 lastkinid, const NLPATH_POINT* ppathpoint)
 {
-	// Cette fonction doit faire une copie d'un certains nombre de KIN d'une array à une autre.
-	// Cette copie va être effectuée simplement comme la copie d'un bloc de mémoire. Cependant cela suppose que la structure KIN soit
-	// composée de simples données ( aucune allocation nested !!! ), ce qui est le cas au moment où ces lignes sont écrites.
-	// En debug, le check ci-dessous devrait nous garantir un CRASH au cas où la structure NLKIN viendrait à évoluer.
+	// Cette fonction doit faire une copie d'un certains nombre de KIN d'une array ï¿½ une autre.
+	// Cette copie va ï¿½tre effectuï¿½e simplement comme la copie d'un bloc de mï¿½moire. Cependant cela suppose que la structure KIN soit
+	// composï¿½e de simples donnï¿½es ( aucune allocation nested !!! ), ce qui est le cas au moment oï¿½ ces lignes sont ï¿½crites.
+	// En debug, le check ci-dessous devrait nous garantir un CRASH au cas oï¿½ la structure NLKIN viendrait ï¿½ ï¿½voluer.
 	NErrorIf(NLclearKinInArrayCallBack != NULL, NERROR_SYSTEM_CHECK);
 	NErrorIf(m_kinsArray.Size, NERROR_ARRAY_IS_NOT_EMPTY);
-	
-	// ******************************* DEBUG 
+
+	// ******************************* DEBUG
 	NLKIN buff[64];
 	NLKIN* pkin = NULL;
 	Nu32 buffid = 0;
@@ -171,13 +170,13 @@ void NLTRAJECTORY_CHUNK_R::build(const NARRAY* pkinsarray, const Nu32 firstkinid
 		pkin = (NLKIN*)NGetArrayPtr(pkinsarray, i);
 		buff[buffid] = *pkin;
 	}
-	// ******************************* DEBUG 
+	// ******************************* DEBUG
 
 
 	NArrayBufferPushBack(&m_kinsArray, (void*)NGetArrayPtr(pkinsarray, firstkinid), lastkinid - firstkinid + 1);
-	
-	// Dans un chunkR les KIN référencés ne modifient pas l'abscisse curviligne. 
-	// Ces KINs décrivent ou des rotation sur place ou des pauses ! Ils représentent les mouvements potentiels de la roue DROITE
+
+	// Dans un chunkR les KIN rï¿½fï¿½rencï¿½s ne modifient pas l'abscisse curviligne.
+	// Ces KINs dï¿½crivent ou des rotation sur place ou des pauses ! Ils reprï¿½sentent les mouvements potentiels de la roue DROITE
 
 	m_pathPoint	= *ppathpoint;
 	m_s0 = m_s1 = m_pathPoint.s;

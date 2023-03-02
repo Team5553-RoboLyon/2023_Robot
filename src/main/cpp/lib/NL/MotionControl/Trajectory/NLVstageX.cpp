@@ -7,21 +7,21 @@
 void NLVSTAGEX::compute_v(const Nf32 k, const Nf32 half_axle_track, const Nf32 turn_left_inertia_coef, const Nf32 turn_right_inertia_coef, const Nf32 max_cruise_velocity)
 {
 	Nf32 r, sqr;
-	// k negatif signifie qu'on tourne à droite.
+	// k negatif signifie qu'on tourne ï¿½ droite.
 	if (k < 0.0f)
 	{
 		r = -1.0f / k;
-		m_v = max_cruise_velocity * (1.0f + (r - half_axle_track) / (r + half_axle_track))*0.5f;
+		m_v = max_cruise_velocity * (1.0f + (r - half_axle_track) / (r + half_axle_track)) * 0.5f;
 		sqr = sqrt(turn_right_inertia_coef / (-k));
 
 		m_v = NMIN(m_v, sqr);
 		FLAG_OFF(m_flags, FLAG_NLVSTAGEX_IS_CEIL);
 	}
-	// k positif signifie qu'on tourne à gauche.
+	// k positif signifie qu'on tourne ï¿½ gauche.
 	else if (k > 0.0f)
 	{
 		r = 1.0f / k;
-		m_v = max_cruise_velocity * (1.0f + (r - half_axle_track) / (r + half_axle_track))*0.5f;
+		m_v = max_cruise_velocity * (1.0f + (r - half_axle_track) / (r + half_axle_track)) * 0.5f;
 		sqr = sqrt(turn_left_inertia_coef / k);
 
 		m_v = NMIN(m_v, sqr);
@@ -35,17 +35,17 @@ void NLVSTAGEX::compute_v(const Nf32 k, const Nf32 half_axle_track, const Nf32 t
 	}
 }
 
-void NLVSTAGEX::set(const NLVSTAGE* pvsdesc)
+void NLVSTAGEX::set(const NLVSTAGE *pvsdesc)
 {
-	m_s0		= pvsdesc->m_s0;
-	m_s1		= pvsdesc->m_s1;
+	m_s0 = pvsdesc->m_s0;
+	m_s1 = pvsdesc->m_s1;
 
-	m_s0Prime	= m_s0;
-	m_s1Prime	= m_s1;
+	m_s0Prime = m_s0;
+	m_s1Prime = m_s1;
 
-	m_flags		= 0;
-	m_v			= pvsdesc->m_v;
-	
+	m_flags = 0;
+	m_v = pvsdesc->m_v;
+
 	m_kinXIn.tjavs_set(0.0f, -NF32_MAX, -NF32_MAX, 0.0f, 0.0f);
 	m_kinXOut.tjavs_set(0.0f, NF32_MAX, NF32_MAX, 0.0f, 0.0f);
 	m_stitch.null();
@@ -53,25 +53,24 @@ void NLVSTAGEX::set(const NLVSTAGE* pvsdesc)
 
 void NLVSTAGEX::set(const Nf32 s0, const Nf32 s1, const Nf32 vlimit, const Nbool bisceil)
 {
-	NErrorIf(s1 < s0, NERROR_INCONSISTENT_VALUES);			//s1 doit être plus grand que s0
-	NErrorIf(vlimit < 0.0f , NERROR_INCONSISTENT_VALUES);	//vlimit doit être positif
-	m_v			= vlimit;
+	NErrorIf(s1 < s0, NERROR_INCONSISTENT_VALUES);		 // s1 doit ï¿½tre plus grand que s0
+	NErrorIf(vlimit < 0.0f, NERROR_INCONSISTENT_VALUES); // vlimit doit ï¿½tre positif
+	m_v = vlimit;
 
-	m_s0		= s0;
-	m_s1		= s1;
+	m_s0 = s0;
+	m_s1 = s1;
 
-	m_s0Prime	= s0;
-	m_s1Prime	= s1;
+	m_s0Prime = s0;
+	m_s1Prime = s1;
 
-	m_flags		= 0;
+	m_flags = 0;
 
-	m_kinXIn.tjavs_set(0.0f, -NF32_MAX, -NF32_MAX, 0.0f,0.0f);
-	m_kinXOut.tjavs_set(0.0f, NF32_MAX,  NF32_MAX, 0.0f, 0.0f);
+	m_kinXIn.tjavs_set(0.0f, -NF32_MAX, -NF32_MAX, 0.0f, 0.0f);
+	m_kinXOut.tjavs_set(0.0f, NF32_MAX, NF32_MAX, 0.0f, 0.0f);
 	m_stitch.null();
 
 	if (bisceil)
 		FLAG_ON(m_flags, FLAG_NLVSTAGEX_IS_CEIL);
-
 }
 
 /*
@@ -81,7 +80,7 @@ void NLVSTAGEX::set(const NLPATH_POINT *pkp, const Nf32 half_axle_track, const N
 
 	m_s0Prime	= m_s0;
 	m_s1Prime	= m_s1;
-	
+
 	m_flags		= 0;
 
 	m_kinXIn.tjavs_set(0.0f, -NF32_MAX, -NF32_MAX, 0.0f, 0.0f);
@@ -110,7 +109,7 @@ void NLVSTAGEX::set(const Nf32 s0, const Nf32 s1, const Nf32 k, const Nf32 half_
 	m_kinXIn.tjavs_set(0.0f, -NF32_MAX, -NF32_MAX, 0.0f, 0.0f);
 	m_kinXOut.tjavs_set(0.0f, NF32_MAX, NF32_MAX, 0.0f, 0.0f);
 	m_stitch.null();
-	compute_v(k,half_axle_track, turn_left_inertia_coef, turn_right_inertia_coef, max_cruise_velocity);
+	compute_v(k, half_axle_track, turn_left_inertia_coef, turn_right_inertia_coef, max_cruise_velocity);
 }
 void NLVSTAGEX::setButKinX(const Nf32 s0, const Nf32 s1, const Nf32 k, const Nf32 half_axle_track, const Nf32 turn_left_inertia_coef, const Nf32 turn_right_inertia_coef, const Nf32 max_cruise_velocity)
 {
@@ -122,36 +121,47 @@ void NLVSTAGEX::setButKinX(const Nf32 s0, const Nf32 s1, const Nf32 k, const Nf3
 
 	m_flags = 0;
 
-	// !!! bien fondé de cette fonction !!! NE PAS MODIFIER LES VALEURS m_axIn et m_axOut
-	//m_axIn = NF32_MAX;
-	//m_axOut = NF32_MAX;
-	//m_kinXIn.tjavs_set(0.0f, -NF32_MAX, -NF32_MAX, 0.0f, 0.0f);
-	//m_kinXOut.tjavs_set(0.0f, NF32_MAX, NF32_MAX, 0.0f, 0.0f);
+	// !!! bien fondï¿½ de cette fonction !!! NE PAS MODIFIER LES VALEURS m_axIn et m_axOut
+	// m_axIn = NF32_MAX;
+	// m_axOut = NF32_MAX;
+	// m_kinXIn.tjavs_set(0.0f, -NF32_MAX, -NF32_MAX, 0.0f, 0.0f);
+	// m_kinXOut.tjavs_set(0.0f, NF32_MAX, NF32_MAX, 0.0f, 0.0f);
 
 	m_stitch.null();
-	compute_v(k,half_axle_track, turn_left_inertia_coef, turn_right_inertia_coef, max_cruise_velocity);
+	compute_v(k, half_axle_track, turn_left_inertia_coef, turn_right_inertia_coef, max_cruise_velocity);
 }
 
-void NLVSTAGEX::setKinXOut(NLVSTAGEX* pvs_nxt, const NLKINTWEAK* pktwk, const NLKINLIMITS* pklim)
+// Il faudra ici intï¿½grer la notion de courbure influencant l'acceleration max possible du robot de telle sorte que l'acceleration max de la roue exterieure au virage
+// reste inferieure ou ï¿½gale ï¿½ l'acceleration max limite !
+// on montre, en se basant sur les fonction d'odometrie pour calculer a_left et a_right, que a doit ï¿½tre:
+//																											a <= (2 * pklim->m_a ) / ( 2 + e*k )
+//																											a : accel max local du robot
+//																											e : entraxe
+//																											k : courbure
+// donc il faut ajouter cette contrainte ici, c'est ï¿½ dire prendre la plus contraignante des contraintes d'accel.
+//																											pklim->m_a
+//																											a_max_local_trapezoidale
+//																											a ( = a_max_local_en_fonction_de_courbure )
+void NLVSTAGEX::setKinXOut(NLVSTAGEX *pvs_nxt, const NLKINTWEAK *pktwk, const NLKINLIMITS *pklim)
 {
 	Nf32 f;
 	Nf32 d = pvs_nxt->m_s0 - m_s1;
 
 	if (m_v > pvs_nxt->m_v) // signifie v0 > v1
 	{
-		// "f" represente l'acceleration locale max dans un modele trapezoidal. 
+		// "f" represente l'acceleration locale max dans un modele trapezoidal.
 		// Demonstration:
 		// posons:	d	distance parcourue
-		//			v0	vitesse au départ
-		//			v1	vitesse à l'arrivée
-		//			t	durée écoulée entre le départ et l'arrivée
-		//			a	accélération (constante, le modèle est trapézoidal) permettant de passer de v0 à v1
+		//			v0	vitesse au dï¿½part
+		//			v1	vitesse ï¿½ l'arrivï¿½e
+		//			t	durï¿½e ï¿½coulï¿½e entre le dï¿½part et l'arrivï¿½e
+		//			a	accï¿½lï¿½ration (constante, le modï¿½le est trapï¿½zoidal) permettant de passer de v0 ï¿½ v1
 		//
 		//			on connait d,v0 et v1. On ne connait ni t, ni a
-		//			on cherche à trouver a
+		//			on cherche ï¿½ trouver a
 		//
-		//			Dans un modèle trapezoidal on peut écrire:
-		//			
+		//			Dans un modï¿½le trapezoidal on peut ï¿½crire:
+		//
 		//					d	= v0*t + (v1-v0)*t/2
 		//						= v0*t + v1*t/2 -v0*t/2
 		//						= (v0 + v1)*t/2					[1]
@@ -163,21 +173,21 @@ void NLVSTAGEX::setKinXOut(NLVSTAGEX* pvs_nxt, const NLKINTWEAK* pktwk, const NL
 		//					d	= (v0 + v1)*(v1 - v0 ) / (2*a)
 		//					a	= (v1 + v0)*(v1 - v0 ) / (2*d)
 		//
-		//					a	= (v1² - v0²)/(2*d)				[3]
-		// 
-		// Concrêtement la longueur de la clothoide correspond à d, v0 à la vitesse du VSTAGE précédent, et v1 à celle du VSTAGE courant:
+		//					a	= (v1ï¿½ - v0ï¿½)/(2*d)				[3]
 		//
-		f = (d > 0.0) ? (NPOW2(pvs_nxt->m_v)- NPOW2(m_v)) / (2.0f * d) : -pklim->m_a;
+		// Concrï¿½tement la longueur de la clothoide correspond ï¿½ d, v0 ï¿½ la vitesse du VSTAGE prï¿½cï¿½dent, et v1 ï¿½ celle du VSTAGE courant:
 		//
-		// si f est plus petite ( en val.absolue) que le max alors f devient le nouveau max possible. on utilise pktweak pour permettre à l'utilisateur de moduler et
-		// ainsi choisir une accel. max comprise entre f et le max possible autorisé par les specs de la drive train.
+		f = (d > 0.0) ? (NPOW2(pvs_nxt->m_v) - NPOW2(m_v)) / (2.0f * d) : -pklim->m_a;
+		//
+		// si f est plus petite ( en val.absolue) que le max alors f devient le nouveau max possible. on utilise pktweak pour permettre ï¿½ l'utilisateur de moduler et
+		// ainsi choisir une accel. max comprise entre f et le max possible autorisï¿½ par les specs de la drive train.
 
 		m_kinXOut.m_a = (f > -pklim->m_a) ? -pklim->m_a + pktwk->m_aHoldLocalLimitRatio * (f + pklim->m_a) : -pklim->m_a;
 		m_kinXOut.m_j = -(pklim->m_j + pktwk->m_jHoldLocalLimitRatio * pklim->m_j * (-m_kinXOut.m_a / pklim->m_a - 1.0f));
-		//NErrorIf(NSIGN(m_kinXOut.m_j) >= 0, NERROR_SYSTEM_GURU_MEDITATION);
+		// NErrorIf(NSIGN(m_kinXOut.m_j) >= 0, NERROR_SYSTEM_GURU_MEDITATION);
 		if ((m_kinXOut.m_a == -pklim->m_a) && (m_kinXOut.m_j == -pklim->m_j))
 		{
-			m_kinXOut.m_t =  pklim->m_tx;
+			m_kinXOut.m_t = pklim->m_tx;
 			m_kinXOut.m_v = -pklim->m_vx;
 			m_kinXOut.m_s = -pklim->m_sx;
 		}

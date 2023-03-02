@@ -13,11 +13,11 @@
 #include "lib/N/Image/NImage.h"
 #include "lib/N/Containers/NNode.h"
 #include "lib/N/Containers/NArray.h"
-#include "NType.h"
-#include "NFlags.h"
-#include "NScreenPoint.h"
-#include "NScreenRect.h"
-#include "NRectf32.h"
+#include "lib/N/NType.h"
+#include "lib/N/NFlags.h"
+#include "lib/N/NScreenPoint.h"
+#include "lib/N/NScreenRect.h"
+#include "lib/N/NRectf32.h"
 
 #ifdef __cplusplus
 extern "C"

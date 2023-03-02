@@ -63,7 +63,7 @@ Nu32 NLTRAJECTORY_CHUNK_T::write(FILE* pfile)
 
 void NLTRAJECTORY_CHUNK_T::draw(NL2DOCS* p2docs, const NCOLORPICKPACK pickpack)
 {
-	//if (ISFLAG_ON(p2docs->m_Flags, FLAG_NL2DOCS_MOTIONPROFILE_LAYER_VIEW_CHUNK_T))
+	//if (ISFLAG_ON(p2docs->m_Flags, FLAG_NL2DOCS_DASHBOARD_MP_CHUNK_T))
 	//{
 		NLTRJPOINT_DESC* pdsc = (NLTRJPOINT_DESC*)m_trajectoryPointDescArray.pFirst; pdsc++;
 		for (Nu32 i = 1; i < m_trajectoryPointDescArray.Size; i++, pdsc++)
@@ -102,20 +102,20 @@ Nf32 NLTRAJECTORY_CHUNK_T::getTime(const Nf32 s)
 				//	NErrorIf(pk->m_a, NERROR_SYSTEM_CHECK);				// impossible car si 0.m_a est nulle et m_j est null  alors seul le cas ou la vitesse est constante est possible...
 				//	NErrorIf(pk0->m_v != pk->m_v, NERROR_SYSTEM_CHECK); // impossible car si 0.m_a est nulle et m_j est null  alors seul le cas ou la vitesse est constante est possible...
 
-				NErrorIf(!pp->m_kin.m_v, NERROR_SYSTEM_CHECK);			// Dans ce cas, la vitesse courante et donc constante ne saurait être nulle !
+				NErrorIf(!pp->m_kin.m_v, NERROR_SYSTEM_CHECK);			// Dans ce cas, la vitesse courante et donc constante ne saurait ï¿½tre nulle !
 				return pp0->m_kin.m_t + (s - pp0->m_kin.m_s) / pp0->m_kin.m_v;
 			}
 			else
 			{
-				// Quelque soit le signe de "pk0->m_a" seule la racine " R2 = (-B + sqrt(delta) )/2A " est applicable à notre situation ( cf etude et tableau de signe )
+				// Quelque soit le signe de "pk0->m_a" seule la racine " R2 = (-B + sqrt(delta) )/2A " est applicable ï¿½ notre situation ( cf etude et tableau de signe )
 				return pp0->m_kin.m_t + (-pp0->m_kin.m_v + sqrt(NPOW2(pp0->m_kin.m_v) - 2.0f * pp0->m_kin.m_a * (pp0->m_kin.m_s - s))) / pp0->m_kin.m_a;
 			}
 
-			// C'est une phase 2 qui mène à pk !
-			// On recherche donc une valeur de t solution de l'équation:
+			// C'est une phase 2 qui mï¿½ne ï¿½ pk !
+			// On recherche donc une valeur de t solution de l'ï¿½quation:
 			//	s = pk0->s + pk0->m_v*t + pk0->m_a*t*t/2.0f
-			//	
-			//	On a donc delta = NPOW2(pk0->m_v) - 2.0f*pk0->m_a*(pk0->m_s - s) discriminant de l'équation.
+			//
+			//	On a donc delta = NPOW2(pk0->m_v) - 2.0f*pk0->m_a*(pk0->m_s - s) discriminant de l'ï¿½quation.
 			//  Pour avoir au moins une solution, il faut que delta soit >=0
 			//						delta	>=	0
 			//	[1]					NPOW2(pk0->m_v) - 2.0f*pk0->m_a*(pk0->m_s - s)	>=	0
@@ -123,7 +123,7 @@ Nf32 NLTRAJECTORY_CHUNK_T::getTime(const Nf32 s)
 			//						NPOW2(pk0->m_v)/(2.0f*pk0->m_a) >=	(pk0->m_s - s)
 			//						NPOW2(pk0->m_v)/(2.0f*pk0->m_a) - pk0->m_s >=	- s
 			//	[2]				   -NPOW2(pk0->m_v)/(2.0f*pk0->m_a) + pk0->m_s <=	s
-			//			
+			//
 			/ *
 			if (pk0->m_a > 0.0f)
 			{
@@ -146,9 +146,9 @@ Nf32 NLTRAJECTORY_CHUNK_T::getTime(const Nf32 s)
 				//
 				// R2 = (-pk0->m_v + sqrt(delta) ) / pk0->m_a
 				//
-				// Quand à R1 = (-pk0->m_v - sqrt(delta) ) / pk0->m_a
-				// On voit bien qu'elle sera TOUJOURS négative pour les mêmes raisons ,
-				// c'est à dire
+				// Quand ï¿½ R1 = (-pk0->m_v - sqrt(delta) ) / pk0->m_a
+				// On voit bien qu'elle sera TOUJOURS nï¿½gative pour les mï¿½mes raisons ,
+				// c'est ï¿½ dire
 				//						-pk0->m_v - sqrt(delta) < 0, TOUJOURS ! donc ...
 				//
 				// Donc on a bien une seule racine positive et donc possible: R+ !
@@ -158,8 +158,8 @@ Nf32 NLTRAJECTORY_CHUNK_T::getTime(const Nf32 s)
 			{
 				// Il est possible que delta soit negatif ou null !
 				// ------------------------------------------------
-				// et c'est R- qui est valide ! Note: R+ est également positive mais plus grande que R1, elle représente le temps qu'il faut pour REPASSER par S après que la vitesse soit devenue négative
-				// à force d'appliquer pk0->m_a ! ( et donc on revient sur nos pas pour repasser par S ... )
+				// et c'est R- qui est valide ! Note: R+ est ï¿½galement positive mais plus grande que R1, elle reprï¿½sente le temps qu'il faut pour REPASSER par S aprï¿½s que la vitesse soit devenue nï¿½gative
+				// ï¿½ force d'appliquer pk0->m_a ! ( et donc on revient sur nos pas pour repasser par S ... )
 				return (-pk0->m_v + sqrt(NPOW2(pk0->m_v) - 2.0f*pk0->m_a*(pk0->m_s - s)) / pk0->m_a);
 			}
 			* /
@@ -228,22 +228,22 @@ Nf32 NLTRAJECTORY_CHUNK_T::getTime(const Nf32 s)
 
 // ------------------------------------------------------------------------------------------
 /**
- *	@brief	Calcule l'intervalle de temps ( start, end ) associé à l'abscisse curviligne s.
- *			
+ *	@brief	Calcule l'intervalle de temps ( start, end ) associï¿½ ï¿½ l'abscisse curviligne s.
+ *
  *	@param	ptimerange est un pointeur sur une structure NINTERVALf32 qui sera 'remplie' par la fonction.
- *	@param	s est l'abscisse curviligne pour laquelle on veut connaitre l'intervalle de temps associé.
- *	@return	Théoriquement les fonctions NLTRAJECTORY_CHUNK.getTime() retournent une valeur parmis les 4 suivantes:
- * 				NLTRAJECTORY_CHUNK_GETTIME_UNIQUE		(= 0 )	s est associé à une date unique t l'intervalle retourné est [t,t]	
- *			 	NLTRAJECTORY_CHUNK_GETTIME_INTERVAL		(= 1 )	s est associé à un intervalle de temps, l'intervalle retourné est [start,end]				
- * 				NLTRAJECTORY_CHUNK_GETTIME_BEFORE		(=-1 )	s est située 'avant' chunkT et n'est n'associée à aucune date de chunkT. l'intervalle retourné est [thischunkT.m_t0,thischunkT.m_t0]	
- * 				NLTRAJECTORY_CHUNK_GETTIME_AFTER		(=-2 )	s est située 'après' chunkT et n'est n'associée à aucune date de chunkT. l'intervalle retourné est [thischunkT.m_t1,thischunkT.m_t1]	
- *			
- *			Plus spécifiquement, la fonction getTime de NLTRAJECTORY_CHUNK_T ne renverra jamais la valeur NLTRAJECTORY_CHUNK_GETTIME_INTERVAL car s
- *			ne peut être que soit avant le CHUNK_T (la fonction renvoie alors NLTRAJECTORY_CHUNK_GETTIME_BEFORE), soit après (NLTRAJECTORY_CHUNK_GETTIME_AFTER), soit
- *			incluse dans l'intervalle couvert [m_s0,m_s1] par le chunk, dans ce dernier cas et parceque le chunkT EST un chunkT , S est associé à une seule et unique valeur de t
+ *	@param	s est l'abscisse curviligne pour laquelle on veut connaitre l'intervalle de temps associï¿½.
+ *	@return	Thï¿½oriquement les fonctions NLTRAJECTORY_CHUNK.getTime() retournent une valeur parmis les 4 suivantes:
+ * 				NLTRAJECTORY_CHUNK_GETTIME_UNIQUE		(= 0 )	s est associï¿½ ï¿½ une date unique t l'intervalle retournï¿½ est [t,t]
+ *			 	NLTRAJECTORY_CHUNK_GETTIME_INTERVAL		(= 1 )	s est associï¿½ ï¿½ un intervalle de temps, l'intervalle retournï¿½ est [start,end]
+ * 				NLTRAJECTORY_CHUNK_GETTIME_BEFORE		(=-1 )	s est situï¿½e 'avant' chunkT et n'est n'associï¿½e ï¿½ aucune date de chunkT. l'intervalle retournï¿½ est [thischunkT.m_t0,thischunkT.m_t0]
+ * 				NLTRAJECTORY_CHUNK_GETTIME_AFTER		(=-2 )	s est situï¿½e 'aprï¿½s' chunkT et n'est n'associï¿½e ï¿½ aucune date de chunkT. l'intervalle retournï¿½ est [thischunkT.m_t1,thischunkT.m_t1]
+ *
+ *			Plus spï¿½cifiquement, la fonction getTime de NLTRAJECTORY_CHUNK_T ne renverra jamais la valeur NLTRAJECTORY_CHUNK_GETTIME_INTERVAL car s
+ *			ne peut ï¿½tre que soit avant le CHUNK_T (la fonction renvoie alors NLTRAJECTORY_CHUNK_GETTIME_BEFORE), soit aprï¿½s (NLTRAJECTORY_CHUNK_GETTIME_AFTER), soit
+ *			incluse dans l'intervalle couvert [m_s0,m_s1] par le chunk, dans ce dernier cas et parceque le chunkT EST un chunkT , S est associï¿½ ï¿½ une seule et unique valeur de t
  *			... dans ce dernier cas la valeur de retour sera donc NLTRAJECTORY_CHUNK_GETTIME_UNIQUE.
  */
- // ------------------------------------------------------------------------------------------
+// ------------------------------------------------------------------------------------------
 /*
 Ns32 NLTRAJECTORY_CHUNK_T::getTime(NINTERVALf32* ptimerange, const Nf32 s)
 {
@@ -266,10 +266,10 @@ Ns32 NLTRAJECTORY_CHUNK_T::getTime(NINTERVALf32* ptimerange, const Nf32 s)
 
 void NLTRAJECTORY_CHUNK_T::build(const NARRAY* pkinsarray, const Nu32 firstkinid, const Nu32 lastkinid, const NLPATH_GEOMETRY* ppathgeometry)
 {
-	// TODO !!! Attention la fonction de construction de chunk T (chunkt->build ) peux générer de NLTRJPOINT_DESC en fin de chunk dont l'abscisse
-	// sera plus grande que la longueur totale du chemin !!! Cela est du à l'imprécision potentielle du calcul des KIN, car pour eux, le s est le resultat
+	// TODO !!! Attention la fonction de construction de chunk T (chunkt->build ) peux gï¿½nï¿½rer de NLTRJPOINT_DESC en fin de chunk dont l'abscisse
+	// sera plus grande que la longueur totale du chemin !!! Cela est du ï¿½ l'imprï¿½cision potentielle du calcul des KIN, car pour eux, le s est le resultat
 	// de l'integration de la vitesse, de l'acceleration et du jerk au cours du temps ...
-	// Pour l'instant ce cas n'est pas géré !!! IL VA FALLOIR LE FAIRE !!!  Sinon plantage assuré avec la fonction NLPATH_GEOMETRY::getPathPoint
+	// Pour l'instant ce cas n'est pas gï¿½rï¿½ !!! IL VA FALLOIR LE FAIRE !!!  Sinon plantage assurï¿½ avec la fonction NLPATH_GEOMETRY::getPathPoint
 
 
 	NErrorIf(pkinsarray->ElementSize != sizeof(NLKIN), NERROR_WRONG_ARRAY_SIZE);
@@ -277,7 +277,7 @@ void NLTRAJECTORY_CHUNK_T::build(const NARRAY* pkinsarray, const Nu32 firstkinid
 	NErrorIf(lastkinid >= pkinsarray->Size, NERROR_INDEX_OUTOFRANGE);
 	NErrorIf(lastkinid <= firstkinid, NERROR_INCONSISTENT_VALUES);
 
-	// ******************************* DEBUG 
+	// ******************************* DEBUG
 	NLKIN buff[64];
 	NLKIN* pkin = NULL;
 	Nu32 buffid = 0;
@@ -286,7 +286,7 @@ void NLTRAJECTORY_CHUNK_T::build(const NARRAY* pkinsarray, const Nu32 firstkinid
 		pkin = (NLKIN*)NGetArrayPtr(pkinsarray, i);
 		buff[buffid] = *pkin;
 	}
-	// ******************************* DEBUG 
+	// ******************************* DEBUG
 
 	NResizeArray(&m_trajectoryPointDescArray, 0, NULL, NLclearNLTrajectoryPointDescInArrayCallBack);
 
@@ -301,8 +301,8 @@ void NLTRAJECTORY_CHUNK_T::build(const NARRAY* pkinsarray, const Nu32 firstkinid
 	timeRange(pk->m_t, plastk->m_t);
 	abscissaRange(pk->m_s, plastk->m_s);
 
-	// Recherche de pp le point du chemin situé juste après le premier Kin ( = pk ).
-	// Et donc par la même occasion la primitive SUR laquelle se trouve pk.
+	// Recherche de pp le point du chemin situï¿½ juste aprï¿½s le premier Kin ( = pk ).
+	// Et donc par la mï¿½me occasion la primitive SUR laquelle se trouve pk.
 	NLPATH_PRIMITIVE* pprim = (NLPATH_PRIMITIVE*)ppathgeometry->m_primitivesArray.pFirst;
 	NLPATH_POINT*	pp = (NLPATH_POINT*)(ppathgeometry->m_pathPointsArray.pFirst) + 1;
 	NLPATH_POINT*	plastp = pp + ppathgeometry->m_pathPointsArray.Size - 2;

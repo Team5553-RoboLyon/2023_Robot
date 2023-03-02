@@ -5,34 +5,55 @@
 
 extern HWND hwnd_Explorer;
 
-NLPATH_WORKBENCH::NLPATH_WORKBENCH():	m_id(ID::WB_UNDEFINED),
-										m_flags(FLAG_NLPATH_WORKBENCH_SMART_BUILD),
-										m_pPathBuilder(NULL),
-										m_pDriveTrainSpecifications(NULL),
-										m_pRamsete(NULL),
-										m_pPath(NULL),
-										m_availableNu8(0),
-										m_hTreeViewVzones(NULL),
-										m_hTreeViewKeys(NULL) { /*Nmem0(this, NLPATH_WORKBENCH);*/ }
+NLPATH_WORKBENCH::NLPATH_WORKBENCH() : m_id(ID::WB_UNDEFINED),
+									   m_flags(FLAG_NLPATH_WORKBENCH_SMART_BUILD),
+									   m_pPathBuilder(NULL),
+									   m_pDriveTrainSpecifications(NULL),
+									   m_pRamsete(NULL),
+									   m_pPath(NULL),
+									   m_availableNu8(0),
+									   m_hTreeViewVzones(NULL),
+									   m_hTreeViewKeys(NULL)
+{
+	/*Nmem0(this, NLPATH_WORKBENCH);*/
+	//																									| should be used by		|
+	// Default color setup																	------------|-----------------------|
+	NSetColorf(&m_colorTable.color[0], NCOLOR_PRESET3F_RED_SCARLET, 1);		   //	RED			|	axis,				|
+	NSetColorf(&m_colorTable.color[1], NCOLOR_PRESET3F_ORANGE, 1);			   //	.			|						|
+	NSetColorf(&m_colorTable.color[2], NCOLOR_PRESET3F_ORANGE_GOLD, 1);		   //	.			|						|
+	NSetColorf(&m_colorTable.color[3], NCOLOR_PRESET3F_YELLOW_LASER_LEMON, 1); //	YELLOW		|						|
+	NSetColorf(&m_colorTable.color[4], NCOLOR_PRESET3F_GREEN_NAPIER, 1);	   //	GREEN		| kin.j<0				|
+	NSetColorf(&m_colorTable.color[5], NCOLOR_PRESET3F_GREEN_EMERALD, 1);	   //	.			| kin.j=0,				|
+	NSetColorf(&m_colorTable.color[6], NCOLOR_PRESET3F_GREEN_SPRING, 1);	   //	.			| kin.j>0				|
+	NSetColorf(&m_colorTable.color[7], NCOLOR_PRESET3F_BLUE_SAPPHIRE, 1);	   //	BLUE		| 						|
+	NSetColorf(&m_colorTable.color[8], NCOLOR_PRESET3F_BLUE_AZURE, 1);		   //	.			|						|
+	NSetColorf(&m_colorTable.color[9], NCOLOR_PRESET3F_BLUE_TURQUOISE, 1);	   //	.			|						|
+	NSetColorf(&m_colorTable.color[10], NCOLOR_PRESET3F_BLUE_ELECTRIC, 1);	   //	.			|						|
+	NSetColorf(&m_colorTable.color[11], NCOLOR_PRESET3F_BLUE_VIOLET, 1);	   //  VIOLET		|						|
+	NSetColorf(&m_colorTable.color[12], NCOLOR_PRESET3F_VIOLET, 1);			   //	.			|						|
+	NSetColorf(&m_colorTable.color[13], NCOLOR_PRESET3F_PEACH, 1);			   //	.			|						|
+	NSetColorf(&m_colorTable.color[14], NCOLOR_PRESET3F_IVORY, 1);			   //  WHITE		|						|
+	NSetColorf(&m_colorTable.color[15], NCOLOR_PRESET3F_BLACK, 1);			   //  BLACK		|						|
+}
 
-NLPATH_WORKBENCH::NLPATH_WORKBENCH(const Nu8 id, const	Nchar * pname, const Nu16 flags,
-														NLPATH_BUILDER* ppathbuilder,
-														NLPATH* ppath,
-														NLTRAJECTORY* ptrajectory,
-														NLDRIVETRAINSPECS* pdts,
-														NLRAMSETE*	prms) :	m_id(id),
-																			m_flags(flags),
-																			m_pPathBuilder(ppathbuilder), 
-																			m_pDriveTrainSpecifications(pdts),
-																			m_pRamsete(prms),
-																			m_pPath(ppath),
-																			m_availableNu8(0),
-																			m_hTreeViewVzones(NULL),
-																			m_hTreeViewKeys(NULL)
+NLPATH_WORKBENCH::NLPATH_WORKBENCH(const Nu8 id, const Nchar *pname, const Nu16 flags,
+								   NLPATH_BUILDER *ppathbuilder,
+								   NLPATH *ppath,
+								   NLTRAJECTORY *ptrajectory,
+								   NLDRIVETRAINSPECS *pdts,
+								   NLRAMSETE *prms) : m_id(id),
+													  m_flags(flags),
+													  m_pPathBuilder(ppathbuilder),
+													  m_pDriveTrainSpecifications(pdts),
+													  m_pRamsete(prms),
+													  m_pPath(ppath),
+													  m_availableNu8(0),
+													  m_hTreeViewVzones(NULL),
+													  m_hTreeViewKeys(NULL)
 
 {
 	// Name:
-	if(pname)
+	if (pname)
 		NStrCopy(m_name, pname, NLPATH_WORKBENCH_NAME_SIZE);
 	else
 		NStrCopy(m_name, "New Path WorkBench", NLPATH_WORKBENCH_NAME_SIZE);
@@ -41,16 +62,33 @@ NLPATH_WORKBENCH::NLPATH_WORKBENCH(const Nu8 id, const	Nchar * pname, const Nu16
 	setTrajectory(ptrajectory, NFALSE);
 
 	// Specific Ramsete:
-	m_specificRamsete.m_b	= NF32_MAX;
+	m_specificRamsete.m_b = NF32_MAX;
 	m_specificRamsete.m_zeta = NF32_MAX;
+
+	//																									| should be used by		|
+	// Default color setup																	------------|-----------------------|
+	NSetColorf(&m_colorTable.color[0], NCOLOR_PRESET3F_RED_SCARLET, 1);		   //	RED			|	axis,				|
+	NSetColorf(&m_colorTable.color[1], NCOLOR_PRESET3F_ORANGE, 1);			   //	.			|						|
+	NSetColorf(&m_colorTable.color[2], NCOLOR_PRESET3F_ORANGE_GOLD, 1);		   //	.			|						|
+	NSetColorf(&m_colorTable.color[3], NCOLOR_PRESET3F_YELLOW_LASER_LEMON, 1); //	YELLOW		|						|
+	NSetColorf(&m_colorTable.color[4], NCOLOR_PRESET3F_GREEN_NAPIER, 1);	   //	GREEN		| kin.j<0				|
+	NSetColorf(&m_colorTable.color[5], NCOLOR_PRESET3F_GREEN_EMERALD, 1);	   //	.			| kin.j=0,				|
+	NSetColorf(&m_colorTable.color[6], NCOLOR_PRESET3F_GREEN_SPRING, 1);	   //	.			| kin.j>0				|
+	NSetColorf(&m_colorTable.color[7], NCOLOR_PRESET3F_BLUE_SAPPHIRE, 1);	   //	BLUE		| 						|
+	NSetColorf(&m_colorTable.color[8], NCOLOR_PRESET3F_BLUE_AZURE, 1);		   //	.			|						|
+	NSetColorf(&m_colorTable.color[9], NCOLOR_PRESET3F_BLUE_TURQUOISE, 1);	   //	.			|						|
+	NSetColorf(&m_colorTable.color[10], NCOLOR_PRESET3F_BLUE_ELECTRIC, 1);	   //	.			|						|
+	NSetColorf(&m_colorTable.color[11], NCOLOR_PRESET3F_BLUE_VIOLET, 1);	   //  VIOLET		|						|
+	NSetColorf(&m_colorTable.color[12], NCOLOR_PRESET3F_VIOLET, 1);			   //	.			|						|
+	NSetColorf(&m_colorTable.color[13], NCOLOR_PRESET3F_PEACH, 1);			   //	.			|						|
+	NSetColorf(&m_colorTable.color[14], NCOLOR_PRESET3F_IVORY, 1);			   //  WHITE		|						|
+	NSetColorf(&m_colorTable.color[15], NCOLOR_PRESET3F_BLACK, 1);			   //  BLACK		|						|
 }
-
-
 
 /*{
 	m_pPathBuilder				= ppathbuilder;
 	m_pDriveTrainSpecifications	= pdts;
-	
+
 	m_pPath						= ppath;
 	m_pTrajectory				= ptrajectory;
 	m_pTrajectoryStatePack		= ppack;
@@ -62,40 +100,40 @@ NLPATH_WORKBENCH::NLPATH_WORKBENCH(const Nu8 id, const	Nchar * pname, const Nu16
 
 NLPATH_WORKBENCH::~NLPATH_WORKBENCH()
 {
-	NErrorIf(m_pPathBuilder,				NERROR_NON_NULL_POINTER);
-	NErrorIf(m_pDriveTrainSpecifications,	NERROR_NON_NULL_POINTER);
+	NErrorIf(m_pPathBuilder, NERROR_NON_NULL_POINTER);
+	NErrorIf(m_pDriveTrainSpecifications, NERROR_NON_NULL_POINTER);
 
-	NErrorIf(m_pPath,						NERROR_NON_NULL_POINTER);
-	NErrorIf(m_pTrajectory,					NERROR_NON_NULL_POINTER);
-//	NErrorIf(m_pTrajectoryStatePack,		NERROR_NON_NULL_POINTER);
-//	NErrorIf(m_pTrajectoryStateSPack,		NERROR_NON_NULL_POINTER);
+	NErrorIf(m_pPath, NERROR_NON_NULL_POINTER);
+	NErrorIf(m_pTrajectory, NERROR_NON_NULL_POINTER);
+	//	NErrorIf(m_pTrajectoryStatePack,		NERROR_NON_NULL_POINTER);
+	//	NErrorIf(m_pTrajectoryStateSPack,		NERROR_NON_NULL_POINTER);
 }
 
-Nu32 NLPATH_WORKBENCH::write(NDATAPACKER* pdpacker, FILE* pfile)
+Nu32 NLPATH_WORKBENCH::write(NDATAPACKER *pdpacker, FILE *pfile)
 {
 	// 1) écriture Version
-	Nu32	version_u32 = VERSION_NLPATH_WORKBENCH_HEADER;
+	Nu32 version_u32 = VERSION_NLPATH_WORKBENCH_HEADER;
 	if (fwrite(&version_u32, sizeof(Nu32), 1, pfile) != 1)
 		return 0;
 
 	// 2) écriture Header
 	NLPATH_WORKBENCH_HEADER header;
-	NStrCopy(header.m_name,m_name,NLPATH_WORKBENCH_NAME_SIZE);
-	header.m_flags			= m_flags;
-	header.m_id				= m_id;
-	header.m_availableNu8	= m_availableNu8;
+	NStrCopy(header.m_name, m_name, NLPATH_WORKBENCH_NAME_SIZE);
+	header.m_flags = m_flags;
+	header.m_id = m_id;
+	header.m_availableNu8 = m_availableNu8;
 
-	if(m_id == NLPATH_WORKBENCH::ID::WB_WAYPOINTS)
-		header.m_pathBuilder = NGetDataPackerIndex(pdpacker,m_pPathBuilder,NLPROJECT::DPKEY_ID::PATH_BLDR_WP);
+	if (m_id == NLPATH_WORKBENCH::ID::WB_WAYPOINTS)
+		header.m_pathBuilder = NGetDataPackerIndex(pdpacker, m_pPathBuilder, NLPROJECT::DPKEY_ID::PATH_BLDR_WP);
 	else
 		header.m_pathBuilder = NGetDataPackerIndex(pdpacker, m_pPathBuilder, NLPROJECT::DPKEY_ID::PATH_BLDR_PLG);
 
-	header.m_path						= NGetDataPackerIndex(pdpacker,m_pPath,						NLPROJECT::DPKEY_ID::PATH);
-	header.m_trajectory					= NGetDataPackerIndex(pdpacker,m_pTrajectory,				NLPROJECT::DPKEY_ID::TRAJECTORY);
-//	header.m_trajectoryStatePack		= NGetDataPackerIndex(pdpacker,m_pTrajectoryStatePack,		NLPROJECT::DPKEY_ID::STATE_PACK);
-//	header.m_trajectoryStateSPack		= NGetDataPackerIndex(pdpacker,m_pTrajectoryStateSPack,		NLPROJECT::DPKEY_ID::STATE_S_PACK);
-	header.m_driveTrainSpecifications	= NGetDataPackerIndex(pdpacker,m_pDriveTrainSpecifications,	NLPROJECT::DPKEY_ID::DT_SPECS);
-	
+	header.m_path = NGetDataPackerIndex(pdpacker, m_pPath, NLPROJECT::DPKEY_ID::PATH);
+	header.m_trajectory = NGetDataPackerIndex(pdpacker, m_pTrajectory, NLPROJECT::DPKEY_ID::TRAJECTORY);
+	//	header.m_trajectoryStatePack		= NGetDataPackerIndex(pdpacker,m_pTrajectoryStatePack,		NLPROJECT::DPKEY_ID::STATE_PACK);
+	//	header.m_trajectoryStateSPack		= NGetDataPackerIndex(pdpacker,m_pTrajectoryStateSPack,		NLPROJECT::DPKEY_ID::STATE_S_PACK);
+	header.m_driveTrainSpecifications = NGetDataPackerIndex(pdpacker, m_pDriveTrainSpecifications, NLPROJECT::DPKEY_ID::DT_SPECS);
+
 	if (fwrite(&header, sizeof(NLPATH_WORKBENCH_HEADER), 1, pfile) != 1)
 		return 0;
 
@@ -103,14 +141,13 @@ Nu32 NLPATH_WORKBENCH::write(NDATAPACKER* pdpacker, FILE* pfile)
 	if (m_specificRamsete.write(pfile) != 1)
 		return 0;
 
-
 	return 1;
 }
 
-Nu32 NLPATH_WORKBENCH::read(NDATAPACKER* pdpacker, FILE* pfile)
+Nu32 NLPATH_WORKBENCH::read(NDATAPACKER *pdpacker, FILE *pfile)
 {
 	// 1) lecture Version
-	Nu32	version_u32;
+	Nu32 version_u32;
 	if (fread(&version_u32, sizeof(Nu32), 1, pfile) != 1)
 		return 0;
 
@@ -125,21 +162,21 @@ Nu32 NLPATH_WORKBENCH::read(NDATAPACKER* pdpacker, FILE* pfile)
 			return 0;
 
 		NStrCopy(m_name, header.m_name, NLPATH_WORKBENCH_NAME_SIZE);
-		m_flags = header.m_flags| FLAG_NLPATH_WORKBENCH_SMART_BUILD;
+		m_flags = header.m_flags | FLAG_NLPATH_WORKBENCH_SMART_BUILD;
 		m_id = header.m_id;
 		m_availableNu8 = header.m_availableNu8;
 
 		if (m_id == NLPATH_WORKBENCH::ID::WB_WAYPOINTS)
-			m_pPathBuilder = (NLPATH_BUILDER*)NGetDataPackerPointer(pdpacker, header.m_pathBuilder, NLPROJECT::DPKEY_ID::PATH_BLDR_WP);
+			m_pPathBuilder = (NLPATH_BUILDER *)NGetDataPackerPointer(pdpacker, header.m_pathBuilder, NLPROJECT::DPKEY_ID::PATH_BLDR_WP);
 		else
-			m_pPathBuilder = (NLPATH_BUILDER*)NGetDataPackerPointer(pdpacker, header.m_pathBuilder, NLPROJECT::DPKEY_ID::PATH_BLDR_PLG);
+			m_pPathBuilder = (NLPATH_BUILDER *)NGetDataPackerPointer(pdpacker, header.m_pathBuilder, NLPROJECT::DPKEY_ID::PATH_BLDR_PLG);
 
-		m_pPath						= (NLPATH*)NGetDataPackerPointer(pdpacker, header.m_path, NLPROJECT::DPKEY_ID::PATH);
-		m_pTrajectory				= (NLTRAJECTORY*)NGetDataPackerPointer(pdpacker, header.m_trajectory, NLPROJECT::DPKEY_ID::TRAJECTORY);
-//		m_pTrajectoryStatePack		= (NLTRAJECTORY_PACK*)NGetDataPackerPointer(pdpacker, header.m_trajectoryStatePack, NLPROJECT::DPKEY_ID::STATE_PACK);
-//		m_pTrajectoryStateSPack		= (NLTRAJECTORY_BASIC_PACK*)NGetDataPackerPointer(pdpacker, header.m_trajectoryStateSPack, NLPROJECT::DPKEY_ID::STATE_S_PACK);
-		m_pDriveTrainSpecifications = (NLDRIVETRAINSPECS*)NGetDataPackerPointer(pdpacker, header.m_driveTrainSpecifications, NLPROJECT::DPKEY_ID::DT_SPECS);
-		
+		m_pPath = (NLPATH *)NGetDataPackerPointer(pdpacker, header.m_path, NLPROJECT::DPKEY_ID::PATH);
+		m_pTrajectory = (NLTRAJECTORY *)NGetDataPackerPointer(pdpacker, header.m_trajectory, NLPROJECT::DPKEY_ID::TRAJECTORY);
+		//		m_pTrajectoryStatePack		= (NLTRAJECTORY_PACK*)NGetDataPackerPointer(pdpacker, header.m_trajectoryStatePack, NLPROJECT::DPKEY_ID::STATE_PACK);
+		//		m_pTrajectoryStateSPack		= (NLTRAJECTORY_BASIC_PACK*)NGetDataPackerPointer(pdpacker, header.m_trajectoryStateSPack, NLPROJECT::DPKEY_ID::STATE_S_PACK);
+		m_pDriveTrainSpecifications = (NLDRIVETRAINSPECS *)NGetDataPackerPointer(pdpacker, header.m_driveTrainSpecifications, NLPROJECT::DPKEY_ID::DT_SPECS);
+
 		// 3) Lecture autres DATA:
 		if (m_specificRamsete.read(pfile) != 1)
 			return 0;
@@ -166,7 +203,7 @@ void NLPATH_WORKBENCH::build()
 		if (ISFLAG_ON(m_flags, FLAG_NLPATH_WORKBENCH_SMART_BUILD) && m_pTrajectory)
 			FLAG_ON(m_flags, FLAG_NLPATH_WORKBENCH_TRAJECTORY_BUILD_REQUEST);
 	}
-	
+
 	// 2) TRAJECTORY BUILD
 	FLAG_OFF(m_flags, FLAG_NLPATH_WORKBENCH_TRAJECTORY_BUILDED);
 	if (ISFLAG_ON(m_flags, FLAG_NLPATH_WORKBENCH_TRAJECTORY_BUILD_REQUEST))
@@ -209,12 +246,12 @@ void NLPATH_WORKBENCH::draw()
 {
 }
 
-Nchar* NLPATH_WORKBENCH::getKinLimitsInfoString(Nchar* info, Nu32 charmax_null_terminated_char_included)
+Nchar *NLPATH_WORKBENCH::getKinLimitsInfoString(Nchar *info, Nu32 charmax_null_terminated_char_included)
 {
 	Nf32 v;
 	Nf32 a;
 	Nf32 j;
-	Nchar* pvstr, *pastr,*pjstr;
+	Nchar *pvstr, *pastr, *pjstr;
 	Nchar local[256];
 
 	if (m_pTrajectory)
@@ -274,29 +311,30 @@ Nchar* NLPATH_WORKBENCH::getKinLimitsInfoString(Nchar* info, Nu32 charmax_null_t
 		}
 		else
 		{
-			v = m_pDriveTrainSpecifications->m_limits.m_v; pvstr = " = Robot Vel. Max";
-			a = m_pDriveTrainSpecifications->m_limits.m_a; pastr = " = Robot Acc. Max";
-			j = m_pDriveTrainSpecifications->m_limits.m_j; pjstr = " = Robot Jerk Max";
+			v = m_pDriveTrainSpecifications->m_limits.m_v;
+			pvstr = " = Robot Vel. Max";
+			a = m_pDriveTrainSpecifications->m_limits.m_a;
+			pastr = " = Robot Acc. Max";
+			j = m_pDriveTrainSpecifications->m_limits.m_j;
+			pjstr = " = Robot Jerk Max";
 		}
 
 		sprintf(local, "Kinematics Limits used :\n\nJerk: %.4f %s\nAccel.: %.4f %s\nVelocity: %.4f %s", j, pjstr, a, pastr, v, pvstr);
-
 	}
 	else
 	{
 		sprintf(local, "No Trajectory to build in !");
 	}
 
-	
-	return NStrCopy(info,local, charmax_null_terminated_char_included);
+	return NStrCopy(info, local, charmax_null_terminated_char_included);
 }
 #endif
 
-void NLPATH_WORKBENCH::setPathBuilder(NLPATH_BUILDER* ppathbuilder, Nbool rebuild)
+void NLPATH_WORKBENCH::setPathBuilder(NLPATH_BUILDER *ppathbuilder, Nbool rebuild)
 {
-	m_pPathBuilder = ppathbuilder; 
+	m_pPathBuilder = ppathbuilder;
 	if (rebuild)
-		FLAG_ON(m_flags, FLAG_NLPATH_WORKBENCH_PATH_BUILD_REQUEST); 
+		FLAG_ON(m_flags, FLAG_NLPATH_WORKBENCH_PATH_BUILD_REQUEST);
 }
 /*
 void NLPATH_WORKBENCH::setPath(NLPATH* ppath, Nbool rebuild)
@@ -311,7 +349,7 @@ void NLPATH_WORKBENCH::setPath(NLPATH* ppath, Nbool rebuild)
 		FLAG_ON(m_flags, FLAG_NLPATH_WORKBENCH_PATH_BUILD_REQUEST);
 }
 */
-void NLPATH_WORKBENCH::setPath(NLPATH* ppath, Nbool rebuild)
+void NLPATH_WORKBENCH::setPath(NLPATH *ppath, Nbool rebuild)
 {
 	NErrorIf(!ppath && rebuild, NERROR_INCONSISTENT_FLAGS);
 
@@ -322,39 +360,38 @@ void NLPATH_WORKBENCH::setPath(NLPATH* ppath, Nbool rebuild)
 		if (m_pTrajectory->m_pPath == NULL)
 		{
 			m_pTrajectory->setPath(ppath); // ppath peut ici être NULL ou non NULL !
-			m_pPath	= ppath;
+			m_pPath = ppath;
 		}
 		// La trajectoire associée possede deja un path... et qui doit bien sur être dejà affecté au workbench
 		else
 		{
-			
-			
+
 			if (m_pTrajectory->m_pPath == ppath)
 			{
 				// Ici on a donc, m_pTrajectory->m_pPath == ppath
 				// ... ET m_pTrajectory->m_pPath != NULL
 				// DONC,  ppath != NULL
-				
+
 				// il est possible que m_pPath soit NULL alors que m_pTrajectory->m_pPath = ppath.
-				// En effet, l'user a pu associer la trajectoire vierge au workbench, 
+				// En effet, l'user a pu associer la trajectoire vierge au workbench,
 				// puis il a associé ppath à trajectory
 				// et enfin il associe ppath au Workbench ...
-				if (!m_pPath)									
-				{												
-					m_pPath = ppath;							//	>>>		m_pTrajectory->m_pPath == ppath == m_pPath 				
+				if (!m_pPath)
+				{
+					m_pPath = ppath; //	>>>		m_pTrajectory->m_pPath == ppath == m_pPath
 				}
-				// Si par contre ppath et m_pTrajectory->m_pPath sont identiques 
+				// Si par contre ppath et m_pTrajectory->m_pPath sont identiques
 				// Mais que m_pPath est non NULL et différent, alors il y a une incohérence...
 				else if (ppath != m_pPath)
 				{
 					// Aïe !
-					NErrorIf(1, NERROR_INCONSISTENT_VALUES);	//	>>>		m_pTrajectory->m_pPath == ppath != m_pPath
+					NErrorIf(1, NERROR_INCONSISTENT_VALUES); //	>>>		m_pTrajectory->m_pPath == ppath != m_pPath
 					return;
 				}
-				//else
+				// else
 				//{
-				//  Rien à faire, ici  on a		...................	>>>		m_pTrajectory->m_pPath == ppath == m_pPath 				
-				//}
+				//   Rien à faire, ici  on a		...................	>>>		m_pTrajectory->m_pPath == ppath == m_pPath
+				// }
 			}
 		}
 	}
@@ -369,33 +406,32 @@ void NLPATH_WORKBENCH::setPath(NLPATH* ppath, Nbool rebuild)
 		FLAG_ON(m_flags, FLAG_NLPATH_WORKBENCH_PATH_BUILD_REQUEST);
 }
 
-
-void NLPATH_WORKBENCH::setTrajectory(NLTRAJECTORY* ptrajectory, Nbool rebuild)
+void NLPATH_WORKBENCH::setTrajectory(NLTRAJECTORY *ptrajectory, Nbool rebuild)
 {
 	NErrorIf(!ptrajectory && rebuild, NERROR_INCONSISTENT_FLAGS);
 
 	if (ptrajectory)
 	{
-		if (ptrajectory->m_pPath)							
+		if (ptrajectory->m_pPath)
 		{
-			if(m_pPath == ptrajectory->m_pPath)				//	>>>		m_pTrajectory = ptrajectory			>>>		m_pTrajectory->m_pPath == m_pPath
+			if (m_pPath == ptrajectory->m_pPath) //	>>>		m_pTrajectory = ptrajectory			>>>		m_pTrajectory->m_pPath == m_pPath
 				m_pTrajectory = ptrajectory;
-			else if (!m_pPath)								
+			else if (!m_pPath)
 			{
-				m_pTrajectory	= ptrajectory;		
-				m_pPath			= ptrajectory->m_pPath;
+				m_pTrajectory = ptrajectory;
+				m_pPath = ptrajectory->m_pPath;
 			}
 			else // ( m_pPath != ptrajectory->m_pPath )  &&  ( ptrajectory->m_pPath != NULL )  &&  ( m_pPath != NULL )
 			{
 				// Aïe !
-				NErrorIf(1, NERROR_INCONSISTENT_VALUES);	//	>>>		Normalement c'est impossible .... donc 
+				NErrorIf(1, NERROR_INCONSISTENT_VALUES); //	>>>		Normalement c'est impossible .... donc
 				return;
 			}
 		}
 		else // (ptrajectory->m_pPath == NULL)
 		{
-			m_pTrajectory	= ptrajectory;
-			m_pTrajectory->setPath(m_pPath);		// m_pPath peut ici être NULL ou non NULL
+			m_pTrajectory = ptrajectory;
+			m_pTrajectory->setPath(m_pPath); // m_pPath peut ici être NULL ou non NULL
 		}
 	}
 	else
@@ -411,7 +447,7 @@ void NLPATH_WORKBENCH::setTrajectory(NLTRAJECTORY* ptrajectory, Nbool rebuild)
 	if (ptrajectory)
 	{
 		NErrorIf(!ptrajectory->m_pPath, NERROR_NULL_POINTER);
-		
+
 		m_pPath			= ptrajectory->m_pPath;
 		m_pTrajectory	= ptrajectory;
 
@@ -430,27 +466,26 @@ void NLPATH_WORKBENCH::setTrajectory(NLTRAJECTORY* ptrajectory, Nbool rebuild)
 /*
 void NLPATH_WORKBENCH::setTrajectoryPack(NLTRAJECTORY_PACK* ppack, Nbool rebuild)
 {
-	m_pTrajectoryStatePack = ppack; 
+	m_pTrajectoryStatePack = ppack;
 	if (rebuild)
-		FLAG_ON(m_flags, FLAG_NLPATH_WORKBENCH_TRAJECTORY_STATE_PACK_BUILD_REQUEST); 
+		FLAG_ON(m_flags, FLAG_NLPATH_WORKBENCH_TRAJECTORY_STATE_PACK_BUILD_REQUEST);
 }
-void NLPATH_WORKBENCH::setTrajectoryBasicPack(NLTRAJECTORY_BASIC_PACK* pspack, Nbool rebuild) 
+void NLPATH_WORKBENCH::setTrajectoryBasicPack(NLTRAJECTORY_BASIC_PACK* pspack, Nbool rebuild)
 {
-	m_pTrajectoryStateSPack = pspack; 
+	m_pTrajectoryStateSPack = pspack;
 	if (rebuild)
-		FLAG_ON(m_flags, FLAG_NLPATH_WORKBENCH_TRAJECTORY_STATE_S_PACK_BUILD_REQUEST); 
+		FLAG_ON(m_flags, FLAG_NLPATH_WORKBENCH_TRAJECTORY_STATE_S_PACK_BUILD_REQUEST);
 }
 */
 
-void NLPATH_WORKBENCH::setDriveTrainSpecifications(NLDRIVETRAINSPECS* pdts, Nbool rebuild)
+void NLPATH_WORKBENCH::setDriveTrainSpecifications(NLDRIVETRAINSPECS *pdts, Nbool rebuild)
 {
 	m_pDriveTrainSpecifications = pdts;
 	if (rebuild)
-		FLAG_ON(m_flags, FLAG_NLPATH_WORKBENCH_TRAJECTORY_BUILD_REQUEST); 
+		FLAG_ON(m_flags, FLAG_NLPATH_WORKBENCH_TRAJECTORY_BUILD_REQUEST);
 }
 
-void NLPATH_WORKBENCH::setRamseteParams(NLRAMSETE* prms)
+void NLPATH_WORKBENCH::setRamseteParams(NLRAMSETE *prms)
 {
 	m_pRamsete = prms;
 }
-

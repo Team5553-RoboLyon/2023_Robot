@@ -1,13 +1,14 @@
 #pragma once
-#include "lib/N/NType.h"
-#include "lib/N/NMemory.h"
-#include "lib/N/NErrorHandling.h"
-#include "lib/NL/MotionControl/NLKin.h"
+#include "../../../N/NType.h"
+#include "../../../N/NMemory.h"
+#include "../../../N/NErrorHandling.h"
+#include "../NLKin.h"
 
 #ifdef _NEDITOR
 #include "../../NL2DOrthogonalCoordinateSystem.h"
 #endif
 
+// FLAT MOTION SHAPE ( = vitesse constante sur une periode de temps dt )
 typedef struct NLFMOTIONSHAPE NLFMOTIONSHAPE;
 struct NLFMOTIONSHAPE
 {

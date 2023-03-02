@@ -1,11 +1,10 @@
 #include "../../../N/NMemory.h"
 #include "../../../N/NMath.h"
 #include "../../../N/Maths/NVec2f32.h"
-#include "../../../N/Maths/NVecLimits.h"
+#include "lib/N/Maths/NVecLimits.h"
 #include "../../../N/NErrorHandling.h"
 
 #include "NLPathPersistentTrackingData.h"
-
 
 #ifdef _NEDITOR
 #include "../../../N/NEditor.h"
@@ -15,88 +14,88 @@
 
 void NLPATH_PERSISTENT_TRACKING_DATA::reset()
 {
-	//m_flags					= ;
-	//m_pPathGeometry			= ;
-	//m_pointToPathMaxDist		= ;
-	//m_clothoidErrorThreshold	= ;
+	// m_flags					= ;
+	// m_pPathGeometry			= ;
+	// m_pointToPathMaxDist		= ;
+	// m_clothoidErrorThreshold	= ;
 	if (ISFLAG_ON(m_flags, FLAG_NLPATH_PERSISTENT_TRACKING_DATA_BACKWARD))
 	{
-		m_trackedPrimitiveIndex		= m_pPathGeometry->m_primitivesArray.Size;;
-		m_pTrackedPrimitive			= (NLPATH_PRIMITIVE*)NGetLastArrayPtr(&m_pPathGeometry->m_primitivesArray);	// tjrs la dernière primitive de la liste
-		m_pTrackedKeyPoint			= (NLPATH_POINT*)NGetLastArrayPtr(&m_pPathGeometry->m_pathPointsArray) - 1;	// tjrs le premier keypoint de la primitive ( in )
+		m_trackedPrimitiveIndex = m_pPathGeometry->m_primitivesArray.Size;
+		;
+		m_pTrackedPrimitive = (NLPATH_PRIMITIVE *)NGetLastArrayPtr(&m_pPathGeometry->m_primitivesArray); // tjrs la derniï¿½re primitive de la liste
+		m_pTrackedKeyPoint = (NLPATH_POINT *)NGetLastArrayPtr(&m_pPathGeometry->m_pathPointsArray) - 1;	 // tjrs le premier keypoint de la primitive ( in )
 	}
 	else
 	{
-		m_trackedPrimitiveIndex		= 0;
-		m_pTrackedPrimitive			= (NLPATH_PRIMITIVE*)m_pPathGeometry->m_primitivesArray.pFirst;		// tjrs la première primitive de la liste
-		m_pTrackedKeyPoint			= (NLPATH_POINT*)m_pPathGeometry->m_pathPointsArray.pFirst + 1;		// tjrs le second keypoint de la primitive ( out )
+		m_trackedPrimitiveIndex = 0;
+		m_pTrackedPrimitive = (NLPATH_PRIMITIVE *)m_pPathGeometry->m_primitivesArray.pFirst; // tjrs la premiï¿½re primitive de la liste
+		m_pTrackedKeyPoint = (NLPATH_POINT *)m_pPathGeometry->m_pathPointsArray.pFirst + 1;	 // tjrs le second keypoint de la primitive ( out )
 	}
 }
 
-void NLPATH_PERSISTENT_TRACKING_DATA::forwardSetup(const NLPATH_GEOMETRY* ppath_geometry, const Nf32 point_to_path_max_dist, const Nf32 cloth_err_threshold)
+void NLPATH_PERSISTENT_TRACKING_DATA::forwardSetup(const NLPATH_GEOMETRY *ppath_geometry, const Nf32 point_to_path_max_dist, const Nf32 cloth_err_threshold)
 {
 	NErrorIf(!ppath_geometry, NERROR_NULL_POINTER);
-	m_flags					= 0;
-	m_pPathGeometry			= (NLPATH_GEOMETRY*)ppath_geometry;
+	m_flags = 0;
+	m_pPathGeometry = (NLPATH_GEOMETRY *)ppath_geometry;
 	m_trackedPrimitiveIndex = 0;
-	m_pTrackedPrimitive		= (NLPATH_PRIMITIVE*)ppath_geometry->m_primitivesArray.pFirst;		// tjrs la première primitive de la liste
-	m_pTrackedKeyPoint		= (NLPATH_POINT*)ppath_geometry->m_pathPointsArray.pFirst + 1;		// tjrs le second keypoint de la primitive ( out )
-	m_pointToPathMaxDist	= point_to_path_max_dist;
-	m_clothoidErrorThreshold= cloth_err_threshold;
+	m_pTrackedPrimitive = (NLPATH_PRIMITIVE *)ppath_geometry->m_primitivesArray.pFirst; // tjrs la premiï¿½re primitive de la liste
+	m_pTrackedKeyPoint = (NLPATH_POINT *)ppath_geometry->m_pathPointsArray.pFirst + 1;	// tjrs le second keypoint de la primitive ( out )
+	m_pointToPathMaxDist = point_to_path_max_dist;
+	m_clothoidErrorThreshold = cloth_err_threshold;
 }
-void NLPATH_PERSISTENT_TRACKING_DATA::backwardSetup(const NLPATH_GEOMETRY* ppath_geometry, const Nf32 point_to_path_max_dist, const Nf32 cloth_err_threshold)
+void NLPATH_PERSISTENT_TRACKING_DATA::backwardSetup(const NLPATH_GEOMETRY *ppath_geometry, const Nf32 point_to_path_max_dist, const Nf32 cloth_err_threshold)
 {
 	NErrorIf(!ppath_geometry, NERROR_NULL_POINTER);
 	FLAG_ON(m_flags, FLAG_NLPATH_PERSISTENT_TRACKING_DATA_BACKWARD);
-	m_pPathGeometry				= (NLPATH_GEOMETRY*)ppath_geometry;
-	m_trackedPrimitiveIndex		= ppath_geometry->m_primitivesArray.Size - 1;
-	m_pTrackedPrimitive			= (NLPATH_PRIMITIVE*)NGetLastArrayPtr(&ppath_geometry->m_primitivesArray);	// tjrs la dernière primitive de la liste
-	m_pTrackedKeyPoint			= (NLPATH_POINT*)NGetLastArrayPtr(&ppath_geometry->m_pathPointsArray) - 1;	// tjrs le premier keypoint de la primitive ( in )
-	m_pointToPathMaxDist		= point_to_path_max_dist;
-	m_clothoidErrorThreshold	= cloth_err_threshold;
+	m_pPathGeometry = (NLPATH_GEOMETRY *)ppath_geometry;
+	m_trackedPrimitiveIndex = ppath_geometry->m_primitivesArray.Size - 1;
+	m_pTrackedPrimitive = (NLPATH_PRIMITIVE *)NGetLastArrayPtr(&ppath_geometry->m_primitivesArray); // tjrs la derniï¿½re primitive de la liste
+	m_pTrackedKeyPoint = (NLPATH_POINT *)NGetLastArrayPtr(&ppath_geometry->m_pathPointsArray) - 1;	// tjrs le premier keypoint de la primitive ( in )
+	m_pointToPathMaxDist = point_to_path_max_dist;
+	m_clothoidErrorThreshold = cloth_err_threshold;
 }
 
-NLPATH_PERSISTENT_TRACKING_DATA::TRCK_RESULT NLPATH_PERSISTENT_TRACKING_DATA::trackForward(NLPATH_POINT* pout, const NVEC2f32* ppos)
+NLPATH_PERSISTENT_TRACKING_DATA::TRCK_RESULT NLPATH_PERSISTENT_TRACKING_DATA::trackForward(NLPATH_POINT *pout, const NVEC2f32 *ppos)
 {
-	TRCK_RESULT			rtrn = TRCK_RESULT::NOT_DETECTED;				// valeur de retour de la fonction
-	NLPATH_PRIMITIVE	*pprim	= m_pTrackedPrimitive;					// primitive en cours de traitement
-	NLPATH_POINT		*pkp1	= m_pTrackedKeyPoint;					// point de fin de la primitive en cours de traitement
-	NLPATH_POINT		*pkp0	= pkp1 - 1;								// point de début de la primitive en cours de traitement
-	Nu32				i;												// index primitive courante
-	Nf32				IP_squarelength;								// distance entre P et son image I ( projection ) sur le chemin
-	Nf32				max_IP_length		= m_pointToPathMaxDist;		// MAX distance entre P (ppos) et son image I (projection) sur le chemin
-	Nf32				max_IP_squarelength = NPOW2(max_IP_length);		// ( MAX distance entre P et son image I ) au carré !
+	TRCK_RESULT rtrn = TRCK_RESULT::NOT_DETECTED;	 // valeur de retour de la fonction
+	NLPATH_PRIMITIVE *pprim = m_pTrackedPrimitive;	 // primitive en cours de traitement
+	NLPATH_POINT *pkp1 = m_pTrackedKeyPoint;		 // point de fin de la primitive en cours de traitement
+	NLPATH_POINT *pkp0 = pkp1 - 1;					 // point de dï¿½but de la primitive en cours de traitement
+	Nu32 i;											 // index primitive courante
+	Nf32 IP_squarelength;							 // distance entre P et son image I ( projection ) sur le chemin
+	Nf32 max_IP_length = m_pointToPathMaxDist;		 // MAX distance entre P (ppos) et son image I (projection) sur le chemin
+	Nf32 max_IP_squarelength = NPOW2(max_IP_length); // ( MAX distance entre P et son image I ) au carrï¿½ !
 
-	Nf32				length;
-	Nf32				dot1, dot0;
-	Nf32				ang;
-	Nf32				f,ds;
-	Nf32				cf, sf;
-	Nf32				theta;
+	Nf32 length;
+	Nf32 dot1, dot0;
+	Nf32 ang;
+	Nf32 f, ds;
+	Nf32 cf, sf;
+	Nf32 theta;
 
-	NVEC2				A;				// pkp0 dans la base appropriée
-	NVEC2				B;				// pkp1 dans la base appropriée
-	NVEC2				P;				// ppos dans la base appropriée
-	NVEC2				I;				// Image de P ( projection)
-	NVEC2				IP;				// I par rapport à P
-	NVEC2				tmp;			// Vecteur intermediaire de calcul
+	NVEC2 A;   // pkp0 dans la base appropriï¿½e
+	NVEC2 B;   // pkp1 dans la base appropriï¿½e
+	NVEC2 P;   // ppos dans la base appropriï¿½e
+	NVEC2 I;   // Image de P ( projection)
+	NVEC2 IP;  // I par rapport ï¿½ P
+	NVEC2 tmp; // Vecteur intermediaire de calcul
 
-	NVEC2				bsc;			// bissectrice
-	Nf32				bsc_threshold;
-	NVEC2				ortho_bsc;		// perpendiculaire à bsc
+	NVEC2 bsc; // bissectrice
+	Nf32 bsc_threshold;
+	NVEC2 ortho_bsc; // perpendiculaire ï¿½ bsc
 
 	// clothoid
-	Nf32	min;		// abscisse curv. min sur la clothoide |_ définissent l'intervalle [min,max] de recherche de l'abscisse curv, de I image de P sur la clothoide.
-	Nf32	max;		// abscisse curv. max sur la clothoide |
-	NVEC2	clth_o;		// Origine de construction geometrique de la clothoide ( son point de départ, là ou k = 0 )
-	NVEC2	clth_of;	// Fin de construction geometrique de la clothoide ( son point de d'arrivée, là ou k != 0 ) exprimée dans la base [clth_o,i,j] de la clothoide.
-	NVEC2	clth_Iu;	// vecteur tangent à la clothoide en I, image de P. Ici I sera la projection de 
-	Nf32	clth_Is;	// Abscisse curviligne de I
+	Nf32 min;	   // abscisse curv. min sur la clothoide |_ dï¿½finissent l'intervalle [min,max] de recherche de l'abscisse curv, de I image de P sur la clothoide.
+	Nf32 max;	   // abscisse curv. max sur la clothoide |
+	NVEC2 clth_o;  // Origine de construction geometrique de la clothoide ( son point de dï¿½part, lï¿½ ou k = 0 )
+	NVEC2 clth_of; // Fin de construction geometrique de la clothoide ( son point de d'arrivï¿½e, lï¿½ ou k != 0 ) exprimï¿½e dans la base [clth_o,i,j] de la clothoide.
+	NVEC2 clth_Iu; // vecteur tangent ï¿½ la clothoide en I, image de P. Ici I sera la projection de
+	Nf32 clth_Is;  // Abscisse curviligne de I
 
-
-	NLPATH_POINT* ptrk_kp;
-	NLPATH_PRIMITIVE* ptrk_prim;
-	Nu32				 trk_primind;
+	NLPATH_POINT *ptrk_kp;
+	NLPATH_PRIMITIVE *ptrk_prim;
+	Nu32 trk_primind;
 
 	m_iteration = 0;
 
@@ -110,7 +109,7 @@ NLPATH_PERSISTENT_TRACKING_DATA::TRCK_RESULT NLPATH_PERSISTENT_TRACKING_DATA::tr
 			P.x = ppos->x - pkp0->p.x;
 			P.y = ppos->y - pkp0->p.y;
 			dot0 = NVec2DotProduct(&P, &pkp1->u); // !!! pkp1 et pas pkp0 car pour un segment le vecteur directeur est pkp1->u !!!
-			
+
 			if (dot0 <= 0.0f)
 			{
 				// Le point le plus proche de P est pkp0
@@ -119,17 +118,17 @@ NLPATH_PERSISTENT_TRACKING_DATA::TRCK_RESULT NLPATH_PERSISTENT_TRACKING_DATA::tr
 				if (IP_squarelength < max_IP_squarelength)
 				{
 					trk_primind = i;
-					ptrk_prim	= pprim;
-					ptrk_kp		= pkp1;
+					ptrk_prim = pprim;
+					ptrk_kp = pkp1;
 
-					pout->s		= pkp0->s;
-					pout->p		= pkp0->p;
-					pout->k		= 0.0f;
-					pout->u		= pkp0->u; // pkp0 et pas pkp1 car ppos est considéré comme AVANT pkp0 !!! DONC pas vraiment sur le segment
+					pout->s = pkp0->s;
+					pout->p = pkp0->p;
+					pout->k = 0.0f;
+					pout->u = pkp0->u; // pkp0 et pas pkp1 car ppos est considï¿½rï¿½ comme AVANT pkp0 !!! DONC pas vraiment sur le segment
 
 					max_IP_squarelength = IP_squarelength;
-					max_IP_length		= sqrt(max_IP_squarelength);
-					
+					max_IP_length = sqrt(max_IP_squarelength);
+
 					rtrn = rtrn = TRCK_RESULT::ON_PATH_SEGMENT_START;
 				}
 			}
@@ -143,16 +142,16 @@ NLPATH_PERSISTENT_TRACKING_DATA::TRCK_RESULT NLPATH_PERSISTENT_TRACKING_DATA::tr
 				if (IP_squarelength < max_IP_squarelength)
 				{
 					trk_primind = i;
-					ptrk_prim	= pprim;
-					ptrk_kp		= pkp1;
+					ptrk_prim = pprim;
+					ptrk_kp = pkp1;
 
-					pout->s		= pkp1->s;
-					pout->p		= pkp1->p;
-					pout->k		= 0.0f;
-					pout->u		= pkp1->u;
+					pout->s = pkp1->s;
+					pout->p = pkp1->p;
+					pout->k = 0.0f;
+					pout->u = pkp1->u;
 
 					max_IP_squarelength = IP_squarelength;
-					max_IP_length		= sqrt(max_IP_squarelength);
+					max_IP_length = sqrt(max_IP_squarelength);
 
 					rtrn = TRCK_RESULT::ON_PATH_SEGMENT_END;
 				}
@@ -161,24 +160,24 @@ NLPATH_PERSISTENT_TRACKING_DATA::TRCK_RESULT NLPATH_PERSISTENT_TRACKING_DATA::tr
 			{
 				I.x = pkp0->p.x + dot0 * pkp1->u.x;
 				I.y = pkp0->p.y + dot0 * pkp1->u.y;
-				IP.x= I.x - ppos->x;
-				IP.y= I.y - ppos->y;
+				IP.x = I.x - ppos->x;
+				IP.y = I.y - ppos->y;
 				// Le point le plus proche de A est P
 				// la distance [ppos,P] vaut norme de AP
 				IP_squarelength = NVec2SquareLength(&IP);
 				if (IP_squarelength < max_IP_squarelength)
 				{
 					trk_primind = i;
-					ptrk_prim	= pprim;
-					ptrk_kp		= pkp1;
+					ptrk_prim = pprim;
+					ptrk_kp = pkp1;
 
-					pout->s		= pkp0->s + dot0;
-					pout->p		= I;
-					pout->k		= 0.0f;
-					pout->u		= pkp1->u;
+					pout->s = pkp0->s + dot0;
+					pout->p = I;
+					pout->k = 0.0f;
+					pout->u = pkp1->u;
 
 					max_IP_squarelength = IP_squarelength;
-					max_IP_length		= sqrt(max_IP_squarelength);
+					max_IP_length = sqrt(max_IP_squarelength);
 
 					rtrn = TRCK_RESULT::ON_PATH_SEGMENT;
 				}
@@ -186,7 +185,7 @@ NLPATH_PERSISTENT_TRACKING_DATA::TRCK_RESULT NLPATH_PERSISTENT_TRACKING_DATA::tr
 			break;
 
 		case NLPATH_PRIMITIVE_ID_ARC:
-			// METHODE 2: ( pour mémoire voir "LEGACY METHOD 1" plus bas dans ce fichier)
+			// METHODE 2: ( pour mï¿½moire voir "LEGACY METHOD 1" plus bas dans ce fichier)
 			// +--------------------------------------------------------------------------------------
 			// |
 			// |	Calcul Bissectrice
@@ -205,7 +204,7 @@ NLPATH_PERSISTENT_TRACKING_DATA::TRCK_RESULT NLPATH_PERSISTENT_TRACKING_DATA::tr
 
 			if (bsc.x || bsc.y)
 			{
-				bsc_threshold = NVec2Normalize(&bsc)/(2.0f*pprim->m_arc.m_radius); 
+				bsc_threshold = NVec2Normalize(&bsc) / (2.0f * pprim->m_arc.m_radius);
 
 				if (pprim->m_arc.m_omega > NF32_PI)
 				{
@@ -218,17 +217,17 @@ NLPATH_PERSISTENT_TRACKING_DATA::TRCK_RESULT NLPATH_PERSISTENT_TRACKING_DATA::tr
 			{
 				NErrorIf(pprim->m_arc.m_omega != NF32_PI, NERROR_SYSTEM_GURU_MEDITATION);
 
-				// Vu le mode de calcul de la bissectrice, bsc null revient à dire que l'angle ACB vaut PI ...
-				// La bissectrice est donc un vecteur perpendiculaire à CA et CB 
+				// Vu le mode de calcul de la bissectrice, bsc null revient ï¿½ dire que l'angle ACB vaut PI ...
+				// La bissectrice est donc un vecteur perpendiculaire ï¿½ CA et CB
 				if (ISFLAG_ON(pprim->m_core.m_flags, FLAG_NLPATH_ARC_INDIRECT))
 				{
-					bsc.x =  A.y;
+					bsc.x = A.y;
 					bsc.y = -A.x;
 				}
 				else
 				{
 					bsc.x = -A.y;
-					bsc.y =  A.x;
+					bsc.y = A.x;
 				}
 
 				NVec2Normalize(&bsc);
@@ -238,25 +237,24 @@ NLPATH_PERSISTENT_TRACKING_DATA::TRCK_RESULT NLPATH_PERSISTENT_TRACKING_DATA::tr
 			// |
 			// +--------------------------------------------------------------------------------------
 
-
-			P.x  = ppos->x - pprim->m_arc.m_center.x;
-			P.y  = ppos->y - pprim->m_arc.m_center.y;
+			P.x = ppos->x - pprim->m_arc.m_center.x;
+			P.y = ppos->y - pprim->m_arc.m_center.y;
 			length = NVec2Length(&P);
 			f = length - pprim->m_arc.m_radius;
 			if (NABS(f) < max_IP_length)
 			{
-				// 'ppos' est dans l'anneau ( potentiellement un disc si max_AP_length >= radius ) des positions situées à une dist. valide du cercle de centre C portant l'arc.
+				// 'ppos' est dans l'anneau ( potentiellement un disc si max_AP_length >= radius ) des positions situï¿½es ï¿½ une dist. valide du cercle de centre C portant l'arc.
 				if (length)
 				{
 					if (ISFLAG_ON(pprim->m_core.m_flags, FLAG_NLPATH_ARC_INDIRECT))
 					{
-						ortho_bsc.x =  bsc.y;
+						ortho_bsc.x = bsc.y;
 						ortho_bsc.y = -bsc.x;
 					}
 					else
 					{
 						ortho_bsc.x = -bsc.y;
-						ortho_bsc.y =  bsc.x;
+						ortho_bsc.y = bsc.x;
 					}
 
 					P.x /= length;
@@ -269,22 +267,22 @@ NLPATH_PERSISTENT_TRACKING_DATA::TRCK_RESULT NLPATH_PERSISTENT_TRACKING_DATA::tr
 					{
 						dot0 = NCLAMP(-1.0f, dot0, 1.0f);
 						ang = acosf(dot0);
-						
-						//ang = (dot1 < 0.0f) ? pprim->m_arc.m_phi + pprim->m_arc.m_omega / 2.0f - ang : pprim->m_arc.m_phi + pprim->m_arc.m_omega / 2.0f + ang;
+
+						// ang = (dot1 < 0.0f) ? pprim->m_arc.m_phi + pprim->m_arc.m_omega / 2.0f - ang : pprim->m_arc.m_phi + pprim->m_arc.m_omega / 2.0f + ang;
 						if (dot1 < 0.0f)
 							ang = pprim->m_arc.m_omega / 2.0f - ang;
 						else
 							ang = pprim->m_arc.m_omega / 2.0f + ang;
 
 						trk_primind = i;
-						ptrk_prim	= pprim;
-						ptrk_kp		= pkp1;
+						ptrk_prim = pprim;
+						ptrk_kp = pkp1;
 
-						pout->s		= pkp0->s + ang * pprim->m_arc.m_radius;
-						pout->p.x	= pprim->m_arc.m_center.x + P.x * pprim->m_arc.m_radius;
-						pout->p.y	= pprim->m_arc.m_center.y + P.y * pprim->m_arc.m_radius;
-						pout->k		= pkp1->k;	// pkp0->k peut être = 0 en cas d'absence de clothoide de transition :/
-														// alors que pkp1->k aura tjrs le 'bon k', celui qui doit être naturellement associé à la primitive [pkp0,pkp1] 
+						pout->s = pkp0->s + ang * pprim->m_arc.m_radius;
+						pout->p.x = pprim->m_arc.m_center.x + P.x * pprim->m_arc.m_radius;
+						pout->p.y = pprim->m_arc.m_center.y + P.y * pprim->m_arc.m_radius;
+						pout->k = pkp1->k; // pkp0->k peut ï¿½tre = 0 en cas d'absence de clothoide de transition :/
+										   // alors que pkp1->k aura tjrs le 'bon k', celui qui doit ï¿½tre naturellement associï¿½ ï¿½ la primitive [pkp0,pkp1]
 						if (ISFLAG_ON(pprim->m_core.m_flags, FLAG_NLPATH_ARC_INDIRECT))
 						{
 							pout->u.x = P.y;
@@ -293,7 +291,7 @@ NLPATH_PERSISTENT_TRACKING_DATA::TRCK_RESULT NLPATH_PERSISTENT_TRACKING_DATA::tr
 						else
 						{
 							pout->u.x = -P.y;
-							pout->u.y =  P.x;
+							pout->u.y = P.x;
 						}
 
 						max_IP_length = NABS(f);
@@ -303,7 +301,7 @@ NLPATH_PERSISTENT_TRACKING_DATA::TRCK_RESULT NLPATH_PERSISTENT_TRACKING_DATA::tr
 					}
 					else // dot0 <= bsc_threshold
 					{
-						
+
 						if (dot1 > 0.0f)
 						{
 							// plus pres de B
@@ -313,8 +311,8 @@ NLPATH_PERSISTENT_TRACKING_DATA::TRCK_RESULT NLPATH_PERSISTENT_TRACKING_DATA::tr
 							if (IP_squarelength < max_IP_squarelength)
 							{
 								trk_primind = i;
-								ptrk_prim	= pprim;
-								ptrk_kp		= pkp1;
+								ptrk_prim = pprim;
+								ptrk_kp = pkp1;
 
 								*pout = *pkp1;
 
@@ -350,8 +348,8 @@ NLPATH_PERSISTENT_TRACKING_DATA::TRCK_RESULT NLPATH_PERSISTENT_TRACKING_DATA::tr
 						else // dot1 == 0.0f
 						{
 							// sur la bissectrice
-							I.x = pprim->m_arc.m_center.x + bsc.x*pprim->m_arc.m_radius;
-							I.y = pprim->m_arc.m_center.y + bsc.y*pprim->m_arc.m_radius;
+							I.x = pprim->m_arc.m_center.x + bsc.x * pprim->m_arc.m_radius;
+							I.y = pprim->m_arc.m_center.y + bsc.y * pprim->m_arc.m_radius;
 							IP.x = ppos->x - pkp0->p.x;
 							IP.y = ppos->y - pkp0->p.y;
 							IP_squarelength = NVec2SquareLength(&IP);
@@ -361,11 +359,11 @@ NLPATH_PERSISTENT_TRACKING_DATA::TRCK_RESULT NLPATH_PERSISTENT_TRACKING_DATA::tr
 								ptrk_prim = pprim;
 								ptrk_kp = pkp1;
 
-								pout->s		= pkp0->s + pprim->m_core.m_l / 2.0f;
-								pout->p.x	= pprim->m_arc.m_center.x + bsc.x * pprim->m_arc.m_radius;
-								pout->p.y	= pprim->m_arc.m_center.y + bsc.y * pprim->m_arc.m_radius;
-								pout->k		= pkp1->k;	// pkp0->k peut être = 0 en cas d'absence de clothoide de transition :/
-															// alors que pkp1->k aura tjrs le 'bon k', celui qui doit être naturellement associé à la primitive [pkp0,pkp1] 
+								pout->s = pkp0->s + pprim->m_core.m_l / 2.0f;
+								pout->p.x = pprim->m_arc.m_center.x + bsc.x * pprim->m_arc.m_radius;
+								pout->p.y = pprim->m_arc.m_center.y + bsc.y * pprim->m_arc.m_radius;
+								pout->k = pkp1->k; // pkp0->k peut ï¿½tre = 0 en cas d'absence de clothoide de transition :/
+												   // alors que pkp1->k aura tjrs le 'bon k', celui qui doit ï¿½tre naturellement associï¿½ ï¿½ la primitive [pkp0,pkp1]
 								if (ISFLAG_ON(pprim->m_core.m_flags, FLAG_NLPATH_ARC_INDIRECT))
 								{
 									pout->u.x = bsc.y;
@@ -385,19 +383,19 @@ NLPATH_PERSISTENT_TRACKING_DATA::TRCK_RESULT NLPATH_PERSISTENT_TRACKING_DATA::tr
 						}
 					}
 				}
-				else //length == 0
+				else // length == 0
 				{
 					// 'ppos' est confondue avec le centre du cercle, mais si nous sommes ici c'est que le centre du cercle fait partie de l'anneau/disc des positions valides...
-					// comme le centre du cercle est bien évidement surla bisectrice, on considère que la projection de 'ppos' sur l'arc se trouve à l'intersection arc/bissectrice.
+					// comme le centre du cercle est bien ï¿½videment surla bisectrice, on considï¿½re que la projection de 'ppos' sur l'arc se trouve ï¿½ l'intersection arc/bissectrice.
 					trk_primind = i;
-					ptrk_prim	= pprim;
-					ptrk_kp		= pkp1;
+					ptrk_prim = pprim;
+					ptrk_kp = pkp1;
 
-					pout->s		= pkp0->s + pprim->m_core.m_l / 2.0f;
-					pout->p.x	= pprim->m_arc.m_center.x + bsc.x * pprim->m_arc.m_radius;
-					pout->p.y	= pprim->m_arc.m_center.y + bsc.y * pprim->m_arc.m_radius;
-					pout->k		= pkp1->k;	// pkp0->k peut être = 0 en cas d'absence de clothoide de transition :/
-													// alors que pkp1->k aura tjrs le 'bon k', celui qui doit être naturellement associé à la primitive [pkp0,pkp1] 
+					pout->s = pkp0->s + pprim->m_core.m_l / 2.0f;
+					pout->p.x = pprim->m_arc.m_center.x + bsc.x * pprim->m_arc.m_radius;
+					pout->p.y = pprim->m_arc.m_center.y + bsc.y * pprim->m_arc.m_radius;
+					pout->k = pkp1->k; // pkp0->k peut ï¿½tre = 0 en cas d'absence de clothoide de transition :/
+									   // alors que pkp1->k aura tjrs le 'bon k', celui qui doit ï¿½tre naturellement associï¿½ ï¿½ la primitive [pkp0,pkp1]
 					if (ISFLAG_ON(pprim->m_core.m_flags, FLAG_NLPATH_ARC_INDIRECT))
 					{
 						pout->u.x = bsc.y;
@@ -406,7 +404,7 @@ NLPATH_PERSISTENT_TRACKING_DATA::TRCK_RESULT NLPATH_PERSISTENT_TRACKING_DATA::tr
 					else
 					{
 						pout->u.x = -bsc.y;
-						pout->u.y =  bsc.x;
+						pout->u.y = bsc.x;
 					}
 
 					max_IP_length = pprim->m_arc.m_radius;
@@ -419,13 +417,13 @@ NLPATH_PERSISTENT_TRACKING_DATA::TRCK_RESULT NLPATH_PERSISTENT_TRACKING_DATA::tr
 
 		case NLPATH_PRIMITIVE_ID_CLOTHOID:
 			// Rappels:
-			// min			Abscisse curv. min sur la clothoide |_ définissent l'intervalle [min,max] de recherche de l'abscisse curv, de I image de P sur la clothoide.
+			// min			Abscisse curv. min sur la clothoide |_ dï¿½finissent l'intervalle [min,max] de recherche de l'abscisse curv, de I image de P sur la clothoide.
 			// max			Abscisse curv. max sur la clothoide |
-			// clth_o		Origine de construction geometrique de la clothoide ( son point de départ, là ou k = 0 )
-			// clth_Iu		Vecteur tangent à la clothoide en I, image de P. Ici I sera la projection de 
+			// clth_o		Origine de construction geometrique de la clothoide ( son point de dï¿½part, lï¿½ ou k = 0 )
+			// clth_Iu		Vecteur tangent ï¿½ la clothoide en I, image de P. Ici I sera la projection de
 			// clth_Is		Abscisse curviligne de I
-			
-			// 1) On va d'abord chercher à exclure un pppos situé à l'extérieur de la zone délimitée par la fin géométrique de la clothoide ( là ou k!= 0 )
+
+			// 1) On va d'abord chercher ï¿½ exclure un pppos situï¿½ ï¿½ l'extï¿½rieur de la zone dï¿½limitï¿½e par la fin gï¿½omï¿½trique de la clothoide ( lï¿½ ou k!= 0 )
 			if (ISFLAG_ON(pprim->m_core.m_flags, FLAG_NLPATH_CLOTHOID_SECOND))
 			{
 				// La clothoide commence en pkp1 (k=0) et se termine en pkp0 (k!=0).
@@ -434,24 +432,24 @@ NLPATH_PERSISTENT_TRACKING_DATA::TRCK_RESULT NLPATH_PERSISTENT_TRACKING_DATA::tr
 				dot0 = NVec2DotProduct(&P, &pkp0->u);
 				if (dot0 <= 0.0f)
 				{
-					// La seule image I de P possible pourrait encore être la fin de la clothoide (k!=0) si P n'est pas trop loin d'elle.
+					// La seule image I de P possible pourrait encore ï¿½tre la fin de la clothoide (k!=0) si P n'est pas trop loin d'elle.
 					IP_squarelength = NVec2SquareLength(&P);
 					if (IP_squarelength < max_IP_squarelength)
 					{
-						// Si la clothoid est PREM', alors l'origin de la clothoide ( où k = 0 ) correspond à l'entrée sur la clothoide dans le sens du chemin
+						// Si la clothoid est PREM', alors l'origin de la clothoide ( oï¿½ k = 0 ) correspond ï¿½ l'entrï¿½e sur la clothoide dans le sens du chemin
 						*pout = *pkp0;
-						rtrn = rtrn = TRCK_RESULT::ON_PATH_CLOTHOID_START; // !!! ICI LA FIN GEOMETRIQUE de la clothoide correspond à l'entrée de la clothoide dans le sens du chemin !!!
+						rtrn = rtrn = TRCK_RESULT::ON_PATH_CLOTHOID_START; // !!! ICI LA FIN GEOMETRIQUE de la clothoide correspond ï¿½ l'entrï¿½e de la clothoide dans le sens du chemin !!!
 					}
 					break;
 				}
 				/*
-				else ... ppos est "du bon côté et reste donc, pour le moment un candidat valide ...
+				else ... ppos est "du bon cï¿½tï¿½ et reste donc, pour le moment un candidat valide ...
 				*/
 
 				// preparation du calcul de clth_of:
-				clth_o = pkp1->p;						// Origine de construction geometrique de la clothoide ( son point de départ, là ou k = 0 ) et fin ( là ou k = value )
-				tmp.x = pkp0->p.x - clth_o.x;			// |___La fin de la construction géométrique de la clothoide par rapport à son Origine.
-				tmp.y = pkp0->p.y - clth_o.y;			// |
+				clth_o = pkp1->p;			  // Origine de construction geometrique de la clothoide ( son point de dï¿½part, lï¿½ ou k = 0 ) et fin ( lï¿½ ou k = value )
+				tmp.x = pkp0->p.x - clth_o.x; // |___La fin de la construction gï¿½omï¿½trique de la clothoide par rapport ï¿½ son Origine.
+				tmp.y = pkp0->p.y - clth_o.y; // |
 			}
 			else
 			{
@@ -461,27 +459,27 @@ NLPATH_PERSISTENT_TRACKING_DATA::TRCK_RESULT NLPATH_PERSISTENT_TRACKING_DATA::tr
 				dot0 = NVec2DotProduct(&P, &pkp1->u);
 				if (dot0 >= 0.0f)
 				{
-					// La seule image I de P possible pourrait encore être la fin de la clothoide (k!=0) si P n'est pas trop loin d'elle.
+					// La seule image I de P possible pourrait encore ï¿½tre la fin de la clothoide (k!=0) si P n'est pas trop loin d'elle.
 					IP_squarelength = NVec2SquareLength(&P);
 					if (IP_squarelength < max_IP_squarelength)
 					{
-						// Si la clothoid est PREM', alors l'origin de la clothoide ( où k = 0 ) correspond à l'entrée sur la clothoide dans le sens du chemin
+						// Si la clothoid est PREM', alors l'origin de la clothoide ( oï¿½ k = 0 ) correspond ï¿½ l'entrï¿½e sur la clothoide dans le sens du chemin
 						*pout = *pkp1;
-						rtrn = rtrn = TRCK_RESULT::ON_PATH_CLOTHOID_END; // !!! ICI LA FIN GEOMETRIQUE de la clothoide correspond à la sortie de la clothoide dans le sens du chemin !!!
+						rtrn = rtrn = TRCK_RESULT::ON_PATH_CLOTHOID_END; // !!! ICI LA FIN GEOMETRIQUE de la clothoide correspond ï¿½ la sortie de la clothoide dans le sens du chemin !!!
 					}
 					break;
 				}
 				/*
-				else ... ppos est "du bon côté et reste donc, pour le moment un candidat valide ...
+				else ... ppos est "du bon cï¿½tï¿½ et reste donc, pour le moment un candidat valide ...
 				*/
 
 				// preparation du calcul de clth_of:
-				clth_o = pkp0->p;						// Origine de construction geometrique de la clothoide ( son point de départ, là ou k = 0 ) et fin ( là ou k = value )
-				tmp.x = pkp1->p.x - clth_o.x;			// |___La fin de la construction géométrique de la clothoide par rapport à son Origine.
-				tmp.y = pkp1->p.y - clth_o.y;			// |
+				clth_o = pkp0->p;			  // Origine de construction geometrique de la clothoide ( son point de dï¿½part, lï¿½ ou k = 0 ) et fin ( lï¿½ ou k = value )
+				tmp.x = pkp1->p.x - clth_o.x; // |___La fin de la construction gï¿½omï¿½trique de la clothoide par rapport ï¿½ son Origine.
+				tmp.y = pkp1->p.y - clth_o.y; // |
 			}
 
-			// Fin de construction geometrique de la clothoide ( son point de d'arrivée, là ou k != 0 ) exprimée dans la base [clth_o,i,j] de la clothoide.
+			// Fin de construction geometrique de la clothoide ( son point de d'arrivï¿½e, lï¿½ ou k != 0 ) exprimï¿½e dans la base [clth_o,i,j] de la clothoide.
 			clth_of.x = tmp.x * pprim->m_clothoid.m_i.x + tmp.y * pprim->m_clothoid.m_i.y;
 			clth_of.y = tmp.x * pprim->m_clothoid.m_j.x + tmp.y * pprim->m_clothoid.m_j.y;
 
@@ -494,28 +492,28 @@ NLPATH_PERSISTENT_TRACKING_DATA::TRCK_RESULT NLPATH_PERSISTENT_TRACKING_DATA::tr
 			// Recherche de P dans le volume englobant des positions potentielles valides
 			if (P.x < 0.0f)
 			{
-				// P semble être un mauvais candidat ... Son abscisse dans la base[clth_0, i, j] de la clothoide le place du "MAUVAIS côté" de l'axe j
-				// P est situé avant l'origine de la clothoide, c'est à dire avant l'extrémité de la clothoide où k = 0
+				// P semble ï¿½tre un mauvais candidat ... Son abscisse dans la base[clth_0, i, j] de la clothoide le place du "MAUVAIS cï¿½tï¿½" de l'axe j
+				// P est situï¿½ avant l'origine de la clothoide, c'est ï¿½ dire avant l'extrï¿½mitï¿½ de la clothoide oï¿½ k = 0
 				// Soit, dans le sens du chemin, ... AVANT pkp0 si la clothoide est Prem'
 				//								 ... APRES pkp1 si la clothoide est SECOND
-				// 
-				// La seule image I de P possible pourrait encore être l'origine de la clothoide si P n'est pas trop loin d'elle.
+				//
+				// La seule image I de P possible pourrait encore ï¿½tre l'origine de la clothoide si P n'est pas trop loin d'elle.
 				IP_squarelength = NVec2SquareLength(&P);
 				if (IP_squarelength < max_IP_squarelength)
 				{
 					trk_primind = i;
-					ptrk_prim	= pprim;
-					ptrk_kp		= pkp1;
+					ptrk_prim = pprim;
+					ptrk_kp = pkp1;
 
 					if (ISFLAG_ON(pprim->m_core.m_flags, FLAG_NLPATH_CLOTHOID_SECOND))
 					{
-						// Si la clothoid est SECOND, alors l'origin de la clothoide ( où k = 0 ) correspond à la sortie de la clothoide dans le sens du chemin
+						// Si la clothoid est SECOND, alors l'origin de la clothoide ( oï¿½ k = 0 ) correspond ï¿½ la sortie de la clothoide dans le sens du chemin
 						*pout = *pkp1;
 						rtrn = rtrn = TRCK_RESULT::ON_PATH_CLOTHOID_END;
 					}
 					else
 					{
-						// Si la clothoid est PREM', alors l'origin de la clothoide ( où k = 0 ) correspond à l'entrée sur la clothoide dans le sens du chemin
+						// Si la clothoid est PREM', alors l'origin de la clothoide ( oï¿½ k = 0 ) correspond ï¿½ l'entrï¿½e sur la clothoide dans le sens du chemin
 						*pout = *pkp0;
 						rtrn = rtrn = TRCK_RESULT::ON_PATH_CLOTHOID_START;
 					}
@@ -528,7 +526,7 @@ NLPATH_PERSISTENT_TRACKING_DATA::TRCK_RESULT NLPATH_PERSISTENT_TRACKING_DATA::tr
 			/*
 			else  (P.x >= 0.0f) ...
 			{
-				P est un bon candidat ... Son abscisse dans la base [clth_0,i,j] de la clothoide le place du "bon côté" de l'axe j
+				P est un bon candidat ... Son abscisse dans la base [clth_0,i,j] de la clothoide le place du "bon cï¿½tï¿½" de l'axe j
 			}
 			*/
 			if (P.y < -max_IP_length)
@@ -540,27 +538,27 @@ NLPATH_PERSISTENT_TRACKING_DATA::TRCK_RESULT NLPATH_PERSISTENT_TRACKING_DATA::tr
 			if (P.x > (clth_of.x + max_IP_length))
 				break;
 
-			// Utilisation de la méthode Newton-Raphson pour trouver le point situé sur la clothoide et le plus proche de 'ppos'. https://fr.wikipedia.org/wiki/M%C3%A9thode_de_Newton
-			min			= 0.0f;
-			max			= pprim->m_clothoid.m_core.m_l;
-			i			= 0;		// compteur d'itérations
+			// Utilisation de la mï¿½thode Newton-Raphson pour trouver le point situï¿½ sur la clothoide et le plus proche de 'ppos'. https://fr.wikipedia.org/wiki/M%C3%A9thode_de_Newton
+			min = 0.0f;
+			max = pprim->m_clothoid.m_core.m_l;
+			i = 0; // compteur d'itï¿½rations
 
-			I.x			= 0.0f;		// |__	On place le premier projeté de P sur l'origine.
-			I.y			= 0.0f;		// |
-			IP = P;					// |--	I étant confondu avec l'origine, on a ici IP = P
-									//
-			f			= P.x;		// |	f correspondant à la projection de P sur la tangente en I, et sachant que ici la tangente en I ( = origine ) n'est autre que le vecteur i de la base
-									// |	On a f = P.x			
-									//
-			clth_Iu.x	= 1.0f;		// |__	La tangente en I ( = origine ) n'est autre que le vecteur i donc : clth_Iu(1,0) 
-			clth_Iu.y	= 0.0f;		// |
-									//
-			clth_Is		= 0.0f;		// |--	L'abscisse curviligne en I ( = origine ) vaut 0.
-			
+			I.x = 0.0f;		  // |__	On place le premier projetï¿½ de P sur l'origine.
+			I.y = 0.0f;		  // |
+			IP = P;			  // |--	I ï¿½tant confondu avec l'origine, on a ici IP = P
+							  //
+			f = P.x;		  // |	f correspondant ï¿½ la projection de P sur la tangente en I, et sachant que ici la tangente en I ( = origine ) n'est autre que le vecteur i de la base
+							  // |	On a f = P.x
+							  //
+			clth_Iu.x = 1.0f; // |__	La tangente en I ( = origine ) n'est autre que le vecteur i donc : clth_Iu(1,0)
+			clth_Iu.y = 0.0f; // |
+							  //
+			clth_Is = 0.0f;	  // |--	L'abscisse curviligne en I ( = origine ) vaut 0.
+
 			while (NABS(f) > m_clothoidErrorThreshold)
 			{
-				// Repérage du point projeté sur la tangente [u] en p ( d'abscisse s ) par rapport au s courant. 
-				// le point projeté est-il avant p ( l<0 ) ou après p (l>0)
+				// Repï¿½rage du point projetï¿½ sur la tangente [u] en p ( d'abscisse s ) par rapport au s courant.
+				// le point projetï¿½ est-il avant p ( l<0 ) ou aprï¿½s p (l>0)
 				if (f < 0.0f)
 				{
 					max = clth_Is;
@@ -574,7 +572,7 @@ NLPATH_PERSISTENT_TRACKING_DATA::TRCK_RESULT NLPATH_PERSISTENT_TRACKING_DATA::tr
 					clth_Is += NMIN(ds, f);
 				}
 
-				// On recalcul la nouvelle Image ( = I) de P à partir de sa nouvelle abscisse (=clth_Is)
+				// On recalcul la nouvelle Image ( = I) de P ï¿½ partir de sa nouvelle abscisse (=clth_Is)
 				NFresnelIntegralsf32(clth_Is / pprim->m_clothoid.m_param, &cf, &sf);
 				I.x = pprim->m_clothoid.m_param * cf;
 				I.y = pprim->m_clothoid.m_param * sf;
@@ -584,19 +582,19 @@ NLPATH_PERSISTENT_TRACKING_DATA::TRCK_RESULT NLPATH_PERSISTENT_TRACKING_DATA::tr
 				clth_Iu.x = cos(theta);
 				clth_Iu.y = sin(theta);
 
-				// On projète à nouveau P sur cette tangente en I 
+				// On projï¿½te ï¿½ nouveau P sur cette tangente en I
 				IP.x = P.x - I.x;
 				IP.y = P.y - I.y;
 				f = IP.x * clth_Iu.x + IP.y * clth_Iu.y; // dot product = error
 
 				// notes:
-				// Si I est "parfait" alors le dot product ( = la projection de P sur la tangente en I ) est égal à ZERO ...
-				// Sinon, et c'est le rôle de cet algo on déplace I ( son abscisse curviligne ) on trouve ses coordonnées X,Y et celle de la tangente en ce point
+				// Si I est "parfait" alors le dot product ( = la projection de P sur la tangente en I ) est ï¿½gal ï¿½ ZERO ...
+				// Sinon, et c'est le rï¿½le de cet algo on dï¿½place I ( son abscisse curviligne ) on trouve ses coordonnï¿½es X,Y et celle de la tangente en ce point
 				// et on reteste ...
 				i++;
 			}
 
-			// Dernier test sur le I trouvé, est-il suffisement proche de P ?
+			// Dernier test sur le I trouvï¿½, est-il suffisement proche de P ?
 			IP_squarelength = NVec2SquareLength(&IP);
 			if (IP_squarelength < max_IP_squarelength)
 			{
@@ -635,12 +633,6 @@ NLPATH_PERSISTENT_TRACKING_DATA::TRCK_RESULT NLPATH_PERSISTENT_TRACKING_DATA::tr
 
 	return rtrn;
 }
-
-
-
-
-
-
 
 // LEGACY
 
@@ -691,7 +683,7 @@ Nbool NLPATH_PERSISTENT_TRACKING_DATA::forwardContinuousUpdate(const NVEC2f32 *p
 						m_pointOnPath.p.x	= pkp0->p.x + dot0*pkp0->u.x;
 						m_pointOnPath.p.y	= pkp0->p.y + dot0*pkp0->u.y;
 						m_pointOnPath.k		= 0.0f; // ! la primitive est un segment , donc ...
-						//NErrorIf( (pkp0->k != 0.0f) || (pkp1->k != 0.0f), NERROR_INCONSISTENT_VALUES); ! en fait non car il est possible que cette condition ne soit pas respectée !! A cause des Arc de cercles sans clothoides qui créent une discontinuité de courbure !!!!
+						//NErrorIf( (pkp0->k != 0.0f) || (pkp1->k != 0.0f), NERROR_INCONSISTENT_VALUES); ! en fait non car il est possible que cette condition ne soit pas respectï¿½e !! A cause des Arc de cercles sans clothoides qui crï¿½ent une discontinuitï¿½ de courbure !!!!
 						m_pointOnPath.u		= pkp0->u;
 						return NTRUE;
 
@@ -734,7 +726,7 @@ Nbool NLPATH_PERSISTENT_TRACKING_DATA::forwardContinuousUpdate(const NVEC2f32 *p
 				}
 			}
 		}
-		else if (dot1 == 0.0f) // ppos est sur la perpendiculaire à la tangente de la "fin" de la primitive ... ( ??? voir à ajouter une tolérance ici  ??? )
+		else if (dot1 == 0.0f) // ppos est sur la perpendiculaire ï¿½ la tangente de la "fin" de la primitive ... ( ??? voir ï¿½ ajouter une tolï¿½rance ici  ??? )
 		{
 			m_pTrackedPrimitive		= pprim;
 			m_pTrackedKeyPoint		= pkp1;
@@ -746,23 +738,22 @@ Nbool NLPATH_PERSISTENT_TRACKING_DATA::forwardContinuousUpdate(const NVEC2f32 *p
 		/ *
 		else // dot > 0.0f
 		{
-			// Signifie que ppos est "après" la fin de la primitive, du coup on passe à la primitive suivante ...
+			// Signifie que ppos est "aprï¿½s" la fin de la primitive, du coup on passe ï¿½ la primitive suivante ...
 			// ... en laissant "naturellement" la boucle for avancer.
 		}
 		* /
 	}
 
-	// Si on arrive ici c'est que ppos est "après" la dernière primitive.
-	// En conséquence ...
+	// Si on arrive ici c'est que ppos est "aprï¿½s" la derniï¿½re primitive.
+	// En consï¿½quence ...
 	m_pTrackedPrimitive = pprim - 1;
 	m_pTrackedKeyPoint	= pkp1 - 1;
 	m_trackedPrimitiveIndex = m_primitiveNb - 1;
-	// Ces valeurs permettrons, le cas échéant de refaire un nouveau 'forwardUpdate'
+	// Ces valeurs permettrons, le cas ï¿½chï¿½ant de refaire un nouveau 'forwardUpdate'
 	m_pointOnPath = *m_pTrackedKeyPoint;
 	return NTRUE;
 }
 */
-
 
 /*
 #ifdef _NEDITOR
@@ -797,80 +788,58 @@ void NLPATH_PERSISTENT_TRACKING_DATA::draw(const NVEC2f32 * pxtend, NCOLOR * pco
 #endif
 */
 
+/*
+ * -------------------------------------------------------------------------------------------------------------------------------------------------------------------
+case NLPATH_PRIMITIVE_ID_ARC:
+		// METHODE 1:
+			// Position par rapport au centre du cercle 'portant' l'arc:
+		A.x = ppos->x - pprim->m_arc.m_center.x;
+		A.y = ppos->y - pprim->m_arc.m_center.y;
+		length = NVec2Normalize(&A);
+		f = length - pprim->m_arc.m_radius;
 
-	/*
-	 * -------------------------------------------------------------------------------------------------------------------------------------------------------------------
-	case NLPATH_PRIMITIVE_ID_ARC:
-			// METHODE 1:
-				// Position par rapport au centre du cercle 'portant' l'arc:
-			A.x = ppos->x - pprim->m_arc.m_center.x;
-			A.y = ppos->y - pprim->m_arc.m_center.y;
-			length = NVec2Normalize(&A);
-			f = length - pprim->m_arc.m_radius;
-
-			if ((NABS(f) < max_AP_length))
+		if ((NABS(f) < max_AP_length))
+		{
+			if (length)
 			{
-				if (length)
+				dot0 = NVec2DotProduct(&A, &pprim->m_arc.m_i); // cos
+				dot1 = NVec2DotProduct(&A, &pprim->m_arc.m_j); // Sin
+				ang  = atan2(dot1, dot0) - pprim->m_arc.m_phi;
+
+				if (ang >= 0.0f)
 				{
-					dot0 = NVec2DotProduct(&A, &pprim->m_arc.m_i); // cos
-					dot1 = NVec2DotProduct(&A, &pprim->m_arc.m_j); // Sin
-					ang  = atan2(dot1, dot0) - pprim->m_arc.m_phi;
-
-					if (ang >= 0.0f)
+					if (ang <= pprim->m_arc.m_omega)
 					{
-						if (ang <= pprim->m_arc.m_omega)
+						trk_primind = i;
+						ptrk_prim	= pprim;
+						ptrk_kp		= pkp1;
+
+						m_pointOnPath.s		= pkp0->s + ang * pprim->m_arc.m_radius;
+						m_pointOnPath.p.x	= pprim->m_arc.m_center.x + A.x * pprim->m_arc.m_radius;
+						m_pointOnPath.p.y	= pprim->m_arc.m_center.y + A.y * pprim->m_arc.m_radius;
+						m_pointOnPath.k		= pkp1->k;	// pkp0->k peut ï¿½tre = 0 en cas d'absence de clothoide de transition :/
+														// alors que pkp1->k aura tjrs le 'bon k', celui qui doit ï¿½tre naturellement associï¿½ ï¿½ la primitive [pkp0,pkp1]
+						if (ISFLAG_ON(pprim->m_core.m_flags, FLAG_NLPATH_ARC_INDIRECT))
 						{
-							trk_primind = i;
-							ptrk_prim	= pprim;
-							ptrk_kp		= pkp1;
-
-							m_pointOnPath.s		= pkp0->s + ang * pprim->m_arc.m_radius;
-							m_pointOnPath.p.x	= pprim->m_arc.m_center.x + A.x * pprim->m_arc.m_radius;
-							m_pointOnPath.p.y	= pprim->m_arc.m_center.y + A.y * pprim->m_arc.m_radius;
-							m_pointOnPath.k		= pkp1->k;	// pkp0->k peut être = 0 en cas d'absence de clothoide de transition :/
-															// alors que pkp1->k aura tjrs le 'bon k', celui qui doit être naturellement associé à la primitive [pkp0,pkp1]
-							if (ISFLAG_ON(pprim->m_core.m_flags, FLAG_NLPATH_ARC_INDIRECT))
-							{
-								m_pointOnPath.u.x = A.y;
-								m_pointOnPath.u.y = -A.x;
-							}
-							else
-							{
-								m_pointOnPath.u.x = -A.y;
-								m_pointOnPath.u.y = A.x;
-							}
-
-							max_AP_length		= NABS(f);
-							max_AP_squarelength = NPOW2(max_AP_length);
+							m_pointOnPath.u.x = A.y;
+							m_pointOnPath.u.y = -A.x;
 						}
-						else //(ang > pprim->m_arc.m_omega)
+						else
 						{
-							// ppos est après la fin de l'arc, cependant comme il est situé sur l'anneau des positions situées à une dist. valide du cercle...
-							// on cherche à voir si il ne serait pas suffisement proche de pkp1 ( on pourrait utiliser la longueur de l'arc ( ang - pprim->m_arc.m_omega) comme bonne approx.
-							// mais soyons fous et précis , comme on recherche une distance 'à vol d'oiseau' calculons une distance 'à vol d'oiseau' ...
-							A.x = ppos->x - pkp1->p.x;
-							A.y = ppos->y - pkp1->p.y;
-							f = NVec2SquareLength(&A);
-							if (f < max_AP_squarelength)
-							{
-								trk_primind = i;
-								ptrk_prim	= pprim;
-								ptrk_kp		= pkp1;
-
-								m_pointOnPath = *pkp1;
-
-								max_AP_squarelength = f;
-								max_AP_length = sqrt(max_AP_squarelength);
-							}
+							m_pointOnPath.u.x = -A.y;
+							m_pointOnPath.u.y = A.x;
 						}
+
+						max_AP_length		= NABS(f);
+						max_AP_squarelength = NPOW2(max_AP_length);
 					}
-					else //(ang < 0.0f)
+					else //(ang > pprim->m_arc.m_omega)
 					{
-						// l'angle est inférieur à 0 donc "AVANT" le début de l'arc.
-						// ppos est avant le début de l'arc, cependant comme il est situé sur l'anneau des positions situées à une dist. valide du cercle...
-						// on cherche à voir si il ne serait pas suffisement proche de pkp0 . On procède donc comme precedement (  ang > pprim->m_arc.m_omega ) mais pour pkp0
-						A.x = ppos->x - pkp0->p.x;
-						A.y = ppos->y - pkp0->p.y;
+						// ppos est aprï¿½s la fin de l'arc, cependant comme il est situï¿½ sur l'anneau des positions situï¿½es ï¿½ une dist. valide du cercle...
+						// on cherche ï¿½ voir si il ne serait pas suffisement proche de pkp1 ( on pourrait utiliser la longueur de l'arc ( ang - pprim->m_arc.m_omega) comme bonne approx.
+						// mais soyons fous et prï¿½cis , comme on recherche une distance 'ï¿½ vol d'oiseau' calculons une distance 'ï¿½ vol d'oiseau' ...
+						A.x = ppos->x - pkp1->p.x;
+						A.y = ppos->y - pkp1->p.y;
 						f = NVec2SquareLength(&A);
 						if (f < max_AP_squarelength)
 						{
@@ -878,46 +847,67 @@ void NLPATH_PERSISTENT_TRACKING_DATA::draw(const NVEC2f32 * pxtend, NCOLOR * pco
 							ptrk_prim	= pprim;
 							ptrk_kp		= pkp1;
 
-							m_pointOnPath = *pkp0;	// on remarque ici que la solution aura le k de pkp0 ! qui potentiellement peut-être null ! ( si pas de clothoide )
-													// cependant cela est acceptable car le point est clairement AVANT le début de l'arc. Et si pkp0->k vaut ZERO c'est qu'avant le début de l'arc
-													// se trouve un segment ...
+							m_pointOnPath = *pkp1;
 
 							max_AP_squarelength = f;
 							max_AP_length = sqrt(max_AP_squarelength);
 						}
 					}
 				}
-				else // length == 0 !
+				else //(ang < 0.0f)
 				{
-					// ppos et le centre cu cercle sont confondus, donc A est le vecteur null !!!
-					// hors  atan2(0,0) renvoie Nan donc ...
-					// impossible de calculer ang dans ces conditions (  trivial )
-					// Cependant si nous sommes ici c'est que ppos est sur "l'anneau" des positions situées à une distance valide des points du cercle "portant" l'arc étudié.
-					// ... et plus précisement dans le cas particulier ou l'anneau est un disque comprenant le centre de ce cercle,
-					// car la distance max autorisée est plus grande que le rayon !!
-					// DONC, comme ppos et lecentre du cercle sont confondus, tous les points du cercle ( et donc de l'arc ) sont situé à la même distance valide ( = rayon )
-					// de ppos. Tous les points de l'arc sont donc solution !!!
-					// Plusieurs possibilités s'offrre à nous:
-					// 1/ ne rien retourner, et considérer qu'il n'y a pas de solution			:(  >>> Dommage car ppos est à une distance valide de l'arc !
-					// 2/ retourner pkp0 comme solution											:/	>>> cela n'est pas faut mais si juste avant nous étions après pkp1 il y aura un 'saut'
-					// 3/ retourber pkp1 comme solution											:/	>>> cela n'est pas faut mais si juste avant nous étions avant pkp0 il y aura un 'saut'
-					// 4/ retourber le point situé sur la bissectrice de l'angle [pkp0,A,pkp1]	:/	>>> cela n'est pas faut mais  il y aura un 'saut' qu'on vienne d'un côté ou de l'autre
-					// 5/ utiliser un historique ( position précédente ) pour choisir ...		:)	>>> on choisirait pkp0 ou pkp1 en fonction d'où on vient ...
-					//
-					// Pour le moment et pour faire simple on choisira la solution 2/ et on retournera pkp0 comme solution
-					// Cependant, il pourrait être judicieurs à l'avenir d'implémenter la solution 5/
-					trk_primind = i;
-					ptrk_prim = pprim;
-					ptrk_kp = pkp1;
+					// l'angle est infï¿½rieur ï¿½ 0 donc "AVANT" le dï¿½but de l'arc.
+					// ppos est avant le dï¿½but de l'arc, cependant comme il est situï¿½ sur l'anneau des positions situï¿½es ï¿½ une dist. valide du cercle...
+					// on cherche ï¿½ voir si il ne serait pas suffisement proche de pkp0 . On procï¿½de donc comme precedement (  ang > pprim->m_arc.m_omega ) mais pour pkp0
+					A.x = ppos->x - pkp0->p.x;
+					A.y = ppos->y - pkp0->p.y;
+					f = NVec2SquareLength(&A);
+					if (f < max_AP_squarelength)
+					{
+						trk_primind = i;
+						ptrk_prim	= pprim;
+						ptrk_kp		= pkp1;
 
-					m_pointOnPath = *pkp0;		// on remarque ici que la solution aura le k de pkp0 ! qui potentiellement peut-être null ! ( si pas de clothoide )
-												// cependant cela est acceptable car pppos est autant sur le tout début de l'arc que sur la toute fin de la primitive precedente
-												// si elle existe ...Et si pkp0->k vaut ZERO c'est qu'avant le début de l'arc se trouve un segment ...
+						m_pointOnPath = *pkp0;	// on remarque ici que la solution aura le k de pkp0 ! qui potentiellement peut-ï¿½tre null ! ( si pas de clothoide )
+												// cependant cela est acceptable car le point est clairement AVANT le dï¿½but de l'arc. Et si pkp0->k vaut ZERO c'est qu'avant le dï¿½but de l'arc
+												// se trouve un segment ...
 
-					max_AP_length		= pprim->m_arc.m_radius;	// nous sommes dans le cas ou length = 0 ! Donc NABS(f) = NABS( 0 - pprim->m_arc.m_radius)
-																	// ... et en plus, si nous sommes ici c'est également que (NABS(f) < max_AP_length). Donc ...
-					max_AP_squarelength = NPOW2(max_AP_length);
+						max_AP_squarelength = f;
+						max_AP_length = sqrt(max_AP_squarelength);
+					}
 				}
 			}
-			 * -------------------------------------------------------------------------------------------------------------------------------------------------------------------
-			 */
+			else // length == 0 !
+			{
+				// ppos et le centre cu cercle sont confondus, donc A est le vecteur null !!!
+				// hors  atan2(0,0) renvoie Nan donc ...
+				// impossible de calculer ang dans ces conditions (  trivial )
+				// Cependant si nous sommes ici c'est que ppos est sur "l'anneau" des positions situï¿½es ï¿½ une distance valide des points du cercle "portant" l'arc ï¿½tudiï¿½.
+				// ... et plus prï¿½cisement dans le cas particulier ou l'anneau est un disque comprenant le centre de ce cercle,
+				// car la distance max autorisï¿½e est plus grande que le rayon !!
+				// DONC, comme ppos et lecentre du cercle sont confondus, tous les points du cercle ( et donc de l'arc ) sont situï¿½ ï¿½ la mï¿½me distance valide ( = rayon )
+				// de ppos. Tous les points de l'arc sont donc solution !!!
+				// Plusieurs possibilitï¿½s s'offrre ï¿½ nous:
+				// 1/ ne rien retourner, et considï¿½rer qu'il n'y a pas de solution			:(  >>> Dommage car ppos est ï¿½ une distance valide de l'arc !
+				// 2/ retourner pkp0 comme solution											:/	>>> cela n'est pas faut mais si juste avant nous ï¿½tions aprï¿½s pkp1 il y aura un 'saut'
+				// 3/ retourber pkp1 comme solution											:/	>>> cela n'est pas faut mais si juste avant nous ï¿½tions avant pkp0 il y aura un 'saut'
+				// 4/ retourber le point situï¿½ sur la bissectrice de l'angle [pkp0,A,pkp1]	:/	>>> cela n'est pas faut mais  il y aura un 'saut' qu'on vienne d'un cï¿½tï¿½ ou de l'autre
+				// 5/ utiliser un historique ( position prï¿½cï¿½dente ) pour choisir ...		:)	>>> on choisirait pkp0 ou pkp1 en fonction d'oï¿½ on vient ...
+				//
+				// Pour le moment et pour faire simple on choisira la solution 2/ et on retournera pkp0 comme solution
+				// Cependant, il pourrait ï¿½tre judicieurs ï¿½ l'avenir d'implï¿½menter la solution 5/
+				trk_primind = i;
+				ptrk_prim = pprim;
+				ptrk_kp = pkp1;
+
+				m_pointOnPath = *pkp0;		// on remarque ici que la solution aura le k de pkp0 ! qui potentiellement peut-ï¿½tre null ! ( si pas de clothoide )
+											// cependant cela est acceptable car pppos est autant sur le tout dï¿½but de l'arc que sur la toute fin de la primitive precedente
+											// si elle existe ...Et si pkp0->k vaut ZERO c'est qu'avant le dï¿½but de l'arc se trouve un segment ...
+
+				max_AP_length		= pprim->m_arc.m_radius;	// nous sommes dans le cas ou length = 0 ! Donc NABS(f) = NABS( 0 - pprim->m_arc.m_radius)
+																// ... et en plus, si nous sommes ici c'est ï¿½galement que (NABS(f) < max_AP_length). Donc ...
+				max_AP_squarelength = NPOW2(max_AP_length);
+			}
+		}
+		 * -------------------------------------------------------------------------------------------------------------------------------------------------------------------
+		 */

@@ -6,79 +6,79 @@
 
 NLDRIVETRAINSPECS::NLDRIVETRAINSPECS(const Nf32 mass, const NVEC3f32 *pcenterofmass, const Nf32 axletrack, const Nf32 wheelrad, const Nf32 staticfriction, const NLKINLIMITS *plimits)
 {
-	m_mass				= mass;
-	m_weight			= mass*NLPHYSICS_GRAVITY;
-	
-	m_centerOfMass		= *pcenterofmass;
-	m_axleTrack			= axletrack;
-	m_wheelRadius		= wheelrad;
-	m_staticFriction	= staticfriction;
+	m_mass = mass;
+	m_weight = mass * NLPHYSICS_GRAVITY;
 
-	m_limits			= *plimits;
+	m_centerOfMass = *pcenterofmass;
+	m_axleTrack = axletrack;
+	m_wheelRadius = wheelrad;
+	m_staticFriction = staticfriction;
+
+	m_limits = *plimits;
 
 	updateTurnInertiaCoefs();
 
 #ifdef _NEDITOR
-	m_wheelBase			= DEFAULT_NLDRIVETRAINSPECS_WHEELBASE;
-	m_wheelWidth		= DEFAULT_NLDRIVETRAINSPECS_WHEEL_WIDTH;
-	m_size.x			= DEFAULT_NLDRIVETRAINSPECS_FRAME_LENGTH; 
-	m_size.y			= DEFAULT_NLDRIVETRAINSPECS_FRAME_WIDTH;
-	m_size.z			= DEFAULT_NLDRIVETRAINSPECS_FRAME_HEIGHT;
-#endif		
-}						  
-			  
+	m_wheelBase = DEFAULT_NLDRIVETRAINSPECS_WHEELBASE;
+	m_wheelWidth = DEFAULT_NLDRIVETRAINSPECS_WHEEL_WIDTH;
+	m_size.x = DEFAULT_NLDRIVETRAINSPECS_FRAME_LENGTH;
+	m_size.y = DEFAULT_NLDRIVETRAINSPECS_FRAME_WIDTH;
+	m_size.z = DEFAULT_NLDRIVETRAINSPECS_FRAME_HEIGHT;
+#endif
+}
+
 NLDRIVETRAINSPECS::NLDRIVETRAINSPECS(const Nf32 mass, const NVEC3f32 *pcenterofmass, const Nf32 axletrack, const Nf32 wheelrad, const Nf32 staticfriction, const Nf32 velocity_max, const Nf32 accel_max, const Nf32 jerk_max)
 {
-	m_mass				= mass;
-	m_weight			= mass * NLPHYSICS_GRAVITY;
+	m_mass = mass;
+	m_weight = mass * NLPHYSICS_GRAVITY;
 
-	m_centerOfMass		= *pcenterofmass;
-	m_axleTrack			= axletrack;
-	m_wheelRadius		= wheelrad;
-	m_staticFriction	= staticfriction;
+	m_centerOfMass = *pcenterofmass;
+	m_axleTrack = axletrack;
+	m_wheelRadius = wheelrad;
+	m_staticFriction = staticfriction;
 
-	m_limits			= NLKINLIMITS(velocity_max,accel_max,jerk_max);
+	m_limits = NLKINLIMITS(velocity_max, accel_max, jerk_max);
 
 	updateTurnInertiaCoefs();
 
 #ifdef _NEDITOR
-	m_wheelBase			= DEFAULT_NLDRIVETRAINSPECS_WHEELBASE;
-	m_wheelWidth		= DEFAULT_NLDRIVETRAINSPECS_WHEEL_WIDTH;
-	m_size.x			= DEFAULT_NLDRIVETRAINSPECS_FRAME_LENGTH; 
-	m_size.y			= DEFAULT_NLDRIVETRAINSPECS_FRAME_WIDTH;
-	m_size.z			= DEFAULT_NLDRIVETRAINSPECS_FRAME_HEIGHT;
+	m_wheelBase = DEFAULT_NLDRIVETRAINSPECS_WHEELBASE;
+	m_wheelWidth = DEFAULT_NLDRIVETRAINSPECS_WHEEL_WIDTH;
+	m_size.x = DEFAULT_NLDRIVETRAINSPECS_FRAME_LENGTH;
+	m_size.y = DEFAULT_NLDRIVETRAINSPECS_FRAME_WIDTH;
+	m_size.z = DEFAULT_NLDRIVETRAINSPECS_FRAME_HEIGHT;
 #endif
 }
 NLDRIVETRAINSPECS::NLDRIVETRAINSPECS(const Nf32 mass, const Nf32 centerofmass_x, const Nf32 centerofmass_y, const Nf32 centerofmass_z, const Nf32 axletrack, const Nf32 wheelrad, const Nf32 staticfriction, const Nf32 velocity_max, const Nf32 accel_max, const Nf32 jerk_max)
 {
-	m_mass				= mass;
-	m_weight			= mass * NLPHYSICS_GRAVITY;
+	m_mass = mass;
+	m_weight = mass * NLPHYSICS_GRAVITY;
 
-	m_centerOfMass.x	= centerofmass_x;
-	m_centerOfMass.y	= centerofmass_y;
-	m_centerOfMass.z	= centerofmass_z;
-	m_axleTrack			= axletrack;
-	m_wheelRadius		= wheelrad;
-	m_staticFriction	= staticfriction;
+	m_centerOfMass.x = centerofmass_x;
+	m_centerOfMass.y = centerofmass_y;
+	m_centerOfMass.z = centerofmass_z;
+	m_axleTrack = axletrack;
+	m_wheelRadius = wheelrad;
+	m_staticFriction = staticfriction;
 
-	m_limits			= NLKINLIMITS(velocity_max, accel_max, jerk_max);
+	m_limits = NLKINLIMITS(velocity_max, accel_max, jerk_max);
 
 	updateTurnInertiaCoefs();
 
 #ifdef _NEDITOR
-	m_wheelBase			= DEFAULT_NLDRIVETRAINSPECS_WHEELBASE;
-	m_wheelWidth		= DEFAULT_NLDRIVETRAINSPECS_WHEEL_WIDTH;
-	m_size.x			= DEFAULT_NLDRIVETRAINSPECS_FRAME_LENGTH; 
-	m_size.y			= DEFAULT_NLDRIVETRAINSPECS_FRAME_WIDTH;
-	m_size.z			= DEFAULT_NLDRIVETRAINSPECS_FRAME_HEIGHT;
+	m_wheelBase = DEFAULT_NLDRIVETRAINSPECS_WHEELBASE;
+	m_wheelWidth = DEFAULT_NLDRIVETRAINSPECS_WHEEL_WIDTH;
+	m_size.x = DEFAULT_NLDRIVETRAINSPECS_FRAME_LENGTH;
+	m_size.y = DEFAULT_NLDRIVETRAINSPECS_FRAME_WIDTH;
+	m_size.z = DEFAULT_NLDRIVETRAINSPECS_FRAME_HEIGHT;
 #endif
 }
 #ifdef _NEDITOR
-Nu32 NLDRIVETRAINSPECS::read(NLPATH_WORKBENCH* pwb)
+Nu32 NLDRIVETRAINSPECS::read(NLPATH_WORKBENCH *pwb)
 {
 	if (pwb)
 	{
-		NLDRIVETRAINSPECS* psrc = pwb->getDriveTrainSpecifications();
+		NLDRIVETRAINSPECS *psrc = pwb->getDriveTrainSpecifications();
 		if (psrc)
 		{
 			*this = *psrc;
@@ -89,65 +89,65 @@ Nu32 NLDRIVETRAINSPECS::read(NLPATH_WORKBENCH* pwb)
 }
 #endif
 
-Nu32 NLDRIVETRAINSPECS::write(FILE* pfile)
+Nu32 NLDRIVETRAINSPECS::write(FILE *pfile)
 {
-	// Write Current version Tag 
-	Nu32	_u32 = VERSION_NLDTSPECS_HEADER;
+	// Write Current version Tag
+	Nu32 _u32 = VERSION_NLDTSPECS_HEADER;
 	if (fwrite(&_u32, sizeof(Nu32), 1, pfile) != 1)
 		return 0;
 
 	NLDTSPECS_HEADER header;
-	NStrCopy(header.m_name,"Robot ", CONSTANT_NLDTSPECS_HEADER_NAME_SIZE);
-	header.m_limits_v			= m_limits.m_v;
-	header.m_limits_a			= m_limits.m_a;
-	header.m_limits_j			= m_limits.m_j;
-	header.m_staticFriction		= m_staticFriction;
-	header.m_mass				= m_mass;
-	header.m_weight				= m_weight;
-	header.m_centerOfMass		= m_centerOfMass;
-	header.m_axleTrack			= m_axleTrack;
-	header.m_wheelRadius		= m_wheelRadius;
+	NStrCopy(header.m_name, "Robot ", CONSTANT_NLDTSPECS_HEADER_NAME_SIZE);
+	header.m_limits_v = m_limits.m_v;
+	header.m_limits_a = m_limits.m_a;
+	header.m_limits_j = m_limits.m_j;
+	header.m_staticFriction = m_staticFriction;
+	header.m_mass = m_mass;
+	header.m_weight = m_weight;
+	header.m_centerOfMass = m_centerOfMass;
+	header.m_axleTrack = m_axleTrack;
+	header.m_wheelRadius = m_wheelRadius;
 
-#ifdef _NEDITOR	
-	header.m_editorData			= sizeof(NLDTSPECS_HEADER_NEDITOR);
-#endif	
+#ifdef _NEDITOR
+	header.m_editorData = sizeof(NLDTSPECS_HEADER_NEDITOR);
+#endif
 #ifndef _NEDITOR
-	header.m_editorData			= 0;
+	header.m_editorData = 0;
 #endif
 	if (fwrite(&header, sizeof(NLDTSPECS_HEADER), 1, pfile) != 1)
 		return 0;
 
-#ifdef _NEDITOR	
-	NLDTSPECS_HEADER_NEDITOR	header_editor;
-	header_editor.m_wheelBase	= m_wheelBase;		// Distance entre le point de contact au sol de la roue avant et de la roue arriere sur un même côté
-	header_editor.m_wheelWidth	= m_wheelWidth;		// largeur des roues
-	header_editor.m_size		= m_size;			// taille de la base.
+#ifdef _NEDITOR
+	NLDTSPECS_HEADER_NEDITOR header_editor;
+	header_editor.m_wheelBase = m_wheelBase;   // Distance entre le point de contact au sol de la roue avant et de la roue arriere sur un mï¿½me cï¿½tï¿½
+	header_editor.m_wheelWidth = m_wheelWidth; // largeur des roues
+	header_editor.m_size = m_size;			   // taille de la base.
 	if (fwrite(&header_editor, sizeof(NLDTSPECS_HEADER_NEDITOR), 1, pfile) != 1)
 		return 0;
-#endif	
+#endif
 	return 1;
 }
 
-Nu32 NLDRIVETRAINSPECS::importTxt(const Nchar* ptxtfilename)
+Nu32 NLDRIVETRAINSPECS::importTxt(const Nchar *ptxtfilename)
 {
 	NErrorIf(!ptxtfilename, NERROR_NULL_POINTER);
 	/* -----------------------------------------------------------------------------------------------------------------
-	*
-	*  Check extension
-	*
-	*/
+	 *
+	 *  Check extension
+	 *
+	 */
 	if (!NStrCheckEnd(ptxtfilename, EXTENSION_NLDRIVETRAINSPECS_TXT))
 		return 0;
 
-	FILE* pfile;
-	Nchar								tempstring[1024];
-	Nchar								name[32];
-	Nchar* pstr;
+	FILE *pfile;
+	Nchar tempstring[1024];
+	Nchar name[32];
+	Nchar *pstr;
 
-	pfile = fopen(ptxtfilename, "r");	// ouverture du fichier
-	fseek(pfile, 0, SEEK_SET);			// on se place au début du fichier
+	pfile = fopen(ptxtfilename, "r"); // ouverture du fichier
+	fseek(pfile, 0, SEEK_SET);		  // on se place au dï¿½but du fichier
 
-	// recupérer la siganture du fichier
+	// recupï¿½rer la siganture du fichier
 	pstr = fgets(tempstring, 1024, pfile);
 	pstr = NStrGet_String_AfterLabel(pstr, "signature= ", name);
 	if (strcmp(name, SIGNATURE_NLDRIVETRAINSPECS))
@@ -163,7 +163,7 @@ Nu32 NLDRIVETRAINSPECS::importTxt(const Nchar* ptxtfilename)
 	pstr = fgets(tempstring, 1024, pfile);
 	pstr = NStrGet_Nf32_AfterLabel(pstr, "kinlimits_j= ", &m_limits.m_j);
 	m_limits.build(FLAG_AUTO);
-	
+
 	// mass & weight
 	pstr = fgets(tempstring, 1024, pfile);
 	pstr = NStrGet_Nf32_AfterLabel(pstr, "mass= ", &m_mass);
@@ -177,11 +177,11 @@ Nu32 NLDRIVETRAINSPECS::importTxt(const Nchar* ptxtfilename)
 	pstr = fgets(tempstring, 1024, pfile);
 	pstr = NStrGet_Nf32_AfterLabel(pstr, "centerofmass_z= ", &m_centerOfMass.z);
 
-	//friction
+	// friction
 	pstr = fgets(tempstring, 1024, pfile);
 	pstr = NStrGet_Nf32_AfterLabel(pstr, "staticfriction= ", &m_staticFriction);
 
-	//axle track & wheelradius
+	// axle track & wheelradius
 	pstr = fgets(tempstring, 1024, pfile);
 	pstr = NStrGet_Nf32_AfterLabel(pstr, "axletrack= ", &m_axleTrack);
 	pstr = fgets(tempstring, 1024, pfile);
@@ -205,12 +205,11 @@ Nu32 NLDRIVETRAINSPECS::importTxt(const Nchar* ptxtfilename)
 	return 1;
 }
 
-
-Nu32 NLDRIVETRAINSPECS::read(FILE* pfile)
+Nu32 NLDRIVETRAINSPECS::read(FILE *pfile)
 {
-	Nu32						_u32;
-	NLDTSPECS_HEADER			header;
-	NLDTSPECS_HEADER_NEDITOR	header_editor;
+	Nu32 _u32;
+	NLDTSPECS_HEADER header;
+	NLDTSPECS_HEADER_NEDITOR header_editor;
 
 	if (fread(&_u32, sizeof(Nu32), 1, pfile) != 1)
 		return 0;
@@ -221,60 +220,60 @@ Nu32 NLDRIVETRAINSPECS::read(FILE* pfile)
 	case NGETVERSION_MAIN(VERSION_NLDTSPECS_HEADER):
 		if (fread(&header, sizeof(NLDTSPECS_HEADER), 1, pfile) != 1)
 			return 0;
-		//NStrCopy( ? , header.m_name, CONSTANT_NLDTSPECS_HEADER_NAME_SIZE); // TODO: ajouter un nom aux specs...
-		m_limits.m_v			= header.m_limits_v;
-		m_limits.m_a			= header.m_limits_a;
-		m_limits.m_j			= header.m_limits_j;
+		// NStrCopy( ? , header.m_name, CONSTANT_NLDTSPECS_HEADER_NAME_SIZE); // TODO: ajouter un nom aux specs...
+		m_limits.m_v = header.m_limits_v;
+		m_limits.m_a = header.m_limits_a;
+		m_limits.m_j = header.m_limits_j;
 		m_limits.build(FLAG_AUTO);
-		m_staticFriction		= header.m_staticFriction;
-		m_mass					= header.m_mass;
-		m_weight				= header.m_weight;
-		m_centerOfMass			= header.m_centerOfMass;
-		m_axleTrack				= header.m_axleTrack;
-		m_wheelRadius			= header.m_wheelRadius;
+		m_staticFriction = header.m_staticFriction;
+		m_mass = header.m_mass;
+		m_weight = header.m_weight;
+		m_centerOfMass = header.m_centerOfMass;
+		m_axleTrack = header.m_axleTrack;
+		m_wheelRadius = header.m_wheelRadius;
 
-#ifdef _NEDITOR	
+#ifdef _NEDITOR
 		if (header.m_editorData == sizeof(NLDTSPECS_HEADER_NEDITOR))
 		{
 			if (fread(&header_editor, sizeof(NLDTSPECS_HEADER_NEDITOR), 1, pfile) != 1)
 				return 0;
-			m_wheelBase			= header_editor.m_wheelBase;
-			m_wheelWidth		= header_editor.m_wheelWidth;
-			m_size				= header_editor.m_size;
+			m_wheelBase = header_editor.m_wheelBase;
+			m_wheelWidth = header_editor.m_wheelWidth;
+			m_size = header_editor.m_size;
 		}
 		else if (!header.m_editorData)
 		{
 			// Pas de valeurs "Neditor"  dans le fichier ?? hors nous sommes en mode edition ;(
-			m_wheelBase		= DEFAULT_NLDRIVETRAINSPECS_WHEELBASE;
-			m_wheelWidth	= DEFAULT_NLDRIVETRAINSPECS_WHEEL_WIDTH;
-			m_size.x		= DEFAULT_NLDRIVETRAINSPECS_FRAME_LENGTH; 
-			m_size.y		= DEFAULT_NLDRIVETRAINSPECS_FRAME_WIDTH;
-			m_size.z		= DEFAULT_NLDRIVETRAINSPECS_FRAME_HEIGHT;
+			m_wheelBase = DEFAULT_NLDRIVETRAINSPECS_WHEELBASE;
+			m_wheelWidth = DEFAULT_NLDRIVETRAINSPECS_WHEEL_WIDTH;
+			m_size.x = DEFAULT_NLDRIVETRAINSPECS_FRAME_LENGTH;
+			m_size.y = DEFAULT_NLDRIVETRAINSPECS_FRAME_WIDTH;
+			m_size.z = DEFAULT_NLDRIVETRAINSPECS_FRAME_HEIGHT;
 		}
-		#ifdef _DEBUG
+#ifdef _DEBUG
 		else
 		{
 			NErrorIf(1, NERROR_FILE_UNEXPECTED_READ_VALUE);
 		}
-		#endif
-#endif	
+#endif
+#endif
 #ifndef _NEDITOR
 		if (header.m_editorData == sizeof(NLDTSPECS_HEADER_NEDITOR))
 		{
-			// On lit les données ... sans rien en faire ...
+			// On lit les donnï¿½es ... sans rien en faire ...
 			if (fread(&header_editor, sizeof(NLDTSPECS_HEADER_NEDITOR), 1, pfile) != 1)
 				return 0;
 		}
 		else if (!header.m_editorData)
 		{
-			return 1; // on return de suite, rien de plus à faire ...
+			return 1; // on return de suite, rien de plus ï¿½ faire ...
 		}
-		#ifdef _DEBUG
+#ifdef _DEBUG
 		else
 		{
 			NErrorIf(1, NERROR_FILE_UNEXPECTED_READ_VALUE);
 		}
-		#endif
+#endif
 #endif
 		return 1;
 
@@ -290,119 +289,119 @@ Nu32 NLDRIVETRAINSPECS::read(FILE* pfile)
 // | Limites de vitesses: |
 // +----------------------+
 //
-// Vitesse max. avant "dérapage/glissement" [skidding]
+// Vitesse max. avant "dï¿½rapage/glissement" [skidding]
 // ---------------------------------------------------
-// Se déplacer le long d'une trajectoire courbe à une vitesse trop élevée peut engendrer un dérapage.
-// Cela se produit quand la force centripete n'est plus suffisante pour "tenir" le véhicule dans la trajectoire. Le véhicule, qui "veut" aller simplement tout droit, prend le dessus et dérape ...
+// Se dï¿½placer le long d'une trajectoire courbe ï¿½ une vitesse trop ï¿½levï¿½e peut engendrer un dï¿½rapage.
+// Cela se produit quand la force centripete n'est plus suffisante pour "tenir" le vï¿½hicule dans la trajectoire. Le vï¿½hicule, qui "veut" aller simplement tout droit, prend le dessus et dï¿½rape ...
 //
-// on note 'a'  l'Acceleration Centripete		a  = v²/R 
-// on note 'Fc' la Force Centripete				Fc = ma = mv²/R
-// on note 'Ff' la Force de Friction Statique	Ff = us*m*g			avec 'us' ratio de friction static, 'm' masse et 'g' gravité ( = 9.81 )
+// on note 'a'  l'Acceleration Centripete		a  = vï¿½/R
+// on note 'Fc' la Force Centripete				Fc = ma = mvï¿½/R
+// on note 'Ff' la Force de Friction Statique	Ff = us*m*g			avec 'us' ratio de friction static, 'm' masse et 'g' gravitï¿½ ( = 9.81 )
 //
-// Tant que la Force de friction statique est supérieur à la force centripète il n'y a pas de dérapage, par contre dès que la Force centripète est plus forte: Dérapage
-// Donc nous avons dérapage ssi
+// Tant que la Force de friction statique est supï¿½rieure ï¿½ la force centripï¿½te il n'y a pas de dï¿½rapage, par contre dï¿½s que la Force centripï¿½te est plus forte: Dï¿½rapage
+// Donc nous avons dï¿½rapage ssi
 //				Fc > Ff
-//				m*v²/R > us*m*g
-//				v²/R > us*g
+//				m*vï¿½/R > us*m*g
+//				vï¿½/R > us*g
 //
 //				+---------------------------------------+
 //				|										|
 //				|	v > sqrt( us*g*R) ---> DERAPAGE !	|
 //				|										|
-//				+---------------------------------------+	
+//				+---------------------------------------+
 //
-//				Donc, si la vitesse de déplacement "v" le long du chemin est supérieure à cette limite,  la force statique de friction (stiction) n'est plus suffisante pour s'opposer à la force centripete et c'est le dérapage.
+//				Donc, si la vitesse de dï¿½placement "v" le long du chemin est supï¿½rieure ï¿½ cette limite,  la force statique de friction (stiction) n'est plus suffisante pour s'opposer ï¿½ la force centripete et c'est le dï¿½rapage.
 //
 // Vitesse max. avant "basculement" [Tilting]
 // ---------------------------------------------------
-// La position de son centre de gravité peut entrainer un véhicule (robot) à basculer lorsqu'il se déplace le long d'une trajectoire courbe à une vitesse trop élevée.
-// La force centripete crée un moment d'inertie pouvant amener le robot à basculer.
+// La position de son centre de gravitï¿½ peut entrainer un vï¿½hicule (robot) ï¿½ basculer lorsqu'il se dï¿½place le long d'une trajectoire courbe ï¿½ une vitesse trop ï¿½levï¿½e.
+// La force centripete crï¿½e un moment d'inertie pouvant amener le robot ï¿½ basculer.
 //
 // Le robot bascule quand M1 < M2
-//				avec,	M1 = m*g*l ( l = distance horizontale du centre de gravité vers la roue )
-//			
-//						M2 = Fc*h  ( h = distance verticale du centre de gravité par rapport au sol )
+//				avec,	M1 = m*g*l ( l = distance horizontale du centre de gravitï¿½ vers la roue )
 //
-// 
+//						M2 = Fc*h  ( h = distance verticale du centre de gravitï¿½ par rapport au sol )
 //
-//				M1		< M2			
-//				m*g*l	< Fc*h 
-//				m*g*l	< h*m*V²/R
-//				g*l		< h*v²/R
 //
-//				v²		> (l/h)*g*R
-//				
+//
+//				M1		< M2
+//				m*g*l	< Fc*h
+//				m*g*l	< h*m*Vï¿½/R
+//				g*l		< h*vï¿½/R
+//
+//				vï¿½		> (l/h)*g*R
+//
 //
 //				+---------------------------------------+
 //				|										|
 //				|	v > sqrt( (l/h)*g*R )---> BASCULE !	|
 //				|										|
-//				+---------------------------------------+	
+//				+---------------------------------------+
 //
-//				Donc, si la vitesse de déplacement "v" le long du chemin est supérieure à cette limite,  le moment créé par la force centripete l'emporte et le robot bascule.
+//				Donc, si la vitesse de dï¿½placement "v" le long du chemin est supï¿½rieure ï¿½ cette limite,  le moment crï¿½ï¿½ par la force centripete l'emporte et le robot bascule.
 //
 // Vitesse Maximum avant basculement et  derapage
 // ----------------------------------------------
-//	On remarque que les deux formules de calcul de limite de vitesse (Bascule & Dérapage) sont de la même forme et quasi identiques à un facteur près.
+//	On remarque que les deux formules de calcul de limite de vitesse (Bascule & Dï¿½rapage) sont de la mï¿½me forme et quasi identiques ï¿½ un facteur prï¿½s.
 //
 //					v > sqrt(   us * g*R )	---> DERAPAGE !
 //					v > sqrt( (l/h)* g*R )	---> BASCULE !
-//						
+//
 //					soit,
-//					
+//
 //					VLim1 = sqrt(   us * g*R )
 //					VLim2 = sqrt( (l/h)* g*R )
 //
-//	En pratique, nous recherchons la limite la plus basse pour éviter tous "désagréments" au robot.
-//	Plutôt que de comparer les deux limites après les avoir calculées, il est préférable de ne comparer que les deux valeurs "us" et "l/h". On évite ainsi de calculer inutilement 1 racine carrée.
+//	En pratique, nous recherchons la limite la plus basse pour ï¿½viter tous "dï¿½sagrï¿½ments" au robot.
+//	Plutï¿½t que de comparer les deux limites aprï¿½s les avoir calculï¿½es, il est prï¿½fï¿½rable de ne comparer que les deux valeurs "us" et "l/h". On ï¿½vite ainsi de calculer inutilement 1 racine carrï¿½e.
 //	Ainsi,
-//					us  < l/h		( Le coefficient de friction statique est inférieur au rapport des coordonnées du centre de gravité ). 
-//									La limite de vitesse "VLim1" sera la plus basse et si on va trop vite, le robot dérapera avant de basculer.
-//								
-//					l/h < us		(  Le rapport des coordonnées du centre de gravité est inférieur au coefficient de friction statique ). 
-//									La limite de vitesse "VLim2" sera la plus basse et si on va trop vite, le robot basculera avant de déraper.
+//					us  < l/h		( Le coefficient de friction statique est infï¿½rieur au rapport des coordonnï¿½es du centre de gravitï¿½ ).
+//									La limite de vitesse "VLim1" sera la plus basse et si on va trop vite, le robot dï¿½rapera avant de basculer.
+//
+//					l/h < us		(  Le rapport des coordonnï¿½es du centre de gravitï¿½ est infï¿½rieur au coefficient de friction statique ).
+//									La limite de vitesse "VLim2" sera la plus basse et si on va trop vite, le robot basculera avant de dï¿½raper.
 //
 // Vitesse Maximum en courbe ( limitation moteur )
 // -----------------------------------------------
-// Notre base pilotable est de type TANK. Elle utilise un différentiel de vitesse entre roues droites et roues gauches pour tourner.
-// La boite de vitesse des roues de droites et celle des roues de gauches sont identiques. En théorie donc, la vitesse maximum des roues droites et gauches est identique
+// Notre base pilotable est de type TANK. Elle utilise un diffï¿½rentiel de vitesse entre roues droites et roues gauches pour tourner.
+// La boite de vitesse des roues de droites et celle des roues de gauches sont identiques. En thï¿½orie donc, la vitesse maximum des roues droites et gauches est identique
 //
 //						VDMax = VGMax
 //
-//	... Et la vitesse maximum de la base est donnée par 
-//	
+//	... Et la vitesse maximum de la base est donnï¿½e par
+//
 //						VMax = (VDMax + VGMax ) /2
 //
-// Rappel des formules utilisées en Odometrie.
+// Rappel des formules utilisï¿½es en Odometrie.
 //
-//				v = (vd + vg)/2				>>> Vitesse de la base à partir des vitesses des roues droites et gauches.
+//				v = (vd + vg)/2				>>> Vitesse de la base ï¿½ partir des vitesses des roues droites et gauches.
 //
-//				vg = (R - e/2) * v / R		>>> Vitesse des roues Gauches à partir de la vitesse de la base, de l'entraxe et du rayon de courbure 
-//												(R-e/2) correspond au rayon du cercle surlequel se deplace la roue Gauche et (v/R) correspond à la vitesse angulaire W de la base (W est bien sûr également la vitesse angulaire donc de la roue gauche)
+//				vg = (R - e/2) * v / R		>>> Vitesse des roues Gauches ï¿½ partir de la vitesse de la base, de l'entraxe et du rayon de courbure
+//												(R-e/2) correspond au rayon du cercle surlequel se deplace la roue Gauche et (v/R) correspond ï¿½ la vitesse angulaire W de la base (W est bien sï¿½r ï¿½galement la vitesse angulaire donc de la roue gauche)
 //
-//				vd = (R + e/2) * v / R		>>> Vitesse des roues Droites à partir de la vitesse de la base, de l'entraxe et du rayon de courbure
-//												(R+e/2) correspond au rayon du cercle surlequel se deplace la roue Droite et (v/R) correspond à la vitesse angulaire W de la base (W est bien sûr également la vitesse angulaire donc de la roue droite)
+//				vd = (R + e/2) * v / R		>>> Vitesse des roues Droites ï¿½ partir de la vitesse de la base, de l'entraxe et du rayon de courbure
+//												(R+e/2) correspond au rayon du cercle surlequel se deplace la roue Droite et (v/R) correspond ï¿½ la vitesse angulaire W de la base (W est bien sï¿½r ï¿½galement la vitesse angulaire donc de la roue droite)
 //
-//				! Les deux précédentes formules sont basées sur le schéma suivant, avec R positif tracé depuis le centre O situé à gauche de la roue gauche:
-//				! Il conviendra donc d'adapter les signes en cas de virage à Droite ( O à droite de la roue droite )
-//																 ___						 ___																																					
-//																|	|						|	|																																					
+//				! Les deux prï¿½cï¿½dentes formules sont basï¿½es sur le schï¿½ma suivant, avec R positif tracï¿½ depuis le centre O situï¿½ ï¿½ gauche de la roue gauche:
+//				! Il conviendra donc d'adapter les signes en cas de virage ï¿½ Droite ( O ï¿½ droite de la roue droite )
+//																 ___						 ___
+//																|	|						|	|
 //									x --------------------------|-+-|-----------+-----------|-+ |
-//																|___|						|___|																																					
-//									O							  g				C			  d		
-//									|							  |				|			  |		
-//									|							  |				|			  |		
+//																|___|						|___|
+//									O							  g				C			  d
+//									|							  |				|			  |
+//									|							  |				|			  |
 //									 <------------------R---------------------->
-//									|							  |				|			  |		
+//									|							  |				|			  |
 //																   <------------e------------>
 //									R: Rayon de courbure
 //									e: entraxe
 //									O: Centre du cercle de rayon R
 //									g: roue Gauche
-//									C: milieu du segment [g,d] devrait coincider avec le centre de gravité
+//									C: milieu du segment [g,d] devrait coincider avec le centre de gravitï¿½
 //									d: roue Droite
 //
-//	A partir des égalités précédentes, on peut écrire:
+//	A partir des ï¿½galitï¿½s prï¿½cï¿½dentes, on peut ï¿½crire:
 //
 //				vd = (R + e/2) * v / R		---->		v = R * vd / (R + e/2)
 //
@@ -423,59 +422,58 @@ Nu32 NLDRIVETRAINSPECS::read(FILE* pfile)
 //
 //				v = vd*( 1 + (R - e/2)/(R + e/2) ) / 2
 //
-// La vitesse maximum possible dans un virage de rayon R est atteinte quand la roue 'extérieure' ( /au virage)  est à sa vitesse maximum, et donc que la roue 'intérieure' (/au virage) est à une vitesse inférieure.
-// On peut donc trouver, pour un rayon de courbure donné,  la vitesse v maximum possible de la base en fonction de la vitesse maximum possible de la roue extérieure au virage.
+// La vitesse maximum possible dans un virage de rayon R est atteinte quand la roue 'extï¿½rieure' ( /au virage)  est ï¿½ sa vitesse maximum, et donc que la roue 'intï¿½rieure' (/au virage) est ï¿½ une vitesse infï¿½rieure.
+// On peut donc trouver, pour un rayon de courbure donnï¿½,  la vitesse v maximum possible de la base en fonction de la vitesse maximum possible de la roue extï¿½rieure au virage.
 //
 //				VMaxenVirage = VDMax*( 1 + (R - e/2)/(R + e/2) ) / 2
 //
-// VDMax étant théoriquement égal à VGMax on considèrera que VMaxenVirage est la même que le virage tourne à droite ou à gauche.
-
+// VDMax ï¿½tant thï¿½oriquement ï¿½gal ï¿½ VGMax on considï¿½rera que VMaxenVirage est la mï¿½me que le virage tourne ï¿½ droite ou ï¿½ gauche.
 
 void NLDRIVETRAINSPECS::updateTurnInertiaCoefs()
 {
-	// Calcul du "coefficient d'inertie"  utilisé ensuite dans le calcul de la vitesse limite locale de chaque VStage !
-	NErrorIf(m_centerOfMass.z < 0.0f, NERROR_INCONSISTENT_VALUES); // Doit être positif !
+	// Calcul du "coefficient d'inertie"  utilisï¿½ ensuite dans le calcul de la vitesse limite locale de chaque VStage !
+	NErrorIf(m_centerOfMass.z < 0.0f, NERROR_INCONSISTENT_VALUES); // Doit ï¿½tre positif !
 
-	if (m_centerOfMass.z) // z représente la hauteur !
+	if (m_centerOfMass.z) // z reprï¿½sente la hauteur !
 	{
-		// Rappel:	Considérons le repère XYZ dont l'origine se trouve sur la projection au sol du centre géométrique du robot.
-		//			(par centre géométrique on entend le point situé au milieu de la 'frame' du robot.)	
-		//			par convention, l'axe X de ce repère pointe vers l'avant du robot
-		//							l'axe Y pointe vers la gauche du robot ( le repère est direct )
+		// Rappel:	Considï¿½rons le repï¿½re XYZ dont l'origine se trouve sur la projection au sol du centre gï¿½omï¿½trique du robot.
+		//			(par centre gï¿½omï¿½trique on entend le point situï¿½ au milieu de la 'frame' du robot.)
+		//			par convention, l'axe X de ce repï¿½re pointe vers l'avant du robot
+		//							l'axe Y pointe vers la gauche du robot ( le repï¿½re est direct )
 		//							l'axe Z pointe vers le haut
 		//
 		// On connait:
 		//
-		//	La position du centre d'inertie dans ce repère (i.e m_centerOfMass):
-		//	
-		//							m_centerOfMass ( x,y,z )	
+		//	La position du centre d'inertie dans ce repï¿½re (i.e m_centerOfMass):
 		//
-		// Quand on tourne à GAUCHE, la roue GAUCHE est à l'intérieur du virage. 
-		// On veut connaitre la position du centre d'inertie par rapport à la roue GAUCHE le long de l'AxeY ( pointant vers la gauche) du repère.
+		//							m_centerOfMass ( x,y,z )
+		//
+		// Quand on tourne ï¿½ GAUCHE, la roue GAUCHE est ï¿½ l'intï¿½rieur du virage.
+		// On veut connaitre la position du centre d'inertie par rapport ï¿½ la roue GAUCHE le long de l'AxeY ( pointant vers la gauche) du repï¿½re.
 		// On connait:
 		// La position de la roue gauche dans le long de l'AxeY = m_axleTrack/2		Rappel: l'AxeX pointe vers l'avant du Robot
 		//																					l'AxeY pointe vers la roue gauche   !!!
 		//
 		// on a donc,
-		//				Pos. Centre d'inertie par rapport à la roue gauche = m_centerOfMass.y - m_axleTrack/2
+		//				Pos. Centre d'inertie par rapport ï¿½ la roue gauche = m_centerOfMass.y - m_axleTrack/2
 		//
 		m_leftTurnInertiaCoef = NMIN(m_staticFriction, NABS(m_centerOfMass.y - m_axleTrack * 0.5f) / m_centerOfMass.z) * NLPHYSICS_GRAVITY;
 
-		// Quand on tourne à DROITE, la roue DROITE est à l'intérieur du virage. 
-		// On veut connaitre la position x,y du centre d'inertie par rapport à la roue DROITE.
+		// Quand on tourne ï¿½ DROITE, la roue DROITE est ï¿½ l'intï¿½rieur du virage.
+		// On veut connaitre la position x,y du centre d'inertie par rapport ï¿½ la roue DROITE.
 		// on connait:
 		// La position de la roue droite dans le long de l'AxeY = -m_axleTrack/2		Rappel: l'AxeX pointe vers l'avant du Robot
 		//																						l'AxeY pointe vers la roue gauche   !!!
 		//
 		// on a donc,
-		//				Pos. Centre d'inertie par rapport à la roue droite	= m_centerOfMass.y - (-m_axleTrack/2)
-		//																	= m_centerOfMass.y + m_axleTrack/2	
+		//				Pos. Centre d'inertie par rapport ï¿½ la roue droite	= m_centerOfMass.y - (-m_axleTrack/2)
+		//																	= m_centerOfMass.y + m_axleTrack/2
 		m_rightTurnInertiaCoef = NMIN(m_staticFriction, NABS(m_centerOfMass.y + m_axleTrack * 0.5f) / m_centerOfMass.z) * NLPHYSICS_GRAVITY;
 	}
 	else
 	{
-		m_leftTurnInertiaCoef	= m_staticFriction * NLPHYSICS_GRAVITY;
-		m_rightTurnInertiaCoef	= m_leftTurnInertiaCoef;
+		m_leftTurnInertiaCoef = m_staticFriction * NLPHYSICS_GRAVITY;
+		m_rightTurnInertiaCoef = m_leftTurnInertiaCoef;
 	}
 }
 
@@ -483,25 +481,25 @@ void NLDRIVETRAINSPECS::updateTurnInertiaCoefs()
 /**
  *	@brief	Calcule la vitesse maximum possible en un point de courbure k
  *
- *	@param		k est la courbure au point considéré
+ *	@param		k est la courbure au point considï¿½rï¿½
  *	@param		max_cruise_velocity est la vitesse maximum possible
  *
- *	@return		la vitesse en m/s max calculée en fonction de la vitesse de croisiere max, de la courbure locale et de l'entraxe.
+ *	@return		la vitesse en m/s max calculï¿½e en fonction de la vitesse de croisiere max, de la courbure locale et de l'entraxe.
  */
- // ------------------------------------------------------------------------------------------
- Nf32 NLDRIVETRAINSPECS::getVelocity(const Nf32 k, const Nf32 max_cruise_velocity)const
+// ------------------------------------------------------------------------------------------
+Nf32 NLDRIVETRAINSPECS::getVelocity(const Nf32 k, const Nf32 max_cruise_velocity) const
 {
-	Nf32 r, sqr,v;
-	// k negatif signifie qu'on tourne à droite.
+	Nf32 r, sqr, v;
+	// k negatif signifie qu'on tourne ï¿½ droite.
 	if (k < 0.0f)
 	{
 		r = -1.0f / k;
-		v = max_cruise_velocity * (1.0f + (r - m_axleTrack*0.5f ) / (r + m_axleTrack * 0.5f)) * 0.5f;
+		v = max_cruise_velocity * (1.0f + (r - m_axleTrack * 0.5f) / (r + m_axleTrack * 0.5f)) * 0.5f;
 		sqr = sqrt(m_rightTurnInertiaCoef / (-k));
 
 		v = NMIN(v, sqr);
 	}
-	// k positif signifie qu'on tourne à gauche.
+	// k positif signifie qu'on tourne ï¿½ gauche.
 	else if (k > 0.0f)
 	{
 		r = 1.0f / k;
@@ -519,56 +517,54 @@ void NLDRIVETRAINSPECS::updateTurnInertiaCoefs()
 	return v;
 }
 
- Nu32 NLDRIVETRAINSPECS::compare(const NLDRIVETRAINSPECS* pdts)
- {
-		if(m_limits.m_v == pdts->m_limits.m_v)
-			return 0;
-		if (m_limits.m_a == pdts->m_limits.m_a)
-			return 0;
-		if (m_limits.m_j == pdts->m_limits.m_j)
-			return 0;
+Nu32 NLDRIVETRAINSPECS::compare(const NLDRIVETRAINSPECS *pdts)
+{
+	if (m_limits.m_v == pdts->m_limits.m_v)
+		return 0;
+	if (m_limits.m_a == pdts->m_limits.m_a)
+		return 0;
+	if (m_limits.m_j == pdts->m_limits.m_j)
+		return 0;
 
-		if(m_mass != pdts->m_mass)
-			return 0;
+	if (m_mass != pdts->m_mass)
+		return 0;
 
-		if(m_weight != pdts->m_weight)
-			return 0;
+	if (m_weight != pdts->m_weight)
+		return 0;
 
-		if(m_axleTrack != pdts->m_axleTrack)
-			return 0;
+	if (m_axleTrack != pdts->m_axleTrack)
+		return 0;
 
-		if(m_wheelRadius != pdts->m_wheelRadius)
-			return 0;
+	if (m_wheelRadius != pdts->m_wheelRadius)
+		return 0;
 
-		if(m_wheelBase != pdts->m_wheelBase)
-			return 0;
+	if (m_wheelBase != pdts->m_wheelBase)
+		return 0;
 
-		if(m_wheelWidth != pdts->m_wheelWidth)
-			return 0;
+	if (m_wheelWidth != pdts->m_wheelWidth)
+		return 0;
 
-		if(m_size.x != pdts->m_size.x)
-			return 0;
-		if (m_size.y != pdts->m_size.y)
-			return 0;
-		if (m_size.z != pdts->m_size.z)
-			return 0;
+	if (m_size.x != pdts->m_size.x)
+		return 0;
+	if (m_size.y != pdts->m_size.y)
+		return 0;
+	if (m_size.z != pdts->m_size.z)
+		return 0;
 
+	if (m_staticFriction == pdts->m_staticFriction)
+		return 0;
 
-		if(m_staticFriction == pdts->m_staticFriction)
-			return 0;
+	if (m_centerOfMass.x != pdts->m_centerOfMass.x)
+		return 0;
+	if (m_centerOfMass.y != pdts->m_centerOfMass.y)
+		return 0;
+	if (m_centerOfMass.z != pdts->m_centerOfMass.z)
+		return 0;
 
-		if(m_centerOfMass.x != pdts->m_centerOfMass.x)
-			return 0;
-		if (m_centerOfMass.y != pdts->m_centerOfMass.y)
-			return 0;
-		if (m_centerOfMass.z != pdts->m_centerOfMass.z)
-			return 0;
+	if (m_rightTurnInertiaCoef != pdts->m_rightTurnInertiaCoef)
+		return 0;
+	if (m_leftTurnInertiaCoef != pdts->m_leftTurnInertiaCoef)
+		return 0;
 
-		if(m_rightTurnInertiaCoef != pdts->m_rightTurnInertiaCoef)
-			return 0;
-		if (m_leftTurnInertiaCoef != pdts->m_leftTurnInertiaCoef)
-			return 0;
-
-	 return 1;
- }
-
+	return 1;
+}

@@ -9,9 +9,9 @@
 // ***************************************************************************************
 // ***************************************************************************************
 #include "lib/N/NType.h"
-#include "../Maths/NVec3f32.h"
-#include "../Containers/NArray.h"
-#include "../Geometry/Components/NGeometryPrimitive.h"
+#include "lib/N/Maths/NVec3f32.h"
+#include "lib/N/Containers/NArray.h"
+#include "lib/N/Geometry/Components/NGeometryPrimitive.h"
 
 #ifdef __cplusplus
 extern "C"

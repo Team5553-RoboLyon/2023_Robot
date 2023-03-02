@@ -1,13 +1,15 @@
-#include "lib/N/NMemory.h"
-#include "lib/N/NMath.h"
-#include "lib/N/Miscellaneous/NColor.h"
-#include "lib/N/NErrorHandling.h"
-#include "lib/N/Utilities/Draw/NUT_Draw.h"
+#include "../../N/NMemory.h"
+#include "../../N/NMath.h"
 
-#include "lib/NL/MotionControl/DriveTrain/NLOdometry.h"
+#include "../../N/Miscellaneous/NColor.h"
+#include "../../N/NErrorHandling.h"
+#include "../../N/Utilities/Draw/NUT_Draw.h"
+#include "../../N/Utilities/Draw/NUT_DrawPencil.h"
 
-#include "lib/NL/Simulation/VirtualRobot/NLVirtualRobot.h"
-#include "lib/NL/Simulation/NLRobot.h"
+#include "../MotionControl/DriveTrain/NLOdometry.h"
+
+#include "./VirtualRobot/NLVirtualRobot.h"
+#include "NLRobot.h"
 
 /*
 void NLROBOT::fromWorkbench(const NLPATH_WORKBENCH* pwb)
@@ -95,6 +97,14 @@ void NLROBOT::RobotInit(NLPATH_WORKBENCH *pwb)
 	m_follower.load(/*"scrumtrooper.ftk"*/ pwb);
 	m_follower.initialize(&m_TrajectoryPack);
 	m_state = NLROBOT::STATE::PATH_FOLLOWING;
+
+	m_logCsv.setItem(0, "Vleft", 5, &m_follower.m_output.m_leftVelocity);
+	m_logCsv.setItem(1, "Rleft", 5, &m_follower.m_output.m_rightVelocity);
+
+	if (m_logCsv.isOpen())
+		m_logCsv.close();
+
+	m_logCsv.open(nullptr, true);
 }
 
 void NLROBOT::RobotPeriodic(const Nf32 dt)
@@ -162,6 +172,8 @@ void NLROBOT::RobotPeriodic(const Nf32 dt)
 		m_moteurR1.SetVoltage(m_CrtzR1.getVoltage(pout->m_rightVelocity, pout->m_rightAcceleration));
 		m_moteurR2.SetVoltage(m_CrtzR2.getVoltage(pout->m_rightVelocity, pout->m_rightAcceleration));
 
+		m_logCsv.write();
+
 		break;
 
 	case NLROBOT::STATE::PATH_END:
@@ -200,6 +212,25 @@ void NLROBOT::draw()
 	origin.z = 0.0f;
 	NCOLOR color = {NCOLOR_PRESET3F_GREEN, 1.0f};
 	m_pVirtualRobot->drawRobotShape(&m_TrajectoryPack.m_matrix, &mx, &origin, &color);
+
+	NCOLOR red = {NCOLOR_PRESET3F_RED_AMARANTH, 1.0f};
+
+	origin.x = m_follower.m_estimatedPose.m_position.x;
+	origin.y = m_follower.m_estimatedPose.m_position.y;
+	origin.z = 0.0f;
+
+	mx.XAxis.x = cos(m_follower.m_estimatedPose.m_angle);
+	mx.YAxis.x = -sin(m_follower.m_estimatedPose.m_angle);
+	mx.ZAxis.x = 0.0f;
+	mx.XAxis.y = sin(m_follower.m_estimatedPose.m_angle);
+	mx.YAxis.y = cos(m_follower.m_estimatedPose.m_angle);
+	mx.ZAxis.y = 0.0f;
+	mx.XAxis.z = 0.0f;
+	mx.YAxis.z = 0.0f;
+	mx.ZAxis.z = 1.0f;
+
+	m_pVirtualRobot->drawRobotShape(&m_TrajectoryPack.m_matrix, &mx, &origin, &red);
+
 	// *
 	// ***************************************************************************************
 
@@ -336,4 +367,9 @@ void NLROBOT::draw()
 	//NUT_Draw_Quad(&pos, &extend, &col);
 	m_pVirtualRobot->drawRobotShape(&pos, &m_trueVelAccMatrix, &color);
 	*/
+}
+
+void NLROBOT::drawDashBoard(NL2DOCS *p2docs, const NCOLORPICKPACK pickpack)
+{
+	m_follower.drawDashBoard(p2docs, pickpack);
 }

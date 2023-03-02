@@ -10,7 +10,7 @@
 // ***************************************************************************************
 #include "lib/N/NType.h"
 #include "lib/N/NErrorHandling.h"
-#include "NImage.h"
+#include "lib/N/Image/NImage.h"
 
 #ifdef __cplusplus
 extern "C"

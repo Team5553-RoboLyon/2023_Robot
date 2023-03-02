@@ -1,13 +1,11 @@
-#include "../../N/NMemory.h"
-#include "../../N/NMath.h"
-#include "../../N/NErrorHandling.h"
-#include "../../N/Utilities/Draw/NUT_Draw.h"
-#include "../../N/Utilities/Draw/NUT_DrawPencil.h"
+#include "lib/N/NMemory.h"
+#include "lib/N/NMath.h"
+#include "lib/N/NErrorHandling.h"
+#include "lib/N/Utilities/Draw/NUT_Draw.h"
+#include "lib/N/Utilities/Draw/NUT_DrawPencil.h"
 
 #include "../NL2DOrthogonalCoordinateSystem_MotionProfileFlags.h"
-#include "NLKin.h"
-
-
+#include "lib/NL/MotionControl/NLKin.h"
 
 /*
 NLKIN::~NLKIN()
@@ -15,25 +13,23 @@ NLKIN::~NLKIN()
 }
 */
 
-
-
 // ------------------------------------------------------------------------------------------
 /**
- *	@brief	Calcule les valeurs de KIN supposé avoir une abscisse curviligne s situés entre l'abscisse curv. de pk0 et celle de pk1.
+ *	@brief	Calcule les valeurs de KIN supposï¿½ avoir une abscisse curviligne s situï¿½s entre l'abscisse curv. de pk0 et celle de pk1.
  *
- *	@param	pk0 est le	Kin supposé être situé "avant"
- * 	@param	pk1 est le	Kin supposé être situé "après"
- *	@param	s est une abscisse curviligne supposée se trouver à l'intérieur de l'intervalle [pk0->s, pk1->s]
- *			Dans le cas où s serait inférieure à pk0->s, alors Kin sera une copie de pk0.
- *			Dans le cas où s serait supérieure à pk1->s, alors Kin sera une copie de pk1. 
- *			Dans tous les autres cas, c'est à dire pk0->s < s < pk1->s, les valeur de kin seront calculées en fonction des données contenues dans pk0 et pk1.
+ *	@param	pk0 est le	Kin supposï¿½ ï¿½tre situï¿½ "avant"
+ * 	@param	pk1 est le	Kin supposï¿½ ï¿½tre situï¿½ "aprï¿½s"
+ *	@param	s est une abscisse curviligne supposï¿½e se trouver ï¿½ l'intï¿½rieur de l'intervalle [pk0->s, pk1->s]
+ *			Dans le cas oï¿½ s serait infï¿½rieure ï¿½ pk0->s, alors Kin sera une copie de pk0.
+ *			Dans le cas oï¿½ s serait supï¿½rieure ï¿½ pk1->s, alors Kin sera une copie de pk1.
+ *			Dans tous les autres cas, c'est ï¿½ dire pk0->s < s < pk1->s, les valeur de kin seront calculï¿½es en fonction des donnï¿½es contenues dans pk0 et pk1.
  */
- // ------------------------------------------------------------------------------------------
-void NLKIN::atS(const NLKIN* pk0, const NLKIN* pk1, const Nf32 s)
+// ------------------------------------------------------------------------------------------
+void NLKIN::atS(const NLKIN *pk0, const NLKIN *pk1, const Nf32 s)
 {
 	NErrorIf(pk0->m_t > pk1->m_t, NERROR_INCONSISTENT_VALUES);
-	// le code est très proche de celui de la fonction getTime.
-	// C'est normal, puisqu'en fait on commence par trouver "t" localement à partir de "s" pour calculer ensuite les autres paramètres du kin.
+	// le code est trï¿½s proche de celui de la fonction getTime.
+	// C'est normal, puisqu'en fait on commence par trouver "t" localement ï¿½ partir de "s" pour calculer ensuite les autres paramï¿½tres du kin.
 	if (s <= pk0->m_s)
 	{
 		*this = *pk0;
@@ -41,7 +37,7 @@ void NLKIN::atS(const NLKIN* pk0, const NLKIN* pk1, const Nf32 s)
 	}
 	else if (s < pk1->m_s)
 	{
-		Nf32	p, q, sqrt_dlt;
+		Nf32 p, q, sqrt_dlt;
 
 		if (!pk1->m_j)
 		{
@@ -49,22 +45,22 @@ void NLKIN::atS(const NLKIN* pk0, const NLKIN* pk1, const Nf32 s)
 			{
 				//	NErrorIf(pk->m_a, NERROR_SYSTEM_CHECK);				// impossible car si 0.m_a est nulle et m_j est null  alors seul le cas ou la vitesse est constante est possible...
 				//	NErrorIf(pk0->m_v != pk->m_v, NERROR_SYSTEM_CHECK); // impossible car si 0.m_a est nulle et m_j est null  alors seul le cas ou la vitesse est constante est possible...
-				NErrorIf(!pk1->m_v, NERROR_SYSTEM_CHECK);			// Dans ce cas, la vitesse courante et donc constante ne saurait être nulle !
+				NErrorIf(!pk1->m_v, NERROR_SYSTEM_CHECK); // Dans ce cas, la vitesse courante et donc constante ne saurait ï¿½tre nulle !
 				from(pk0, (s - pk0->m_s) / pk0->m_v);
 				return;
 			}
 			else
 			{
-				// Quelque soit le signe de "pk0->m_a" seule la racine " R2 = (-B + sqrt(delta) )/2A " est applicable à notre situation ( cf etude et tableau de signe )
+				// Quelque soit le signe de "pk0->m_a" seule la racine " R2 = (-B + sqrt(delta) )/2A " est applicable ï¿½ notre situation ( cf etude et tableau de signe )
 				from(pk0, (-pk0->m_v + sqrt(NPOW2(pk0->m_v) - 2.0f * pk0->m_a * (pk0->m_s - s))) / pk0->m_a);
 				return;
 			}
 
-			// C'est une phase 2 qui mène à pk !
-			// On recherche donc une valeur de t solution de l'équation:
+			// C'est une phase 2 qui mï¿½ne ï¿½ pk !
+			// On recherche donc une valeur de t solution de l'ï¿½quation:
 			//	s = pk0->s + pk0->m_v*t + pk0->m_a*t*t/2.0f
-			//	
-			//	On a donc delta = NPOW2(pk0->m_v) - 2.0f*pk0->m_a*(pk0->m_s - s) discriminant de l'équation.
+			//
+			//	On a donc delta = NPOW2(pk0->m_v) - 2.0f*pk0->m_a*(pk0->m_s - s) discriminant de l'ï¿½quation.
 			//  Pour avoir au moins une soluiton, il faut que delta soit >=0
 			//						delta	>=	0
 			//	[1]					NPOW2(pk0->m_v) - 2.0f*pk0->m_a*(pk0->m_s - s)	>=	0
@@ -72,7 +68,7 @@ void NLKIN::atS(const NLKIN* pk0, const NLKIN* pk1, const Nf32 s)
 			//						NPOW2(pk0->m_v)/(2.0f*pk0->m_a) >=	(pk0->m_s - s)
 			//						NPOW2(pk0->m_v)/(2.0f*pk0->m_a) - pk0->m_s >=	- s
 			//	[2]				   -NPOW2(pk0->m_v)/(2.0f*pk0->m_a) + pk0->m_s <=	s
-			//			
+			//
 			/*
 			if (pk0->m_a > 0.0f)
 			{
@@ -95,9 +91,9 @@ void NLKIN::atS(const NLKIN* pk0, const NLKIN* pk1, const Nf32 s)
 				//
 				// R2 = (-pk0->m_v + sqrt(delta) ) / pk0->m_a
 				//
-				// Quand à R1 = (-pk0->m_v - sqrt(delta) ) / pk0->m_a
-				// On voit bien qu'elle sera TOUJOURS négative pour les mêmes raisons ,
-				// c'est à dire
+				// Quand ï¿½ R1 = (-pk0->m_v - sqrt(delta) ) / pk0->m_a
+				// On voit bien qu'elle sera TOUJOURS nï¿½gative pour les mï¿½mes raisons ,
+				// c'est ï¿½ dire
 				//						-pk0->m_v - sqrt(delta) < 0, TOUJOURS ! donc ...
 				//
 				// Donc on a bien une seule racine positive et donc possible: R+ !
@@ -107,8 +103,8 @@ void NLKIN::atS(const NLKIN* pk0, const NLKIN* pk1, const Nf32 s)
 			{
 				// Il est possible que delta soit negatif ou null !
 				// ------------------------------------------------
-				// et c'est R- qui est valide ! Note: R+ est également positive mais plus grande que R1, elle représente le temps qu'il faut pour REPASSER par S après que la vitesse soit devenue négative
-				// à force d'appliquer pk0->m_a ! ( et donc on revient sur nos pas pour repasser par S ... )
+				// et c'est R- qui est valide ! Note: R+ est ï¿½galement positive mais plus grande que R1, elle reprï¿½sente le temps qu'il faut pour REPASSER par S aprï¿½s que la vitesse soit devenue nï¿½gative
+				// ï¿½ force d'appliquer pk0->m_a ! ( et donc on revient sur nos pas pour repasser par S ... )
 				return (-pk0->m_v + sqrt(NPOW2(pk0->m_v) - 2.0f*pk0->m_a*(pk0->m_s - s)) / pk0->m_a);
 			}
 			*/
@@ -181,10 +177,10 @@ void NLKIN::atS(const NLKIN* pk0, const NLKIN* pk1, const Nf32 s)
 	}
 }
 
-void NLKIN::atT(const NLKIN* pk0, const NLKIN* pk1, const Nf32 t)
+void NLKIN::atT(const NLKIN *pk0, const NLKIN *pk1, const Nf32 t)
 {
 	NErrorIf(pk0->m_t > pk1->m_t, NERROR_INCONSISTENT_VALUES);
-	// le code est beaucoup plus simple que pour atS. Ici, pas besoin de trouver 't' il est passé en paramètre !
+	// le code est beaucoup plus simple que pour atS. Ici, pas besoin de trouver 't' il est passï¿½ en paramï¿½tre !
 	// il s'agit donc juste de calculer les valeurs du Kin en fonction de 't'!
 	if (t <= pk0->m_t)
 	{
@@ -211,8 +207,8 @@ void NLKIN::atT(const NLKIN* pk0, const NLKIN* pk1, const Nf32 t)
  *	@param	jerk est le	Jerk a appliquer ( m/s/s/s )
  *	@param	dt est la Duree separant pk0 et KIN
  */
- // ------------------------------------------------------------------------------------------
-void NLKIN::from(const NLKIN* pk0, const Nf32 jerk, const Nf32 dt)
+// ------------------------------------------------------------------------------------------
+void NLKIN::from(const NLKIN *pk0, const Nf32 jerk, const Nf32 dt)
 {
 	Nf32 dt2 = dt * dt;
 
@@ -229,15 +225,15 @@ void NLKIN::from(const NLKIN* pk0, const Nf32 jerk, const Nf32 dt)
  *	@param	pk0 est le	Kin "origine"
  *	@param	dt est la Duree separant pk0 et KIN
  */
- // ------------------------------------------------------------------------------------------
+// ------------------------------------------------------------------------------------------
 void NLKIN::from(const NLKIN *pk0, const Nf32 dt)
 {
 	Nf32 dt2 = dt * dt;
 
 	m_t = pk0->m_t + dt;
 	m_a = pk0->m_a;
-	m_v = pk0->m_v + pk0->m_a*dt;
-	m_s = pk0->m_s + pk0->m_v*dt + (pk0->m_a*dt2) / 2.0f;
+	m_v = pk0->m_v + pk0->m_a * dt;
+	m_s = pk0->m_s + pk0->m_v * dt + (pk0->m_a * dt2) / 2.0f;
 	m_j = 0.0f;
 }
 
@@ -250,15 +246,15 @@ void NLKIN::from(const NLKIN *pk0, const Nf32 dt)
  *	@param		dt est la Duree separant KIN et pk1
  *	@return		le pointeur pk1 passe en argument est simplement retourne en sortie de fonction
  */
- // ------------------------------------------------------------------------------------------
-NLKIN* NLKIN::to(NLKIN *pk1, const Nf32 jerk, const Nf32 dt)
+// ------------------------------------------------------------------------------------------
+NLKIN *NLKIN::to(NLKIN *pk1, const Nf32 jerk, const Nf32 dt)
 {
 	Nf32 dt2 = dt * dt;
 
 	pk1->m_t = m_t + dt;
 	pk1->m_a = m_a + jerk * dt;
-	pk1->m_v = m_v + m_a * dt + (jerk*dt2) / 2.0f;
-	pk1->m_s = m_s + m_v * dt + (m_a*dt2) / 2.0f + (jerk*dt2*dt) / 6.0f;
+	pk1->m_v = m_v + m_a * dt + (jerk * dt2) / 2.0f;
+	pk1->m_s = m_s + m_v * dt + (m_a * dt2) / 2.0f + (jerk * dt2 * dt) / 6.0f;
 	pk1->m_j = jerk;
 
 	return pk1;
@@ -267,39 +263,38 @@ NLKIN* NLKIN::to(NLKIN *pk1, const Nf32 jerk, const Nf32 dt)
 // ------------------------------------------------------------------------------------------
 /**
  *	@brief	Calcule les valeurs de pk1 depuis KIN en appliquant un \b Jerk nul sur une duree "dt"
- *			Cette fonction fait la meme chose que NLKIN::to(pk1, 0, dt) de maniere plus optimisée.
+ *			Cette fonction fait la meme chose que NLKIN::to(pk1, 0, dt) de maniere plus optimisï¿½e.
  *	@param	pk1 est le	Kin "cible"
  *	@param	dt est la Duree separant KIN et pk1
  *	@return	le pointeur pk1 passe en argument est simplement retourne en sortie de fonction
  */
- // ------------------------------------------------------------------------------------------
-NLKIN* NLKIN::to(NLKIN *pk1, const Nf32 dt)
+// ------------------------------------------------------------------------------------------
+NLKIN *NLKIN::to(NLKIN *pk1, const Nf32 dt)
 {
 	Nf32 dt2 = dt * dt;
 
 	pk1->m_t = m_t + dt;
 	pk1->m_a = m_a;
 	pk1->m_v = m_v + m_a * dt;
-	pk1->m_s = m_s + m_v * dt + (m_a*dt2) / 2.0f;
+	pk1->m_s = m_s + m_v * dt + (m_a * dt2) / 2.0f;
 	pk1->m_j = 0.0f;
 
 	return pk1;
 }
 
-
 // ------------------------------------------------------------------------------------------
 /**
  *	@brief	Verifie que les valeurs d'Acceleration et de Vitesse contenues dans KIN respectent les limites fixees par NLKINLIMITS passee en argument.
- *			\b ATTENTION! Cette fonction ne fait rien de plus que tester si l'acceleration  et potentiellement la vitesse actuelle(s) du KIN sont superieure(s), ou pas, aux limites fixées.
+ *			\b ATTENTION! Cette fonction ne fait rien de plus que tester si l'acceleration  et potentiellement la vitesse actuelle(s) du KIN sont superieure(s), ou pas, aux limites fixï¿½es.
  *			L'acceleration est testee en premier. La vitesse est testee dans un second temps si et seulement si l'acceleration est OK.
  *	@param	pkmax regroupe les valeurs maximales d'Acceleration, de Vitesse ( ou Velocite ) et de Jerk d'un systeme.
  *	@return	Une des valeurs de l'enum NLKIN::CHECKS.
- *			VELOCITY_ACCELERATION_OK	(= 0) Signifie que la vitesse et l'acceleration respectent toutes les deux les limites. 
+ *			VELOCITY_ACCELERATION_OK	(= 0) Signifie que la vitesse et l'acceleration respectent toutes les deux les limites.
  *			ACCELERATION_OVERSHOOT		Signifie que l'acceleration actuelle est hors limite. La velocite n'a pas ete testee car le resultat du test de l'acceleration est negatif.
  *			VELOCITY_OVERSHOOT			Signifie que la vitesse actuelle est hors limite. L'acceleration est alors obligatoirement OK car testee avant la vitesse.
  */
- // ------------------------------------------------------------------------------------------
-const Nu32 NLKIN::accVelfastCheck(const NLKINLIMITS * pkmax)
+// ------------------------------------------------------------------------------------------
+const Nu32 NLKIN::accVelfastCheck(const NLKINLIMITS *pkmax)
 {
 	if (NABS(m_a) > pkmax->m_a)
 		return NLKIN::ACCELERATION_OVERSHOOT;
@@ -313,7 +308,7 @@ const Nu32 NLKIN::accVelfastCheck(const NLKINLIMITS * pkmax)
 /**
  *	@brief	Verifie que les valeurs d'Acceleration et de Vitesse contenues dans KIN respectent les limites fixees par NLKINLIMITS passee en argument.
  *			\b ATTENTION! Cette fonction ne fait rien de plus que tester si l'acceleration  et la vitesse actuelle(s) du KIN sont superieure(s), ou pas, aux limites fixees.
- *			L'acceleration et la vitesse sont systematiquement testees toutes les deux. 
+ *			L'acceleration et la vitesse sont systematiquement testees toutes les deux.
  *	@param	pkmax regroupe les valeurs maximales d'Acceleration, de Vitesse ( ou Velocite ) et de Jerk d'un systeme.
  *	@return	Une \b combinaison des valeurs de l'enum NLKIN::CHECKS.
  *			+ \b VELOCITY_ACCELERATION_OK	(= 0) Signifie que la vitesse et l'acceleration respectent toutes les deux les limites.
@@ -321,8 +316,8 @@ const Nu32 NLKIN::accVelfastCheck(const NLKINLIMITS * pkmax)
  *			+ \b VELOCITY_OVERSHOOT			Signifie que la vitesse actuelle est hors limite. L'acceleration est OK.
  *			+ \b ACCELERATION_OVERSHOOT|VELOCITY_OVERSHOOT	Signifie que l'acceleration et la vitesse actuelles sont hors limite.
  */
- // ------------------------------------------------------------------------------------------
-const Nu32 NLKIN::accVelCheck(const NLKINLIMITS * pkmax)
+// ------------------------------------------------------------------------------------------
+const Nu32 NLKIN::accVelCheck(const NLKINLIMITS *pkmax)
 {
 	Nu32 ret = 0;
 	if (NABS(m_a) > pkmax->m_a)
@@ -337,32 +332,32 @@ const Nu32 NLKIN::accVelCheck(const NLKINLIMITS * pkmax)
 // ------------------------------------------------------------------------------------------
 /**
  *	@brief	Verifie que les valeurs d'Acceleration et de Vitesse contenues dans KIN respectent les limites fixees par NLKINLIMITS passee en argument.
- *			Cette fonction, en plus de  tester si l'acceleration  et la vitesse actuelle(s) du KIN sont superieure(s), ou pas, aux limites fixees, va verifier la cohérence de l'acceleration et de la vitesse au regard de ces limites.
+ *			Cette fonction, en plus de  tester si l'acceleration  et la vitesse actuelle(s) du KIN sont superieure(s), ou pas, aux limites fixees, va verifier la cohï¿½rence de l'acceleration et de la vitesse au regard de ces limites.
  *			L'acceleration est testee en premier. La vitesse est testee dans un second temps si et seulement si l'acceleration est OK.
  *
  * ## Precision sur les tests effectues
- * Si la vitesse de pk0 est proche de la limite supérieure de vitesse, plus precisement dans la zone ou l'acceleration evolue de amax à -amax en passant par 0...
- * Il est important de verifier la cohérence acceleration / vitesse de pk0. En effet,
- *					+ si, pk0->m_a > 0	il faut veiller a ce que la reduction de m_a à 0 n'entraine pas du meme coup un dépassement de vitesse.
+ * Si la vitesse de pk0 est proche de la limite supï¿½rieure de vitesse, plus precisement dans la zone ou l'acceleration evolue de amax ï¿½ -amax en passant par 0...
+ * Il est important de verifier la cohï¿½rence acceleration / vitesse de pk0. En effet,
+ *					+ si, pk0->m_a > 0	il faut veiller a ce que la reduction de m_a ï¿½ 0 n'entraine pas du meme coup un dï¿½passement de vitesse.
  *										Ce qui revient a dire que les valeurs de m_a et de m_v sont incoherentes.
  *					+ si, pk0->m_a < 0	il faut verifier la valeur de la vitesse quand a etait nulle ! Elle doit etre inferieure a la vitesse max autorisee.
  *										En effet, imaginons une valeur de vitesse egale a la vitesse max ou presque ( donc pas de depassement ) et une valeur d'acceleration negative.( pas de depassement non plus )
- *										ce cas de figure est des plus etrange, et signifie une chose: la vitesse 'fut' en dépassement.
+ *										ce cas de figure est des plus etrange, et signifie une chose: la vitesse 'fut' en dï¿½passement.
  *										Pour verifier ce cas de figure, on recherche la valeur de la vitesse d'origine "dans le passe" quand l'acceleration "etait" nulle.
- * ## Dans un premier temps, la fonction verifie:	
+ * ## Dans un premier temps, la fonction verifie:
  *					+ -vmax <= v <= vmax
  *					+ -amax <= a <= amax
  *
- * Plus precisement, si v est comprise dans l'intervalle [ (-vmax + vx ),  (vmax-vx) ] il n'y a aucun problème possible. Car,l'acceleration,respectant ses valeurs limites ne pourra jamais amener la vitesse en dehors de ses propres limites.
+ * Plus precisement, si v est comprise dans l'intervalle [ (-vmax + vx ),  (vmax-vx) ] il n'y a aucun problï¿½me possible. Car,l'acceleration,respectant ses valeurs limites ne pourra jamais amener la vitesse en dehors de ses propres limites.
  *				car, vx = amax*amax/2j
  * Par contre, si v est proche de vmax ou de -vmax et plus exactement si v est dans ] vmax-vx, vmax] ou dans ]-vmax + vx, -vmax ], alors il est possible qu'une valeur incoherente d'acceleration entraine la vitesse vers une valeur hors limite.
- *				
+ *
  *				dvatozero = | a*a/2j |
  *
  *				SI v > vmax - vx,
- *				on veut donc s'assurer que, 
+ *				on veut donc s'assurer que,
  *					v + dvatozero	<= vmax	quand 'a'  est positive ( sinon OVERSHOOT dans le futur  ! )
- *					v + dvatozero	<= vmax	quand 'a'  est negative ( sinon OVERSHOOTED dans le passé ! )
+ *					v + dvatozero	<= vmax	quand 'a'  est negative ( sinon OVERSHOOTED dans le passï¿½ ! )
  *											v + a*a/2j		<= vmax
  *												a*a/2j		<= vmax-v
  *												a*a			<= (vmax-v)*2j
@@ -385,31 +380,30 @@ const Nu32 NLKIN::accVelCheck(const NLKINLIMITS * pkmax)
  *			+ \b VELOCITY_ACCELERATION_OK	(= 0) Signifie que la vitesse et l'acceleration respectent toutes les deux les limites.
  *			+ \b ACCELERATION_OVERSHOOT		Signifie que l'acceleration actuelle est hors limite, la velocite est OK.
  *			+ \b VELOCITY_OVERSHOOT			Signifie que la vitesse actuelle est hors limite. L'acceleration est OK.
- *			+ \b VELOCITY_WAS_OVERSHOOTED	Signifie que la vitesse et l'acceleration actuelle "semblent" OK. Mais qu'il y a une incohérence entre les 2 qui ne s'explique que si la vitesse "etait" hors limite.
- *			+ \b VELOCITY_WILL_OVERSHOOT	Signifie que la vitesse et l'acceleration actuelle "semblent" OK. Mais qu'il y a une incohérence entre les 2 qui entrainera forcement la vitesse hors des limites fixees.
+ *			+ \b VELOCITY_WAS_OVERSHOOTED	Signifie que la vitesse et l'acceleration actuelle "semblent" OK. Mais qu'il y a une incohï¿½rence entre les 2 qui ne s'explique que si la vitesse "etait" hors limite.
+ *			+ \b VELOCITY_WILL_OVERSHOOT	Signifie que la vitesse et l'acceleration actuelle "semblent" OK. Mais qu'il y a une incohï¿½rence entre les 2 qui entrainera forcement la vitesse hors des limites fixees.
  */
- // ------------------------------------------------------------------------------------------
+// ------------------------------------------------------------------------------------------
 const Nu32 NLKIN::accVelFastFullCheck(const NLKINLIMITS *pkmax)
 {
 	if (NABS(m_a) > pkmax->m_a)
-		return NLKIN::ACCELERATION_OVERSHOOT;	// retourne immediatement le code d'erreur approprie si l'Acceleration actuelle est hors limite. Les tests plus avancés et les tests sur la vitesse ne sont pas effectués.
+		return NLKIN::ACCELERATION_OVERSHOOT; // retourne immediatement le code d'erreur approprie si l'Acceleration actuelle est hors limite. Les tests plus avancï¿½s et les tests sur la vitesse ne sont pas effectuï¿½s.
 
 	if (NABS(m_v) > pkmax->m_v)
-		return NLKIN::VELOCITY_OVERSHOOT;		// retourne immediatement le code d'erreur approprie si la vitesse actuelle est hors limite. Les tests plus avancés ne sont pas effectués.
-
+		return NLKIN::VELOCITY_OVERSHOOT; // retourne immediatement le code d'erreur approprie si la vitesse actuelle est hors limite. Les tests plus avancï¿½s ne sont pas effectuï¿½s.
 
 	if (m_v > pkmax->m_vmvx)
 	{
-		if ((m_a*m_a) > ((pkmax->m_v - m_v)*pkmax->m_2j))
+		if ((m_a * m_a) > ((pkmax->m_v - m_v) * pkmax->m_2j))
 			return ((m_a > 0.0f) ? NLKIN::VELOCITY_WILL_OVERSHOOT : NLKIN::VELOCITY_WAS_OVERSHOOTED);
 	}
-	else if (m_v < -pkmax->m_vmvx )
+	else if (m_v < -pkmax->m_vmvx)
 	{
-		if ((m_a*m_a) > ((pkmax->m_v + m_v)*pkmax->m_2j))
+		if ((m_a * m_a) > ((pkmax->m_v + m_v) * pkmax->m_2j))
 			return ((m_a > 0.0f) ? NLKIN::VELOCITY_WAS_OVERSHOOTED : NLKIN::VELOCITY_WILL_OVERSHOOT);
 	}
 
-	return  NLKIN::VELOCITY_ACCELERATION_OK;
+	return NLKIN::VELOCITY_ACCELERATION_OK;
 }
 
 // ------------------------------------------------------------------------------------------
@@ -422,9 +416,9 @@ const Nu32 NLKIN::accVelFastFullCheck(const NLKINLIMITS *pkmax)
  *			+ \b VELOCITY_ACCELERATION_OK	(= 0) Signifie que la vitesse et l'acceleration respectent toutes les deux les limites.
  *			+ \b ACCELERATION_OVERSHOOT		Signifie que l'acceleration actuelle est hors limite, la velocite est OK.
  *			+ \b VELOCITY_OVERSHOOT			Signifie que la vitesse actuelle est hors limite. L'acceleration est OK.
- *			+ \b VELOCITY_WAS_OVERSHOOTED	Signifie que la vitesse et l'acceleration actuelle "semblent" OK. Mais qu'il y a une incohérence entre les 2 qui ne s'explique que si la vitesse "etait" hors limite.
- *			+ \b VELOCITY_WILL_OVERSHOOT	Signifie que la vitesse et l'acceleration actuelle "semblent" OK. Mais qu'il y a une incohérence entre les 2 qui entrainera forcement la vitesse hors des limites fixees..
-*/
+ *			+ \b VELOCITY_WAS_OVERSHOOTED	Signifie que la vitesse et l'acceleration actuelle "semblent" OK. Mais qu'il y a une incohï¿½rence entre les 2 qui ne s'explique que si la vitesse "etait" hors limite.
+ *			+ \b VELOCITY_WILL_OVERSHOOT	Signifie que la vitesse et l'acceleration actuelle "semblent" OK. Mais qu'il y a une incohï¿½rence entre les 2 qui entrainera forcement la vitesse hors des limites fixees..
+ */
 // ------------------------------------------------------------------------------------------
 const Nu32 NLKIN::accVelFullCheck(const NLKINLIMITS *pkmax)
 {
@@ -438,12 +432,12 @@ const Nu32 NLKIN::accVelFullCheck(const NLKINLIMITS *pkmax)
 
 	if (m_v > pkmax->m_vmvx)
 	{
-		if ((m_a*m_a) > ((pkmax->m_v - m_v)*pkmax->m_2j))
+		if ((m_a * m_a) > ((pkmax->m_v - m_v) * pkmax->m_2j))
 			ret |= ((m_a > 0.0f) ? NLKIN::VELOCITY_WILL_OVERSHOOT : NLKIN::VELOCITY_WAS_OVERSHOOTED);
 	}
 	else if (m_v < (-pkmax->m_vmvx))
 	{
-		if ((m_a*m_a) > ((pkmax->m_v + m_v)*pkmax->m_2j))
+		if ((m_a * m_a) > ((pkmax->m_v + m_v) * pkmax->m_2j))
 			ret |= ((m_a > 0.0f) ? NLKIN::VELOCITY_WAS_OVERSHOOTED : NLKIN::VELOCITY_WILL_OVERSHOOT);
 	}
 	return ret;
@@ -452,7 +446,7 @@ const Nu32 NLKIN::accVelFullCheck(const NLKINLIMITS *pkmax)
 // ------------------------------------------------------------------------------------------
 /**
  *	@brief	Verifie l'evolution de la vitesse du KIN.
- *			Cette fonction ne teste ni l'acceleration ni la vitesse actuelles.	
+ *			Cette fonction ne teste ni l'acceleration ni la vitesse actuelles.
  *
  * Plus exactement la fonction verifie la valeur de la vitesse apres avoir ramene l'acceleration a 0 depuis sa valeur actuelle.
  *		Si la vitesse est alors hors limite alors la fonction renvoie un code d'erreur \b VELOCITY_WILL_OVERSHOOT
@@ -475,18 +469,18 @@ const Nu32 NLKIN::accVelFullCheck(const NLKINLIMITS *pkmax)
  *	@return	Une des valeurs de l'enum NLKIN::CHECKS.
  *			+ \b VELOCITY_ACCELERATION_OK	(= 0) Signifie que la vitesse et l'acceleration respectent toutes les deux les limites.
  *			+ \b VELOCITY_WILL_OVERSHOOT	Signifie que la vitesse sera forcement entrainee hors des limites fixees par l'acceleration actuelle qui est donc incoherente.
-*/
+ */
 // ------------------------------------------------------------------------------------------
 const Nu32 NLKIN::velForwardCheck(const NLKINLIMITS *pkmax)
 {
-	// Calcul de "dvatozero", c'est à dire du differentiel ( gain ou perte) de vitesse acquise/perdue lors de la transition de la valeur courante de l'acceleration a ZERO.
-	// ( le signe de "a" permet de signer dvatozero ) 
-	Nf32 dvatozero = (m_a < 0.0f) ? -(m_a*m_a) / pkmax->m_2j : (m_a*m_a) / pkmax->m_2j;
+	// Calcul de "dvatozero", c'est ï¿½ dire du differentiel ( gain ou perte) de vitesse acquise/perdue lors de la transition de la valeur courante de l'acceleration a ZERO.
+	// ( le signe de "a" permet de signer dvatozero )
+	Nf32 dvatozero = (m_a < 0.0f) ? -(m_a * m_a) / pkmax->m_2j : (m_a * m_a) / pkmax->m_2j;
 
 	if (NABS(m_v + dvatozero) > pkmax->m_v)
-		return  NLKIN::VELOCITY_WILL_OVERSHOOT;	
+		return NLKIN::VELOCITY_WILL_OVERSHOOT;
 
-	return  NLKIN::VELOCITY_ACCELERATION_OK;
+	return NLKIN::VELOCITY_ACCELERATION_OK;
 }
 
 // ------------------------------------------------------------------------------------------
@@ -495,14 +489,14 @@ const Nu32 NLKIN::velForwardCheck(const NLKINLIMITS *pkmax)
  *			Cette fonction ne teste ni l'acceleration ni la vitesse actuelles.
  *
  * Plus exactement la fonction va verifier la valeur que la vitesse "a eut" quand l'acceleration "valait" 0.
- *		Si la vitesse était alors hors limite alors la fonction "backward check" renvoie un code d'erreur "VELOCITY_WAS_OVERSHOOTED"
- *		Sinon la valeur ZERO est retournée ( 0 = OK )
+ *		Si la vitesse ï¿½tait alors hors limite alors la fonction "backward check" renvoie un code d'erreur "VELOCITY_WAS_OVERSHOOTED"
+ *		Sinon la valeur ZERO est retournï¿½e ( 0 = OK )
  *
  * ## Details
- * le temps nécéssaire pour revenir en arriere ( dans le temps) à l'instant où l'acceleration était nulle est d'abord calcule \n
- * \li					t = pk0->m_a / jmax ( jmax étant la valeur de jerk maximum et constante. jmax = pkmax->m_j )
+ * le temps nï¿½cï¿½ssaire pour revenir en arriere ( dans le temps) ï¿½ l'instant oï¿½ l'acceleration ï¿½tait nulle est d'abord calcule \n
+ * \li					t = pk0->m_a / jmax ( jmax ï¿½tant la valeur de jerk maximum et constante. jmax = pkmax->m_j )
  *
- * La quantité de vitesse générée pendant cette durée \e t vaut:
+ * La quantitï¿½ de vitesse gï¿½nï¿½rï¿½e pendant cette durï¿½e \e t vaut:
  * \li					dvatozero = a * t = pk0->m_a * pk0->m_a / jmax
  *
  * Si \e a est positive alors cette quantite de vitesse sera enlevee a la vitesse initiale pour obtenir la valeur de la vitesse quand \e a \b etait nulle.
@@ -511,23 +505,23 @@ const Nu32 NLKIN::velForwardCheck(const NLKINLIMITS *pkmax)
  * \li				a > 0,	v_azero = v - dvatozero
  * \li				a = 0,	v_azero = v
  *
- * Reste alors à tester la vitesse obtenue qui, pour être valide doit rester comprise entre -vmax et vmax.
+ * Reste alors ï¿½ tester la vitesse obtenue qui, pour ï¿½tre valide doit rester comprise entre -vmax et vmax.
  *	@param	pkmax regroupe les valeurs maximales d'Acceleration, de Vitesse ( ou Velocite ) et de Jerk d'un systeme.
  *	@return	Une des valeurs de l'enum NLKIN::CHECKS.
  *			+ \b VELOCITY_ACCELERATION_OK	(= 0) Signifie que la vitesse et l'acceleration respectent toutes les deux les limites.
  *			+ \b VELOCITY_WAS_OVERSHOOTED	Signifie que la vitesse etait forcement hors des limites fixees au regard de l'acceleration.
-*/
+ */
 // ------------------------------------------------------------------------------------------
 const Nu32 NLKIN::velBackwardCheck(const NLKINLIMITS *pkmax)
 {
-	// Calcul de "dvafromzero", c'est à dire le différentiel ( gain ou perte) de vitesse acquise/perdue lors de la transition de l'acceleration nulle à la valeur courante de l'acceleration.
-	// ( le signe de "a" permet de signer dvafromzero ) 
-	Nf32 dvafromzero = (m_a < 0.0f) ? (m_a*m_a) / pkmax->m_2j : -(m_a*m_a) / pkmax->m_2j;
+	// Calcul de "dvafromzero", c'est ï¿½ dire le diffï¿½rentiel ( gain ou perte) de vitesse acquise/perdue lors de la transition de l'acceleration nulle ï¿½ la valeur courante de l'acceleration.
+	// ( le signe de "a" permet de signer dvafromzero )
+	Nf32 dvafromzero = (m_a < 0.0f) ? (m_a * m_a) / pkmax->m_2j : -(m_a * m_a) / pkmax->m_2j;
 
 	if (NABS(m_v + dvafromzero) > pkmax->m_v)
 		return NLKIN::VELOCITY_WAS_OVERSHOOTED;
 
-	return  NLKIN::VELOCITY_ACCELERATION_OK;
+	return NLKIN::VELOCITY_ACCELERATION_OK;
 }
 
 #ifdef _NEDITOR
@@ -537,45 +531,45 @@ const Nu32 NLKIN::velBackwardCheck(const NLKINLIMITS *pkmax)
  *
  *	@param	p2docs
  *	@param	pk0
- *	@param	pickack	couleur id0	: index de la couleur j > 0 
- *					couleur id1	: index de la couleur ==  0 
- *					couleur id2	: index de la couleur j < 0 
- *	@return	
+ *	@param	pickack	couleur id0	: index de la couleur j > 0
+ *					couleur id1	: index de la couleur ==  0
+ *					couleur id2	: index de la couleur j < 0
+ *	@return
  */
 // ------------------------------------------------------------------------------------------
-void NLKIN::draw(NL2DOCS * p2docs, const NCOLORPICKPACK pickpack, const NLKIN* pk0)
+void NLKIN::draw(NL2DOCS *p2docs, const NCOLORPICKPACK pickpack, const NLKIN *pk0)
 {
 	Nf32 dt = m_t - pk0->m_t;
 	if (dt)
 	{
-		Nf32			a0, v0, s0, t0, t;
-		Nu32			i;
-		Nu32			iter = 32;
-		NUTDRAWVERTEX	p, o;
+		Nf32 a0, v0, s0, t0, t;
+		Nu32 i;
+		Nu32 iter = 32;
+		NUTDRAWVERTEX p, o;
 
-		NVEC2 xt = { 0.005f,0.005f };
+		NVEC2 xt = {0.005f, 0.005f};
 
 		o.Position_3f.z = p.Position_3f.z = 0.0f;
 
 		// Couleurs
 		if (m_j > 0.0f)
-			p2docs->getModulatedColor(&p.Color0_4f,0, pickpack);
+			p2docs->getModulatedColor(&p.Color0_4f, 0, pickpack);
 		else if (m_j == 0.0f)
 			p2docs->getModulatedColor(&p.Color0_4f, 1, pickpack);
 		else
 			p2docs->getModulatedColor(&p.Color0_4f, 2, pickpack);
 		o.Color0_4f = p.Color0_4f;
 
-		// On dessine par rapport à T
-		if (ISFLAG_ON(p2docs->m_Flags, FLAG_NL2DOCS_MOTIONPROFILE_LAYER_VIEW_FT))
+		// On dessine par rapport ï¿½ T
+		if (ISFLAG_ON(p2docs->m_userFlags, FLAG_NL2DOCS_DASHBOARD_MP_FT))
 		{
 			// t:
 			o.Position_3f.x = p2docs->transformX(m_t, NL2DOCS_COORDS_STYLE_0);
 
 			// V(t):
-			if (ISFLAG_ON(p2docs->m_Flags, FLAG_NL2DOCS_MOTIONPROFILE_LAYER_VIEW_VEL))
+			if (ISFLAG_ON(p2docs->m_userFlags, FLAG_NL2DOCS_DASHBOARD_MP_VEL))
 			{
-				// Méthode B:
+				// Mï¿½thode B:
 				o.Position_3f.y = p2docs->transformY(m_v, NL2DOCS_COORDS_STYLE_1);
 				NUT_Draw_Mark(&o.Position_3f, &xt, &o.Color0_4f);
 				NUT_DrawPencil_From(&o);
@@ -583,7 +577,7 @@ void NLKIN::draw(NL2DOCS * p2docs, const NCOLORPICKPACK pickpack, const NLKIN* p
 				for (i = 0; i <= iter; i++)
 				{
 					t = dt * (Nf32)i / (Nf32)iter;
-					v0 = m_v - m_a * t + 0.5f*m_j*t*t;
+					v0 = m_v - m_a * t + 0.5f * m_j * t * t;
 					t0 = m_t - t;
 					p.Position_3f.x = p2docs->transformX(t0);
 					p.Position_3f.y = p2docs->transformY(v0);
@@ -591,9 +585,9 @@ void NLKIN::draw(NL2DOCS * p2docs, const NCOLORPICKPACK pickpack, const NLKIN* p
 				}
 			}
 			// A(t):
-			if (ISFLAG_ON(p2docs->m_Flags, FLAG_NL2DOCS_MOTIONPROFILE_LAYER_VIEW_ACCEL))
+			if (ISFLAG_ON(p2docs->m_userFlags, FLAG_NL2DOCS_DASHBOARD_MP_ACCEL))
 			{
-				// Méthode B:
+				// Mï¿½thode B:
 				o.Position_3f.y = p2docs->transformY(m_a, NL2DOCS_SUBSCALE_0, NL2DOCS_COORDS_STYLE_1);
 				NUT_Draw_Mark(&o.Position_3f, &xt, &o.Color0_4f);
 				NUT_DrawPencil_From(&o);
@@ -609,9 +603,9 @@ void NLKIN::draw(NL2DOCS * p2docs, const NCOLORPICKPACK pickpack, const NLKIN* p
 				}
 			}
 			// J(t):
-			if (ISFLAG_ON(p2docs->m_Flags, FLAG_NL2DOCS_MOTIONPROFILE_LAYER_VIEW_JERK))
+			if (ISFLAG_ON(p2docs->m_userFlags, FLAG_NL2DOCS_DASHBOARD_MP_JERK))
 			{
-				// Méthode B:
+				// Mï¿½thode B:
 				o.Position_3f.y = p2docs->transformY(m_j, NL2DOCS_SUBSCALE_1, NL2DOCS_COORDS_STYLE_1);
 				NUT_Draw_Mark(&o.Position_3f, &xt, &o.Color0_4f);
 				NUT_DrawPencil_From(&o);
@@ -626,15 +620,15 @@ void NLKIN::draw(NL2DOCS * p2docs, const NCOLORPICKPACK pickpack, const NLKIN* p
 				}
 			}
 		}
-		else // On dessine par rapport à S (par defaut) 
+		else // On dessine par rapport ï¿½ S (par defaut)
 		{
 			// s:
 			o.Position_3f.x = p2docs->transformX(m_s, NL2DOCS_COORDS_STYLE_0);
 
 			// V(s):
-			if (ISFLAG_ON(p2docs->m_Flags, FLAG_NL2DOCS_MOTIONPROFILE_LAYER_VIEW_VEL))
+			if (ISFLAG_ON(p2docs->m_userFlags, FLAG_NL2DOCS_DASHBOARD_MP_VEL))
 			{
-				// Méthode B:
+				// Mï¿½thode B:
 				o.Position_3f.y = p2docs->transformY(m_v, NL2DOCS_COORDS_STYLE_1);
 				NUT_Draw_Mark(&o.Position_3f, &xt, &o.Color0_4f);
 				NUT_DrawPencil_From(&o);
@@ -642,15 +636,15 @@ void NLKIN::draw(NL2DOCS * p2docs, const NCOLORPICKPACK pickpack, const NLKIN* p
 				for (i = 0; i <= iter; i++)
 				{
 					t = dt * (Nf32)i / (Nf32)iter;
-					v0 = m_v - m_a * t + 0.5f*m_j*t*t;
-					s0 = m_s - m_v * t + 0.5f*m_a*t*t - m_j * t*t*t / 6.0f;
+					v0 = m_v - m_a * t + 0.5f * m_j * t * t;
+					s0 = m_s - m_v * t + 0.5f * m_a * t * t - m_j * t * t * t / 6.0f;
 					p.Position_3f.x = p2docs->transformX(s0);
 					p.Position_3f.y = p2docs->transformY(v0);
 					NUT_DrawPencil_LineTo(&p);
 				}
 			}
 			// A(s):
-			if (ISFLAG_ON(p2docs->m_Flags, FLAG_NL2DOCS_MOTIONPROFILE_LAYER_VIEW_ACCEL))
+			if (ISFLAG_ON(p2docs->m_userFlags, FLAG_NL2DOCS_DASHBOARD_MP_ACCEL))
 			{
 				o.Position_3f.y = p2docs->transformY(m_a, NL2DOCS_SUBSCALE_0, NL2DOCS_COORDS_STYLE_1);
 				NUT_Draw_Mark(&o.Position_3f, &xt, &o.Color0_4f);
@@ -660,16 +654,16 @@ void NLKIN::draw(NL2DOCS * p2docs, const NCOLORPICKPACK pickpack, const NLKIN* p
 				{
 					t = dt * (Nf32)i / (Nf32)iter;
 					a0 = m_a - m_j * t;
-					s0 = m_s - m_v * t + 0.5f*m_a*t*t - m_j * t*t*t / 6.0f;
+					s0 = m_s - m_v * t + 0.5f * m_a * t * t - m_j * t * t * t / 6.0f;
 					p.Position_3f.x = p2docs->transformX(s0);
 					p.Position_3f.y = p2docs->transformY(a0, NL2DOCS_SUBSCALE_0);
 					NUT_DrawPencil_LineTo(&p);
 				}
 			}
 			// J(s):
-			if (ISFLAG_ON(p2docs->m_Flags, FLAG_NL2DOCS_MOTIONPROFILE_LAYER_VIEW_JERK))
+			if (ISFLAG_ON(p2docs->m_userFlags, FLAG_NL2DOCS_DASHBOARD_MP_JERK))
 			{
-				// Méthode B:
+				// Mï¿½thode B:
 				o.Position_3f.y = p2docs->transformY(m_j, NL2DOCS_SUBSCALE_1, NL2DOCS_COORDS_STYLE_1);
 				NUT_Draw_Mark(&o.Position_3f, &xt, &o.Color0_4f);
 				NUT_DrawPencil_From(&o);
@@ -677,8 +671,8 @@ void NLKIN::draw(NL2DOCS * p2docs, const NCOLORPICKPACK pickpack, const NLKIN* p
 				for (i = 0; i <= iter; i++)
 				{
 					t = dt * (Nf32)i / (Nf32)iter;
-					//a0 = m_a - m_j * t;
-					s0 = m_s - m_v * t + 0.5f*m_a*t*t - m_j * t*t*t / 6.0f;
+					// a0 = m_a - m_j * t;
+					s0 = m_s - m_v * t + 0.5f * m_a * t * t - m_j * t * t * t / 6.0f;
 					p.Position_3f.x = p2docs->transformX(s0);
 					p.Position_3f.y = p2docs->transformY(m_j, NL2DOCS_SUBSCALE_1);
 					NUT_DrawPencil_LineTo(&p);
@@ -688,21 +682,21 @@ void NLKIN::draw(NL2DOCS * p2docs, const NCOLORPICKPACK pickpack, const NLKIN* p
 	}
 }
 
-void NLKIN::verticalDraw(NL2DOCS* p2docs, const NVEC2* po, const NCOLORPICKPACK pickpack, const NLKIN* pk0)
+void NLKIN::verticalDraw(NL2DOCS *p2docs, const NVEC2 *po, const NCOLORPICKPACK pickpack, const NLKIN *pk0)
 {
 	Nf32 dt = m_t - pk0->m_t;
 	if (dt)
 	{
-		Nf32			a0, v0, s0, t0, t;
-		Nu32			i;
-		Nu32			iter = 32;
-		NUTDRAWVERTEX	p, o;
-		NVEC2			xt = { 0.005f,0.005f };
+		Nf32 a0, v0, s0, t0, t;
+		Nu32 i;
+		Nu32 iter = 32;
+		NUTDRAWVERTEX p, o;
+		NVEC2 xt = {0.005f, 0.005f};
 
 		o.Position_3f.z = p.Position_3f.z = 0.0f;
 
 		//	-----------------------------------------------------
-		// 
+		//
 		//	Couleurs
 		//
 		if (m_j > 0.0f)
@@ -714,7 +708,7 @@ void NLKIN::verticalDraw(NL2DOCS* p2docs, const NVEC2* po, const NCOLORPICKPACK 
 		o.Color0_4f = p.Color0_4f;
 
 		//	-----------------------------------------------------
-		// 
+		//
 		// Shift d'origine
 		//
 		NVEC2 shiftorgn;
@@ -722,18 +716,18 @@ void NLKIN::verticalDraw(NL2DOCS* p2docs, const NVEC2* po, const NCOLORPICKPACK 
 		shiftorgn.y = p2docs->transformY(po->y);
 
 		//	-----------------------------------------------------
-		// 
-		// On dessine par rapport à T
 		//
-		if (ISFLAG_ON(p2docs->m_Flags, FLAG_NL2DOCS_MOTIONPROFILE_LAYER_VIEW_FT))
+		// On dessine par rapport ï¿½ T
+		//
+		if (ISFLAG_ON(p2docs->m_userFlags, FLAG_NL2DOCS_DASHBOARD_MP_FT))
 		{
 			// t:
 			o.Position_3f.y = shiftorgn.y + p2docs->transformVy(-m_t);
 
 			// V(t):
-			if (ISFLAG_ON(p2docs->m_Flags, FLAG_NL2DOCS_MOTIONPROFILE_LAYER_VIEW_VEL))
+			if (ISFLAG_ON(p2docs->m_userFlags, FLAG_NL2DOCS_DASHBOARD_MP_VEL))
 			{
-				// Méthode B:
+				// Mï¿½thode B:
 				o.Position_3f.x = shiftorgn.x + p2docs->transformVx(m_v);
 				NUT_Draw_Mark(&o.Position_3f, &xt, &o.Color0_4f);
 				NUT_DrawPencil_From(&o);
@@ -741,18 +735,18 @@ void NLKIN::verticalDraw(NL2DOCS* p2docs, const NVEC2* po, const NCOLORPICKPACK 
 				for (i = 0; i <= iter; i++)
 				{
 					t = dt * (Nf32)i / (Nf32)iter;
-					v0 = m_v - m_a * t + 0.5f*m_j*t*t;
+					v0 = m_v - m_a * t + 0.5f * m_j * t * t;
 					t0 = m_t - t;
-					p.Position_3f.x = shiftorgn.x+p2docs->transformVx(v0);
-					p.Position_3f.y = shiftorgn.y+p2docs->transformVy(-t0);
+					p.Position_3f.x = shiftorgn.x + p2docs->transformVx(v0);
+					p.Position_3f.y = shiftorgn.y + p2docs->transformVy(-t0);
 					NUT_DrawPencil_LineTo(&p);
 				}
 			}
 			// A(t):
-			if (ISFLAG_ON(p2docs->m_Flags, FLAG_NL2DOCS_MOTIONPROFILE_LAYER_VIEW_ACCEL))
+			if (ISFLAG_ON(p2docs->m_userFlags, FLAG_NL2DOCS_DASHBOARD_MP_ACCEL))
 			{
-				// Méthode B:
-				o.Position_3f.x = shiftorgn.x+p2docs->transformVx(m_a);
+				// Mï¿½thode B:
+				o.Position_3f.x = shiftorgn.x + p2docs->transformVx(m_a);
 				NUT_Draw_Mark(&o.Position_3f, &xt, &o.Color0_4f);
 				NUT_DrawPencil_From(&o);
 
@@ -761,16 +755,16 @@ void NLKIN::verticalDraw(NL2DOCS* p2docs, const NVEC2* po, const NCOLORPICKPACK 
 					t = dt * (Nf32)i / (Nf32)iter;
 					a0 = m_a - m_j * t;
 					t0 = m_t - t;
-					p.Position_3f.x = shiftorgn.x+p2docs->transformVx(a0);
-					p.Position_3f.y = shiftorgn.y+p2docs->transformVy(-t0);
+					p.Position_3f.x = shiftorgn.x + p2docs->transformVx(a0);
+					p.Position_3f.y = shiftorgn.y + p2docs->transformVy(-t0);
 					NUT_DrawPencil_LineTo(&p);
 				}
 			}
 			// J(t):
-			if (ISFLAG_ON(p2docs->m_Flags, FLAG_NL2DOCS_MOTIONPROFILE_LAYER_VIEW_JERK))
+			if (ISFLAG_ON(p2docs->m_userFlags, FLAG_NL2DOCS_DASHBOARD_MP_JERK))
 			{
-				// Méthode B:
-				o.Position_3f.x = shiftorgn.x+p2docs->transformVx(m_j);
+				// Mï¿½thode B:
+				o.Position_3f.x = shiftorgn.x + p2docs->transformVx(m_j);
 				NUT_Draw_Mark(&o.Position_3f, &xt, &o.Color0_4f);
 				NUT_DrawPencil_From(&o);
 
@@ -778,21 +772,21 @@ void NLKIN::verticalDraw(NL2DOCS* p2docs, const NVEC2* po, const NCOLORPICKPACK 
 				{
 					t = dt * (Nf32)i / (Nf32)iter;
 					t0 = m_t - t;
-					p.Position_3f.x = shiftorgn.x+p2docs->transformVx(m_j);
-					p.Position_3f.y = shiftorgn.y+p2docs->transformVy(-t0);
+					p.Position_3f.x = shiftorgn.x + p2docs->transformVx(m_j);
+					p.Position_3f.y = shiftorgn.y + p2docs->transformVy(-t0);
 					NUT_DrawPencil_LineTo(&p);
 				}
 			}
 		}
-		else  // On dessine par rapport à S (par defaut) 
+		else // On dessine par rapport ï¿½ S (par defaut)
 		{
 			// s:
-			o.Position_3f.y = shiftorgn.y+p2docs->transformVy(-m_s);
-			
+			o.Position_3f.y = shiftorgn.y + p2docs->transformVy(-m_s);
+
 			// V(s):
-			if (ISFLAG_ON(p2docs->m_Flags, FLAG_NL2DOCS_MOTIONPROFILE_LAYER_VIEW_VEL))
+			if (ISFLAG_ON(p2docs->m_userFlags, FLAG_NL2DOCS_DASHBOARD_MP_VEL))
 			{
-				// Méthode B:
+				// Mï¿½thode B:
 				o.Position_3f.x = shiftorgn.x + p2docs->transformVx(m_v);
 				NUT_Draw_Mark(&o.Position_3f, &xt, &o.Color0_4f);
 				NUT_DrawPencil_From(&o);
@@ -802,13 +796,13 @@ void NLKIN::verticalDraw(NL2DOCS* p2docs, const NVEC2* po, const NCOLORPICKPACK 
 					t = dt * (Nf32)i / (Nf32)iter;
 					v0 = m_v - m_a * t + 0.5f * m_j * t * t;
 					s0 = m_s - m_v * t + 0.5f * m_a * t * t - m_j * t * t * t / 6.0f;
-					p.Position_3f.x = shiftorgn.x+p2docs->transformVx(v0);
-					p.Position_3f.y = shiftorgn.y+p2docs->transformVy(-s0);
+					p.Position_3f.x = shiftorgn.x + p2docs->transformVx(v0);
+					p.Position_3f.y = shiftorgn.y + p2docs->transformVy(-s0);
 					NUT_DrawPencil_LineTo(&p);
 				}
 			}
 			// A(s):
-			if (ISFLAG_ON(p2docs->m_Flags, FLAG_NL2DOCS_MOTIONPROFILE_LAYER_VIEW_ACCEL))
+			if (ISFLAG_ON(p2docs->m_userFlags, FLAG_NL2DOCS_DASHBOARD_MP_ACCEL))
 			{
 				o.Position_3f.x = shiftorgn.x + p2docs->transformVx(m_a);
 				NUT_Draw_Mark(&o.Position_3f, &xt, &o.Color0_4f);
@@ -825,9 +819,9 @@ void NLKIN::verticalDraw(NL2DOCS* p2docs, const NVEC2* po, const NCOLORPICKPACK 
 				}
 			}
 			// J(s):
-			if (ISFLAG_ON(p2docs->m_Flags, FLAG_NL2DOCS_MOTIONPROFILE_LAYER_VIEW_JERK))
+			if (ISFLAG_ON(p2docs->m_userFlags, FLAG_NL2DOCS_DASHBOARD_MP_JERK))
 			{
-				// Méthode B:
+				// Mï¿½thode B:
 				o.Position_3f.x = shiftorgn.x + p2docs->transformY(m_j);
 				NUT_Draw_Mark(&o.Position_3f, &xt, &o.Color0_4f);
 				NUT_DrawPencil_From(&o);
@@ -835,7 +829,7 @@ void NLKIN::verticalDraw(NL2DOCS* p2docs, const NVEC2* po, const NCOLORPICKPACK 
 				for (i = 0; i <= iter; i++)
 				{
 					t = dt * (Nf32)i / (Nf32)iter;
-					//a0 = m_a - m_j * t;
+					// a0 = m_a - m_j * t;
 					s0 = m_s - m_v * t + 0.5f * m_a * t * t - m_j * t * t * t / 6.0f;
 					p.Position_3f.x = shiftorgn.x + p2docs->transformVx(m_j);
 					p.Position_3f.y = shiftorgn.y + p2docs->transformVy(-s0);
@@ -846,7 +840,7 @@ void NLKIN::verticalDraw(NL2DOCS* p2docs, const NVEC2* po, const NCOLORPICKPACK 
 	}
 }
 
-Nchar* NLKIN::print(Nchar* pstr)
+Nchar *NLKIN::print(Nchar *pstr)
 {
 	sprintf(pstr, "Kin[%X].t = %.4f\t.s = %.4f\t.v = %.4f\t.a = %.4f\t.j = %.4f", this, m_t, m_s, m_v, m_a, m_j);
 	return pstr;

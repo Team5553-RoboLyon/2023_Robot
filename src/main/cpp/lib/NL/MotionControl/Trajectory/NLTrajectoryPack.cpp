@@ -8,17 +8,16 @@
 #include "NLTrajectoryPackGetPointPersistentResult.h"
 #include "NLTrajectoryPack.h"
 
-
 NLTRAJECTORY_PACK::NLTRAJECTORY_PACK()
 {
 	NSetupArray(&m_trajectoryPointDescArray, 0, sizeof(NLTRJPOINT_DESC));
 
 	NSetupArray(&m_spotsArray, 0, sizeof(NLPATH_POINT));
-	
+
 	NIdentityMatrix(&m_matrix);
 	m_dt = 0.0f;
 	m_ds = 0.0f;
-//	m_pChunk = NULL;
+	//	m_pChunk = NULL;
 }
 
 NLTRAJECTORY_PACK::~NLTRAJECTORY_PACK()
@@ -29,15 +28,15 @@ NLTRAJECTORY_PACK::~NLTRAJECTORY_PACK()
 
 // ------------------------------------------------------------------------------------------
 /**
- *	@brief	'Reset' complet du pack ( ... qui est alors prêt pour un nouveau 'build' ).
- *			Toutes les données inclues dans le pack sont effacées, cependant la place mémoire occupée par l'array des chunks n'est pas libérée.
- *			Plus precisement: 
- *					La capacité de l'array 'm_chunksArray' reste telle quelle est, mais la taille est redéfinie à ZERO.
- *					La mémoire allouée en plus par chaque chunk inclu dans 'm_chunksArray' est libérée par l'appel à la méthode 'NLclearNLTrajectoryChunkInArrayCallBack'
+ *	@brief	'Reset' complet du pack ( ... qui est alors prï¿½t pour un nouveau 'build' ).
+ *			Toutes les donnï¿½es inclues dans le pack sont effacï¿½es, cependant la place mï¿½moire occupï¿½e par l'array des chunks n'est pas libï¿½rï¿½e.
+ *			Plus precisement:
+ *					La capacitï¿½ de l'array 'm_chunksArray' reste telle quelle est, mais la taille est redï¿½finie ï¿½ ZERO.
+ *					La mï¿½moire allouï¿½e en plus par chaque chunk inclu dans 'm_chunksArray' est libï¿½rï¿½e par l'appel ï¿½ la mï¿½thode 'NLclearNLTrajectoryChunkInArrayCallBack'
  *					pour chaque chunk.
  *
  */
- // ------------------------------------------------------------------------------------------
+// ------------------------------------------------------------------------------------------
 void NLTRAJECTORY_PACK::erase()
 {
 	NEraseArray(&m_trajectoryPointDescArray, NLclearNLTrajectoryPointDescInArrayCallBack);
@@ -45,45 +44,45 @@ void NLTRAJECTORY_PACK::erase()
 
 	m_pathGeometry.erase();
 	NIdentityMatrix(&m_matrix);
-	m_dt		= 0.0f;
-	m_ds		= 0.0f;
-	//m_pChunk	= NULL;
+	m_dt = 0.0f;
+	m_ds = 0.0f;
+	// m_pChunk	= NULL;
 }
 
-void NLTRAJECTORY_PACK::setup(const NLPATH* ppath, const NLDRIVETRAINSPECS* pdtspecs, const NARRAY* pusedpkeysarray)
+void NLTRAJECTORY_PACK::setup(const NLPATH *ppath, const NLDRIVETRAINSPECS *pdtspecs, const NARRAY *pusedpkeysarray)
 {
-	// Le pack "intègre toutes les données nécéssaires" au bon fonctionnement et à la cohérence du suivi de trajectoire.
-	// Il y a donc copie d'un certains nombre de données
+	// Le pack "intï¿½gre toutes les donnï¿½es nï¿½cï¿½ssaires" au bon fonctionnement et ï¿½ la cohï¿½rence du suivi de trajectoire.
+	// Il y a donc copie d'un certains nombre de donnï¿½es
 	erase();
 
-	m_pathGeometry				= ppath->m_geometry;	
-	m_matrix					= ppath->m_matrix;
-	
+	m_pathGeometry = ppath->m_geometry;
+	m_matrix = ppath->m_matrix;
+
 	Nu32 requiredspotsarraysize = 0;
-	NLTRJKEY** pptk = (NLTRJKEY**)pusedpkeysarray->pFirst;
+	NLTRJKEY **pptk = (NLTRJKEY **)pusedpkeysarray->pFirst;
 	for (Nu32 i = 0; i < pusedpkeysarray->Size; i++, pptk++)
 	{
 		requiredspotsarraysize += (*pptk)->SpotRequirement();
 	}
 	if (m_spotsArray.Capacity < requiredspotsarraysize)
-		NIncreaseArrayCapacity(&m_spotsArray, requiredspotsarraysize - m_spotsArray.Capacity );
+		NIncreaseArrayCapacity(&m_spotsArray, requiredspotsarraysize - m_spotsArray.Capacity);
 
-	m_driveTrainSpecifications	= *pdtspecs;
+	m_driveTrainSpecifications = *pdtspecs;
 
-	// Au cas où erase ne fasse plus son travail ...
+	// Au cas oï¿½ erase ne fasse plus son travail ...
 	NErrorIf(m_dt, NERROR_INCONSISTENT_VALUES);
 	NErrorIf(m_ds, NERROR_INCONSISTENT_VALUES);
-	//NErrorIf(m_pChunk, NERROR_INCONSISTENT_VALUES);
+	// NErrorIf(m_pChunk, NERROR_INCONSISTENT_VALUES);
 }
 
-Nu32 NLTRAJECTORY_PACK::read( FILE* pfile)
+Nu32 NLTRAJECTORY_PACK::read(FILE *pfile)
 {
 	// 1) lecture Version
-	Nu32	version_u32;
+	Nu32 version_u32;
 	if (fread(&version_u32, sizeof(Nu32), 1, pfile) != 1)
 		return 0;
 	// 2) lecture Header
-	NLTRAJECTORY_PACK_HEADER	header;
+	NLTRAJECTORY_PACK_HEADER header;
 
 	switch (NGETVERSION_MAIN(version_u32))
 	{
@@ -91,21 +90,21 @@ Nu32 NLTRAJECTORY_PACK::read( FILE* pfile)
 	case NGETVERSION_MAIN(VERSION_NLTRAJECTORY_PACK_HEADER):
 		if (fread(&header, sizeof(NLTRAJECTORY_PACK_HEADER), 1, pfile) != 1)
 			return 0;
-		m_dt					= header.m_dt;
-		m_matrix				= header.m_matrix;
-		
+		m_dt = header.m_dt;
+		m_matrix = header.m_matrix;
+
 		if (!m_driveTrainSpecifications.read(pfile))
 			return 0;
-		
+
 		if (!m_pathGeometry.read(pfile))
 			return 0;
 
-	/*
-		m_dtSpecsLimits			= header.m_dtSpecsLimits ;
-		m_dtSpecsAxleTrack		= header.m_dtSpecsAxleTrack;
-		m_dtSpecsStaticFriction = header.m_dtSpecsStaticFriction;
-		m_dtSpecsCenterOfMass	= header.m_dtSpecsCenterOfMass;
-		*/
+		/*
+			m_dtSpecsLimits			= header.m_dtSpecsLimits ;
+			m_dtSpecsAxleTrack		= header.m_dtSpecsAxleTrack;
+			m_dtSpecsStaticFriction = header.m_dtSpecsStaticFriction;
+			m_dtSpecsCenterOfMass	= header.m_dtSpecsCenterOfMass;
+			*/
 		// Recherche de potentiels pbs sur les arrays.
 		// ('NIsArrayCorruptedOrInconsistent' se charge de faire un setup auto en cas de array full of ZEROS)
 		if (NIsArrayCorruptedOrInconsistent(&m_spotsArray, &header.m_spotsArrayBounds, NTRUE)) // signifie qu'il y a un pb ( NARRAYCHK_INCONSISTENCY ou NARRAYCHK_CORRUPTED )
@@ -124,28 +123,28 @@ Nu32 NLTRAJECTORY_PACK::read( FILE* pfile)
 
 		if (m_trajectoryPointDescArray.Size)
 		{
-			NLTRJPOINT_DESC_HEADER		dsc;
-			NLTRJPOINT_DESC* ptpdsc = (NLTRJPOINT_DESC*)m_trajectoryPointDescArray.pFirst;
+			NLTRJPOINT_DESC_HEADER dsc;
+			NLTRJPOINT_DESC *ptpdsc = (NLTRJPOINT_DESC *)m_trajectoryPointDescArray.pFirst;
 			for (Nu32 i = 0; i < m_trajectoryPointDescArray.Size; i++, ptpdsc++)
 			{
 				if (fread(&dsc, sizeof(NLTRJPOINT_DESC_HEADER), 1, pfile) != 1)
 					return 0;
 
-				ptpdsc->m_kin	= dsc.m_kin;
+				ptpdsc->m_kin = dsc.m_kin;
 				ptpdsc->m_flags = dsc.m_flags;
 				if (ISFLAG_ON(ptpdsc->m_flags, FLAG_NLTRJPOINT_DESC_KTYPE_SPOT))
 				{
-					ptpdsc->m_pPathPoint1	= (NLPATH_POINT*)m_spotsArray.pFirst + dsc.m_KeyPoint1Idx;
-					ptpdsc->m_pPrimitive	= NULL;
+					ptpdsc->m_pPathPoint1 = (NLPATH_POINT *)m_spotsArray.pFirst + dsc.m_KeyPoint1Idx;
+					ptpdsc->m_pPrimitive = NULL;
 				}
 				else
 				{
-					ptpdsc->m_pPathPoint1	= (NLPATH_POINT*)m_pathGeometry.m_pathPointsArray.pFirst + dsc.m_KeyPoint1Idx;
-					ptpdsc->m_pPrimitive	= (NLPATH_PRIMITIVE*)m_pathGeometry.m_primitivesArray.pFirst + dsc.m_PrimitiveIdx;
+					ptpdsc->m_pPathPoint1 = (NLPATH_POINT *)m_pathGeometry.m_pathPointsArray.pFirst + dsc.m_KeyPoint1Idx;
+					ptpdsc->m_pPrimitive = (NLPATH_PRIMITIVE *)m_pathGeometry.m_primitivesArray.pFirst + dsc.m_PrimitiveIdx;
 				}
 			}
 		}
-		
+
 		return 1;
 
 	default:
@@ -155,18 +154,18 @@ Nu32 NLTRAJECTORY_PACK::read( FILE* pfile)
 }
 
 #ifdef _NEDITOR
-Nu32 NLTRAJECTORY_PACK::read(NLPATH_WORKBENCH* pwb)
+Nu32 NLTRAJECTORY_PACK::read(NLPATH_WORKBENCH *pwb)
 {
-	// 'operator =' n'est pas défini pour NLTRAJECTORY_PACK donc on doit faire une partie du JOB à la main
+	// 'operator =' n'est pas dï¿½fini pour NLTRAJECTORY_PACK donc on doit faire une partie du JOB ï¿½ la main
 	if (pwb && pwb->m_pTrajectory)
 	{
-		NLTRAJECTORY_PACK* ppack = pwb->m_pTrajectory->getPack();
-		m_matrix		= ppack->m_matrix;
-		m_dt			= ppack->m_dt;
+		NLTRAJECTORY_PACK *ppack = pwb->m_pTrajectory->getPack();
+		m_matrix = ppack->m_matrix;
+		m_dt = ppack->m_dt;
 
-		m_driveTrainSpecifications	= ppack->m_driveTrainSpecifications;
-		m_pathGeometry				= ppack->m_pathGeometry;
-		
+		m_driveTrainSpecifications = ppack->m_driveTrainSpecifications;
+		m_pathGeometry = ppack->m_pathGeometry;
+
 		NARRAYBOUNDS bounds;
 		NGetArrayBounds(&bounds, &ppack->m_spotsArray);
 		if (NIsArrayCorruptedOrInconsistent(&m_spotsArray, &bounds, NTRUE))
@@ -179,8 +178,8 @@ Nu32 NLTRAJECTORY_PACK::read(NLPATH_WORKBENCH* pwb)
 			NCopyArray(&m_spotsArray, &ppack->m_spotsArray);
 		}
 
-		NGetArrayBounds(&bounds,&ppack->m_trajectoryPointDescArray);
-		if (NIsArrayCorruptedOrInconsistent(&m_trajectoryPointDescArray, &bounds,NTRUE))
+		NGetArrayBounds(&bounds, &ppack->m_trajectoryPointDescArray);
+		if (NIsArrayCorruptedOrInconsistent(&m_trajectoryPointDescArray, &bounds, NTRUE))
 		{
 			NErrorIf(1, NERROR_ARRAY_CORRUPTED);
 			return 0;
@@ -188,9 +187,8 @@ Nu32 NLTRAJECTORY_PACK::read(NLPATH_WORKBENCH* pwb)
 		else
 		{
 			NResizeArray(&m_trajectoryPointDescArray, bounds.Size, NULL, NULL);
-			NLTRJPOINT_DESC* psrc = (NLTRJPOINT_DESC*)ppack->m_trajectoryPointDescArray.pFirst;
-			NLTRJPOINT_DESC* pdst = (NLTRJPOINT_DESC*)m_trajectoryPointDescArray.pFirst;
-
+			NLTRJPOINT_DESC *psrc = (NLTRJPOINT_DESC *)ppack->m_trajectoryPointDescArray.pFirst;
+			NLTRJPOINT_DESC *pdst = (NLTRJPOINT_DESC *)m_trajectoryPointDescArray.pFirst;
 
 #ifdef _NUT_LOGGING
 			NUT_EnableLoggingChannel(LOGS_CHANNEL_PACK, TRUE);
@@ -200,73 +198,70 @@ Nu32 NLTRAJECTORY_PACK::read(NLPATH_WORKBENCH* pwb)
 			for (Nu32 i = 0; i < ppack->m_trajectoryPointDescArray.Size; i++, psrc++)
 			{
 				if (ISFLAG_ON(psrc->m_flags, FLAG_NLTRJPOINT_DESC_KTYPE_SPOT))
-					NUT_Logging(LOGS_CHANNEL_PACK, "SPOT-NLTRJPOINT_DESC[%d]\tm_pPathPoint1[%X]\tm_pPrimitive[%X] \n",i,psrc->m_pPathPoint1,psrc->m_pPrimitive);
+					NUT_Logging(LOGS_CHANNEL_PACK, "SPOT-NLTRJPOINT_DESC[%d]\tm_pPathPoint1[%X]\tm_pPrimitive[%X] \n", i, psrc->m_pPathPoint1, psrc->m_pPrimitive);
 				else
 					NUT_Logging(LOGS_CHANNEL_PACK, "TRVL-NLTRJPOINT_DESC[%d]\tm_pPathPoint1[%X]\tm_pPrimitive[%X] \n", i, psrc->m_pPathPoint1, psrc->m_pPrimitive);
 			}
 #endif
 
-
-
-			// Copie élément par élément:
-			psrc = (NLTRJPOINT_DESC*)ppack->m_trajectoryPointDescArray.pFirst;
-			pdst = (NLTRJPOINT_DESC*)m_trajectoryPointDescArray.pFirst;
+			// Copie ï¿½lï¿½ment par ï¿½lï¿½ment:
+			psrc = (NLTRJPOINT_DESC *)ppack->m_trajectoryPointDescArray.pFirst;
+			pdst = (NLTRJPOINT_DESC *)m_trajectoryPointDescArray.pFirst;
 			for (Nu32 i = 0; i < m_trajectoryPointDescArray.Size; i++, psrc++, pdst++)
 			{
-				pdst->m_flags		= psrc->m_flags;
-				pdst->m_kin			= psrc->m_kin;
+				pdst->m_flags = psrc->m_flags;
+				pdst->m_kin = psrc->m_kin;
 				if (ISFLAG_ON(pdst->m_flags, FLAG_NLTRJPOINT_DESC_KTYPE_SPOT))
 				{
 					NErrorIf(psrc->m_pPrimitive, NERROR_NON_NULL_POINTER);
-					pdst->m_pPathPoint1 = (NLPATH_POINT*)m_spotsArray.pFirst + (psrc->m_pPathPoint1 - (NLPATH_POINT*)ppack->m_spotsArray.pFirst);
+					pdst->m_pPathPoint1 = (NLPATH_POINT *)m_spotsArray.pFirst + (psrc->m_pPathPoint1 - (NLPATH_POINT *)ppack->m_spotsArray.pFirst);
 					pdst->m_pPrimitive = NULL;
 				}
 				else
 				{
 					NErrorIf(!psrc->m_pPrimitive, NERROR_NON_NULL_POINTER);
-					pdst->m_pPathPoint1 = (NLPATH_POINT*)m_pathGeometry.m_pathPointsArray.pFirst + (psrc->m_pPathPoint1 - (NLPATH_POINT*)ppack->m_pathGeometry.m_pathPointsArray.pFirst);
-					pdst->m_pPrimitive = (NLPATH_PRIMITIVE*)m_pathGeometry.m_primitivesArray.pFirst + (psrc->m_pPrimitive - (NLPATH_PRIMITIVE*)ppack->m_pathGeometry.m_primitivesArray.pFirst);
+					pdst->m_pPathPoint1 = (NLPATH_POINT *)m_pathGeometry.m_pathPointsArray.pFirst + (psrc->m_pPathPoint1 - (NLPATH_POINT *)ppack->m_pathGeometry.m_pathPointsArray.pFirst);
+					pdst->m_pPrimitive = (NLPATH_PRIMITIVE *)m_pathGeometry.m_primitivesArray.pFirst + (psrc->m_pPrimitive - (NLPATH_PRIMITIVE *)ppack->m_pathGeometry.m_primitivesArray.pFirst);
 				}
 			}
 		}
-		#ifdef _NUT_LOGGING
+#ifdef _NUT_LOGGING
 		NUT_EnableLoggingChannel(LOGS_CHANNEL_PACK, TRUE);
 		NUT_Logging(LOGS_CHANNEL_PACK, "+ Check Loading PACK DATA from PathWorkBench +\n");
-		
+
 		// Spot Array
-		NLPATH_POINT* p0, * p1;
-		p0 = (NLPATH_POINT*)m_spotsArray.pFirst;
-		p1 = (NLPATH_POINT*)ppack->m_spotsArray.pFirst;
+		NLPATH_POINT *p0, *p1;
+		p0 = (NLPATH_POINT *)m_spotsArray.pFirst;
+		p1 = (NLPATH_POINT *)ppack->m_spotsArray.pFirst;
 		for (Nu32 i = 0; i < m_spotsArray.Size; i++, p0++, p1++)
 		{
-			NUT_Logging(LOGS_CHANNEL_PACK, "p[%X] (\t%.4f\t%.4f\t%.4f\t%.4f\t%.4f\t%.4f) \n",	p0,p0->s,p0->p.x,p0->p.y,p0->u.x,p0->u.y,p0->k);
-			NUT_Logging(LOGS_CHANNEL_PACK, "p[%X] (\t%.4f\t%.4f\t%.4f\t%.4f\t%.4f\t%.4f) \n",	p1, p1->s, p1->p.x, p1->p.y, p1->u.x, p1->u.y, p1->k);
+			NUT_Logging(LOGS_CHANNEL_PACK, "p[%X] (\t%.4f\t%.4f\t%.4f\t%.4f\t%.4f\t%.4f) \n", p0, p0->s, p0->p.x, p0->p.y, p0->u.x, p0->u.y, p0->k);
+			NUT_Logging(LOGS_CHANNEL_PACK, "p[%X] (\t%.4f\t%.4f\t%.4f\t%.4f\t%.4f\t%.4f) \n", p1, p1->s, p1->p.x, p1->p.y, p1->u.x, p1->u.y, p1->k);
 		}
-		#endif
+#endif
 		return 1;
-
 	}
 	return 0;
 }
 #endif
-Nu32 NLTRAJECTORY_PACK::write(FILE* pfile)
+Nu32 NLTRAJECTORY_PACK::write(FILE *pfile)
 {
-	// 1) écriture Version
-	Nu32	version_u32 = VERSION_NLTRAJECTORY_PACK_HEADER;
+	// 1) ï¿½criture Version
+	Nu32 version_u32 = VERSION_NLTRAJECTORY_PACK_HEADER;
 	if (fwrite(&version_u32, sizeof(Nu32), 1, pfile) != 1)
 		return 0;
 
-	// 2) écriture Header
-	NLTRAJECTORY_PACK_HEADER	header;
-	header.m_dt							= m_dt;
-	header.m_matrix						= m_matrix;
+	// 2) ï¿½criture Header
+	NLTRAJECTORY_PACK_HEADER header;
+	header.m_dt = m_dt;
+	header.m_matrix = m_matrix;
 	/*
 	header.m_dtSpecsLimits				= m_dtSpecsLimits;
 	header.m_dtSpecsAxleTrack			= m_dtSpecsAxleTrack;
 	header.m_dtSpecsStaticFriction		= m_dtSpecsStaticFriction;
 	header.m_dtSpecsCenterOfMass		= m_dtSpecsCenterOfMass;
 	*/
-	//header.m_keyStatesArraySize = m_keyStatesArray.Size;
+	// header.m_keyStatesArraySize = m_keyStatesArray.Size;
 	NGetArrayBounds(&header.m_spotsArrayBounds, &m_spotsArray);
 	NGetArrayBounds(&header.m_trajectoryPointDescArrayBounds, &m_trajectoryPointDescArray);
 	if (fwrite(&header, sizeof(NLTRAJECTORY_PACK_HEADER), 1, pfile) != 1)
@@ -284,51 +279,51 @@ Nu32 NLTRAJECTORY_PACK::write(FILE* pfile)
 			return 0;
 	}
 
-	// 3) écriture m_trajectoryPointDescArray à la main:
+	// 3) ï¿½criture m_trajectoryPointDescArray ï¿½ la main:
 	if (m_trajectoryPointDescArray.Size)
 	{
-		NLTRJPOINT_DESC_HEADER		dsc;
-		NLTRJPOINT_DESC* ptpdsc = (NLTRJPOINT_DESC*)m_trajectoryPointDescArray.pFirst;
+		NLTRJPOINT_DESC_HEADER dsc;
+		NLTRJPOINT_DESC *ptpdsc = (NLTRJPOINT_DESC *)m_trajectoryPointDescArray.pFirst;
 		for (Nu32 i = 0; i < m_trajectoryPointDescArray.Size; i++, ptpdsc++)
 		{
-			dsc.m_kin			= ptpdsc->m_kin;
-			dsc.m_flags			= ptpdsc->m_flags;
+			dsc.m_kin = ptpdsc->m_kin;
+			dsc.m_flags = ptpdsc->m_flags;
 			if (ISFLAG_ON(dsc.m_flags, FLAG_NLTRJPOINT_DESC_KTYPE_SPOT))
 			{
-				dsc.m_KeyPoint1Idx = ptpdsc->m_pPathPoint1 - (NLPATH_POINT*)m_spotsArray.pFirst;
+				dsc.m_KeyPoint1Idx = ptpdsc->m_pPathPoint1 - (NLPATH_POINT *)m_spotsArray.pFirst;
 				dsc.m_PrimitiveIdx = NVOID;
 			}
 			else
 			{
-				dsc.m_KeyPoint1Idx = ptpdsc->m_pPathPoint1 - (NLPATH_POINT*)m_pathGeometry.m_pathPointsArray.pFirst;
-				dsc.m_PrimitiveIdx = ptpdsc->m_pPrimitive - (NLPATH_PRIMITIVE*)m_pathGeometry.m_primitivesArray.pFirst;
+				dsc.m_KeyPoint1Idx = ptpdsc->m_pPathPoint1 - (NLPATH_POINT *)m_pathGeometry.m_pathPointsArray.pFirst;
+				dsc.m_PrimitiveIdx = ptpdsc->m_pPrimitive - (NLPATH_PRIMITIVE *)m_pathGeometry.m_primitivesArray.pFirst;
 			}
 
-			if (fwrite(&dsc,sizeof(NLTRJPOINT_DESC_HEADER),1, pfile) != 1)
+			if (fwrite(&dsc, sizeof(NLTRJPOINT_DESC_HEADER), 1, pfile) != 1)
 				return 0;
 		}
 	}
-	
+
 	return 1;
 }
-Nu32 NLTRAJECTORY_PACK::load(const Nchar* pfilename)
+Nu32 NLTRAJECTORY_PACK::load(const Nchar *pfilename)
 {
 	/* -----------------------------------------------------------------------------------------------------------------
-	*
-	*  Check extension
-	*
-	*/
+	 *
+	 *  Check extension
+	 *
+	 */
 	if (!NStrCheckEnd(pfilename, EXTENSION_NLTRAJECTORY_PACK_BIN))
 		return 0;
 
 	// 0) Ouverture du fichier en lecture
-	FILE* pfile = fopen(pfilename, "rb");
+	FILE *pfile = fopen(pfilename, "rb");
 	NErrorIf(!pfile, NERROR_FILE_OPENING_ERROR);
 	if (!pfile)
 		return 0;
 
 	// 1) Lecture Signature
-	Nu32	_u32;
+	Nu32 _u32;
 	if (fread(&_u32, sizeof(Nu32), 1, pfile) != 1)
 	{
 		fclose(pfile);
@@ -352,7 +347,7 @@ Nu32 NLTRAJECTORY_PACK::load(const Nchar* pfilename)
 	fclose(pfile);
 	return 1;
 }
-Nu32 NLTRAJECTORY_PACK::save(const Nchar* pfilename)
+Nu32 NLTRAJECTORY_PACK::save(const Nchar *pfilename)
 {
 	/* -----------------------------------------------------------------------------------------------------------------
 	 *
@@ -363,13 +358,13 @@ Nu32 NLTRAJECTORY_PACK::save(const Nchar* pfilename)
 		return 0;
 
 	// 0) Ouverture du fichier en ecriture
-	FILE* pfile = fopen(pfilename, "wb");
+	FILE *pfile = fopen(pfilename, "wb");
 	NErrorIf(!pfile, NERROR_FILE_OPENING_ERROR);
 	if (!pfile)
 		return 0;
 
 	// 1) Ecriture Signature
-	Nu32	_u32 = SIGNATURE_NLTRAJECTORY_PACK_BIN;
+	Nu32 _u32 = SIGNATURE_NLTRAJECTORY_PACK_BIN;
 	if (fwrite(&_u32, sizeof(Nu32), 1, pfile) != 1)
 	{
 		fclose(pfile);
@@ -384,7 +379,6 @@ Nu32 NLTRAJECTORY_PACK::save(const Nchar* pfilename)
 	}
 	fclose(pfile);
 	return 1;
-
 }
 /*
 void NLTRAJECTORY_PACK::storeRelevantParameters(const NLDRIVETRAINSPECS* pdtspecs)
@@ -429,7 +423,7 @@ NLTRAJECTORY_POINT* NLTRAJECTORY_PACK::getState(NLTRAJECTORY_POINT * pstate, con
 	{
 		pks0 = (NLTRJPOINT_DESC*)m_chunksArray.pFirst;
 		NLPATH_POINT* pkp0 = (pks0->m_pPathPoint1 - 1);
-		
+
 		pstate->m_kin	= pks0->m_kin;
 		pstate->m_p		= pkp0->p;
 		pstate->m_u		= pkp0->u;
@@ -442,7 +436,7 @@ NLTRAJECTORY_POINT* NLTRAJECTORY_PACK::getState(NLTRAJECTORY_POINT * pstate, con
 		pks0 = pks1 -1;
 
 		pstate->m_kin.from(&pks0->m_kin, pks1->m_kin.m_j, t - pks0->m_kin.m_t);
-		
+
 		NLPATH_POINT p;
 		m_pathGeometry.getPathPoint(&p, pks1->m_pPathPoint1, pks1->m_pPrimitive, pstate->m_kin.m_s);
 
@@ -459,7 +453,7 @@ NLTRAJECTORY_POINT* NLTRAJECTORY_PACK::getState(NLTRAJECTORY_POINT * pstate, con
 		pstate->m_tangent			= pkp1->u;
 		pstate->m_localCurvature	= pkp1->k;
 	}
-	
+
 	return pstate;
 }
 */
@@ -470,25 +464,28 @@ void NLTRAJECTORY_PACK::initializePersistentData()
 	m_pChunk->initializePersistentData();
 }
 */
-//NLTRAJECTORY_GETPOINT_RESULT
+// NLTRAJECTORY_GETPOINT_RESULT
 
-void NLTRAJECTORY_PACK::getPoint(NLTRAJECTORY_PACK_GETPOINT_PERSISTENT_RESULT* presult, const Nf32 t)
+void NLTRAJECTORY_PACK::getPoint(NLTRAJECTORY_PACK_GETPOINT_PERSISTENT_RESULT *presult, const Nf32 t)
 {
-	NErrorIf(!NIsValidArrayElementPtr(&m_trajectoryPointDescArray, (NBYTE*)presult->m_pTrjPointDsc), NERROR_SYSTEM_GURU_MEDITATION);
+	NErrorIf(!NIsValidArrayElementPtr(&m_trajectoryPointDescArray, (NBYTE *)presult->m_pTrjPointDsc), NERROR_SYSTEM_GURU_MEDITATION);
 	NErrorIf(t < 0.0f, NERROR_SYSTEM_GURU_MEDITATION);
 	NErrorIf(t > m_dt, NERROR_SYSTEM_GURU_MEDITATION);
 
-	NLTRJPOINT_DESC* ptpdsc		= presult->m_pTrjPointDsc;
-	NLTRJPOINT_DESC* ptpdsc0	= NULL;
-	while (ptpdsc->m_kin.m_t < t) { ptpdsc++; }
-	NErrorIf(ptpdsc > (NLTRJPOINT_DESC*)NGetLastArrayPtr(&m_trajectoryPointDescArray), NERROR_SYSTEM_GURU_MEDITATION);
+	NLTRJPOINT_DESC *ptpdsc = presult->m_pTrjPointDsc;
+	NLTRJPOINT_DESC *ptpdsc0 = NULL;
+	while (ptpdsc->m_kin.m_t < t)
+	{
+		ptpdsc++;
+	}
+	NErrorIf(ptpdsc > (NLTRJPOINT_DESC *)NGetLastArrayPtr(&m_trajectoryPointDescArray), NERROR_SYSTEM_GURU_MEDITATION);
 	ptpdsc0 = ptpdsc - 1;
 	presult->m_result.m_kin.from(&ptpdsc0->m_kin, ptpdsc->m_kin.m_j, t - ptpdsc0->m_kin.m_t);
-	
-	// Si m_pPrimitive est définie c'est que nous sommes en face d'un NLTRJPOINT_DESC de KTYPE TRAVELLING !
-	if(ptpdsc->m_pPrimitive)
-		m_pathGeometry.getPathPoint((NLPATH_POINT*)presult, ptpdsc->m_pPathPoint1, ptpdsc->m_pPrimitive, presult->m_result.m_kin.m_s);
-	// Sinon de KTYPE SPOT ou BACK_AND_FORTH 
+
+	// Si m_pPrimitive est dï¿½finie c'est que nous sommes en face d'un NLTRJPOINT_DESC de KTYPE TRAVELLING !
+	if (ptpdsc->m_pPrimitive)
+		m_pathGeometry.getPathPoint((NLPATH_POINT *)presult, ptpdsc->m_pPathPoint1, ptpdsc->m_pPrimitive, presult->m_result.m_kin.m_s);
+	// Sinon de KTYPE SPOT ou BACK_AND_FORTH
 	else
 	{
 		presult->m_result.m_p = ptpdsc->m_pPathPoint1->p;
@@ -520,14 +517,14 @@ NLTRAJECTORY_CHUNK_T* NLTRAJECTORY_PACK::AllocChunkT(const NARRAY* pkinsarray, c
 {
 
 
-	NErrorIf(!m_pathGeometry.m_ds, NERROR_NULL_VALUE);						// ? |La path geometrie doit être valide et déclarée au préalable ! 
+	NErrorIf(!m_pathGeometry.m_ds, NERROR_NULL_VALUE);						// ? |La path geometrie doit ï¿½tre valide et dï¿½clarï¿½e au prï¿½alable !
 	NErrorIf(!m_pathGeometry.m_pathPointsArray.Size, NERROR_NULL_VALUE);		// ? |cf NLTRAJECTORY_PACK.setup(...)
 	NErrorIf(!m_pathGeometry.m_primitivesArray.Size, NERROR_NULL_VALUE);	// ? |
 
 	NLTRAJECTORY_CHUNK_T *pchunk =  new(NArrayAllocBack(&m_chunksArray)) NLTRAJECTORY_CHUNK_T;
 	pchunk->build(pkinsarray, firstkinid, lastkinid, &m_pathGeometry);
 
-	// Check de cohérence ...
+	// Check de cohï¿½rence ...
 #ifdef _DEBUG
 	if (m_chunksArray.Size > 1)
 	{
@@ -537,7 +534,7 @@ NLTRAJECTORY_CHUNK_T* NLTRAJECTORY_PACK::AllocChunkT(const NARRAY* pkinsarray, c
 	}
 #endif
 
-	// Le chunk venant d'être ajouté il est le dernier. On se base sur ses données t et s de "sortie" pour définir la durée
+	// Le chunk venant d'ï¿½tre ajoutï¿½ il est le dernier. On se base sur ses donnï¿½es t et s de "sortie" pour dï¿½finir la durï¿½e
 	// et la longueur totale couverte par le Pack
 	m_dt = pchunk->m_t1;
 	m_ds = pchunk->m_s1;
@@ -547,7 +544,7 @@ NLTRAJECTORY_CHUNK_T* NLTRAJECTORY_PACK::AllocChunkT(const NARRAY* pkinsarray, c
 /*
 NLTRAJECTORY_CHUNK_R* NLTRAJECTORY_PACK::AllocChunkR(const NARRAY* pkinsarray, const Nu32 firstkinid, const Nu32 lastkinid, const Nf32 s)
 {
-	NErrorIf(!m_pathGeometry.m_ds, NERROR_NULL_VALUE);						// ? |La path geometrie doit être valide et déclarée au préalable ! 
+	NErrorIf(!m_pathGeometry.m_ds, NERROR_NULL_VALUE);						// ? |La path geometrie doit ï¿½tre valide et dï¿½clarï¿½e au prï¿½alable !
 	NErrorIf(!m_pathGeometry.m_pathPointsArray.Size, NERROR_NULL_VALUE);		// ? |cf NLTRAJECTORY_PACK.setup(...)
 	NErrorIf(!m_pathGeometry.m_primitivesArray.Size, NERROR_NULL_VALUE);	// ? |
 
@@ -555,7 +552,7 @@ NLTRAJECTORY_CHUNK_R* NLTRAJECTORY_PACK::AllocChunkR(const NARRAY* pkinsarray, c
 	m_pathGeometry.getPathPoint(&pathpoint, s);
 	NLTRAJECTORY_CHUNK_R* pchunk = new(NArrayAllocBack(&m_chunksArray)) NLTRAJECTORY_CHUNK_R;
 	pchunk->build(pkinsarray, firstkinid, lastkinid, &pathpoint);
-	// Check de cohérence ...
+	// Check de cohï¿½rence ...
 #ifdef _DEBUG
 	if (m_chunksArray.Size > 1)
 	{
@@ -564,93 +561,96 @@ NLTRAJECTORY_CHUNK_R* NLTRAJECTORY_PACK::AllocChunkR(const NARRAY* pkinsarray, c
 		//NErrorIf(ppreviouschunk->m_s1 != pchunk->m_s0, NERROR_INCONSISTENT_VALUES);
 	}
 #endif
-	
-	// Le chunk venant d'être ajouté il est le dernier. On se base sur ses données t et s de "sortie" pour définir la durée
+
+	// Le chunk venant d'ï¿½tre ajoutï¿½ il est le dernier. On se base sur ses donnï¿½es t et s de "sortie" pour dï¿½finir la durï¿½e
 	// et la longueur totale couverte par le Pack
 	m_dt = pchunk->m_t1;
 	m_ds = pchunk->m_s1;
 	return pchunk;
 }
 */
-NLTRJPOINT_DESC_CFG NLTRAJECTORY_PACK::buildTravelingChunk(const NLTRJPOINT_DESC_CFG cfg, const NARRAY* pkinsarray)
+NLTRJPOINT_DESC_CFG NLTRAJECTORY_PACK::buildTravelingChunk(const NLTRJPOINT_DESC_CFG cfg, const NARRAY *pkinsarray)
 {
 	NErrorIf(!IS_NLTRJPOINT_DESC_KTYPE_TRAVELING(cfg), NERROR_INCONSISTENT_PARAMETERS);
 
-	// TODO !!! Attention cette fonction peux générer un NLTRJPOINT_DESC en fin de chunk dont l'abscisse
-	// sera plus grande que la longueur totale du chemin !!! Cela est du à l'imprécision potentielle du calcul des KIN, car pour eux, le s est le resultat
+	// TODO !!! Attention cette fonction peux gï¿½nï¿½rer un NLTRJPOINT_DESC en fin de chunk dont l'abscisse
+	// sera plus grande que la longueur totale du chemin !!! Cela est du ï¿½ l'imprï¿½cision potentielle du calcul des KIN, car pour eux, le s est le resultat
 	// de l'integration de la vitesse, de l'acceleration et du jerk au cours du temps ...
-	// Pour l'instant ce cas n'est pas géré !!! IL VA FALLOIR LE FAIRE !!!  Sinon plantage assuré avec la fonction NLPATH_GEOMETRY::getPathPoint
+	// Pour l'instant ce cas n'est pas gï¿½rï¿½ !!! IL VA FALLOIR LE FAIRE !!!  Sinon plantage assurï¿½ avec la fonction NLPATH_GEOMETRY::getPathPoint
 	NErrorIf(pkinsarray->ElementSize != sizeof(NLKIN), NERROR_ARRAY_WRONG_ELEMENT_SIZE);
 	NErrorIf(m_pathGeometry.m_pathPointsArray.Size < 2, NERROR_INCONSISTENT_VALUES);
-	
+
 	if (!IS_NLTRJPOINT_DESC_CFG_CREATE_KIN(cfg))
 	{
-		// On retire toute ref. relatives à la création de Kins.
+		// On retire toute ref. relatives ï¿½ la crï¿½ation de Kins.
 		return MAKE_NLTRJPOINT_DESC_CFG(0, FALSE, cfg);
 	}
 
-
 	//	0)	* Preparation
 	//		*	pointeurs sur Kin
-	NLKIN* pk = (NLKIN*)pkinsarray->pFirst + GET_NLTRJPOINT_DESC_CFG_FIRST_KIN_IDX(cfg);
-	NLKIN* pprvk = pk;
-	NLKIN* plastk = (NLKIN*)pkinsarray->pFirst + pkinsarray->Size - 1;
+	NLKIN *pk = (NLKIN *)pkinsarray->pFirst + GET_NLTRJPOINT_DESC_CFG_FIRST_KIN_IDX(cfg);
+	NLKIN *pprvk = pk;
+	NLKIN *plastk = (NLKIN *)pkinsarray->pFirst + pkinsarray->Size - 1;
 	NErrorIf(!pk || !plastk, NERROR_NULL_POINTER);
 
 	// ????????NErrorIf(plastk->m_s == 0.0f, NERROR_SYSTEM_GURU_MEDITATION);
-	//		*	pointeurs sur éléments constituant la géométrie du chemin
-	NLPATH_PRIMITIVE* pprim;
-	NLPATH_POINT* pp;
-	NLPATH_POINT* plastp = ((NLPATH_POINT*)(m_pathGeometry.m_pathPointsArray.pFirst)) + m_pathGeometry.m_pathPointsArray.Size - 1;
+	//		*	pointeurs sur ï¿½lï¿½ments constituant la gï¿½omï¿½trie du chemin
+	NLPATH_PRIMITIVE *pprim;
+	NLPATH_POINT *pp;
+	NLPATH_POINT *plastp = ((NLPATH_POINT *)(m_pathGeometry.m_pathPointsArray.pFirst)) + m_pathGeometry.m_pathPointsArray.Size - 1;
 	// ????????NErrorIf(((NLPATH_POINT*)NGetLastArrayPtr(&m_pathGeometry.m_pathPointsArray))->s < plastk->m_s, NERROR_SYSTEM_GURU_MEDITATION);
 
 	//		*	pointeur sur point de trajectoire
-	NLTRJPOINT_DESC* ptrjpointdsc = (NLTRJPOINT_DESC*)NGetLastArrayPtr(&m_trajectoryPointDescArray);
+	NLTRJPOINT_DESC *ptrjpointdsc = (NLTRJPOINT_DESC *)NGetLastArrayPtr(&m_trajectoryPointDescArray);
 
 	//	1)	* Initialisation
-	//		*	
+	//		*
 	if (!ptrjpointdsc)
 	{
 		// L'array des "trajectoryPointDesc(ription)" est vide !
-		// Ce NLTRJPOINT_DESC est le premier à y être insèré !
-		// Il DOIT démarrrer par un premier Kin dont l'abscisse curviligne est 0 ! 
-		// ... et bien sûr, il pointera sur la première primitive du chemin associé et sur le second pathpoint.
-		// ( c'est à dire le 2eme de la paire définition le début et la fin de la primitive )
+		// Ce NLTRJPOINT_DESC est le premier ï¿½ y ï¿½tre insï¿½rï¿½ !
+		// Il DOIT dï¿½marrrer par un premier Kin dont l'abscisse curviligne est 0 !
+		// ... et bien sï¿½r, il pointera sur la premiï¿½re primitive du chemin associï¿½ et sur le second pathpoint.
+		// ( c'est ï¿½ dire le 2eme de la paire dï¿½finition le dï¿½but et la fin de la primitive )
 		NErrorIf(pk->m_s != 0.0f, NERROR_INCONSISTENT_VALUES);
 		NErrorIf(pk->m_v != 0.0f, NERROR_INCONSISTENT_VALUES);
 		NErrorIf(pk->m_a != 0.0f, NERROR_INCONSISTENT_VALUES);
 		NErrorIf(pk->m_j != 0.0f, NERROR_INCONSISTENT_VALUES);
-		pprim = (NLPATH_PRIMITIVE*)m_pathGeometry.m_primitivesArray.pFirst;
-		pp = (NLPATH_POINT*)(m_pathGeometry.m_pathPointsArray.pFirst) + 1;
+		pprim = (NLPATH_PRIMITIVE *)m_pathGeometry.m_primitivesArray.pFirst;
+		pp = (NLPATH_POINT *)(m_pathGeometry.m_pathPointsArray.pFirst) + 1;
 	}
 	else
 	{
-		// Il y a déjà un "trajectoryPointDesc(ription)" !
-		// Chaque nouveau kin inséré est censé contribuer à un déplacement du début à la fin du chemin, du coup l'abscisse curviligne de chaque nouveau kin inséré
-		// doit être supérieure ou égale à la précédente, jamais inférieure !
-		NErrorIf(pk->m_s < ptrjpointdsc->m_kin.m_s, NERROR_INCONSISTENT_VALUES);
+		// Il y a dï¿½jï¿½ un "trajectoryPointDesc(ription)" !
 
 		// Recherche de la primitive et du point
 		if (ptrjpointdsc->m_pPrimitive)
 		{
+			// Chaque nouveau kin insï¿½rï¿½ est censï¿½ contribuer ï¿½ un dï¿½placement du dï¿½but ï¿½ la fin du chemin, du coup, tant que le trjpointdesc est de type travelling,
+			// ce qui est le cas si m_pPrimitive est non null, l'abscisse curviligne de chaque nouveau kin insï¿½rï¿½ ...
+			// ... doit ï¿½tre supï¿½rieure ou ï¿½gale ï¿½ la prï¿½cï¿½dente, jamais infï¿½rieure !
+			NErrorIf(pk->m_s < ptrjpointdsc->m_kin.m_s, NERROR_INCONSISTENT_VALUES);
 			pprim = ptrjpointdsc->m_pPrimitive;
 			pp = ptrjpointdsc->m_pPathPoint1;
 		}
 		else
 		{
-			pprim	= (NLPATH_PRIMITIVE*)m_pathGeometry.m_primitivesArray.pFirst;
-			pp		= (NLPATH_POINT*)(m_pathGeometry.m_pathPointsArray.pFirst) + 1;
-			while ((pk->m_s > pp->s)&&(pp<plastp)) { pp++; pprim++; }
+			pprim = (NLPATH_PRIMITIVE *)m_pathGeometry.m_primitivesArray.pFirst;
+			pp = (NLPATH_POINT *)(m_pathGeometry.m_pathPointsArray.pFirst) + 1;
+			while ((pk->m_s > pp->s) && (pp < plastp))
+			{
+				pp++;
+				pprim++;
+			}
 		}
 	}
-
 
 	//	2)	* Construction des NLTRJPOINT_DESC
 	//
 	NErrorIf(!IS_NLTRJPOINT_DESC_KTYPE_TRAVELING(cfg), NERROR_INCONSISTENT_FLAGS);
 	NErrorIf(IS_NLTRJPOINT_DESC_KTYPE_NULL(cfg), NERROR_INCONSISTENT_FLAGS);
-	Nf32			 pps = pp->s;
-	NLTRJPOINT_DESC  trjpointdsc;
+	Nf32 pps = pp->s;
+	NLTRJPOINT_DESC trjpointdsc;
 
 	trjpointdsc.m_flags = cfg & MASK_NLTRJPOINT_DESC_CONFIG;
 
@@ -658,11 +658,11 @@ NLTRJPOINT_DESC_CFG NLTRAJECTORY_PACK::buildTravelingChunk(const NLTRJPOINT_DESC
 	{
 		if (pk->m_s < pps)
 		{
-			//trjpointdsc.m_flags ...	is already setup
+			// trjpointdsc.m_flags ...	is already setup
 			trjpointdsc.m_kin = *pk;
 			trjpointdsc.m_pPathPoint1 = pp;
 			trjpointdsc.m_pPrimitive = pprim;
-			ptrjpointdsc = (NLTRJPOINT_DESC*)NArrayPushBack(&m_trajectoryPointDescArray, (NBYTE*)&trjpointdsc);
+			ptrjpointdsc = (NLTRJPOINT_DESC *)NArrayPushBack(&m_trajectoryPointDescArray, (NBYTE *)&trjpointdsc);
 
 			if (pk < plastk)
 			{
@@ -674,11 +674,11 @@ NLTRJPOINT_DESC_CFG NLTRAJECTORY_PACK::buildTravelingChunk(const NLTRJPOINT_DESC
 		}
 		else if (pk->m_s == pps)
 		{
-			//trjpointdsc.m_flags ...	is already setup
+			// trjpointdsc.m_flags ...	is already setup
 			trjpointdsc.m_kin = *pk;
 			trjpointdsc.m_pPathPoint1 = pp;
 			trjpointdsc.m_pPrimitive = pprim;
-			ptrjpointdsc = (NLTRJPOINT_DESC*)NArrayPushBack(&m_trajectoryPointDescArray, (NBYTE*)&trjpointdsc);
+			ptrjpointdsc = (NLTRJPOINT_DESC *)NArrayPushBack(&m_trajectoryPointDescArray, (NBYTE *)&trjpointdsc);
 
 			if (pp < plastp)
 			{
@@ -704,11 +704,11 @@ NLTRJPOINT_DESC_CFG NLTRAJECTORY_PACK::buildTravelingChunk(const NLTRJPOINT_DESC
 			NErrorIf(pk->m_s <= pps, NERROR_INCONSISTENT_VALUES);
 			NErrorIf(pps == NF32_MAX, NERROR_INCONSISTENT_VALUES);
 
-			//trjpointdsc.m_flags ...	is already setup
+			// trjpointdsc.m_flags ...	is already setup
 			trjpointdsc.m_kin.atS(pprvk, pk, pps);
 			trjpointdsc.m_pPathPoint1 = pp;
 			trjpointdsc.m_pPrimitive = pprim;
-			ptrjpointdsc = (NLTRJPOINT_DESC*)NArrayPushBack(&m_trajectoryPointDescArray, (NBYTE*)&trjpointdsc);
+			ptrjpointdsc = (NLTRJPOINT_DESC *)NArrayPushBack(&m_trajectoryPointDescArray, (NBYTE *)&trjpointdsc);
 
 			if (pp < plastp)
 			{
@@ -722,108 +722,105 @@ NLTRJPOINT_DESC_CFG NLTRAJECTORY_PACK::buildTravelingChunk(const NLTRJPOINT_DESC
 			}
 		}
 	}
-	// On retire toute ref. relatives à la création de Kins.
+	// On retire toute ref. relatives ï¿½ la crï¿½ation de Kins.
 	return MAKE_NLTRJPOINT_DESC_CFG(0, FALSE, cfg);
 }
 
+// ...
+//	*****************************************************************************************************************************
+//	*
+//	*	L'abscisse du dernier Trajectory Point Desc est elle "audelï¿½" du chemin ?
+//	*
+//	*	Les "descriptions de Point de trajectoire" et leur kins sont calculï¿½s pour amener le robot exactement en fin de chemin.
+//	*	En consï¿½quence, on s'attend ï¿½ avoir:
+//	*											ptrjpointdsc->m_kin.m_s == m_pathGeometry.m_ds		[ avec "ptrjpointdsc->m_kin" dernier Kin de la trajectoire ]
+//  *
+//	*	Cependant, Il est possible que les approximations de calcul des kins ( float ) cumulï¿½es aboutissent ï¿½ l'inï¿½galitï¿½ suivante:
+//	*
+//	*											ptrjpointdsc->m_kin.m_s != m_pathGeometry.m_ds		[ avec "ptrjpointdsc->m_kin" dernier Kin de la trajectoire ]
+//	*
+//	*	Dans l'absolu, cela n'est pas trï¿½s grave car les fonctions qui ensuite interprï¿½tent les "ptrjpointdsc->m_kin" le font d'une maniï¿½re telle quelle retourne un rï¿½sultat cohï¿½rent.
+//	*
+//	*										par ex:	Le rï¿½sultat calculï¿½ par NLPATH_GEOMETRY::getPathPoint(NLPATH_POINT *pres, const Nf32 s) avec :
+//	*													s = ptrjpointdsc->m_kin.m_s	[ s > NLPATH_GEOMETRY.m_ds ]
+// 	*
+//	*												Sera le point pres, situï¿½ au delï¿½ du chemin sur le prologement de la derniï¿½re primitive du chemin.
+//	*												Sur un segment, le point sera sur le prolongement du segment.
+//	*												Sur un arc, le point sera sur le prolongement de l'arc.
+//	*												Sur une clothoide, le point sera sur le prolongement de la clothoide.
+//  *
+//  *	Si on tient absolument ï¿½ "ptrjpointdsc->m_kin.m_s <= m_pathGeometry.m_ds		[ avec "ptrjpointdsc->m_kin" dernier Kin de la trajectoire ]"
+//	*	... il conviendra de ralloger le chemin "d'un petit quelquechose" pour y parvenir.
+//  *	(	le cas oï¿½ ptrjpointdsc->m_kin.m_s < m_pathGeometry.m_ds, est moins gï¿½nant, cela revient ï¿½ dire que le robot c'est arrï¿½tï¿½ un peu avant mais SUR le chemin, alors que le cas
+//	*		oï¿½ ptrjpointdsc->m_kin.m_s > m_pathGeometry.m_ds revient ï¿½ dire que le robot est HORS du chemin )
+//  *
+//	*	On rallongera donc artificiellement le chemin en lui ajoutant un segment dont la longueur sera suffisement grande pour "intï¿½grer" le/les dernier(s) "trajectory Point Desc" ...
+//	*
 
+/*
+//	* mï¿½thode de rallongement : non testï¿½e ! et non mise en oeuvre car pas forcement utile en fin de compte ...
+if (ptrjpointdsc->m_kin.m_s > m_pathGeometry.m_ds)
+{
+	NLPATH_POINT* pof = (NLPATH_POINT*)m_pathGeometry.m_pathPointsArray.pFirst;
+	NLPATH_PRIMITIVE* pof2 = (NLPATH_PRIMITIVE*)m_pathGeometry.m_primitivesArray.pFirst;
 
-// ... 
-	//	*****************************************************************************************************************************
-	//	*
-	//	*	L'abscisse du dernier Trajectory Point Desc est elle "audelà" du chemin ?
-	//	*
-	//	*	Les "descriptions de Point de trajectoire" et leur kins sont calculés pour amener le robot exactement en fin de chemin.
-	//	*	En conséquence, on s'attend à avoir: 
-	//	*											ptrjpointdsc->m_kin.m_s == m_pathGeometry.m_ds		[ avec "ptrjpointdsc->m_kin" dernier Kin de la trajectoire ]
-	//  *
-	//	*	Cependant, Il est possible que les approximations de calcul des kins ( float ) cumulées aboutissent à l'inégalité suivante:
-	//	*
-	//	*											ptrjpointdsc->m_kin.m_s != m_pathGeometry.m_ds		[ avec "ptrjpointdsc->m_kin" dernier Kin de la trajectoire ]
-	//	*	
-	//	*	Dans l'absolu, cela n'est pas très grave car les fonctions qui ensuite interprètent les "ptrjpointdsc->m_kin" le font d'une manière telle quelle retourne un résultat cohérent.
-	//	*
-	//	*										par ex:	Le résultat calculé par NLPATH_GEOMETRY::getPathPoint(NLPATH_POINT *pres, const Nf32 s) avec :
-	//	*													s = ptrjpointdsc->m_kin.m_s	[ s > NLPATH_GEOMETRY.m_ds ]
-	// 	*												
-	//	*												Sera le point pres, situé au delà du chemin sur le prologement de la dernière primitive du chemin.
-	//	*												Sur un segment, le point sera sur le prolongement du segment.
-	//	*												Sur un arc, le point sera sur le prolongement de l'arc. 	
-	//	*												Sur une clothoide, le point sera sur le prolongement de la clothoide.
-	//  *
-	//  *	Si on tient absolument à "ptrjpointdsc->m_kin.m_s <= m_pathGeometry.m_ds		[ avec "ptrjpointdsc->m_kin" dernier Kin de la trajectoire ]"
-	//	*	... il conviendra de ralloger le chemin "d'un petit quelquechose" pour y parvenir.
-	//  *	(	le cas où ptrjpointdsc->m_kin.m_s < m_pathGeometry.m_ds, est moins gênant, cela revient à dire que le robot c'est arrêté un peu avant mais SUR le chemin, alors que le cas
-	//	*		où ptrjpointdsc->m_kin.m_s > m_pathGeometry.m_ds revient à dire que le robot est HORS du chemin )
-	//  *
-	//	*	On rallongera donc artificiellement le chemin en lui ajoutant un segment dont la longueur sera suffisement grande pour "intègrer" le/les dernier(s) "trajectory Point Desc" ... 
-	//	*
+	pp = (NLPATH_POINT*)NArrayAllocBack(&m_pathGeometry.m_pathPointsArray);
+	pprim =(NLPATH_PRIMITIVE*)NArrayAllocBack(&m_pathGeometry.m_primitivesArray);
 
-	/*
-	//	* méthode de rallongement : non testée ! et non mise en oeuvre car pas forcement utile en fin de compte ...
-	if (ptrjpointdsc->m_kin.m_s > m_pathGeometry.m_ds)
+	if ((pof != (NLPATH_POINT*)m_pathGeometry.m_pathPointsArray.pFirst)||(pof2 != (NLPATH_PRIMITIVE*)m_pathGeometry.m_primitivesArray.pFirst))
 	{
-		NLPATH_POINT* pof = (NLPATH_POINT*)m_pathGeometry.m_pathPointsArray.pFirst;
-		NLPATH_PRIMITIVE* pof2 = (NLPATH_PRIMITIVE*)m_pathGeometry.m_primitivesArray.pFirst;
-
-		pp = (NLPATH_POINT*)NArrayAllocBack(&m_pathGeometry.m_pathPointsArray);
-		pprim =(NLPATH_PRIMITIVE*)NArrayAllocBack(&m_pathGeometry.m_primitivesArray);
-
-		if ((pof != (NLPATH_POINT*)m_pathGeometry.m_pathPointsArray.pFirst)||(pof2 != (NLPATH_PRIMITIVE*)m_pathGeometry.m_primitivesArray.pFirst))
+		ptrjpointdsc = (NLTRJPOINT_DESC*)m_trajectoryPointDescArray.pFirst;
+		for (Nu32 i = 0; i < m_trajectoryPointDescArray.Size; i++, ptrjpointdsc++)
 		{
-			ptrjpointdsc = (NLTRJPOINT_DESC*)m_trajectoryPointDescArray.pFirst;
-			for (Nu32 i = 0; i < m_trajectoryPointDescArray.Size; i++, ptrjpointdsc++)
-			{
-				ptrjpointdsc->m_pPathPoint1 = (NLPATH_POINT*)m_pathGeometry.m_pathPointsArray.pFirst + (ptrjpointdsc->m_pPathPoint1 - pof);
-				ptrjpointdsc->m_pPrimitive = (NLPATH_PRIMITIVE*)m_pathGeometry.m_primitivesArray.pFirst + (ptrjpointdsc->m_pPrimitive - pof2);
-			}
-			ptrjpointdsc--;
-			NErrorIf(((NLTRJPOINT_DESC*)m_trajectoryPointDescArray.pFirst - ptrjpointdsc) != m_trajectoryPointDescArray.Size - 1, NERROR_INCONSISTENT_VALUES);
+			ptrjpointdsc->m_pPathPoint1 = (NLPATH_POINT*)m_pathGeometry.m_pathPointsArray.pFirst + (ptrjpointdsc->m_pPathPoint1 - pof);
+			ptrjpointdsc->m_pPrimitive = (NLPATH_PRIMITIVE*)m_pathGeometry.m_primitivesArray.pFirst + (ptrjpointdsc->m_pPrimitive - pof2);
 		}
-
-		plastp = (NLPATH_POINT*)NGetArrayPtr(&m_pathGeometry.m_pathPointsArray, m_pathGeometry.m_pathPointsArray.Size - 2);
-		NLPATH_PRIMITIVE* plastprim = (NLPATH_PRIMITIVE*)NGetArrayPtr(&m_pathGeometry.m_primitivesArray, m_pathGeometry.m_primitivesArray.Size - 2);
-		NErrorIf(plastp != ptrjpointdsc->m_pPathPoint1, NERROR_INCONSISTENT_VALUES);
-		NErrorIf(plastprim != ptrjpointdsc->m_pPrimitive, NERROR_INCONSISTENT_VALUES);
-
-		// Setup de la primitive "artificielle"
-		pprim->m_segment.m_core.m_id		= NLPATH_PRIMITIVE_ID_SEGMENT;
-		pprim->m_segment.m_core.m_flags		= flags;
-		pprim->m_segment.m_core.m_keyPoint0 = _SafeNu32ToNu16(m_pathGeometry.m_pathPointsArray.Size - 2);
-		pprim->m_segment.m_core.m_l			= pp->s - m_pathGeometry.m_ds;
-
-		// Setup du point "artificiel"
-		pp->k	= 0.0f;
-		pp->u	= plastp->u;
-		pp->s	= ptrjpointdsc->m_kin.m_s;
-		pp->p.x = pp->u.x * pprim->m_segment.m_core.m_l;
-		pp->p.y = pp->u.y * pprim->m_segment.m_core.m_l;
+		ptrjpointdsc--;
+		NErrorIf(((NLTRJPOINT_DESC*)m_trajectoryPointDescArray.pFirst - ptrjpointdsc) != m_trajectoryPointDescArray.Size - 1, NERROR_INCONSISTENT_VALUES);
 	}
-	*/
 
+	plastp = (NLPATH_POINT*)NGetArrayPtr(&m_pathGeometry.m_pathPointsArray, m_pathGeometry.m_pathPointsArray.Size - 2);
+	NLPATH_PRIMITIVE* plastprim = (NLPATH_PRIMITIVE*)NGetArrayPtr(&m_pathGeometry.m_primitivesArray, m_pathGeometry.m_primitivesArray.Size - 2);
+	NErrorIf(plastp != ptrjpointdsc->m_pPathPoint1, NERROR_INCONSISTENT_VALUES);
+	NErrorIf(plastprim != ptrjpointdsc->m_pPrimitive, NERROR_INCONSISTENT_VALUES);
+
+	// Setup de la primitive "artificielle"
+	pprim->m_segment.m_core.m_id		= NLPATH_PRIMITIVE_ID_SEGMENT;
+	pprim->m_segment.m_core.m_flags		= flags;
+	pprim->m_segment.m_core.m_keyPoint0 = _SafeNu32ToNu16(m_pathGeometry.m_pathPointsArray.Size - 2);
+	pprim->m_segment.m_core.m_l			= pp->s - m_pathGeometry.m_ds;
+
+	// Setup du point "artificiel"
+	pp->k	= 0.0f;
+	pp->u	= plastp->u;
+	pp->s	= ptrjpointdsc->m_kin.m_s;
+	pp->p.x = pp->u.x * pprim->m_segment.m_core.m_l;
+	pp->p.y = pp->u.y * pprim->m_segment.m_core.m_l;
+}
+*/
 
 // ------------------------------------------------------------------------------------------
 /**
- *	@brief	Construit une série de "Descriptions de Point de trajectoire" à partir d'un/plusieurs "kins" 
- *			... et bien sûr du chemin déjà défini dans le Pack.
- * 
+ *	@brief	Construit une sï¿½rie de "Descriptions de Point de trajectoire" ï¿½ partir d'un/plusieurs "kins"
+ *			... et bien sï¿½r du chemin dï¿½jï¿½ dï¿½fini dans le Pack.
+ *
  *	@param	build_flags	est une valeur 32 bits contenant:
- *										le "Core Mode" codé sur 1 bit ( BIT_1 )
- *	
- * 
- *	@return	l'index de l'action attachée.
+ *										le "Core Mode" codï¿½ sur 1 bit ( BIT_1 )
+ *
+ *
+ *	@return	l'index de l'action attachï¿½e.
  *			NVOID si hwnd est NULL
- *	 		valeur indéterminée si la classe de fenêtre de hwnd n'est pas ActionWinClass
+ *	 		valeur indï¿½terminï¿½e si la classe de fenï¿½tre de hwnd n'est pas ActionWinClass
  *
  */
- // ------------------------------------------------------------------------------------------
+// ------------------------------------------------------------------------------------------
 /*
 NLTRJPOINT_DESC_CFG NLTRAJECTORY_PACK::buildTravelingChunk(const NLTRJPOINT_DESC_CFG cfg, const NARRAY* pkinsarray, const Nu32 firstkinid, const Nu32 lastkinid)
 {
-// TODO !!! Attention cette fonction peux générer un NLTRJPOINT_DESC en fin de chunk dont l'abscisse
-// sera plus grande que la longueur totale du chemin !!! Cela est du à l'imprécision potentielle du calcul des KIN, car pour eux, le s est le resultat
+// TODO !!! Attention cette fonction peux gï¿½nï¿½rer un NLTRJPOINT_DESC en fin de chunk dont l'abscisse
+// sera plus grande que la longueur totale du chemin !!! Cela est du ï¿½ l'imprï¿½cision potentielle du calcul des KIN, car pour eux, le s est le resultat
 // de l'integration de la vitesse, de l'acceleration et du jerk au cours du temps ...
-// Pour l'instant ce cas n'est pas géré !!! IL VA FALLOIR LE FAIRE !!!  Sinon plantage assuré avec la fonction NLPATH_GEOMETRY::getPathPoint
+// Pour l'instant ce cas n'est pas gï¿½rï¿½ !!! IL VA FALLOIR LE FAIRE !!!  Sinon plantage assurï¿½ avec la fonction NLPATH_GEOMETRY::getPathPoint
 	NErrorIf(pkinsarray->ElementSize != sizeof(NLKIN), NERROR_WRONG_ARRAY_SIZE);
 	NErrorIf(firstkinid >= pkinsarray->Size, NERROR_INDEX_OUTOFRANGE);
 	NErrorIf(lastkinid <= firstkinid, NERROR_INCONSISTENT_VALUES);
@@ -846,7 +843,7 @@ NLTRJPOINT_DESC_CFG NLTRAJECTORY_PACK::buildTravelingChunk(const NLTRJPOINT_DESC
 	NErrorIf(!pk || !plastk, NERROR_NULL_POINTER);
 
 	// ????????NErrorIf(plastk->m_s == 0.0f, NERROR_SYSTEM_GURU_MEDITATION);
-	//		*	pointeurs sur éléments constituant la géométrie du chemin
+	//		*	pointeurs sur ï¿½lï¿½ments constituant la gï¿½omï¿½trie du chemin
 	NLPATH_PRIMITIVE* pprim;
 	NLPATH_POINT* pp;
 	NLPATH_POINT* plastp	= ((NLPATH_POINT*)(m_pathGeometry.m_pathPointsArray.pFirst)) + m_pathGeometry.m_pathPointsArray.Size - 1;
@@ -856,12 +853,12 @@ NLTRJPOINT_DESC_CFG NLTRAJECTORY_PACK::buildTravelingChunk(const NLTRJPOINT_DESC
 	NLTRJPOINT_DESC* ptrjpointdsc = (NLTRJPOINT_DESC*)NGetLastArrayPtr(&m_trajectoryPointDescArray);
 
 	//	1)	* Initialisation
-	//		*	
+	//		*
 	if (!ptrjpointdsc)
 	{
 		// L'array des "trajectoryPointDesc(ription)" est vide !
-		// Ce chunk est le premier à y être insèré !
-		// Il DOIT démarrrer par un premier Kin dont l'abscisse curviligne est 0 ! 
+		// Ce chunk est le premier ï¿½ y ï¿½tre insï¿½rï¿½ !
+		// Il DOIT dï¿½marrrer par un premier Kin dont l'abscisse curviligne est 0 !
 		NErrorIf(pk->m_s != 0.0f, NERROR_INCONSISTENT_VALUES);
 		NErrorIf(pk->m_v != 0.0f, NERROR_INCONSISTENT_VALUES);
 		NErrorIf(pk->m_a != 0.0f, NERROR_INCONSISTENT_VALUES);
@@ -869,10 +866,10 @@ NLTRJPOINT_DESC_CFG NLTRAJECTORY_PACK::buildTravelingChunk(const NLTRJPOINT_DESC
 		pprim = (NLPATH_PRIMITIVE*)m_pathGeometry.m_primitivesArray.pFirst;
 		pp = (NLPATH_POINT*)(m_pathGeometry.m_pathPointsArray.pFirst) + 1;
 	}
-	else 
+	else
 	{
-		// Chaque nouveau kin inséré est censé contribuer à un déplacement du début à la fin du chemin, du coup l'abscisse curviligne de chaque nouveau kin inséré
-		// doit être supérieure ou égale à la précédente, jamais inférieure !
+		// Chaque nouveau kin insï¿½rï¿½ est censï¿½ contribuer ï¿½ un dï¿½placement du dï¿½but ï¿½ la fin du chemin, du coup l'abscisse curviligne de chaque nouveau kin insï¿½rï¿½
+		// doit ï¿½tre supï¿½rieure ou ï¿½gale ï¿½ la prï¿½cï¿½dente, jamais infï¿½rieure !
 		NErrorIf(pk->m_s < ptrjpointdsc->m_kin.m_s, NERROR_INCONSISTENT_VALUES);
 		pprim	= ptrjpointdsc->m_pPrimitive;
 		pp		= ptrjpointdsc->m_pPathPoint1;
@@ -887,7 +884,7 @@ NLTRJPOINT_DESC_CFG NLTRAJECTORY_PACK::buildTravelingChunk(const NLTRJPOINT_DESC
 	NLTRJPOINT_DESC  trjpointdsc;
 
 	trjpointdsc.m_flags = cfg & MASK_NLTRAJECTORY_POINT_DESC_CONFIG;
-	
+
 	while (1)
 	{
 		if (pk->m_s < pps)
@@ -958,36 +955,36 @@ NLTRJPOINT_DESC_CFG NLTRAJECTORY_PACK::buildTravelingChunk(const NLTRJPOINT_DESC
 	}
 	//	*****************************************************************************************************************************
 	//	*
-	//	*	L'abscisse du dernier Trajectory Point Desc est elle "audelà" du chemin ?
+	//	*	L'abscisse du dernier Trajectory Point Desc est elle "audelï¿½" du chemin ?
 	//	*
-	//	*	Les "descriptions de Point de trajectoire" et leur kins sont calculés pour amener le robot exactement en fin de chemin.
-	//	*	En conséquence, on s'attend à avoir: 
+	//	*	Les "descriptions de Point de trajectoire" et leur kins sont calculï¿½s pour amener le robot exactement en fin de chemin.
+	//	*	En consï¿½quence, on s'attend ï¿½ avoir:
 	//	*											ptrjpointdsc->m_kin.m_s == m_pathGeometry.m_ds		[ avec "ptrjpointdsc->m_kin" dernier Kin de la trajectoire ]
 	//  *
-	//	*	Cependant, Il est possible que les approximations de calcul des kins ( float ) cumulées aboutissent à l'inégalité suivante:
+	//	*	Cependant, Il est possible que les approximations de calcul des kins ( float ) cumulï¿½es aboutissent ï¿½ l'inï¿½galitï¿½ suivante:
 	//	*
 	//	*											ptrjpointdsc->m_kin.m_s != m_pathGeometry.m_ds		[ avec "ptrjpointdsc->m_kin" dernier Kin de la trajectoire ]
-	//	*	
-	//	*	Dans l'absolu, cela n'est pas très grave car les fonctions qui ensuite interprètent les "ptrjpointdsc->m_kin" le font d'une manière telle quelle retourne un résultat cohérent.
 	//	*
-	//	*										par ex:	Le résultat calculé par NLPATH_GEOMETRY::getPathPoint(NLPATH_POINT *pres, const Nf32 s) avec :
+	//	*	Dans l'absolu, cela n'est pas trï¿½s grave car les fonctions qui ensuite interprï¿½tent les "ptrjpointdsc->m_kin" le font d'une maniï¿½re telle quelle retourne un rï¿½sultat cohï¿½rent.
+	//	*
+	//	*										par ex:	Le rï¿½sultat calculï¿½ par NLPATH_GEOMETRY::getPathPoint(NLPATH_POINT *pres, const Nf32 s) avec :
 	//	*													s = ptrjpointdsc->m_kin.m_s	[ s > NLPATH_GEOMETRY.m_ds ]
-	// 	*												
-	//	*												Sera le point pres, situé au delà du chemin sur le prologement de la dernière primitive du chemin.
+	// 	*
+	//	*												Sera le point pres, situï¿½ au delï¿½ du chemin sur le prologement de la derniï¿½re primitive du chemin.
 	//	*												Sur un segment, le point sera sur le prolongement du segment.
-	//	*												Sur un arc, le point sera sur le prolongement de l'arc. 	
+	//	*												Sur un arc, le point sera sur le prolongement de l'arc.
 	//	*												Sur une clothoide, le point sera sur le prolongement de la clothoide.
 	//  *
-	//  *	Si on tient absolument à "ptrjpointdsc->m_kin.m_s <= m_pathGeometry.m_ds		[ avec "ptrjpointdsc->m_kin" dernier Kin de la trajectoire ]"
+	//  *	Si on tient absolument ï¿½ "ptrjpointdsc->m_kin.m_s <= m_pathGeometry.m_ds		[ avec "ptrjpointdsc->m_kin" dernier Kin de la trajectoire ]"
 	//	*	... il conviendra de ralloger le chemin "d'un petit quelquechose" pour y parvenir.
-	//  *	(	le cas où ptrjpointdsc->m_kin.m_s < m_pathGeometry.m_ds, est moins gênant, cela revient à dire que le robot c'est arrêté un peu avant mais SUR le chemin, alors que le cas
-	//	*		où ptrjpointdsc->m_kin.m_s > m_pathGeometry.m_ds revient à dire que le robot est HORS du chemin )
+	//  *	(	le cas oï¿½ ptrjpointdsc->m_kin.m_s < m_pathGeometry.m_ds, est moins gï¿½nant, cela revient ï¿½ dire que le robot c'est arrï¿½tï¿½ un peu avant mais SUR le chemin, alors que le cas
+	//	*		oï¿½ ptrjpointdsc->m_kin.m_s > m_pathGeometry.m_ds revient ï¿½ dire que le robot est HORS du chemin )
 	//  *
-	//	*	On rallongera donc artificiellement le chemin en lui ajoutant un segment dont la longueur sera suffisement grande pour "intègrer" le/les dernier(s) "trajectory Point Desc" ... 
+	//	*	On rallongera donc artificiellement le chemin en lui ajoutant un segment dont la longueur sera suffisement grande pour "intï¿½grer" le/les dernier(s) "trajectory Point Desc" ...
 	//	*
-	
+
 	/ *
-	//	* méthode de rallongement : non testée ! et non mise en oeuvre car pas forcement utile en fin de compte ...
+	//	* mï¿½thode de rallongement : non testï¿½e ! et non mise en oeuvre car pas forcement utile en fin de compte ...
 	if (ptrjpointdsc->m_kin.m_s > m_pathGeometry.m_ds)
 	{
 		NLPATH_POINT* pof = (NLPATH_POINT*)m_pathGeometry.m_pathPointsArray.pFirst;
@@ -1042,9 +1039,9 @@ NLPATH_POINT* NLTRAJECTORY_PACK::safeSpotAllocation()
 		for (Nu32 i = 0; i < m_trajectoryPointDescArray.Size; i++, ppdsc++)
 		{
 			if(!ppdsc->m_pPrimitive)
-			ppdsc->m_pPathPoint1 
+			ppdsc->m_pPathPoint1
 		}
-		
+
 	}
 }
 */
@@ -1055,7 +1052,7 @@ NLPROMOTE_KEY_ACTION_CFG NLTRAJECTORY_PACK::buildSpotChunk(NARRAY* pkinsarray, N
 
 	NLTRJPOINT_DESC		trjpointdsc;
 	NLPATH_POINT*				pspot	= NULL;
-	NLKIN*						pk		= NULL;	 
+	NLKIN*						pk		= NULL;
 	NLKIN*						plastk	= NULL;
 	NLPROMOTE_KEY_ACTION_CFG	nxt_cfg	= 0;
 
@@ -1119,7 +1116,7 @@ NLTRJPOINT_DESC_CFG NLTRAJECTORY_PACK::buildSpotChunk(const NLTRJPOINT_DESC_CFG 
 	pspot = (NLPATH_POINT*)NGetLastArrayPtr(&m_spotsArray);
 	if (!pspot || pspot->s != s)
 	{
-		NErrorIf(m_spotsArray.Size == m_spotsArray.Capacity, NERROR_ARRAY_REALLOCATION_FAILURE); // Normalement 
+		NErrorIf(m_spotsArray.Size == m_spotsArray.Capacity, NERROR_ARRAY_REALLOCATION_FAILURE); // Normalement
 		pspot = (NLPATH_POINT*)NArrayAllocBack(&m_spotsArray);
 		m_pathGeometry.getPathPoint(pspot, s);
 	}
@@ -1132,10 +1129,10 @@ NLTRJPOINT_DESC_CFG NLTRAJECTORY_PACK::buildSpotChunk(const NLTRJPOINT_DESC_CFG 
 		trjpointdsc.m_pPrimitive = NULL;
 		NArrayPushBack(&m_trajectoryPointDescArray, (NBYTE*)&trjpointdsc);
 		pk++;
-	} 
+	}
 }
 */
-NLTRJPOINT_DESC_CFG NLTRAJECTORY_PACK::buildSpotChunk(const NLTRJPOINT_DESC_CFG cfg, const Nf32 s, const NARRAY* pkinsarray)
+NLTRJPOINT_DESC_CFG NLTRAJECTORY_PACK::buildSpotChunk(const NLTRJPOINT_DESC_CFG cfg, const Nf32 s, const NARRAY *pkinsarray)
 {
 	if (IS_NLTRJPOINT_DESC_CFG_CREATE_KIN(cfg))
 	{
@@ -1143,17 +1140,17 @@ NLTRJPOINT_DESC_CFG NLTRAJECTORY_PACK::buildSpotChunk(const NLTRJPOINT_DESC_CFG 
 		NErrorIf(!pkinsarray->Size, NERROR_ARRAY_IS_EMPTY);
 		NErrorIf(GET_NLTRJPOINT_DESC_CFG_FIRST_KIN_IDX(cfg) >= pkinsarray->Size, NERROR_INCONSISTENT_VALUES);
 
-		NLKIN* pk = (NLKIN*)pkinsarray->pFirst + GET_NLTRJPOINT_DESC_CFG_FIRST_KIN_IDX(cfg);
-		NLKIN* plastk = (NLKIN*)pkinsarray->pFirst + pkinsarray->Size - 1;
-		NLPATH_POINT* pspot = NULL;
-		NLTRJPOINT_DESC  trjpointdsc;
+		NLKIN *pk = (NLKIN *)pkinsarray->pFirst + GET_NLTRJPOINT_DESC_CFG_FIRST_KIN_IDX(cfg);
+		NLKIN *plastk = (NLKIN *)pkinsarray->pFirst + pkinsarray->Size - 1;
+		NLPATH_POINT *pspot = NULL;
+		NLTRJPOINT_DESC trjpointdsc;
 
 		// Creation du "Point" fixe sur lequel les TrajectoryPointDesc vont se construire
-		pspot = (NLPATH_POINT*)NGetLastArrayPtr(&m_spotsArray);
+		pspot = (NLPATH_POINT *)NGetLastArrayPtr(&m_spotsArray);
 		if (!pspot || pspot->s != s)
 		{
-			NErrorIf(m_spotsArray.Size == m_spotsArray.Capacity, NERROR_ARRAY_REALLOCATION_FAILURE); // Normalement 
-			pspot = (NLPATH_POINT*)NArrayAllocBack(&m_spotsArray);
+			NErrorIf(m_spotsArray.Size == m_spotsArray.Capacity, NERROR_ARRAY_REALLOCATION_FAILURE); // Normalement
+			pspot = (NLPATH_POINT *)NArrayAllocBack(&m_spotsArray);
 			m_pathGeometry.getPathPoint(pspot, s);
 		}
 
@@ -1163,11 +1160,11 @@ NLTRJPOINT_DESC_CFG NLTRAJECTORY_PACK::buildSpotChunk(const NLTRJPOINT_DESC_CFG 
 			trjpointdsc.m_kin = *pk;
 			trjpointdsc.m_pPathPoint1 = pspot;
 			trjpointdsc.m_pPrimitive = NULL;
-			NArrayPushBack(&m_trajectoryPointDescArray, (NBYTE*)&trjpointdsc);
+			NArrayPushBack(&m_trajectoryPointDescArray, (NBYTE *)&trjpointdsc);
 			pk++;
 		}
 	}
-	// On retire toute ref. relatives à la création de Kins.
+	// On retire toute ref. relatives ï¿½ la crï¿½ation de Kins.
 	return MAKE_NLTRJPOINT_DESC_CFG(0, FALSE, cfg);
 }
 
@@ -1179,27 +1176,30 @@ Nf32 NLTRAJECTORY_PACK::getTime(const Nf32 s)
 		return m_dt;
 	else // 0 < s < m_ds
 	{
-		NLTRJPOINT_DESC* pp = (NLTRJPOINT_DESC*)m_trajectoryPointDescArray.pFirst;
-		Nf32	p, q, sqrt_dlt;
+		NLTRJPOINT_DESC *pp = (NLTRJPOINT_DESC *)m_trajectoryPointDescArray.pFirst;
+		Nf32 p, q, sqrt_dlt;
 
-		while (pp->m_kin.m_s < s) { pp++; };
-		NLTRJPOINT_DESC* pp0 = pp - 1;
+		while (pp->m_kin.m_s < s)
+		{
+			pp++;
+		};
+		NLTRJPOINT_DESC *pp0 = pp - 1;
 
-		// Normalement, la construction de l'array des NLTRJPOINT_DESC + le test effectué dans le while devrait systématiquement "atterrir" sur un
+		// Normalement, la construction de l'array des NLTRJPOINT_DESC + le test effectuï¿½ dans le while devrait systï¿½matiquement "atterrir" sur un
 		// NLTRJPOINT_DESC de KTYPE Travelling !
-		//	s0		s1		s2		s3		s4		s5		s6		s7			Les points pg et ph sont de KTYPE SPot, les autres Travelling		
+		//	s0		s1		s2		s3		s4		s5		s6		s7			Les points pg et ph sont de KTYPE SPot, les autres Travelling
 		//	+.......+.......+.......+.......+.......+.......+.......+... . . .	Si on a s tel que s4 < s <= s5
 		//	pa		pb		pc		pd		pe		pf		pj		pk			on atterri sur pp = pf (s5 ) qui est de Type Travelling
-		//																		pg, ph et pi sont "inaccessibles" car "masqué" par pf
+		//																		pg, ph et pi sont "inaccessibles" car "masquï¿½" par pf
 		//											+							pp0 = pp - 1 tombe sur pe(s4) qui est travelling aussi.
 		//											pg							Si on a s tel que s5 < s <= s6
 		//																		on atterri sur pp = pj (s6 ) qui est de Type Travelling
-		//											+							pp0 = pp - 1 tombe sur pi(s5) qui doit etre /est travelling aussi.	
+		//											+							pp0 = pp - 1 tombe sur pi(s5) qui doit etre /est travelling aussi.
 		//											ph							la contruction de l'array garanti que toute chunk de points SPOT
-		//																		se termine pas un point de KTYPE travelling à la même abscisse.
+		//																		se termine pas un point de KTYPE travelling ï¿½ la mï¿½me abscisse.
 		//											+
 		//											pi
-		NErrorIf(!IS_NLTRAJECTORY_POINT_DESC_TRAVELING(pp->m_flags), NERROR_SYSTEM_GURU_MEDITATION);	
+		NErrorIf(!IS_NLTRAJECTORY_POINT_DESC_TRAVELING(pp->m_flags), NERROR_SYSTEM_GURU_MEDITATION);
 		NErrorIf(!IS_NLTRAJECTORY_POINT_DESC_TRAVELING(pp0->m_flags), NERROR_SYSTEM_GURU_MEDITATION);
 
 		if (!pp->m_kin.m_j)
@@ -1209,18 +1209,18 @@ Nf32 NLTRAJECTORY_PACK::getTime(const Nf32 s)
 				//	NErrorIf(pk->m_a, NERROR_SYSTEM_CHECK);				// impossible car si 0.m_a est nulle et m_j est null  alors seul le cas ou la vitesse est constante est possible...
 				//	NErrorIf(pk0->m_v != pk->m_v, NERROR_SYSTEM_CHECK); // impossible car si 0.m_a est nulle et m_j est null  alors seul le cas ou la vitesse est constante est possible...
 
-				NErrorIf(!pp->m_kin.m_v, NERROR_SYSTEM_CHECK);			// Dans ce cas, la vitesse courante et donc constante ne saurait être nulle !
+				NErrorIf(!pp->m_kin.m_v, NERROR_SYSTEM_CHECK); // Dans ce cas, la vitesse courante et donc constante ne saurait ï¿½tre nulle !
 				return pp0->m_kin.m_t + (s - pp0->m_kin.m_s) / pp0->m_kin.m_v;
 			}
 			else
 			{
-				// Quelque soit le signe de "pk0->m_a" seule la racine " R2 = (-B + sqrt(delta) )/2A " est applicable à notre situation ( cf etude et tableau de signe )
+				// Quelque soit le signe de "pk0->m_a" seule la racine " R2 = (-B + sqrt(delta) )/2A " est applicable ï¿½ notre situation ( cf etude et tableau de signe )
 				// ... Quelques explications de +:
-				// C'est une phase 2 qui mène à pk !
-				// On recherche donc une valeur de t solution de l'équation:
+				// C'est une phase 2 qui mï¿½ne ï¿½ pk !
+				// On recherche donc une valeur de t solution de l'ï¿½quation:
 				//	s = pk0->s + pk0->m_v*t + pk0->m_a*t*t/2.0f
-				//	
-				//	On a donc delta = NPOW2(pk0->m_v) - 2.0f*pk0->m_a*(pk0->m_s - s) discriminant de l'équation.
+				//
+				//	On a donc delta = NPOW2(pk0->m_v) - 2.0f*pk0->m_a*(pk0->m_s - s) discriminant de l'ï¿½quation.
 				//  Pour avoir au moins une solution, il faut que delta soit >=0
 				//						delta	>=	0
 				//	[1]					NPOW2(pk0->m_v) - 2.0f*pk0->m_a*(pk0->m_s - s)	>=	0
@@ -1228,7 +1228,7 @@ Nf32 NLTRAJECTORY_PACK::getTime(const Nf32 s)
 				//						NPOW2(pk0->m_v)/(2.0f*pk0->m_a) >=	(pk0->m_s - s)
 				//						NPOW2(pk0->m_v)/(2.0f*pk0->m_a) - pk0->m_s >=	- s
 				//	[2]				   -NPOW2(pk0->m_v)/(2.0f*pk0->m_a) + pk0->m_s <=	s
-				//			
+				//
 				/*
 					if (pk0->m_a > 0.0f)
 					{
@@ -1251,9 +1251,9 @@ Nf32 NLTRAJECTORY_PACK::getTime(const Nf32 s)
 						//
 						// R2 = (-pk0->m_v + sqrt(delta) ) / pk0->m_a
 						//
-						// Quand à R1 = (-pk0->m_v - sqrt(delta) ) / pk0->m_a
-						// On voit bien qu'elle sera TOUJOURS négative pour les mêmes raisons ,
-						// c'est à dire
+						// Quand ï¿½ R1 = (-pk0->m_v - sqrt(delta) ) / pk0->m_a
+						// On voit bien qu'elle sera TOUJOURS nï¿½gative pour les mï¿½mes raisons ,
+						// c'est ï¿½ dire
 						//						-pk0->m_v - sqrt(delta) < 0, TOUJOURS ! donc ...
 						//
 						// Donc on a bien une seule racine positive et donc possible: R+ !
@@ -1263,17 +1263,16 @@ Nf32 NLTRAJECTORY_PACK::getTime(const Nf32 s)
 					{
 						// Il est possible que delta soit negatif ou null !
 						// ------------------------------------------------
-						// et c'est R- qui est valide ! Note: R+ est également positive mais plus grande que R1, elle représente le temps qu'il faut pour REPASSER par S après que la vitesse soit devenue négative
-						// à force d'appliquer pk0->m_a ! ( et donc on revient sur nos pas pour repasser par S ... )
+						// et c'est R- qui est valide ! Note: R+ est ï¿½galement positive mais plus grande que R1, elle reprï¿½sente le temps qu'il faut pour REPASSER par S aprï¿½s que la vitesse soit devenue nï¿½gative
+						// ï¿½ force d'appliquer pk0->m_a ! ( et donc on revient sur nos pas pour repasser par S ... )
 						return (-pk0->m_v + sqrt(NPOW2(pk0->m_v) - 2.0f * pk0->m_a * (pk0->m_s - s)) / pk0->m_a);
 					}
 
-					Donc que pk0->m_a soit positif, null ou negatif, on calcule / retourne toujours de la même manière...
+					Donc que pk0->m_a soit positif, null ou negatif, on calcule / retourne toujours de la mï¿½me maniï¿½re...
 				*/
 
 				return pp0->m_kin.m_t + (-pp0->m_kin.m_v + sqrt(NPOW2(pp0->m_kin.m_v) - 2.0f * pp0->m_kin.m_a * (pp0->m_kin.m_s - s))) / pp0->m_kin.m_a;
 			}
-
 		}
 		else if (pp->m_kin.m_j > 0.0f)
 		{
@@ -1332,7 +1331,7 @@ Nf32 NLTRAJECTORY_PACK::getTime(const Nf32 s)
 	}
 }
 
-Ns32 NLTRAJECTORY_PACK::getTime(NINTERVALf32* ptimerange, const Nf32 s)
+Ns32 NLTRAJECTORY_PACK::getTime(NINTERVALf32 *ptimerange, const Nf32 s)
 {
 	if (s < 0.0f)
 	{
@@ -1346,7 +1345,7 @@ Ns32 NLTRAJECTORY_PACK::getTime(NINTERVALf32* ptimerange, const Nf32 s)
 	}
 	else // 0 <= s <= m_ds
 	{
-		NLTRJPOINT_DESC* pp = (NLTRJPOINT_DESC*)m_trajectoryPointDescArray.pFirst;
+		NLTRJPOINT_DESC *pp = (NLTRJPOINT_DESC *)m_trajectoryPointDescArray.pFirst;
 		for (Nu32 i = 0; i < m_trajectoryPointDescArray.Size; i++, pp++)
 		{
 			if (ISFLAG_ON(pp->m_flags, FLAG_NLTRJACTION_KTYPE_SPOT))
@@ -1354,22 +1353,25 @@ Ns32 NLTRAJECTORY_PACK::getTime(NINTERVALf32* ptimerange, const Nf32 s)
 				if (s == pp->m_pPathPoint1->s)
 				{
 					ptimerange->start = pp->m_kin.m_t;
-					do { pp++; } while (ISFLAG_ON(pp->m_flags, FLAG_NLTRJPOINT_DESC_KTYPE_SPOT));
-					#ifdef _DEBUG
-					NLTRJPOINT_DESC* plast = (NLTRJPOINT_DESC*)NGetLastArrayPtr(&m_trajectoryPointDescArray);
+					do
+					{
+						pp++;
+					} while (ISFLAG_ON(pp->m_flags, FLAG_NLTRJPOINT_DESC_KTYPE_SPOT));
+#ifdef _DEBUG
+					NLTRJPOINT_DESC *plast = (NLTRJPOINT_DESC *)NGetLastArrayPtr(&m_trajectoryPointDescArray);
 					NErrorIf(pp > plast, NERROR_ADDRESS_OUTOFRANGE);
 					NErrorIf(!IS_NLTRAJECTORY_POINT_DESC_TRAVELING(pp->m_flags), NERROR_INCONSISTENT_PARAMETERS);
-					NErrorIf(pp->m_kin.m_t != (pp-1)->m_kin.m_t, NERROR_INCONSISTENT_PARAMETERS);
-					#endif	
-					
+					NErrorIf(pp->m_kin.m_t != (pp - 1)->m_kin.m_t, NERROR_INCONSISTENT_PARAMETERS);
+#endif
+
 					ptimerange->end = pp->m_kin.m_t;
 					return NLTRAJECTORYPACK_GETTIME_INTERVAL;
 				}
 			}
 		}
-		//... si on arrive ici c'est que s n'est égal à aucun SPOT, du coup on appel getTime "classique"
-		ptimerange->start	= getTime(s);
-		ptimerange->end		= ptimerange->start;
+		//... si on arrive ici c'est que s n'est ï¿½gal ï¿½ aucun SPOT, du coup on appel getTime "classique"
+		ptimerange->start = getTime(s);
+		ptimerange->end = ptimerange->start;
 		return NLTRAJECTORYPACK_GETTIME_UNIQUE;
 	}
 }
@@ -1377,12 +1379,12 @@ Nf32 NLTRAJECTORY_PACK::getLastTrjPtDescTime()
 {
 	if (m_trajectoryPointDescArray.Size)
 	{
-		return ((NLTRJPOINT_DESC*)m_trajectoryPointDescArray.pFirst + m_trajectoryPointDescArray.Size - 1)->m_kin.m_t;
+		return ((NLTRJPOINT_DESC *)m_trajectoryPointDescArray.pFirst + m_trajectoryPointDescArray.Size - 1)->m_kin.m_t;
 	}
 	else
 	{
-		return 0.0f; 
-	} 
+		return 0.0f;
+	}
 }
 /*
 void NLTRAJECTORY_PACK::drawChunksArray(NL2DOCS* p2docs, const NCOLORPICKPACK pickpack)
@@ -1392,7 +1394,6 @@ void NLTRAJECTORY_PACK::drawChunksArray(NL2DOCS* p2docs, const NCOLORPICKPACK pi
 		pchunk->draw(p2docs, pickpack);
 }
 */
-
 
 /*
 #ifdef _NEDITOR
@@ -1407,7 +1408,6 @@ void NLTRAJECTORY_BASIC_PACK::drawTrajectoryStateSArray(NL2DOCS * p2docs)
 }
 #endif
 */
-
 
 /*
 void NLTRAJECTORY_TRACKER::build(NLPATH_GEOMETRY * ppath_geometry, const NLDRIVETRAINSPECS * pdtspecs)
@@ -1432,8 +1432,8 @@ void NLTRAJECTORY_TRACKER::build(NLPATH_GEOMETRY * ppath_geometry, const NLDRIVE
 	{
 		while ((kin1_id < m_kinsArray.Size) && (pkin1->m_s < pkp1->s))
 		{
-			// on recupère la courbure en pkin->m_s
-					// ( on sait que pkin->m_s est situé "entre" pkp0 et pkp1 sur la primitive pprim ...
+			// on recupï¿½re la courbure en pkin->m_s
+					// ( on sait que pkin->m_s est situï¿½ "entre" pkp0 et pkp1 sur la primitive pprim ...
 			if (pprim->m_core.m_id == NLPATH_PRIMITIVE_ID_CLOTHOID)
 			{
 				slocal = pkin1->m_s - pkp0->s;
@@ -1447,21 +1447,21 @@ void NLTRAJECTORY_TRACKER::build(NLPATH_GEOMETRY * ppath_geometry, const NLDRIVE
 			NArrayPushBack(&m_differentialDriveTrainPosesArray, (NBYTE*)&d2tp);
 
 			// Kin suivant
-			// !!! ATTENTION !!! à la toute fin, "kin1_id = m_kinsArray.Size" et le pointeur pkin1 pointe en dehors de m_kinsArray !!!
+			// !!! ATTENTION !!! ï¿½ la toute fin, "kin1_id = m_kinsArray.Size" et le pointeur pkin1 pointe en dehors de m_kinsArray !!!
 			pkin0 = pkin1;
 			pkin1++;
 			kin1_id++;
 		}
 
 		// A partir d'ici nous savons:
-		//  pkin1->m_s >= pkp1->s 
+		//  pkin1->m_s >= pkp1->s
 		//		OU
-		//  kin1_id == m_kinsArray.Size, 
-		//	ce qui signifie que l'abscisse curviligne du dernier Kin de m_kinsArray est inférieure à longueur totale du chemin...
+		//  kin1_id == m_kinsArray.Size,
+		//	ce qui signifie que l'abscisse curviligne du dernier Kin de m_kinsArray est infï¿½rieure ï¿½ longueur totale du chemin...
 		//	... et que le pointeur pkin1 courant est invalide ( hors array )
 		if (kin1_id < m_kinsArray.Size)
 		{
-			// on calcule et on insère une pose issue de "pkp1"
+			// on calcule et on insï¿½re une pose issue de "pkp1"
 			getKinAtS(&kin, pkin0, pkin1, pkp1->s);
 			d2tp.set(&kin, pkp1->k);
 			NArrayPushBack(&m_differentialDriveTrainPosesArray, (NBYTE*)&d2tp);
@@ -1471,8 +1471,8 @@ void NLTRAJECTORY_TRACKER::build(NLPATH_GEOMETRY * ppath_geometry, const NLDRIVE
 			break;
 		}
 	}
-	// Une dernière chose,
-	// il est possible que l'abscisse curviligne du dernier kin soit légèrement supérieure à la longueur totale du chemin.
+	// Une derniï¿½re chose,
+	// il est possible que l'abscisse curviligne du dernier kin soit lï¿½gï¿½rement supï¿½rieure ï¿½ la longueur totale du chemin.
 	if (kin1_id < m_kinsArray.Size)
 	{
 		kin1_id++;

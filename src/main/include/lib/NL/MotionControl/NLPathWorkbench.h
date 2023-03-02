@@ -4,10 +4,10 @@
 #include <windows.h>
 #include <CommCtrl.h>
 #endif
-#include "lib/N/NType.h"
-#include "lib/N/NFlags.h"
-#include "lib/N/File/NDataPacker.h"
-#include "lib/N/Core/NVersion.h"
+#include "../../N/NType.h"
+#include "../../N/NFlags.h"
+#include "../../N/File/NDataPacker.h"
+#include "../../N/Core/NVersion.h"
 
 #include "./DriveTrain/NLRamsete.h"
 
@@ -107,7 +107,7 @@ public:
 	HTREEITEM m_hTreeViewKeys;
 
 	// HTREEITEM					m_hTreeSelectedKey;	// Current Selected Key in Treeview.
-
+	NCOLORPALETTE_16_4f32 m_colorTable;
 #endif
 
 	// private:

@@ -3,7 +3,7 @@
 
 #include "lib/N/NType.h"
 #include "lib/N/NErrorHandling.h"
-#include "NLimits.h"
+#include "lib/N/Core/NLimits.h"
 
 #ifdef __cplusplus
 extern "C"

@@ -2,7 +2,7 @@
 #include "../../../N/NMemory.h"
 #include "../../../N/NMath.h"
 #include "../../../N/Maths/NVec2f32.h"
-#include "../../../N/Maths/NVecLimits.h"
+#include "lib/N/Maths/NVecLimits.h"
 #include "../../../N/NErrorHandling.h"
 */
 #include "../Trajectory/NLVstage.h"
@@ -13,26 +13,26 @@
 
 NLPATH::NLPATH()
 {
-	NIdentityMatrix(&m_matrix); 
+	NIdentityMatrix(&m_matrix);
 }
-NLPATH::NLPATH(const Nu32 pathpoints_capacity, const Nu32 primitives_capacity) :m_geometry(pathpoints_capacity, primitives_capacity)
+NLPATH::NLPATH(const Nu32 pathpoints_capacity, const Nu32 primitives_capacity) : m_geometry(pathpoints_capacity, primitives_capacity)
 {
 	NIdentityMatrix(&m_matrix);
 }
 NLPATH::~NLPATH()
 {
-	NIdentityMatrix(&m_matrix); 
+	NIdentityMatrix(&m_matrix);
 }
 
-Nu32 NLPATH::write(FILE* pfile)
+Nu32 NLPATH::write(FILE *pfile)
 {
-	// 1) écriture Version
-	Nu32	version_u32 = VERSION_NLPATH_HEADER;
+	// 1) ï¿½criture Version
+	Nu32 version_u32 = VERSION_NLPATH_HEADER;
 	if (fwrite(&version_u32, sizeof(Nu32), 1, pfile) != 1)
 		return 0;
 
-	// 2) écriture Header
-	NLPATH_HEADER	header;
+	// 2) ï¿½criture Header
+	NLPATH_HEADER header;
 	header.m_matrix = m_matrix;
 
 	if (fwrite(&header, sizeof(NLPATH_HEADER), 1, pfile) != 1)
@@ -41,14 +41,14 @@ Nu32 NLPATH::write(FILE* pfile)
 	return m_geometry.write(pfile);
 }
 
-Nu32 NLPATH::read(FILE* pfile)
+Nu32 NLPATH::read(FILE *pfile)
 {
 	// 1) lecture Version
-	Nu32	version_u32;
+	Nu32 version_u32;
 	if (fread(&version_u32, sizeof(Nu32), 1, pfile) != 1)
 		return 0;
 	// 2) lecture Header
-	NLPATH_HEADER	header;
+	NLPATH_HEADER header;
 
 	switch (NGETVERSION_MAIN(version_u32))
 	{
@@ -69,78 +69,78 @@ Nu32 NLPATH::read(FILE* pfile)
 	return 0;
 }
 
-Nf32 NLPATH::calculateMaxCruiseVelocity(const NLKINLIMITS* pklim) const
+Nf32 NLPATH::calculateMaxCruiseVelocity(const NLKINLIMITS *pklim) const
 {
 	NErrorIf(!pklim->isConsistent(), NERROR_INCONSISTENT_VALUES);
 
-	//	Si le chemin est jugé trop court, on ne calcule aucune vitesse de croisiere et on renvoie ZERO.
+	//	Si le chemin est jugï¿½ trop court, on ne calcule aucune vitesse de croisiere et on renvoie ZERO.
 	if (m_geometry.m_ds < pklim->m_2ss)
 		return 0.0f;
 	else
 	{
 		Nf32 vc = NMIN(pklim->m_v, (-pklim->m_a2 + sqrt(pklim->m_a4 + pklim->m_4j2a * m_geometry.m_ds)) / pklim->m_2j);
-		NErrorIf(vc < pklim->m_2vx, NERROR_INCONSISTENT_VALUES);	// vu que m_geometry.m_ds >= pklim->m_2ss, alors la racine trouvée
-																	// ne saurait être hors limite et donc vc ne saurait l'être en conséquence.
+		NErrorIf(vc < pklim->m_2vx, NERROR_INCONSISTENT_VALUES); // vu que m_geometry.m_ds >= pklim->m_2ss, alors la racine trouvï¿½e
+																 // ne saurait ï¿½tre hors limite et donc vc ne saurait l'ï¿½tre en consï¿½quence.
 		return vc;
-		//	Si la vitesse de croisiere est jugée trop faible, on renvoie ZERO. 
-		//return (vc < pklim->m_2vx) ? 0.0f:vc;
+		//	Si la vitesse de croisiere est jugï¿½e trop faible, on renvoie ZERO.
+		// return (vc < pklim->m_2vx) ? 0.0f:vc;
 	}
 }
 
-Nu32 NLPATH::buildVStages(NARRAY* pout_vstagedesc_array, const NLDRIVETRAINSPECS* pdtspecs, const NLKINLIMITS* pklim) const
+Nu32 NLPATH::buildVStages(NARRAY *pout_vstagedesc_array, const NLDRIVETRAINSPECS *pdtspecs, const NLKINLIMITS *pklim) const
 {
 	// Remarques sur les "VStageDescs":
-	// Les VstageDescs issus d'un Path se succèdent systématiquement selon un même et unique pattern.
-	// En effet, si on nomme VSceil les vstage dont la courbure associée est 0 ( i.e vitesse associée max ) et VSFloor les vstage dont la courbure est non nulle alors nous voyons apparaitre
+	// Les VstageDescs issus d'un Path se succï¿½dent systï¿½matiquement selon un mï¿½me et unique pattern.
+	// En effet, si on nomme VSceil les vstage dont la courbure associï¿½e est 0 ( i.e vitesse associï¿½e max ) et VSFloor les vstage dont la courbure est non nulle alors nous voyons apparaitre
 	// une alternance .... VSCeil, VSFloor, VSCeil, VSFloor, VSCeil, VSFloor, VSCeil ...
-	// On comprend vite pourquoi, la méthode utilisisée pour générer un chemin commence systématiquement soit par un segment ( k=0 ) soit par une clothoide ( dont le k initial est 0 )
-	// 
+	// On comprend vite pourquoi, la mï¿½thode utilisisï¿½e pour gï¿½nï¿½rer un chemin commence systï¿½matiquement soit par un segment ( k=0 ) soit par une clothoide ( dont le k initial est 0 )
+	//
 	//	+------+				   +		 +------------+   +--+				  +
-	//			.				  . .		.			   . .	  .				 .	
-	//			 .				 .	 .	   .				+	   .			. 	
-	//			  .			    .	  .   .						    +----------+  
-	//			   +-----------+	   . .										  
-	//									+										  	
+	//			.				  . .		.			   . .	  .				 .
+	//			 .				 .	 .	   .				+	   .			.
+	//			  .			    .	  .   .						    +----------+
+	//			   +-----------+	   . .
+	//									+
 	NErrorIf(!pout_vstagedesc_array, NERROR_NULL_POINTER);
 	NErrorIf(pout_vstagedesc_array->ElementSize != sizeof(NLVSTAGE), NERROR_ARRAY_WRONG_ELEMENT_SIZE);
 
-	NLPATH_POINT		*pkp0 = ((NLPATH_POINT*)m_geometry.m_pathPointsArray.pFirst);
-	NLPATH_POINT		*pkp1 = pkp0 + 1;
-	NLPATH_PRIMITIVE	*pprim = (NLPATH_PRIMITIVE*)m_geometry.m_primitivesArray.pFirst;
-	Nf32				prev_k = NF32_MAX;
+	NLPATH_POINT *pkp0 = ((NLPATH_POINT *)m_geometry.m_pathPointsArray.pFirst);
+	NLPATH_POINT *pkp1 = pkp0 + 1;
+	NLPATH_PRIMITIVE *pprim = (NLPATH_PRIMITIVE *)m_geometry.m_primitivesArray.pFirst;
+	Nf32 prev_k = NF32_MAX;
 
-	NLVSTAGE		vstage_desc;
-	NLVSTAGE		*pvstage_desc;
+	NLVSTAGE vstage_desc;
+	NLVSTAGE *pvstage_desc;
 
-	Nu32				initial_array_size = pout_vstagedesc_array->Size;
+	Nu32 initial_array_size = pout_vstagedesc_array->Size;
 
-	for (Nu32 i = 0; i <m_geometry.m_primitivesArray.Size; i++, pprim++, pkp0 = pkp1, pkp1++)
+	for (Nu32 i = 0; i < m_geometry.m_primitivesArray.Size; i++, pprim++, pkp0 = pkp1, pkp1++)
 	{
 		switch (pprim->m_core.m_id)
 		{
 		case NLPATH_PRIMITIVE_ID_SEGMENT:
-			// Si la courbure précédente est différente de celle du path point de sortie de la primitive ...
+			// Si la courbure prï¿½cï¿½dente est diffï¿½rente de celle du path point de sortie de la primitive ...
 			if (pkp1->k != prev_k)
 			{
-				// ... alors on crée un nouveau VSTAGE
+				// ... alors on crï¿½e un nouveau VSTAGE
 				prev_k = pkp1->k;
-				pvstage_desc = (NLVSTAGE*)NArrayAllocBack(pout_vstagedesc_array);
+				pvstage_desc = (NLVSTAGE *)NArrayAllocBack(pout_vstagedesc_array);
 				pvstage_desc->force(pkp0->s, pkp1->s, pdtspecs->getVelocity(pkp1->k, pklim->m_v));
 			}
-			// ... sinon, dans le cas ou la courbure référencée dans le VSTAGE courant et dans le pathpoint de sortie de primitive sont égaux ...
+			// ... sinon, dans le cas ou la courbure rï¿½fï¿½rencï¿½e dans le VSTAGE courant et dans le pathpoint de sortie de primitive sont ï¿½gaux ...
 			else
 			{
 				pvstage_desc->m_s1 = pkp1->s;
-				// ... Alors on "étire le VSTAGE courant jusqu'au path point de sortie de primitive.
+				// ... Alors on "ï¿½tire le VSTAGE courant jusqu'au path point de sortie de primitive.
 			}
 			break;
 
 		case NLPATH_PRIMITIVE_ID_ARC:
-			// La gestion de la primitive Arc est exactement la même que pour la primitive segment.
+			// La gestion de la primitive Arc est exactement la mï¿½me que pour la primitive segment.
 			if (pkp1->k != prev_k)
 			{
 				prev_k = pkp1->k;
-				pvstage_desc = (NLVSTAGE*)NArrayAllocBack(pout_vstagedesc_array);
+				pvstage_desc = (NLVSTAGE *)NArrayAllocBack(pout_vstagedesc_array);
 				pvstage_desc->force(pkp0->s, pkp1->s, pdtspecs->getVelocity(pkp1->k, pklim->m_v));
 			}
 			else
@@ -151,30 +151,30 @@ Nu32 NLPATH::buildVStages(NARRAY* pout_vstagedesc_array, const NLDRIVETRAINSPECS
 
 		case NLPATH_PRIMITIVE_ID_CLOTHOID:
 			// La clothoide joue le role de transition de courbure entre deux VStages.
-			// Le Vstage précédent est donc censé avoir un K identique au K initial de la Clothoide. Si cela n'est pas le cas, cela revient à dire qu'il y a une rupture de continuité de courbure.
-			// Cela est possible si le path contient des cercles de constructions non remplacés par des paires de clothoides (+potentiel arc inséré).
+			// Le Vstage prï¿½cï¿½dent est donc censï¿½ avoir un K identique au K initial de la Clothoide. Si cela n'est pas le cas, cela revient ï¿½ dire qu'il y a une rupture de continuitï¿½ de courbure.
+			// Cela est possible si le path contient des cercles de constructions non remplacï¿½s par des paires de clothoides (+potentiel arc insï¿½rï¿½).
 			//
-			// 1)La clothoide est 1/2 et a donc un k0 = 0. 
-			//		Dans ce cas cela revient à dire que le Vstage précédent à un K different de 0 ... d'où la rupture de continuité !
-			//		a) Cela est possible au tout début avec la première clothoide. Le vstage precedent à un k valant NF32_MAX.
-			//		( du coup cette premiere clothoide créée systematiquement un VStage de longueur nulle et de courbure nulle)
-			//		
-			//		b)Cela est possible dans le cas de l'enchainement initial de deux arcs de cercle de construction avec le second remplacé par 2 clothoides (+ potentiel cercle inséré).
-			//		Dans ce cas, le premier cercle de construction génère un premier VStage et la première clothoide génère un VStage de longeur et courbure nulle situé à la même abscisse
-			//		que la sortie du VStage précédent ( celui généré par le premier cercle de construction ).
+			// 1)La clothoide est 1/2 et a donc un k0 = 0.
+			//		Dans ce cas cela revient ï¿½ dire que le Vstage prï¿½cï¿½dent ï¿½ un K different de 0 ... d'oï¿½ la rupture de continuitï¿½ !
+			//		a) Cela est possible au tout dï¿½but avec la premiï¿½re clothoide. Le vstage precedent ï¿½ un k valant NF32_MAX.
+			//		( du coup cette premiere clothoide crï¿½ï¿½e systematiquement un VStage de longueur nulle et de courbure nulle)
+			//
+			//		b)Cela est possible dans le cas de l'enchainement initial de deux arcs de cercle de construction avec le second remplacï¿½ par 2 clothoides (+ potentiel cercle insï¿½rï¿½).
+			//		Dans ce cas, le premier cercle de construction gï¿½nï¿½re un premier VStage et la premiï¿½re clothoide gï¿½nï¿½re un VStage de longeur et courbure nulle situï¿½ ï¿½ la mï¿½me abscisse
+			//		que la sortie du VStage prï¿½cï¿½dent ( celui gï¿½nï¿½rï¿½ par le premier cercle de construction ).
 			//
 			// 2)La clothoide est 2/2 et a donc un k0 > 0. On voit vite que ce cas est impossible. Si pkp0->k != pvs->m_k, la clothoide est forcement 1/2 !
-			//		
+			//
 			if (pkp0->k != prev_k)
 			{
 				NErrorIf(ISFLAG_ON(pprim->m_core.m_flags, FLAG_NLPATH_CLOTHOID_SECOND), NERROR_SYSTEM_GURU_MEDITATION);
 				NErrorIf(pkp0->k != 0.0f, NERROR_SYSTEM_GURU_MEDITATION);
-				pvstage_desc = (NLVSTAGE*)NArrayAllocBack(pout_vstagedesc_array);
+				pvstage_desc = (NLVSTAGE *)NArrayAllocBack(pout_vstagedesc_array);
 				pvstage_desc->force(pkp0->s, pkp0->s, pdtspecs->getVelocity(pkp0->k, pklim->m_v));
 			}
-			// ... ensuite la clothoide génère un Vstage de "sortie" censé être utilisé par la primitive suivante si celle ci est bien dans la continuité de la courbure de la clothoide.
+			// ... ensuite la clothoide gï¿½nï¿½re un Vstage de "sortie" censï¿½ ï¿½tre utilisï¿½ par la primitive suivante si celle ci est bien dans la continuitï¿½ de la courbure de la clothoide.
 			prev_k = pkp1->k;
-			pvstage_desc = (NLVSTAGE*)NArrayAllocBack(pout_vstagedesc_array);
+			pvstage_desc = (NLVSTAGE *)NArrayAllocBack(pout_vstagedesc_array);
 			pvstage_desc->force(pkp1->s, pkp1->s, pdtspecs->getVelocity(pkp1->k, pklim->m_v));
 			break;
 
@@ -186,32 +186,32 @@ Nu32 NLPATH::buildVStages(NARRAY* pout_vstagedesc_array, const NLDRIVETRAINSPECS
 	return (pout_vstagedesc_array->Size - initial_array_size);
 }
 
-NVEC2f32* NLPATH::convertGlobalPositionToLocal(NVEC2f32* pres, const NVEC2f32* pglobal_position)const
+NVEC2f32 *NLPATH::convertGlobalPositionToLocal(NVEC2f32 *pres, const NVEC2f32 *pglobal_position) const
 {
-	NVEC2f32 p,r;
+	NVEC2f32 p, r;
 
 	p.x = pglobal_position->x - m_matrix.Origin.x;
 	p.y = pglobal_position->y - m_matrix.Origin.y;
 
-	r.x = p.x * m_matrix.XAxis.x + p.y * m_matrix.XAxis.y; // équivalant à:  NVec2DotProduct(&p, (NVEC2f32*)&m_matrix.XAxis);
-	r.y = p.x * m_matrix.YAxis.x + p.y * m_matrix.YAxis.y; // équivalant à:  NVec2DotProduct(&p, (NVEC2f32*)&m_matrix.YAxis);
+	r.x = p.x * m_matrix.XAxis.x + p.y * m_matrix.XAxis.y; // ï¿½quivalant ï¿½:  NVec2DotProduct(&p, (NVEC2f32*)&m_matrix.XAxis);
+	r.y = p.x * m_matrix.YAxis.x + p.y * m_matrix.YAxis.y; // ï¿½quivalant ï¿½:  NVec2DotProduct(&p, (NVEC2f32*)&m_matrix.YAxis);
 
 	*pres = r;
 	return pres;
 }
 
-NVEC2f32* NLPATH::convertGlobalDirectionToLocal(NVEC2f32* pres, const NVEC2f32* pglobal_direction)const
+NVEC2f32 *NLPATH::convertGlobalDirectionToLocal(NVEC2f32 *pres, const NVEC2f32 *pglobal_direction) const
 {
 	NVEC2f32 r;
 
-	r.x = pglobal_direction->x * m_matrix.XAxis.x + pglobal_direction->y * m_matrix.XAxis.y; // équivalant à:  NVec2DotProduct(pglobal_direction, (NVEC2f32*)&m_matrix.XAxis);
-	r.y = pglobal_direction->x * m_matrix.YAxis.x + pglobal_direction->y * m_matrix.YAxis.y; // équivalant à:  NVec2DotProduct(pglobal_direction, (NVEC2f32*)&m_matrix.YAxis);
+	r.x = pglobal_direction->x * m_matrix.XAxis.x + pglobal_direction->y * m_matrix.XAxis.y; // ï¿½quivalant ï¿½:  NVec2DotProduct(pglobal_direction, (NVEC2f32*)&m_matrix.XAxis);
+	r.y = pglobal_direction->x * m_matrix.YAxis.x + pglobal_direction->y * m_matrix.YAxis.y; // ï¿½quivalant ï¿½:  NVec2DotProduct(pglobal_direction, (NVEC2f32*)&m_matrix.YAxis);
 
 	*pres = r;
 	return pres;
 }
 
-NVEC2f32* NLPATH::convertLocalPositionToGlobal(NVEC2f32* pres, const NVEC2f32* plocal_position)const
+NVEC2f32 *NLPATH::convertLocalPositionToGlobal(NVEC2f32 *pres, const NVEC2f32 *plocal_position) const
 {
 	NVEC3f32 v;
 	NMulVector2ByMatrixO(&v, &m_matrix, plocal_position);
@@ -221,7 +221,7 @@ NVEC2f32* NLPATH::convertLocalPositionToGlobal(NVEC2f32* pres, const NVEC2f32* p
 	return pres;
 }
 
-NVEC2f32* NLPATH::convertLocalDirectionToGlobal(NVEC2f32* pres, const NVEC2f32* plocal_direction)const
+NVEC2f32 *NLPATH::convertLocalDirectionToGlobal(NVEC2f32 *pres, const NVEC2f32 *plocal_direction) const
 {
 	NVEC3f32 v;
 	NMulVector2ByMatrix3O(&v, &m_matrix, plocal_direction);
@@ -229,9 +229,7 @@ NVEC2f32* NLPATH::convertLocalDirectionToGlobal(NVEC2f32* pres, const NVEC2f32* 
 	pres->y = v.y;
 
 	return pres;
-
 }
-
 
 /*
 LEGACY TO BE DELETED !!
@@ -260,12 +258,12 @@ void NLPATH::segmentPrimitive(const NVEC2f32 *pA, const NVEC2f32 *pB)
 // NLPATH::arcPrimitives
 // ------------------------------------------------------------------------------------------
 // In  :
-//		pB			ptr sur le point d'entrée sur l'arc de cercle 'source'
-//		pBtgt		ptr sur le vecteur tangent à l'arc de cercle en B.
+//		pB			ptr sur le point d'entrï¿½e sur l'arc de cercle 'source'
+//		pBtgt		ptr sur le vecteur tangent ï¿½ l'arc de cercle en B.
 //		pD			ptr sur le point de sortie sur l'arc de cercle 'source'
-//		pDtgt		ptr sur le vecteur tangent à l'arc de cercle en D.
+//		pDtgt		ptr sur le vecteur tangent ï¿½ l'arc de cercle en D.
 //		csgn		"Circle Sign" signe du cercle source ( 1 ou -1 selon son sens de parcours )
-//		icratio		"Inserted Circle ratio"	défini la présence ( ou pas) d'un arc de cercle inséré entre les deux clothoides.		
+//		icratio		"Inserted Circle ratio"	dï¿½fini la prï¿½sence ( ou pas) d'un arc de cercle insï¿½rï¿½ entre les deux clothoides.
 // Out :
 //		void
 // ------------------------------------------------------------------------------------------
@@ -278,35 +276,35 @@ void NLPATH::arcPrimitives(const NVEC2f32 *pB, const NVEC2f32 *pBtgt, const NVEC
 	//					|
 	//					+----> Primitive#1.1: Clothoide
 	//					|
-	//					+----> Primitive#1.2: Arc de cercle "inséré"
+	//					+----> Primitive#1.2: Arc de cercle "insï¿½rï¿½"
 	//					|
 	//					+----> Primitive#1.3: Clothoide
 	//
-	// Calculs des paramètres de clothoides
+	// Calculs des paramï¿½tres de clothoides
 	NUT_2DLINE_XRESULT	xres;
 	Nf32					fa;
 	NVEC2f32				f0;
 	Nf32					lp0f0;					// longueur du vecteur [p0,f0]
 	Nf32					alpha, sigma, theta;
 	Nf32					km;						// courbure au point d'abscisse curviligne maximum.
-	Nf32					rac1, rac2;				// racines intermédiaires utilisées dans le calcul du ryon du cercle (arc de cercle) inséré entre les deux clothoides.
+	Nf32					rac1, rac2;				// racines intermï¿½diaires utilisï¿½es dans le calcul du ryon du cercle (arc de cercle) insï¿½rï¿½ entre les deux clothoides.
 	Nf32					costheta, sintheta;		// respectivement cosinus et sinus de l'angle theta.
-	Nf32					icr;					// Inserted Cercle Radius ( rayon du cercle, ou plutôt arc de cercle, inséré entre les deux clothoides )	
-	NVEC2f32				icc;					// Inserted Cercle Center ( centre du cercle, ou plutôt arc de cercle, inséré entre les deux clothoides )
+	Nf32					icr;					// Inserted Cercle Radius ( rayon du cercle, ou plutï¿½t arc de cercle, insï¿½rï¿½ entre les deux clothoides )
+	NVEC2f32				icc;					// Inserted Cercle Center ( centre du cercle, ou plutï¿½t arc de cercle, insï¿½rï¿½ entre les deux clothoides )
 	Nf32					sm;						// Abscisse curviligne su sommet de la clothoide ( = abscisse curviligne max )
 	Nf32					param;					//
-	Nf32					cf, sf;					// Résultats des calculs des intégrales de Fresnel.
-	Nf32					x, y;					// variables de calculs intermédiaires
+	Nf32					cf, sf;					// Rï¿½sultats des calculs des intï¿½grales de Fresnel.
+	Nf32					x, y;					// variables de calculs intermï¿½diaires
 
 	NLPATH_PRIMITIVE*		pprim;
 	NLPATH_POINT*		pkey;
 
 	NUT_2DLineXLine_VDir(pB,pBtgt,pD,pDtgt, &xres);
 	f0 = xres.I;
-	lp0f0 = NABS(xres.ParamCoordAB); // comme 'u' est unitaire, 'xres.ParamCoordAB' represente ici la longueur algébrique du vecteur [p0,f0].
+	lp0f0 = NABS(xres.ParamCoordAB); // comme 'u' est unitaire, 'xres.ParamCoordAB' represente ici la longueur algï¿½brique du vecteur [p0,f0].
 	alpha = acosf( NVec2DotProduct(pBtgt,pDtgt) );
 
-	// Avec un arc de cercle inséré entre les deux clothoides symetriques à sommet.
+	// Avec un arc de cercle insï¿½rï¿½ entre les deux clothoides symetriques ï¿½ sommet.
 	if (icratio != 0.0f)
 	{
 		theta	= ((NF32_PI - alpha) / 2.0f) *icratio; // Ref [2.2.5] page 63 AVEC " 0.0f < icratio < 1.0f " permettant de faire evoluer tetha0 dans l'intervalle ]0, (PI-alpha0)/2 [
@@ -321,7 +319,7 @@ void NLPATH::arcPrimitives(const NVEC2f32 *pB, const NVEC2f32 *pBtgt, const NVEC
 		icc.y	= icr * (rac1 * sf + costheta);
 		sigma	= 1.0f / (2.0f*theta*icr*icr);
 		sm		= 2.0f*theta*icr;
-		km		= 1.0f / icr;	// ou ... km = sm * sigma; qui normalement doit donner le même résultat à epsilon près...
+		km		= 1.0f / icr;	// ou ... km = sm * sigma; qui normalement doit donner le mï¿½me rï¿½sultat ï¿½ epsilon prï¿½s...
 		param	= sqrt(NF32_PI / sigma);
 
 		// CLOTHOIDE #1
@@ -352,7 +350,7 @@ void NLPATH::arcPrimitives(const NVEC2f32 *pB, const NVEC2f32 *pBtgt, const NVEC
 		pprim->m_arc.m_i			= *pBtgt;
 		pprim->m_arc.m_j.x			= -pBtgt->y * csgn;
 		pprim->m_arc.m_j.y			=  pBtgt->x * csgn;
-	
+
 		//pprim->m_arc.m_center		= icc;
 		pprim->m_arc.m_center.x = pB->x + pprim->m_arc.m_i.x*icc.x + pprim->m_arc.m_j.x*icc.y;
 		pprim->m_arc.m_center.y = pB->y + pprim->m_arc.m_i.y*icc.x + pprim->m_arc.m_j.y*icc.y;
@@ -374,7 +372,7 @@ void NLPATH::arcPrimitives(const NVEC2f32 *pB, const NVEC2f32 *pBtgt, const NVEC
 		pprim->m_clothoid.m_j.x = pDtgt->y * csgn;
 		pprim->m_clothoid.m_j.y = -pDtgt->x * csgn;
 
-		// ARC:extraction keypoint ( de fin d'arc de cercle ) ... part II ( utilise les parametres et la base de la clothoide ) 
+		// ARC:extraction keypoint ( de fin d'arc de cercle ) ... part II ( utilise les parametres et la base de la clothoide )
 		NFresnelIntegralsf64(sm / param, &cf, &sf);
 		x = param * cf;
 		y = param * sf;
@@ -388,9 +386,9 @@ void NLPATH::arcPrimitives(const NVEC2f32 *pB, const NVEC2f32 *pBtgt, const NVEC
 		pkey->k = 0.0f;
 	}
 	else
-	// Sans cercle inséré entre les deux clothoides symetriques à sommet.
+	// Sans cercle insï¿½rï¿½ entre les deux clothoides symetriques ï¿½ sommet.
 	{
-		NFresnelIntegralsf64(sqrt(1.0f - alpha / NF32_PI), &cf, &sf);				// |	
+		NFresnelIntegralsf64(sqrt(1.0f - alpha / NF32_PI), &cf, &sf);				// |
 		fa = cf + sf / (tanf(alpha / 2.0f));								// |-- Ref. [2.4] page 61
 		sigma = (NF32_PI / (lp0f0*lp0f0)) * fa*fa;							// |
 		sm = sqrt((NF32_PI - alpha) / sigma);
@@ -441,11 +439,11 @@ void NLPATH::arcPrimitives(const NVEC2f32 *pB, const NVEC2f32 *pBtgt, const NVEC
 /*
 void NLPATH::build()
 {
-	// Rien à faire // Nothing to do !
+	// Rien ï¿½ faire // Nothing to do !
 //	if (ISFLAG_OFF(m_flags, FLAG_NLPATH_WAYPOINTS_UPDATED) || (m_wayPointsArray.Size < 2) )
 //		return;
 
-	// 	Clear et (re)Construction des sections à partir des Waypoints
+	// 	Clear et (re)Construction des sections ï¿½ partir des Waypoints
 	NEraseArray(&m_pathPointsArray,	NULL);
 	NEraseArray(&m_sectionsArray,	NULL);
 	NEraseArray(&m_primitivesArray, NULL);
@@ -457,11 +455,11 @@ void NLPATH::build()
 	NLPATH_SECTION_BPAIR	*ppair;
 	NVEC2f32		 v, vp, C,es,mu;
 
-	// insertion du premier keyPoint ( les suivants seront insérés 1 par 1 par les methodes d'extraction de  primitives )
+	// insertion du premier keyPoint ( les suivants seront insï¿½rï¿½s 1 par 1 par les methodes d'extraction de  primitives )
 	NLPATH_POINT *pkp = (NLPATH_POINT*)NArrayAllocBack(&m_pathPointsArray);
 	pkp->p = pwp0->p;		// position dans le plan XY
 	pkp->s = 0.0f;			// abscisse curviligne nulle ( ... c'est le point de depart )
-	pkp->k = 0.0f ;			// courbure à ce point.  TODO: ajouter la possibilité d'avoir une courbure non-nulle c'est à dire départ non-arrêté et que la premiere primitive est un arc de cercle !!!
+	pkp->k = 0.0f ;			// courbure ï¿½ ce point.  TODO: ajouter la possibilitï¿½ d'avoir une courbure non-nulle c'est ï¿½ dire dï¿½part non-arrï¿½tï¿½ et que la premiere primitive est un arc de cercle !!!
 
 	for (i = 1; i < m_wayPointsArray.Size; i++, pwp0 = pwp1, pwp1++)
 	{
@@ -485,7 +483,7 @@ void NLPATH::build()
 			// Remplacement du premier arc de cercle:
 			if (ppair->beta0 >= NF32_PI)
 			{
-				// l'arc de cercle est trop "ouvert". Il doit être scindé en deux.
+				// l'arc de cercle est trop "ouvert". Il doit ï¿½tre scindï¿½ en deux.
 				NUT_2DLINE_XRESULT	xres;
 				NUT_2DLineXLine_VDir(&psection->pwayPoint_from->p, &psection->pwayPoint_from->u, &ppair->s, &ppair->se, &xres);
 				v.x = (ppair->pcircle0->o.x - xres.I.x);
@@ -512,7 +510,7 @@ void NLPATH::build()
 			// Remplacement du second arc de cercle:
 			if (ppair->beta1 >= NF32_PI)
 			{
-				// l'arc de cercle est trop "ouvert". Il doit être scindé en deux.
+				// l'arc de cercle est trop "ouvert". Il doit ï¿½tre scindï¿½ en deux.
 				NUT_2DLINE_XRESULT	xres;
 				NUT_2DLineXLine_VDir(&psection->pwayPoint_to->p, &psection->pwayPoint_to->u, &ppair->e, &es, &xres);
 				v.x = (ppair->pcircle1->o.x - xres.I.x);
@@ -537,7 +535,7 @@ void NLPATH::build()
 			}
 
 		}
-	
+
 	}
 }
 */

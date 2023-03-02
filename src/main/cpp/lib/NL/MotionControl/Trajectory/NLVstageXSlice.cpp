@@ -10,7 +10,7 @@
 #include "../../NL2DOrthogonalCoordinateSystem.h"
 
 #ifdef _NEDITOR
-//#include "../../N/NEditor.h"
+// #include "../../N/NEditor.h"
 #include "../../../N/Utilities/Draw/NUT_Draw.h"
 #include "../../../N/Utilities/Draw/NUT_DrawPencil.h"
 #include "../../NL2DOrthogonalCoordinateSystem_MotionProfileFlags.h"
@@ -21,9 +21,9 @@ NLVSTAGEXSLICE::NLVSTAGEXSLICE()
 	NSetupArray(&m_vStageXArray, CONSTANT_NLVSTAGEXSLICE_INITIAL_VSTAGEX_ARRAYCAPACITY, sizeof(NLVSTAGEX));
 	NSetupArray(&m_knodeArray, 0, sizeof(NLKNODE));
 
-	m_RequiredKinArraySize	= 0;
-	m_pKey0					= NULL;
-	m_pKey1					= NULL;
+	m_RequiredKinArraySize = 0;
+	m_pKey0 = NULL;
+	m_pKey1 = NULL;
 }
 
 NLVSTAGEXSLICE::~NLVSTAGEXSLICE()
@@ -32,43 +32,40 @@ NLVSTAGEXSLICE::~NLVSTAGEXSLICE()
 	NClearArray(&m_knodeArray, NLClearKnodeInArrayCallBack);
 }
 
-
-
-
 // ------------------------------------------------------------------------------------------
 /**
- *	@brief	Cette fonction construit un NLVSTAGEXSLICE en 3 étapes:
- *			1/ "Slicing" c'est à dire sélection d'un intervalle de VStages situés entre les deux clefs pkey0 et pkey1.
- *			2/ "KinX" calculs des KinX pour chaque VstageX inclus. C'est à dire calculs des accelerations max d'entrée et de sortie de Vstage avec V et J associés.
+ *	@brief	Cette fonction construit un NLVSTAGEXSLICE en 3 ï¿½tapes:
+ *			1/ "Slicing" c'est ï¿½ dire sï¿½lection d'un intervalle de VStages situï¿½s entre les deux clefs pkey0 et pkey1.
+ *			2/ "KinX" calculs des KinX pour chaque VstageX inclus. C'est ï¿½ dire calculs des accelerations max d'entrï¿½e et de sortie de Vstage avec V et J associï¿½s.
  *			3/ "alternance Floor/ceil" des Vstages. Cette alternance est garantie par l'insertion potentielle de VSTAGE de longueur nulle.
- *			   
- * 
+ *
+ *
  *	@param	pvstage_array est l'array de VStage depuis lequel on extrait la 'slice' de VStageX.
  *	@param	plocal_limits est
  *	@param	pktweak est
  *	@param	pkey0 est
  *	@param	pkey1 est
  *
- *	@return	
+ *	@return
  */
- // ------------------------------------------------------------------------------------------
-Nu32 NLVSTAGEXSLICE::prepare(const NARRAY* pvstage_array, const NLKINLIMITS* plocal_limits, const NLKINTWEAK* pktweak, const NLTRJKEY *pkey0, const NLTRJKEY* pkey1)
+// ------------------------------------------------------------------------------------------
+Nu32 NLVSTAGEXSLICE::prepare(const NARRAY *pvstage_array, const NLKINLIMITS *plocal_limits, const NLKINTWEAK *pktweak, const NLTRJKEY *pkey0, const NLTRJKEY *pkey1)
 {
 	NErrorIf(pvstage_array->ElementSize != sizeof(NLVSTAGE), NERROR_ARRAY_WRONG_ELEMENT_SIZE);
-	NErrorIf(!IS_NLTRJKEY_ENABLE_STOP(pkey0->m_flags), NERROR_INCONSISTENT_FLAGS); 
+	NErrorIf(!IS_NLTRJKEY_ENABLE_STOP(pkey0->m_flags), NERROR_INCONSISTENT_FLAGS);
 	NErrorIf(!IS_NLTRJKEY_ENABLE_STOP(pkey1->m_flags), NERROR_INCONSISTENT_FLAGS);
 
 	NResizeArray(&m_vStageXArray, 0, NULL, NLClearVStageXInArrayCallBack);
 
 	//	+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------
 	//	|
-	//	|	PHASE 0)	SETUP BASIC : key0 et key1 et vérification de l'intervalle couvert ( i-e nbre de Vstages inclus entre key0 et key1, qui peut, potentiellement, être null )
+	//	|	PHASE 0)	SETUP BASIC : key0 et key1 et vï¿½rification de l'intervalle couvert ( i-e nbre de Vstages inclus entre key0 et key1, qui peut, potentiellement, ï¿½tre null )
 	// 	|
 	// 	|
-	m_pKey0 = (NLTRJKEY*)pkey0;
-	m_pKey1 = (NLTRJKEY*)pkey1;
-	
-	// Il est possible que la clef de début et de fin soit identique 
+	m_pKey0 = (NLTRJKEY *)pkey0;
+	m_pKey1 = (NLTRJKEY *)pkey1;
+
+	// Il est possible que la clef de dï¿½but et de fin soit identique
 	if (pkey0 == pkey1)
 		return 0;
 	//	+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -76,20 +73,20 @@ Nu32 NLVSTAGEXSLICE::prepare(const NARRAY* pvstage_array, const NLKINLIMITS* plo
 	//	|	PHASE 1)	'SLICING' DE L'ARRAY DE VSTAGES EN ARRAY DE 'VSTAGEX'
 	// 	|
 	// 	|
-	NLVSTAGEX* pvsx;
-	NLVSTAGE* pvs;
+	NLVSTAGEX *pvsx;
+	NLVSTAGE *pvs;
 	Nu32 i;
 
 	NARRAY tmp_array;
 	NSetupArray(&tmp_array, pvstage_array->Size + 2, sizeof(NLVSTAGE));
 	NLVstageArrayTools::slice(&tmp_array, pvstage_array, pkey0->m_s, pkey1->m_s, NTRUE);
-	
-	//	Création de l'array de VStageX à partir de l'Array 'Slicé'.
-	pvs = (NLVSTAGE*)tmp_array.pFirst;
+
+	//	Crï¿½ation de l'array de VStageX ï¿½ partir de l'Array 'Slicï¿½'.
+	pvs = (NLVSTAGE *)tmp_array.pFirst;
 	for (i = 0; i < tmp_array.Size; i++, pvs++)
 	{
-		//pvsx = (NLVSTAGEX*) new((void*)NArrayAllocBack0(&m_vStageXArray)) NLVSTAGEX; // Placement new
-		pvsx = (NLVSTAGEX*)NArrayAllocBack0(&m_vStageXArray);
+		// pvsx = (NLVSTAGEX*) new((void*)NArrayAllocBack0(&m_vStageXArray)) NLVSTAGEX; // Placement new
+		pvsx = (NLVSTAGEX *)NArrayAllocBack0(&m_vStageXArray);
 		pvsx->set(pvs);
 	}
 	NClearArray(&tmp_array, NULL);
@@ -97,34 +94,34 @@ Nu32 NLVSTAGEXSLICE::prepare(const NARRAY* pvstage_array, const NLKINLIMITS* plo
 	//	|
 	//	+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
-	// Check intermédiaire
-	NErrorIf(NGetFirstArrayPtr(&m_vStageXArray) && ((NLVSTAGEX*)NGetFirstArrayPtr(&m_vStageXArray))->m_s1 < pkey0->m_s, NERROR_VALUE_OUTOFRANGE); // inférieure à l'abscisse minimale
-	NErrorIf(NGetLastArrayPtr(&m_vStageXArray) && ((NLVSTAGEX*)NGetLastArrayPtr(&m_vStageXArray))->m_s1 > pkey1->m_s, NERROR_VALUE_OUTOFRANGE); // supérieure à l'abscisse maximale
+	// Check intermï¿½diaire
+	NErrorIf(NGetFirstArrayPtr(&m_vStageXArray) && ((NLVSTAGEX *)NGetFirstArrayPtr(&m_vStageXArray))->m_s1 < pkey0->m_s, NERROR_VALUE_OUTOFRANGE); // infï¿½rieure ï¿½ l'abscisse minimale
+	NErrorIf(NGetLastArrayPtr(&m_vStageXArray) && ((NLVSTAGEX *)NGetLastArrayPtr(&m_vStageXArray))->m_s1 > pkey1->m_s, NERROR_VALUE_OUTOFRANGE);   // supï¿½rieure ï¿½ l'abscisse maximale
 
-//	+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------
-//	|
-//	|	PHASE 2)	FINALISATION DE L'ARRAY DES 'VSTAGEX': calcul des KinX pour chaque vstageX
-// 	|
-//	|
+	//	+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------
+	//	|
+	//	|	PHASE 2)	FINALISATION DE L'ARRAY DES 'VSTAGEX': calcul des KinX pour chaque vstageX
+	// 	|
+	//	|
 	NErrorIf(!m_vStageXArray.Size, NERROR_SYSTEM_CHECK);
-	pvsx = (NLVSTAGEX*)m_vStageXArray.pFirst;
+	pvsx = (NLVSTAGEX *)m_vStageXArray.pFirst;
 	for (i = 0; i < m_vStageXArray.Size - 1; i++, pvsx++)
 	{
 		pvsx->setKinXOut(pvsx + 1, pktweak, plocal_limits);
 	}
 
-//	+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------
-//	|
-//	|	PHASE 3)	FINALISATION DE L'ARRAY DES 'VSTAGEX': Alternance Floor , Ceil
-// 	|
-//	|
-//  |
-//	|	On redistribue ceil et floor au sein de l'array et si besoin on insère des ceils de longueur nulle, 
-//	|	pour conserver l'alternance ... floor ... ceil  ... floor ... 
-	NLVSTAGEX	vsx;
+	//	+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------
+	//	|
+	//	|	PHASE 3)	FINALISATION DE L'ARRAY DES 'VSTAGEX': Alternance Floor , Ceil
+	// 	|
+	//	|
+	//  |
+	//	|	On redistribue ceil et floor au sein de l'array et si besoin on insï¿½re des ceils de longueur nulle,
+	//	|	pour conserver l'alternance ... floor ... ceil  ... floor ...
+	NLVSTAGEX vsx;
 	for (i = 1; i < m_vStageXArray.Size - 1; i++)
 	{
-		pvsx = (NLVSTAGEX*)NGetArrayPtr(&m_vStageXArray, i);
+		pvsx = (NLVSTAGEX *)NGetArrayPtr(&m_vStageXArray, i);
 
 		if (pvsx->m_kinXIn.m_a < 0.0f)
 		{
@@ -132,61 +129,61 @@ Nu32 NLVSTAGEXSLICE::prepare(const NARRAY* pvstage_array, const NLKINLIMITS* plo
 			{
 				// In: -	Out: -		>>>		HYBRID [FLOOR,ceil] !
 				//
-				// Il est nécéssaire de diviser pvsx en 2 : 1 FLOOR et 1 CEIL de longueur nulle.
-				// On va donc insérer un nouveau VStage dans l'Array. Comme l'insertion se fait Avant l'index de ref. on va avoir, après insertion:
-				// 
+				// Il est nï¿½cï¿½ssaire de diviser pvsx en 2 : 1 FLOOR et 1 CEIL de longueur nulle.
+				// On va donc insï¿½rer un nouveau VStage dans l'Array. Comme l'insertion se fait Avant l'index de ref. on va avoir, aprï¿½s insertion:
+				//
 				// pvsx actuel deviendra ceil de longueur nulle
-				// vsx inséré sera FLOOR
+				// vsx insï¿½rï¿½ sera FLOOR
 				vsx = *pvsx;
-				vsx.m_kinXOut.null();	// ce FLOOR donne sur le CEIL de longueur nulle ayant la même vitesse que lui !
+				vsx.m_kinXOut.null(); // ce FLOOR donne sur le CEIL de longueur nulle ayant la mï¿½me vitesse que lui !
 				FLAG_OFF(vsx.m_flags, FLAG_NLVSTAGEX_IS_CEIL);
 
-				pvsx->m_s0 = pvsx->m_s1;	// pvs = Vstage de longueur nulle à droite de FLOOR (vs)
-				pvsx->m_kinXIn.null();	// ce CEIL de longueur nulle se trouve juste après le FLOOR ayant la même vitesse que lui !
+				pvsx->m_s0 = pvsx->m_s1; // pvs = Vstage de longueur nulle ï¿½ droite de FLOOR (vs)
+				pvsx->m_kinXIn.null();	 // ce CEIL de longueur nulle se trouve juste aprï¿½s le FLOOR ayant la mï¿½me vitesse que lui !
 				FLAG_ON(pvsx->m_flags, FLAG_NLVSTAGEX_IS_CEIL);
 
 				// insert un nouveau VStage avant le vstage i
-				NInsertArrayElement(&m_vStageXArray, i, (NBYTE*)&vsx);
+				NInsertArrayElement(&m_vStageXArray, i, (NBYTE *)&vsx);
 				i++;
 			}
-			else // (pvsx->m_kinXOut.m_a > 0.0f) OU ... (pvs->m_kinXOut.m_a == 0.0f) ce qui est normalement impossible à ce stade ( thx to _trim_aggregate )
+			else // (pvsx->m_kinXOut.m_a > 0.0f) OU ... (pvs->m_kinXOut.m_a == 0.0f) ce qui est normalement impossible ï¿½ ce stade ( thx to _trim_aggregate )
 			{
 				NErrorIf(pvsx->m_kinXOut.m_a == 0.0f, NERROR_SYSTEM_GURU_MEDITATION);
-				// ... Nous sommes sûrs à partir d'ici que 'pvsx->m_kinXOut.m_a > 0.0f'
+				// ... Nous sommes sï¿½rs ï¿½ partir d'ici que 'pvsx->m_kinXOut.m_a > 0.0f'
 				// In: -	Out: +		>>>		FLOOR !
 				FLAG_OFF(pvsx->m_flags, FLAG_NLVSTAGEX_IS_CEIL);
 			}
 		}
-		else // (pvs->m_kinXIn.m_a > 0.0f) OU ... (pvs->m_kinXIn.m_a == 0.0f) ce qui est normalement impossible à ce stade ( thx to _trim_aggregate )
+		else // (pvs->m_kinXIn.m_a > 0.0f) OU ... (pvs->m_kinXIn.m_a == 0.0f) ce qui est normalement impossible ï¿½ ce stade ( thx to _trim_aggregate )
 		{
 			NErrorIf(pvsx->m_kinXIn.m_a == 0.0f, NERROR_SYSTEM_GURU_MEDITATION);
-			// ... Nous sommes sûrs à partir d'ici que 'pvs->m_kinXIn.m_a > 0.0f'
+			// ... Nous sommes sï¿½rs ï¿½ partir d'ici que 'pvs->m_kinXIn.m_a > 0.0f'
 			if (pvsx->m_kinXOut.m_a < 0.0f)
 			{
 				// In: +	Out: -		>>>		CEIL !
 				FLAG_ON(pvsx->m_flags, FLAG_NLVSTAGEX_IS_CEIL);
 			}
-			else // (pvs->m_kinXOut.m_a > 0.0f) OU ... (pvs->m_kinXOut.m_a == 0.0f) ce qui est normalement impossible à ce stade ( thx to _trim_aggregate )
+			else // (pvs->m_kinXOut.m_a > 0.0f) OU ... (pvs->m_kinXOut.m_a == 0.0f) ce qui est normalement impossible ï¿½ ce stade ( thx to _trim_aggregate )
 			{
 				NErrorIf(pvsx->m_kinXOut.m_a == 0.0f, NERROR_SYSTEM_GURU_MEDITATION);
-				// ... Nous sommes sûrs à partir d'ici que 'pvs->m_kinXOut.m_a > 0.0f'
+				// ... Nous sommes sï¿½rs ï¿½ partir d'ici que 'pvs->m_kinXOut.m_a > 0.0f'
 				// In: +	Out: +		>>>		HYBRID [ceil,FLOOR]!
 				//
-				// Il est nécéssaire de diviser pvs en 2 : 1 CEIL de longueur nulle et 1 FLOOR.
-				// On va donc insérer un nouveau VStage dan sl'Array. Comme l'insertion se fait Avant l'index de ref. on va avoir, après insertion:
-				// 
+				// Il est nï¿½cï¿½ssaire de diviser pvs en 2 : 1 CEIL de longueur nulle et 1 FLOOR.
+				// On va donc insï¿½rer un nouveau VStage dan sl'Array. Comme l'insertion se fait Avant l'index de ref. on va avoir, aprï¿½s insertion:
+				//
 				// pvs actuel deviendra FLOOR
-				// vs inséré sera ceil de longueur nulle
+				// vs insï¿½rï¿½ sera ceil de longueur nulle
 				vsx = *pvsx;
-				vsx.m_kinXOut.null();	// ce CEIL de longueur nulle se trouve juste avant le FLOOR ayant la même vitesse que lui !
-				vsx.m_s1 = vsx.m_s0;	// vsx = Vstage de longueur nulle à Gauche de FLOOR (pvs)
+				vsx.m_kinXOut.null(); // ce CEIL de longueur nulle se trouve juste avant le FLOOR ayant la mï¿½me vitesse que lui !
+				vsx.m_s1 = vsx.m_s0;  // vsx = Vstage de longueur nulle ï¿½ Gauche de FLOOR (pvs)
 				FLAG_ON(vsx.m_flags, FLAG_NLVSTAGEX_IS_CEIL);
 
-				pvsx->m_kinXIn.null();	// ce FLOOR se trouve juste après le CEIL ayant la même vitesse que lui !
+				pvsx->m_kinXIn.null(); // ce FLOOR se trouve juste aprï¿½s le CEIL ayant la mï¿½me vitesse que lui !
 				FLAG_OFF(pvsx->m_flags, FLAG_NLVSTAGEX_IS_CEIL);
 
 				// insert un nouveau VStage avant le vstage i
-				NInsertArrayElement(&m_vStageXArray, i, (NBYTE*)&vsx);
+				NInsertArrayElement(&m_vStageXArray, i, (NBYTE *)&vsx);
 				i++;
 			}
 		}
@@ -198,37 +195,37 @@ Nu32 NLVSTAGEXSLICE::prepare(const NARRAY* pvstage_array, const NLKINLIMITS* plo
 	// 	|
 	//	|
 	//	| Nous savons que :
-	//	| 
+	//	|
 	//	| a)	Il y a alternance floor,ceil.
 	//	| b)	L'array des vstageX commence et termine par un floor.
-	//	| c)	L'array des vstageX contient un nombre impair de vstageX. ( Size est impaire ) la répartition étant: 
-	//	| 
-	//	| 						VstageX floor : (size + 1) / 2 
-	//	| 						VstageX ceil :  (size - 1) / 2 
-	//	| 	
+	//	| c)	L'array des vstageX contient un nombre impair de vstageX. ( Size est impaire ) la rï¿½partition ï¿½tant:
+	//	|
+	//	| 						VstageX floor : (size + 1) / 2
+	//	| 						VstageX ceil :  (size - 1) / 2
+	//	|
 	//	|  Nous allons donc checker toutes ces assertions !
 
 #ifdef _DEBUG
-// vérification de a) en sachant qu'on commence par un floor ...
+	// vï¿½rification de a) en sachant qu'on commence par un floor ...
 	Nu32 dbg_type = 0; // 0 floor, 1 ceil
-	NLVSTAGEX* dbg_pvx = (NLVSTAGEX*)m_vStageXArray.pFirst;
+	NLVSTAGEX *dbg_pvx = (NLVSTAGEX *)m_vStageXArray.pFirst;
 	for (Nu32 dbg_i = 0; dbg_i < m_vStageXArray.Size; dbg_i++, dbg_pvx++, dbg_type = 1 - dbg_type)
 	{
 		NErrorIf(ISFLAG_ON(dbg_pvx->m_flags, FLAG_NLVSTAGEX_IS_CEIL) && dbg_type == 0, NERROR_SYSTEM_GURU_MEDITATION);
 		NErrorIf(ISFLAG_OFF(dbg_pvx->m_flags, FLAG_NLVSTAGEX_IS_CEIL) && dbg_type == 1, NERROR_SYSTEM_GURU_MEDITATION);
 	}
 
-	// vérification de b)
-	dbg_pvx = (NLVSTAGEX*)m_vStageXArray.pFirst;
+	// vï¿½rification de b)
+	dbg_pvx = (NLVSTAGEX *)m_vStageXArray.pFirst;
 	NErrorIf(ISFLAG_ON(dbg_pvx->m_flags, FLAG_NLVSTAGEX_IS_CEIL), NERROR_SYSTEM_GURU_MEDITATION);
 	dbg_pvx += (m_vStageXArray.Size - 1);
 	NErrorIf(ISFLAG_ON(dbg_pvx->m_flags, FLAG_NLVSTAGEX_IS_CEIL), NERROR_SYSTEM_GURU_MEDITATION);
 
-	// vérification de c)
+	// vï¿½rification de c)
 	NErrorIf(!NISODD(m_vStageXArray.Size), NERROR_SYSTEM_GURU_MEDITATION);
 	Nu32 dbg_ceil_count = 0;
 	Nu32 dbg_floor_count = 0;
-	dbg_pvx = (NLVSTAGEX*)m_vStageXArray.pFirst;
+	dbg_pvx = (NLVSTAGEX *)m_vStageXArray.pFirst;
 	for (Nu32 dbg_i = 0; dbg_i < m_vStageXArray.Size; dbg_i++, dbg_pvx++)
 	{
 		if (ISFLAG_ON(dbg_pvx->m_flags, FLAG_NLVSTAGEX_IS_CEIL))
@@ -249,12 +246,12 @@ Nu32 NLVSTAGEXSLICE::prepare(const NARRAY* pvstage_array, const NLKINLIMITS* plo
 /**
  *	@brief
  *
- *	@param	pkin_out est l'array de sortie où seront pushés la séquence de kins correpondant à la solution
- *			issue de l'analyse de l'arbre associé ( et préalablement construit avec NLVSTAGEXSLICE::buildSolutionTree() )
+ *	@param	pkin_out est l'array de sortie oï¿½ seront pushï¿½s la sï¿½quence de kins correpondant ï¿½ la solution
+ *			issue de l'analyse de l'arbre associï¿½ ( et prï¿½alablement construit avec NLVSTAGEXSLICE::buildSolutionTree() )
  *
- *	@return le nombre de Kins effectivement 'pushés' sur l'array de sortie
+ *	@return le nombre de Kins effectivement 'pushï¿½s' sur l'array de sortie
  */
- // ------------------------------------------------------------------------------------------
+// ------------------------------------------------------------------------------------------
 void NLVSTAGEXSLICE::BuildSolutionTree()
 {
 	NErrorIf(!m_vStageXArray.Size, NERROR_NULL_SIZE);
@@ -264,60 +261,59 @@ void NLVSTAGEXSLICE::BuildSolutionTree()
 	//	|	1/ CONSTRUCTION DE L'ARBRE DES SOLUTIONS
 	// 	|
 	// 	|
-	//				 Création de la file de travail à la taille maximum possible pour une utilisation optimisée:
-	//				 Allouer suffisement de mémoire pour être en mesure de stocker l'ensemble des pointeurs sur noeuds dans la file sans reallocation va permettre
+	//				 Crï¿½ation de la file de travail ï¿½ la taille maximum possible pour une utilisation optimisï¿½e:
+	//				 Allouer suffisement de mï¿½moire pour ï¿½tre en mesure de stocker l'ensemble des pointeurs sur noeuds dans la file sans reallocation va permettre
 	//				 une gestion plus efficace du FIFO sur la file.
-	//				 En effet, nous allons allouer la "taille" de la file en 1 seule fois et ne jamais désalloué les éléments sortis de la file !
-	//				
+	//				 En effet, nous allons allouer la "taille" de la file en 1 seule fois et ne jamais dï¿½sallouï¿½ les ï¿½lï¿½ments sortis de la file !
+	//
 	//				 Calcul du nombre de KNODE:
 	//						soit F,		le nombre de VstageX de type floor total
 	//							 K,		le nombre de Knode total
 	//							 size,	le nombre de VStageX
 	//
-	//						On a, F = (size + 1) / 2 
-	//				
-	//						Chaque KNODE se construit entre 1 floor de depart et 1 floor d'arrivée.
-	//						La premiere paire de floor ( premier et dernier vstageX) génère 1 Knode.
-	//						Chaque floor supplémentaire génère 2 Knodes supplémentaire ( car chaque floor supl. découpe l'intervalle en 2 )
+	//						On a, F = (size + 1) / 2
+	//
+	//						Chaque KNODE se construit entre 1 floor de depart et 1 floor d'arrivï¿½e.
+	//						La premiere paire de floor ( premier et dernier vstageX) gï¿½nï¿½re 1 Knode.
+	//						Chaque floor supplï¿½mentaire gï¿½nï¿½re 2 Knodes supplï¿½mentaire ( car chaque floor supl. dï¿½coupe l'intervalle en 2 )
 	//						Donc,
 	//						K = 1 + (F-1)*2
 	//						K = 1 + 2*F -2
 	//						K = 2*F -1
-	//						K = 2*[(size+1)/2] - 1 
-	//						K = (size + 1 ) - 1 
+	//						K = 2*[(size+1)/2] - 1
+	//						K = (size + 1 ) - 1
 	//						K = size
 	Ns32 diff = m_vStageXArray.Size - m_knodeArray.Capacity;
 	if (diff > 0)
 		NIncreaseArrayCapacity(&m_knodeArray, diff);
 	NResizeArray(&m_knodeArray, 0, NULL, NULL);
 
-	// Création d'un premier noeud qu'on ajoute simplement en fin de file
-	// On gère manuellement le nombre de noeuds de la file restant à traiter.( filesize )
-	NLKNODE* pkn = (NLKNODE*)NArrayAllocBack(&m_knodeArray);
-	pkn->setup((NLVSTAGEX*)NGetFirstArrayPtr(&m_vStageXArray), (NLVSTAGEX*)NGetLastArrayPtr(&m_vStageXArray), NULL, NULL);
-	
-	NLKNODE*			phead = pkn;
-	Nu32				filesize = 1;
+	// Crï¿½ation d'un premier noeud qu'on ajoute simplement en fin de file
+	// On gï¿½re manuellement le nombre de noeuds de la file restant ï¿½ traiter.( filesize )
+	NLKNODE *pkn = (NLKNODE *)NArrayAllocBack(&m_knodeArray);
+	pkn->setup((NLVSTAGEX *)NGetFirstArrayPtr(&m_vStageXArray), (NLVSTAGEX *)NGetLastArrayPtr(&m_vStageXArray), NULL, NULL);
 
-	NLVSTAGEX*			pvsplit;
-	NLKNODE*			pknchild_left, * pknchild_right;
-	NLSMOTIONSHAPE		sleft, sright;
-	NLSCUTOUTOFFSETS	cutout;
-	NLSTARTSTITCH		immediate_start;
-	NLSCUTINOFFSETS		cutin;
-	NLENDSTITCH			immediate_end;
+	NLKNODE *phead = pkn;
+	Nu32 filesize = 1;
 
-	Nf32				s_left_in, s_right_out;
-	Nf32				s_left_out, s_right_in;
-	Nf32				v_left_in, v_right_out;
-	Nu32				mps_count = 0;		// nombre de MotionProfile feuilles ( car déclaré optimum et non "splitable") déclaré SUP ou SDOWN ( donc plus simples et légers que le SUP_FLAT_SDOWN )
-	Nu32				split_count = 0;	// nombre de split effectif. ( permet de connaitre le nombre de NLKNODE feuilles soit split_count + 1 )
+	NLVSTAGEX *pvsplit;
+	NLKNODE *pknchild_left, *pknchild_right;
+	NLSMOTIONSHAPE sleft, sright;
+	NLSCUTOUTOFFSETS cutout;
+	NLSTARTSTITCH immediate_start;
+	NLSCUTINOFFSETS cutin;
+	NLENDSTITCH immediate_end;
 
+	Nf32 s_left_in, s_right_out;
+	Nf32 s_left_out, s_right_in;
+	Nf32 v_left_in, v_right_out;
+	Nu32 mps_count = 0;	  // nombre de MotionProfile feuilles ( car dï¿½clarï¿½ optimum et non "splitable") dï¿½clarï¿½ SUP ou SDOWN ( donc plus simples et lï¿½gers que le SUP_FLAT_SDOWN )
+	Nu32 split_count = 0; // nombre de split effectif. ( permet de connaitre le nombre de NLKNODE feuilles soit split_count + 1 )
 
 	// ... Et c'est parti !
 	while (filesize)
 	{
-		// on récupère le noeud le plus ancien ( celui en tête de File )
+		// on rï¿½cupï¿½re le noeud le plus ancien ( celui en tï¿½te de File )
 		pkn = phead;
 		filesize--;
 		phead++;
@@ -326,20 +322,20 @@ void NLVSTAGEXSLICE::BuildSolutionTree()
 		{
 			// +----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 			// |																																														|
-			// | L'idée est de Diviser ( Split ) l'intervalle "pkn" [m_pVfrom, m_pVto] en deux intervalles fils avec comme point de split le VStage "le plus bas" dans l'intervalle.					|	
-			// | Chacun des deux intervalles est vérifié pour être sûr qu'il est possible de rejoindre les deux bornes sans les dépasser, ni en abscisse, ni en vitesse.								|
+			// | L'idï¿½e est de Diviser ( Split ) l'intervalle "pkn" [m_pVfrom, m_pVto] en deux intervalles fils avec comme point de split le VStage "le plus bas" dans l'intervalle.					|
+			// | Chacun des deux intervalles est vï¿½rifiï¿½ pour ï¿½tre sï¿½r qu'il est possible de rejoindre les deux bornes sans les dï¿½passer, ni en abscisse, ni en vitesse.								|
 			// | Les tests sont les suivants:																																							|
 			// |	A) Croisement(s):	(Motion Profile Crossing)																																		|
-			// |						On vérifie que le "Motion Profile Minimum" de l'intervalle fils de gauche ne croise pas le "Motion Profile Minimum" de l'intervalle fils de droite.				|
-			// |						On appelle "Motion Profile Minimum" la S-Shape permettant de passer directement de la vitesse de début d'intervalle à celle de fin d'intervalle.				|
+			// |						On vï¿½rifie que le "Motion Profile Minimum" de l'intervalle fils de gauche ne croise pas le "Motion Profile Minimum" de l'intervalle fils de droite.				|
+			// |						On appelle "Motion Profile Minimum" la S-Shape permettant de passer directement de la vitesse de dï¿½but d'intervalle ï¿½ celle de fin d'intervalle.				|
 			// |																																														|
-			// |	B) Dépassement(s):	(Abscissa Overshooting )																																			|
+			// |	B) Dï¿½passement(s):	(Abscissa Overshooting )																																			|
 			// |																																														|
 			// |	C) Plafonnement(s)	? (capping)																																														|
 			// |																																														|
-			// s_left_in est l'abscisse la plus à gauche de l'intervalle [from,to]et s_right_out est l'abscisse la plus à droite.
+			// s_left_in est l'abscisse la plus ï¿½ gauche de l'intervalle [from,to]et s_right_out est l'abscisse la plus ï¿½ droite.
 
-			// Abscisses des intervalles fils après split ...
+			// Abscisses des intervalles fils aprï¿½s split ...
 			// Pour l'intervalle fils [from,split]		[s_left_in, s_left_out]
 			// Pour l'intervalle fils [split, to]		[s_right_in, s_right_out]
 
@@ -356,27 +352,27 @@ void NLVSTAGEXSLICE::BuildSolutionTree()
 			// ... la distance couverte par les 2 motion S shapes ( sleft et sright ) est plus grande que la distance disponible entre les 2 vstage
 			if ((sleft.m_ds + sright.m_ds) > (s_right_out - s_left_in))
 			{
-				// En cas de "croisement" des motion profiles : pas de SPLIT ! 
-				// On en reste donc à la solution déjà calculée précédement et stoskée dans pkn. ( calculée precedement = lors du précédent passage ici avec construction de la solution minimum avec left ou right ) 
+				// En cas de "croisement" des motion profiles : pas de SPLIT !
+				// On en reste donc ï¿½ la solution dï¿½jï¿½ calculï¿½e prï¿½cï¿½dement et stoskï¿½e dans pkn. ( calculï¿½e precedement = lors du prï¿½cï¿½dent passage ici avec construction de la solution minimum avec left ou right )
 				continue;
 			}
 			// +------------------------------------------------+
-			// | B) Dépassement(s) ? (Abscissa Overshooting)	|
+			// | B) Dï¿½passement(s) ? (Abscissa Overshooting)	|
 			// +------------------------------------------------+
-			// ... Pas de croisement, nous sommes sûrs que les 2 profils S "tiennent", sans se percuter l'un l'autre.
-			// Il est cependant possible que l'un d'eux ( pas les deux car sinon il y aurait croisement ) dépasse  à droite, ou à gauche, de Split.
+			// ... Pas de croisement, nous sommes sï¿½rs que les 2 profils S "tiennent", sans se percuter l'un l'autre.
+			// Il est cependant possible que l'un d'eux ( pas les deux car sinon il y aurait croisement ) dï¿½passe  ï¿½ droite, ou ï¿½ gauche, de Split.
 			else if (sleft.forwardOvershoot(&cutout, &immediate_start, pkn->m_pVfrom, pvsplit))
 			{
-				// Dépassement à droite de split, ... donc calcul des contraintes associées
-				// Cela signifie que la "distance maximum" séparant From de Split n'est pas suffisante pour atteindre Split.V depuis From.V...
-				// Du coup, Split.V est atteinte plus tard/plus loin dans l'intervalle voisin, c'est à dire dans [Split,To]...
-				// En conséquence, on considère que [From,Split] ne sera plus subdivisable.
-				// A priori il ne devrait pas y avoir d'autres Vstages dans l'intervalle [From,Split] mais cela n'est pas non plus impossible, 
-				// On veillera donc à bloquer toute nouvelle subdivision, en flaggant le knode "FLAG_NLSMOTIONPROFILE_OPTIMUM_SOLUTION"
+				// Dï¿½passement ï¿½ droite de split, ... donc calcul des contraintes associï¿½es
+				// Cela signifie que la "distance maximum" sï¿½parant From de Split n'est pas suffisante pour atteindre Split.V depuis From.V...
+				// Du coup, Split.V est atteinte plus tard/plus loin dans l'intervalle voisin, c'est ï¿½ dire dans [Split,To]...
+				// En consï¿½quence, on considï¿½re que [From,Split] ne sera plus subdivisable.
+				// A priori il ne devrait pas y avoir d'autres Vstages dans l'intervalle [From,Split] mais cela n'est pas non plus impossible,
+				// On veillera donc ï¿½ bloquer toute nouvelle subdivision, en flaggant le knode "FLAG_NLSMOTIONPROFILE_OPTIMUM_SOLUTION"
 				pvsplit->nullPrimeFlatShape();
 
-				pknchild_left = (NLKNODE*)NArrayAllocBack(&m_knodeArray);
-				pknchild_right = (NLKNODE*)NArrayAllocBack(&m_knodeArray);
+				pknchild_left = (NLKNODE *)NArrayAllocBack(&m_knodeArray);
+				pknchild_right = (NLKNODE *)NArrayAllocBack(&m_knodeArray);
 				split_count++;
 				filesize += 2;
 
@@ -385,11 +381,10 @@ void NLVSTAGEXSLICE::BuildSolutionTree()
 				pknchild_left->setup(pkn->m_pVfrom, pvsplit, pknchild_right, pkn);
 				pknchild_right->setup(pvsplit, pkn->m_pVto, pknchild_left, pkn);
 
-
 				// build left Child:
 				// -----------------
-				// La Shape de gauche construite en forward build up et donc en dépassement à droite de Vsplit devient donc le motion profile de left child.
-				// On prend soin de renseigner son cutout, c'est à dire "quand" et "ou" l'arrivée de la shape devra être "coupée" ( avant son dernier kin 'classique' )
+				// La Shape de gauche construite en forward build up et donc en dï¿½passement ï¿½ droite de Vsplit devient donc le motion profile de left child.
+				// On prend soin de renseigner son cutout, c'est ï¿½ dire "quand" et "ou" l'arrivï¿½e de la shape devra ï¿½tre "coupï¿½e" ( avant son dernier kin 'classique' )
 				pknchild_left->m_motionProfile.sUp(&sleft, &pkn->m_pVfrom->m_stitch.m_start.m_cutIn, &cutout);
 				// On flag cette solution comme optimum pour bloquer toute subdivision future.
 				FLAG_ON(pknchild_left->m_motionProfile.m_flags, FLAG_NLSMOTIONPROFILE_OPTIMUM_SOLUTION);
@@ -397,43 +392,43 @@ void NLVSTAGEXSLICE::BuildSolutionTree()
 
 				// build right Child:
 				// ------------------
-				// Dans ce cas, nous avons un Ramped Motion Profile à droite.
-				// Il est bien sûr composé de 2 S_SHAPEs, une à sa gauche, une à sa droite !
+				// Dans ce cas, nous avons un Ramped Motion Profile ï¿½ droite.
+				// Il est bien sï¿½r composï¿½ de 2 S_SHAPEs, une ï¿½ sa gauche, une ï¿½ sa droite !
 				// La S_SHAPE de gauche (du motion profile de droite ! )
-				// Elle permet le "Redémarrage" depuis le point fantôme créé à droite de l'intervalle de gauche (pknchild_left) ;)
+				// Elle permet le "Redï¿½marrage" depuis le point fantï¿½me crï¿½ï¿½ ï¿½ droite de l'intervalle de gauche (pknchild_left) ;)
 				//
 				sleft.m_s0 = pvsplit->m_s1 + immediate_start.m_s1Offsets.m_ds;
-				sleft.m_v0 = pvsplit->m_v + immediate_start.m_s1Offsets.m_dv;					// vitesse initiale
-				sleft.m_v1 = pvsplit->m_v;																// vitesse finale
-				// sleft.m_jx = ...;		identique à celui déjà présent dans sleft	// Jerk initial (et max).	Est du même signe que (v1 - v0) et null si v1 == v0
-				sleft.m_tx = -cutout.m_dt;																// Durée nécéssaire pour que l'accel. (initialement nulle) atteigne sa valeur max. ( soit m_ax ).
-				sleft.m_ax = cutout.m_da; // sleft.m_jx*sleft.m_tx;									// Acceleration Max.		Est du même signe que (v1 - v0) et nulle si v1 == v0
+				sleft.m_v0 = pvsplit->m_v + immediate_start.m_s1Offsets.m_dv; // vitesse initiale
+				sleft.m_v1 = pvsplit->m_v;									  // vitesse finale
+				// sleft.m_jx = ...;		identique ï¿½ celui dï¿½jï¿½ prï¿½sent dans sleft	// Jerk initial (et max).	Est du mï¿½me signe que (v1 - v0) et null si v1 == v0
+				sleft.m_tx = -cutout.m_dt; // Durï¿½e nï¿½cï¿½ssaire pour que l'accel. (initialement nulle) atteigne sa valeur max. ( soit m_ax ).
+				sleft.m_ax = cutout.m_da;  // sleft.m_jx*sleft.m_tx;									// Acceleration Max.		Est du mï¿½me signe que (v1 - v0) et nulle si v1 == v0
 
-				//tmp_dbg = sleft.m_jx*sleft.m_tx;
-				//NErrorIf(cutout.m_da != tmp_dbg, NERROR_SYSTEM_CHECK);
-				sleft.m_vx = -cutout.m_dv;																// Vitesse acquise quand l'acceleration (initialement nulle) atteind sa valeur max. ( soit m_ax ).
-				sleft.m_tb = 0.0f;																		// Durée de maintient de l'acceleration maximum.
-				sleft.m_sx = sleft.m_jx * NPOW3(sleft.m_tx) / 6.0f;											// Portion de distance couverte pas la SShape sur une durée de m_tx pendant que l'acceleration
-																										// ... (initialement nulle) atteind sa valeur maximum ( soit m_ax )
-																										// ! 'm_sx' est une 'portion de distance' et ne représente qu'une partie de la distance
-																										// ( c'est pourquoi on parle de portion ) parcourue pendant la durée 'm_tx'.
-																										// ! La distance totale parcourue pendnat la durée 'm_tx' (i.e durant la phase montante) 
-																										// étant: s = m_sx + v0*m_tx
-				sleft.m_ds = (sleft.m_v0 + sleft.m_v1) * sleft.m_tx;										// Distance totale couverte pas la S Motion Shape
+				// tmp_dbg = sleft.m_jx*sleft.m_tx;
+				// NErrorIf(cutout.m_da != tmp_dbg, NERROR_SYSTEM_CHECK);
+				sleft.m_vx = -cutout.m_dv;							 // Vitesse acquise quand l'acceleration (initialement nulle) atteind sa valeur max. ( soit m_ax ).
+				sleft.m_tb = 0.0f;									 // Durï¿½e de maintient de l'acceleration maximum.
+				sleft.m_sx = sleft.m_jx * NPOW3(sleft.m_tx) / 6.0f;	 // Portion de distance couverte pas la SShape sur une durï¿½e de m_tx pendant que l'acceleration
+																	 // ... (initialement nulle) atteind sa valeur maximum ( soit m_ax )
+																	 // ! 'm_sx' est une 'portion de distance' et ne reprï¿½sente qu'une partie de la distance
+																	 // ( c'est pourquoi on parle de portion ) parcourue pendant la durï¿½e 'm_tx'.
+																	 // ! La distance totale parcourue pendnat la durï¿½e 'm_tx' (i.e durant la phase montante)
+																	 // ï¿½tant: s = m_sx + v0*m_tx
+				sleft.m_ds = (sleft.m_v0 + sleft.m_v1) * sleft.m_tx; // Distance totale couverte pas la S Motion Shape
 				pknchild_right->m_motionProfile.sRamped(&sleft, &sright, &immediate_start.m_cutIn, &pkn->m_pVto->m_stitch.m_end.m_cutOut);
 			}
 			else if (sright.backwardOvershoot(&cutin, &immediate_end, pvsplit, pkn->m_pVto))
 			{
-				// Dépassement à gauche de split, ... donc calcul des contraintes associées
-				// Cela signifie que la "distance maximum" séparant Split de To n'est pas suffisante pour atteindre To.V depuis Split.V...
-				// Du coup, cela obligerait à partir "avant split" avec une vitesse de Split.V et donc "d'envahir" l'intervalle voisin, c'est à dire [From,Split]...
-				// En conséquence, on considère que [Split,To] ne sera plus subdivisable.
-				// A priori il ne devrait pas y avoir d'autres Vstages dans l'intervalle [Split,To] mais cela n'est pas non plus impossible, donc on veille à bloquer toute nouvelle subdivision.
-				//pvsplit->m_overshootOffsets = ovs;
+				// Dï¿½passement ï¿½ gauche de split, ... donc calcul des contraintes associï¿½es
+				// Cela signifie que la "distance maximum" sï¿½parant Split de To n'est pas suffisante pour atteindre To.V depuis Split.V...
+				// Du coup, cela obligerait ï¿½ partir "avant split" avec une vitesse de Split.V et donc "d'envahir" l'intervalle voisin, c'est ï¿½ dire [From,Split]...
+				// En consï¿½quence, on considï¿½re que [Split,To] ne sera plus subdivisable.
+				// A priori il ne devrait pas y avoir d'autres Vstages dans l'intervalle [Split,To] mais cela n'est pas non plus impossible, donc on veille ï¿½ bloquer toute nouvelle subdivision.
+				// pvsplit->m_overshootOffsets = ovs;
 				pvsplit->nullPrimeFlatShape();
 
-				pknchild_left = (NLKNODE*)NArrayAllocBack(&m_knodeArray);
-				pknchild_right = (NLKNODE*)NArrayAllocBack(&m_knodeArray);
+				pknchild_left = (NLKNODE *)NArrayAllocBack(&m_knodeArray);
+				pknchild_right = (NLKNODE *)NArrayAllocBack(&m_knodeArray);
 				split_count++;
 				filesize += 2;
 
@@ -441,7 +436,6 @@ void NLVSTAGEXSLICE::BuildSolutionTree()
 
 				pknchild_left->setup(pkn->m_pVfrom, pvsplit, pknchild_right, pkn);
 				pknchild_right->setup(pvsplit, pkn->m_pVto, pknchild_left, pkn);
-
 
 				// build RIGHT:
 				// ------------
@@ -453,23 +447,23 @@ void NLVSTAGEXSLICE::BuildSolutionTree()
 				// build LEFT:
 				// -----------
 				// LEFT.right
-				sright.m_tx = -immediate_end.m_cutOut.m_dt;													// Durée nécéssaire pour que l'accel. (initialement nulle) atteigne sa valeur max. ( soit m_ax ).
-				sright.m_v0 = pvsplit->m_v;																	// vitesse initiale
-				sright.m_v1 = pvsplit->m_v + immediate_end.m_s0Offsets.m_dv;								// vitesse finale
-				sright.m_ds = (sright.m_v0 + sright.m_v1) * sright.m_tx;										// Distance totale couverte pas la S Motion Shape
+				sright.m_tx = -immediate_end.m_cutOut.m_dt;					 // Durï¿½e nï¿½cï¿½ssaire pour que l'accel. (initialement nulle) atteigne sa valeur max. ( soit m_ax ).
+				sright.m_v0 = pvsplit->m_v;									 // vitesse initiale
+				sright.m_v1 = pvsplit->m_v + immediate_end.m_s0Offsets.m_dv; // vitesse finale
+				sright.m_ds = (sright.m_v0 + sright.m_v1) * sright.m_tx;	 // Distance totale couverte pas la S Motion Shape
 
 				sright.m_s0 = pvsplit->m_s0 + immediate_end.m_s0Offsets.m_ds - sright.m_ds;
-				// sright.m_jx = ...;		identique à celui déjà présent dans sright	// Jerk initial (et max).	Est du même signe que (v1 - v0) et null si v1 == v0
-				sright.m_ax = immediate_end.m_cutOut.m_da;													// Acceleration Max.		Est du même signe que (v1 - v0) et nulle si v1 == v0
+				// sright.m_jx = ...;		identique ï¿½ celui dï¿½jï¿½ prï¿½sent dans sright	// Jerk initial (et max).	Est du mï¿½me signe que (v1 - v0) et null si v1 == v0
+				sright.m_ax = immediate_end.m_cutOut.m_da; // Acceleration Max.		Est du mï¿½me signe que (v1 - v0) et nulle si v1 == v0
 
-				sright.m_vx = -immediate_end.m_cutOut.m_dv;													// Vitesse acquise quand l'acceleration (initialement nulle) atteind sa valeur max. ( soit m_ax ).
-				sright.m_tb = 0.0f;																			// Durée de maintient de l'acceleration maximum.
-				sright.m_sx = sright.m_jx * NPOW3(sright.m_tx) / 6.0f;										// Portion de distance couverte pas la SShape sur une durée de m_tx pendant que l'acceleration
-																											// ... (initialement nulle) atteind sa valeur maximum ( soit m_ax )
-																											// ! 'm_sx' est une 'portion de distance' et ne représente qu'une partie de la distance
-																											// ( c'est pourquoi on parle de portion ) parcourue pendant la durée 'm_tx'.
-																											// ! La distance totale parcourue pendnat la durée 'm_tx' (i.e durant la phase montante) 
-																											// étant: s = m_sx + v0*m_tx
+				sright.m_vx = -immediate_end.m_cutOut.m_dv;			   // Vitesse acquise quand l'acceleration (initialement nulle) atteind sa valeur max. ( soit m_ax ).
+				sright.m_tb = 0.0f;									   // Durï¿½e de maintient de l'acceleration maximum.
+				sright.m_sx = sright.m_jx * NPOW3(sright.m_tx) / 6.0f; // Portion de distance couverte pas la SShape sur une durï¿½e de m_tx pendant que l'acceleration
+																	   // ... (initialement nulle) atteind sa valeur maximum ( soit m_ax )
+																	   // ! 'm_sx' est une 'portion de distance' et ne reprï¿½sente qu'une partie de la distance
+																	   // ( c'est pourquoi on parle de portion ) parcourue pendant la durï¿½e 'm_tx'.
+																	   // ! La distance totale parcourue pendnat la durï¿½e 'm_tx' (i.e durant la phase montante)
+																	   // ï¿½tant: s = m_sx + v0*m_tx
 
 				pknchild_left->m_motionProfile.sRamped(&sleft, &sright, &pkn->m_pVfrom->m_stitch.m_start.m_cutIn, &immediate_end.m_cutOut);
 			}
@@ -482,9 +476,9 @@ void NLVSTAGEXSLICE::BuildSolutionTree()
 				s_right_in = sright.m_s0;
 				s_left_out = s_left_in + sleft.m_ds;
 
-				// Ni croisement, ni dépassement, les deux intervalles fils de "pkn" sont "buildables"
-				pknchild_left = (NLKNODE*)NArrayAllocBack(&m_knodeArray);
-				pknchild_right = (NLKNODE*)NArrayAllocBack(&m_knodeArray);
+				// Ni croisement, ni dï¿½passement, les deux intervalles fils de "pkn" sont "buildables"
+				pknchild_left = (NLKNODE *)NArrayAllocBack(&m_knodeArray);
+				pknchild_right = (NLKNODE *)NArrayAllocBack(&m_knodeArray);
 				split_count++;
 				filesize += 2;
 
@@ -492,17 +486,17 @@ void NLVSTAGEXSLICE::BuildSolutionTree()
 				pknchild_left->setup(pkn->m_pVfrom, pvsplit, pknchild_right, pkn);
 				pknchild_right->setup(pvsplit, pkn->m_pVto, pknchild_left, pkn);
 
-				// Sera-t'il possible de traverser chacun de ces 2 intervalles en dépassant la vitesse "Split.V" en cours de route ... 
-				// ... et en rejoingnant Split.V  à la toute fin ? 
-				// En fait, la seule raison qui, à partir de maintenant, peut empêcher de le faire est le 'plafonnement' de l'intervalle.
+				// Sera-t'il possible de traverser chacun de ces 2 intervalles en dï¿½passant la vitesse "Split.V" en cours de route ...
+				// ... et en rejoingnant Split.V  ï¿½ la toute fin ?
+				// En fait, la seule raison qui, ï¿½ partir de maintenant, peut empï¿½cher de le faire est le 'plafonnement' de l'intervalle.
 
 				// +----------------------------------------+
-				// | C.1) [From,Split] est-il plafonné ?	|
+				// | C.1) [From,Split] est-il plafonnï¿½ ?	|
 				// +----------------------------------------+
 				if (s_left_out >= pvsplit->m_s0)
 				{
-					// Plafonnement à l'arrivée sur l'intervalle [From,Split]. C'est à dire qu'en rejoignant directement la vitesse Split.V depuis From.V on  dépasse Split.s0.
-					// Cela est autorisé certes, mais cela indique qu'il ne sera pas possible de faire mieux !
+					// Plafonnement ï¿½ l'arrivï¿½e sur l'intervalle [From,Split]. C'est ï¿½ dire qu'en rejoignant directement la vitesse Split.V depuis From.V on  dï¿½passe Split.s0.
+					// Cela est autorisï¿½ certes, mais cela indique qu'il ne sera pas possible de faire mieux !
 					// L'intervalle [From,Split] permet donc la construction d'un Motion Profile de type SUP ou SUP_FLAT
 					pknchild_left->m_motionProfile.sUp(&sleft, &pkn->m_pVfrom->m_stitch.m_start.m_cutIn, NULL);
 					pvsplit->setPrimeFlatShapeS0(s_left_out);
@@ -512,22 +506,22 @@ void NLVSTAGEXSLICE::BuildSolutionTree()
 				// +------------------------------------+
 				// | D) [From,Split] Ok !				|
 				// +------------------------------------+
-				else if (sleft.m_ds)//  (s_left_out < pvsplit->m_s0)
+				else if (sleft.m_ds) //  (s_left_out < pvsplit->m_s0)
 				{
 					pknchild_left->m_motionProfile.sUpFlat(&sleft, &pkn->m_pVfrom->m_stitch.m_start.m_cutIn, pvsplit->m_s0 - s_left_out);
 				}
-				else  // .... left est FLAT car sleft.m_ds est null !!! ( rappel sleft a été construite  par 'sleft.forwardBuildUp' )
+				else // .... left est FLAT car sleft.m_ds est null !!! ( rappel sleft a ï¿½tï¿½ construite  par 'sleft.forwardBuildUp' )
 				{
 					pknchild_left->m_motionProfile.flat(s_left_in, pvsplit->m_s0, sleft.m_v0);
 				}
 
 				// +------------------------------------+
-				// | E) [Split,To] est-il plafonné ?	|
+				// | E) [Split,To] est-il plafonnï¿½ ?	|
 				// +------------------------------------+
 				if (s_right_in <= pvsplit->m_s1)
 				{
-					// Plafonnement au départ sur l'intervalle [Split,To]. C'est à dire qu'en rejoignant directement la vitesse To.V depuis Split.V on  doit commencer à décélérer avant Split.s1.
-					// Cela est autorisé certes, mais cela indique qu'il ne sera pas possible de faire mieux !
+					// Plafonnement au dï¿½part sur l'intervalle [Split,To]. C'est ï¿½ dire qu'en rejoignant directement la vitesse To.V depuis Split.V on  doit commencer ï¿½ dï¿½cï¿½lï¿½rer avant Split.s1.
+					// Cela est autorisï¿½ certes, mais cela indique qu'il ne sera pas possible de faire mieux !
 					// L'intervalle [Split,To] permet donc la construction d'un Motion Profile de type SDOWN ou FLAT_SDOWN
 					pknchild_right->m_motionProfile.sDown(&sright, NULL, &pkn->m_pVto->m_stitch.m_end.m_cutOut);
 					pvsplit->setPrimeFlatShapeS1(s_right_in);
@@ -537,7 +531,7 @@ void NLVSTAGEXSLICE::BuildSolutionTree()
 				// +------------------------------------+
 				// | E) [Split,To] Ok !					|
 				// +------------------------------------+
-				else if (sright.m_ds)// (s_right_in > pvsplit->m_s1)
+				else if (sright.m_ds) // (s_right_in > pvsplit->m_s1)
 				{
 					pknchild_right->m_motionProfile.flatSdown(&sright, &pkn->m_pVto->m_stitch.m_end.m_cutOut, s_right_in - pvsplit->m_s1);
 				}
@@ -547,28 +541,28 @@ void NLVSTAGEXSLICE::BuildSolutionTree()
 				}
 			}
 		} // ... if ( pvsplit = pkn->deepSolveAndGetSplitVStage(&local_limits) )
-	} // ... while(flisesize)
+	}	  // ... while(flisesize)
 
 	//	+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------
 	//	|
 	//	|	2/ RECHERCHE ET PROMOTION DE LA SOLUTION OPTIMUM DANS L'ARBRE
 	// 	|
 	// 	|
-	//		Toutes les options étant calculées et hiérarchisées dans l'arbre, reste maintenant à ne retenir que les meilleures solutions et à calculer/ stocker les kins associés.
-	//		Pour se faire nous allons avoir besoin d'un buffer de travail, et pour des questions de rapidité d'éxécution nous allons faire en sorte d'allouer ce buffer en une seule fois ( pas de réallocations en cours de route ) !
-	//		Nous devons donc estimer la taille maximum que pourrait atteindre ce buffer pour NE JAMAIS écrire/lire à l'extérieur.
+	//		Toutes les options ï¿½tant calculï¿½es et hiï¿½rarchisï¿½es dans l'arbre, reste maintenant ï¿½ ne retenir que les meilleures solutions et ï¿½ calculer/ stocker les kins associï¿½s.
+	//		Pour se faire nous allons avoir besoin d'un buffer de travail, et pour des questions de rapiditï¿½ d'ï¿½xï¿½cution nous allons faire en sorte d'allouer ce buffer en une seule fois ( pas de rï¿½allocations en cours de route ) !
+	//		Nous devons donc estimer la taille maximum que pourrait atteindre ce buffer pour NE JAMAIS ï¿½crire/lire ï¿½ l'extï¿½rieur.
 	//									...
-	//		Estimation de la taille max. du buffer nécéssaire à la promotion des motion profiles en Kin
-	//		
-	//		Nombre de Kins:	Pour rappel, la promotion d'un Motion profile en Kin ne créée pas le kin0 du motion profile... celui - ci étant considéré comme pré-existant !
-	//						Ainsi un motion profile de type SUP se décrit avec 4 kins :	
-	//						( mais seul 3 seront réellement créés )
-	//																			kin0 (			t0 ) ... La promotion ne crée pas ce premier Kin mais assume qu'il existe déjà.
+	//		Estimation de la taille max. du buffer nï¿½cï¿½ssaire ï¿½ la promotion des motion profiles en Kin
+	//
+	//		Nombre de Kins:	Pour rappel, la promotion d'un Motion profile en Kin ne crï¿½ï¿½e pas le kin0 du motion profile... celui - ci ï¿½tant considï¿½rï¿½ comme prï¿½-existant !
+	//						Ainsi un motion profile de type SUP se dï¿½crit avec 4 kins :
+	//						( mais seul 3 seront rï¿½ellement crï¿½ï¿½s )
+	//																			kin0 (			t0 ) ... La promotion ne crï¿½e pas ce premier Kin mais assume qu'il existe dï¿½jï¿½.
 	//																			kin1 (kin0	+	tx )
 	//																			kin2 (kin1	+	tb ) ... n'existe que si tb > 0
 	//																			kin3 (kin2	+	tx )
-	//		
-	//											|		Nombre MINimum de Kin créés à la promotion		|		Nombre MAXimum de kin créés à la promotion		|
+	//
+	//											|		Nombre MINimum de Kin crï¿½ï¿½s ï¿½ la promotion		|		Nombre MAXimum de kin crï¿½ï¿½s ï¿½ la promotion		|
 	//											+	   ( ... dans le cas ou Tb(s) est/sont Null(s) )	+														+
 	//		Motion Profile	EMPTY				|							0							|							0							|
 	//		Motion Profile	SDOWN				|							2	...si Tb null			|							3							|
@@ -579,108 +573,106 @@ void NLVSTAGEXSLICE::BuildSolutionTree()
 	//		Motion Profile	SUP_FLAT			|							3	...si Tb null			|							4							|
 	//		Motion Profile	SUP_FLAT_SDOWN		|							5	...si Tb(s) null(s)		|							7							|
 	//
-	//		La boucle de création de motion profile précédente nous renvoie 2 compteurs:
+	//		La boucle de crï¿½ation de motion profile prï¿½cï¿½dente nous renvoie 2 compteurs:
 	//						'split_count'	Le nombre total de divisions d'intervalle en deux sous-intervalles.
 	//										On a donc "split_count + 1" intervalles 'feuilles' dans notre arbre.
 	//						'mps_count'		Le nombre de motion profile feuille de type SUP ou SDOWN.
-	//										( Ces motion profile étant considérés comme optimum solution n'ont pas été re-subdivisés en 2. Ils sont feuilles à coup sûr !)
-	//		On en conclut que, au maximum, et dans le cas ou la solution optimum globale descendrait jusqu'à toutes les feuilles de l'arbre, alors ces motions profile feuilles 
-	//		composant la solution seraient répartis comme ceci:
+	//										( Ces motion profile ï¿½tant considï¿½rï¿½s comme optimum solution n'ont pas ï¿½tï¿½ re-subdivisï¿½s en 2. Ils sont feuilles ï¿½ coup sï¿½r !)
+	//		On en conclut que, au maximum, et dans le cas ou la solution optimum globale descendrait jusqu'ï¿½ toutes les feuilles de l'arbre, alors ces motions profile feuilles
+	//		composant la solution seraient rï¿½partis comme ceci:
 	//
 	//										'spli_count + 1' motion profile dont 'mps_count' motion profile de type SUP ou SDOWN
 	//
-	// Du coup, en se basant sur le tableau livré plus haut, le nombre total de kins créés pour décrire cette solution ( descendant jusqu'aux feuilles )  est :
+	// Du coup, en se basant sur le tableau livrï¿½ plus haut, le nombre total de kins crï¿½ï¿½s pour dï¿½crire cette solution ( descendant jusqu'aux feuilles )  est :
 	//
 	//		K = S * (split_count + 1)  - D * mps_count
-	//		
+	//
 	//		avec
 	//
-	//		S	= nbre de kin créés à la promotion d'un motion profile SUP_FLAT_SDOWN précédé d'une FLAT  SHAPE ( la prime flat shape représentant le chemin parcouru sous le plafond d'un NLVSTAGEX )
+	//		S	= nbre de kin crï¿½ï¿½s ï¿½ la promotion d'un motion profile SUP_FLAT_SDOWN prï¿½cï¿½dï¿½ d'une FLAT  SHAPE ( la prime flat shape reprï¿½sentant le chemin parcouru sous le plafond d'un NLVSTAGEX )
 	//		S	= 7 + 1
 	//		S	= 8
 	//
-	//		D	= S - nbre de kin créés à la promotion d'un motion profile SUP ou SDOWN  précédé d'une FLAT  SHAPE
+	//		D	= S - nbre de kin crï¿½ï¿½s ï¿½ la promotion d'un motion profile SUP ou SDOWN  prï¿½cï¿½dï¿½ d'une FLAT  SHAPE
 	//		D	= 8 - (3+1)
 	//		D	= 4
-	//		
-	//		Donc pour faire simple, on estime le nombre de KIN créés par la promotion de (split_count + 1) motion profile(s) SUP_FLAT_SDOWN précédés tous d'une FLAT SHAPE
-	//		... et, comme on sait qu'en fait, parmis eux certains ne sont "que" des SUP ou SDOWN on retranche le nombre de KIN estimés en trop...
 	//
-	//		( la capacité max etant de K+1 car il faut insérer le premier kin de démarrage ! )
+	//		Donc pour faire simple, on estime le nombre de KIN crï¿½ï¿½s par la promotion de (split_count + 1) motion profile(s) SUP_FLAT_SDOWN prï¿½cï¿½dï¿½s tous d'une FLAT SHAPE
+	//		... et, comme on sait qu'en fait, parmis eux certains ne sont "que" des SUP ou SDOWN on retranche le nombre de KIN estimï¿½s en trop...
+	//
+	//		( la capacitï¿½ max etant de K+1 car il faut insï¿½rer le premier kin de dï¿½marrage ! )
 	m_RequiredKinArraySize = 8 * (split_count + 1) - 4 * mps_count + 1;
 
+	/*
+		NSetArrayCapacity(&m_kinsArray, 1 + 8 * (split_count + 1) - 4 * mps_count, NULL);
+		// Insertion du premier Kin dans le buffer
+		NLKIN* pkin = (NLKIN*)NArrayAllocBack(&m_kinsArray);
+		pkin->null();
+		pkn = (NLKNODE*)pknodearray->pFirst;
+		Nu32 size = pkn->promote(pkin);
+		NErrorIf(m_kinsArray.Size + size > m_kinsArray.Capacity, NERROR_SYSTEM_GURU_MEDITATION);
+		NUpSizeArray(&m_kinsArray, size, NULL);
 
-/*
-	NSetArrayCapacity(&m_kinsArray, 1 + 8 * (split_count + 1) - 4 * mps_count, NULL);
-	// Insertion du premier Kin dans le buffer
-	NLKIN* pkin = (NLKIN*)NArrayAllocBack(&m_kinsArray);
-	pkin->null();
-	pkn = (NLKNODE*)pknodearray->pFirst;
-	Nu32 size = pkn->promote(pkin);
-	NErrorIf(m_kinsArray.Size + size > m_kinsArray.Capacity, NERROR_SYSTEM_GURU_MEDITATION);
-	NUpSizeArray(&m_kinsArray, size, NULL);
+	#ifndef _NEDITOR
+		NClearArray(&knodearray, NULL);
+	#endif
 
-#ifndef _NEDITOR
-	NClearArray(&knodearray, NULL);
-#endif
+		// Pour finir: longueur et durï¿½e de la trajectoire
+		pkin = (NLKIN*)NGetLastArrayPtr(&m_kinsArray);
+		m_dt = pkin->m_t;
+		NErrorIf(size&& NLKIN_S_DISTINCT(m_pPath->m_geometry.m_ds, pkin->m_s), NERROR_WRONG_VALUE);	// on accepte que size == 0, c'est ï¿½ dire que le promote n'ai rien fait !
+																										// ce qui arrive si la vitesse max est ï¿½gale/infï¿½rieure au threshold utilisï¿½ dans
+																										// la construction des motions profile ... [ cf. NLSMOTIONPROFILE::sRamped(...) ]
 
-	// Pour finir: longueur et durée de la trajectoire 
-	pkin = (NLKIN*)NGetLastArrayPtr(&m_kinsArray);
-	m_dt = pkin->m_t;
-	NErrorIf(size&& NLKIN_S_DISTINCT(m_pPath->m_geometry.m_ds, pkin->m_s), NERROR_WRONG_VALUE);	// on accepte que size == 0, c'est à dire que le promote n'ai rien fait !
-																									// ce qui arrive si la vitesse max est égale/inférieure au threshold utilisé dans
-																									// la construction des motions profile ... [ cf. NLSMOTIONPROFILE::sRamped(...) ]
+	*/
 
-*/
+	/*
+	 *
+	 * LEGACY
+	 *
+		Nu32 size = pkin_out->Size + 1 + 8 * (split_count + 1) - 4 * mps_count;
+		if (pkin_out->Capacity < size)
+			NIncreaseArrayCapacity(pkin_out, size - pkin_out->Capacity);
 
-/*
- *
- * LEGACY
- *
-	Nu32 size = pkin_out->Size + 1 + 8 * (split_count + 1) - 4 * mps_count;
-	if (pkin_out->Capacity < size)
-		NIncreaseArrayCapacity(pkin_out, size - pkin_out->Capacity);
+		m_firstKinId = pkin_out->Size;
+		// Insertion du premier Kin dans le buffer
+		NLKIN* pkin = (NLKIN*)NArrayAllocBack(pkin_out);
+		pkin->null();
+		pkn = (NLKNODE*)pkin_out->pFirst;
+		size = pkn->promote(pkin);
+		NErrorIf(pkin_out->Size + size > pkin_out->Capacity, NERROR_SYSTEM_GURU_MEDITATION);
+		NUpSizeArray(pkin_out, size, NULL);
+		m_lastKinId = pkin_out->Size-1;
+	*/
 
-	m_firstKinId = pkin_out->Size;
-	// Insertion du premier Kin dans le buffer
-	NLKIN* pkin = (NLKIN*)NArrayAllocBack(pkin_out);
-	pkin->null();
-	pkn = (NLKNODE*)pkin_out->pFirst;
-	size = pkn->promote(pkin);
-	NErrorIf(pkin_out->Size + size > pkin_out->Capacity, NERROR_SYSTEM_GURU_MEDITATION);
-	NUpSizeArray(pkin_out, size, NULL);
-	m_lastKinId = pkin_out->Size-1;
-*/
+	/*
+	#ifndef _NEDITOR
+		NClearArray(&knodearray, NULL);
+	#endif
 
-
-/*
-#ifndef _NEDITOR
-	NClearArray(&knodearray, NULL);
-#endif
-
-	// Pour finir: longueur et durée de la trajectoire 
-	pkin = (NLKIN*)NGetLastArrayPtr(pkin_out);
-	m_dt = pkin->m_t;
-	NErrorIf(size&& NLKIN_S_DISTINCT(m_pPath->m_geometry.m_ds, pkin->m_s), NERROR_WRONG_VALUE);	// on accepte que size == 0, c'est à dire que le promote n'ai rien fait !
-																									// ce qui arrive si la vitesse max est égale/inférieure au threshold utilisé dans
-																									// la construction des motions profile ... [ cf. NLSMOTIONPROFILE::sRamped(...) ]
-*/
+		// Pour finir: longueur et durï¿½e de la trajectoire
+		pkin = (NLKIN*)NGetLastArrayPtr(pkin_out);
+		m_dt = pkin->m_t;
+		NErrorIf(size&& NLKIN_S_DISTINCT(m_pPath->m_geometry.m_ds, pkin->m_s), NERROR_WRONG_VALUE);	// on accepte que size == 0, c'est ï¿½ dire que le promote n'ai rien fait !
+																										// ce qui arrive si la vitesse max est ï¿½gale/infï¿½rieure au threshold utilisï¿½ dans
+																										// la construction des motions profile ... [ cf. NLSMOTIONPROFILE::sRamped(...) ]
+	*/
 }
 
-NLTRJPOINT_DESC_CFG NLVSTAGEXSLICE::Promote(const NLTRJPOINT_DESC_CFG cfg, const Nf32 t, NARRAY* pkin_out)
+NLTRJPOINT_DESC_CFG NLVSTAGEXSLICE::Promote(const NLTRJPOINT_DESC_CFG cfg, const Nf32 t, NARRAY *pkin_out)
 {
-	NErrorIf(m_RequiredKinArraySize == 0, NERROR_SYSTEM_GURU_MEDITATION); // < 4 ? ne serait-il pas plus avisé ? car il faut au moins 4 Kins ...
+	NErrorIf(m_RequiredKinArraySize == 0, NERROR_SYSTEM_GURU_MEDITATION); // < 4 ? ne serait-il pas plus avisï¿½ ? car il faut au moins 4 Kins ...
 	NErrorIf(!pkin_out, NERROR_NULL_POINTER);
 
 	if (pkin_out->Capacity < pkin_out->Size + m_RequiredKinArraySize)
-		NIncreaseArrayCapacity(pkin_out, m_RequiredKinArraySize - (pkin_out->Capacity-pkin_out->Size));
+		NIncreaseArrayCapacity(pkin_out, m_RequiredKinArraySize - (pkin_out->Capacity - pkin_out->Size));
 
 	Nu32 kidx = pkin_out->Size;
-	
+
 	NLKIN kin;
-	NLKIN* pkin = NULL;
-	NLKIN* pprevkin = (NLKIN*)NGetLastArrayPtr(pkin_out);
-	
+	NLKIN *pkin = NULL;
+	NLKIN *pprevkin = (NLKIN *)NGetLastArrayPtr(pkin_out);
+
 	if (pprevkin != NULL)
 	{
 		if (pprevkin->m_t == t && pprevkin->m_a == 0.0f && pprevkin->m_v == 0.0f)
@@ -692,24 +684,22 @@ NLTRJPOINT_DESC_CFG NLVSTAGEXSLICE::Promote(const NLTRJPOINT_DESC_CFG cfg, const
 			kin.null();
 			kin.m_t = t;
 			kin.m_s = pprevkin->m_s;
-			pkin = (NLKIN*)NArrayPushBack(pkin_out, (NBYTE*)&kin);
+			pkin = (NLKIN *)NArrayPushBack(pkin_out, (NBYTE *)&kin);
 		}
 	}
 	else
 	{
 		kin.null();
 		kin.m_t = t;
-		pkin = (NLKIN*)NArrayPushBack(pkin_out, (NBYTE*)&kin);
+		pkin = (NLKIN *)NArrayPushBack(pkin_out, (NBYTE *)&kin);
 	}
 
-	Nu32 size = ((NLKNODE*)m_knodeArray.pFirst)->promote( pkin );
+	Nu32 size = ((NLKNODE *)m_knodeArray.pFirst)->promote(pkin);
 	NErrorIf(pkin_out->Size + size > pkin_out->Capacity, NERROR_SYSTEM_GURU_MEDITATION);
 	NUpSizeArray(pkin_out, size, NULL);
 
-	return size? MAKE_NLTRJPOINT_DESC_CFG(kidx,TRUE,(cfg&MASK_NLTRJPOINT_DESC_DTMODE)| FLAGS_NLTRJPOINT_DESC_KTYPE_TRAVELING): MAKE_NLTRJPOINT_DESC_CFG(0,FALSE, (cfg & MASK_NLTRJPOINT_DESC_DTMODE) | FLAGS_NLTRJPOINT_DESC_KTYPE_TRAVELING);
+	return size ? MAKE_NLTRJPOINT_DESC_CFG(kidx, TRUE, (cfg & MASK_NLTRJPOINT_DESC_DTMODE) | FLAGS_NLTRJPOINT_DESC_KTYPE_TRAVELING) : MAKE_NLTRJPOINT_DESC_CFG(0, FALSE, (cfg & MASK_NLTRJPOINT_DESC_DTMODE) | FLAGS_NLTRJPOINT_DESC_KTYPE_TRAVELING);
 }
-
-
 
 #ifdef _NEDITOR
 // ------------------------------------------------------------------------------------------
@@ -722,46 +712,44 @@ NLTRJPOINT_DESC_CFG NLVSTAGEXSLICE::Promote(const NLTRJPOINT_DESC_CFG cfg, const
  *					couleur id5 : index de la couleur du texte d'infos
  *	@return
  */
- // ------------------------------------------------------------------------------------------
-void NLVSTAGEXSLICE::drawVStages(NLTRAJECTORY_PACK *ppack, NL2DOCS* p2docs, const NCOLORPICKPACK pickpack)
+// ------------------------------------------------------------------------------------------
+void NLVSTAGEXSLICE::drawVStages(NLTRAJECTORY_PACK *ppack, NL2DOCS *p2docs, const NCOLORPICKPACK pickpack)
 {
-	Nchar			txt[64];
-	NLVSTAGEX* pvs, * pvs0;
+	Nchar txt[64];
+	NLVSTAGEX *pvs, *pvs0;
 
-	NUTDRAWVERTEX	va;
+	NUTDRAWVERTEX va;
 	va.Position_3f.z = 0.0f;
 
-	NVEC3			v3;
+	NVEC3 v3;
 	v3.z = 0.0f;
 
-	NVEC2			xtd = { 0.004f,0.004f };
+	NVEC2 xtd = {0.004f, 0.004f};
 
 	// Preparation: texte
-	NUT_DRAWTEXT	drawtxt;
+	NUT_DRAWTEXT drawtxt;
 	Nmem0(&drawtxt, NUT_DRAWTEXT);
 	drawtxt.Size = 0.01f;
-	drawtxt.Color= p2docs->m_color[NSTCPLT_GET_COLID_MSK(5, pickpack, NL2DOCS_COLOR_TABLE_ID_MSK)];	// meme chose que: p2docs->getColor(5,pickpack)
+	drawtxt.Color = p2docs->m_color[NSTCPLT_GET_COLID_MSK(5, pickpack, NL2DOCS_COLOR_TABLE_ID_MSK)]; // meme chose que: p2docs->getColor(5,pickpack)
 
 	// Preparation: Couleur Vstage
-	NCOLOR			ceilcolor, floorcolor;
-	ceilcolor	= p2docs->m_color[NSTCPLT_GET_COLID_MSK(0, pickpack, NL2DOCS_COLOR_TABLE_ID_MSK)];	// meme chose que: p2docs->getColor(0,pickpack)
-	floorcolor	= p2docs->m_color[NSTCPLT_GET_COLID_MSK(1, pickpack, NL2DOCS_COLOR_TABLE_ID_MSK)];	// meme chose que: p2docs->getColor(1,pickpack)
-	
+	NCOLOR ceilcolor, floorcolor;
+	ceilcolor = p2docs->m_color[NSTCPLT_GET_COLID_MSK(0, pickpack, NL2DOCS_COLOR_TABLE_ID_MSK)];  // meme chose que: p2docs->getColor(0,pickpack)
+	floorcolor = p2docs->m_color[NSTCPLT_GET_COLID_MSK(1, pickpack, NL2DOCS_COLOR_TABLE_ID_MSK)]; // meme chose que: p2docs->getColor(1,pickpack)
 
 	// En fonction de t
-	if (ISFLAG_ON(p2docs->m_Flags, FLAG_NL2DOCS_MOTIONPROFILE_LAYER_VIEW_FT))
+	if (ISFLAG_ON(p2docs->m_userFlags, FLAG_NL2DOCS_DASHBOARD_MP_FT))
 	{
 		//--------------------------------------------------------------------------------------
-		// Représenter les velocity stages en fonction du temps revient à représenter les limitations de vitesses imposées (par les velocity Stage) en fonction de l'évolution des positions
+		// Reprï¿½senter les velocity stages en fonction du temps revient ï¿½ reprï¿½senter les limitations de vitesses imposï¿½es (par les velocity Stage) en fonction de l'ï¿½volution des positions
 		// au cours du temps et donc au long du motion profile courant.
 		// Dit autrement, en appliquant le motion profile, on change de position au cours du temps et pour chacune de ces positions on regarde la limitation de vitesse attenante ...
-		Nf32	s, v;
-		Nu32	iter = 100;
-		Nu32	r;
+		Nf32 s, v;
+		Nu32 iter = 100;
+		Nu32 r;
 		NINTERVALf32 interval;
 
-
-		pvs0 = (NLVSTAGEX*)m_vStageXArray.pFirst;
+		pvs0 = (NLVSTAGEX *)m_vStageXArray.pFirst;
 		pvs = pvs0 + 1;
 		// Traitement du premier Vstage
 		if (ISFLAG_ON(pvs0->m_flags, FLAG_NLVSTAGEX_IS_CEIL))
@@ -773,7 +761,7 @@ void NLVSTAGEXSLICE::drawVStages(NLTRAJECTORY_PACK *ppack, NL2DOCS* p2docs, cons
 		va.Position_3f.x = p2docs->transformX(interval.start);
 		va.Position_3f.y = p2docs->transformY(pvs0->m_v);
 		NUT_DrawPencil_From(&va);
-		if(r == NLTRAJECTORYPACK_GETTIME_INTERVAL)
+		if (r == NLTRAJECTORYPACK_GETTIME_INTERVAL)
 		{
 			va.Position_3f.x = p2docs->transformX(interval.end);
 			va.Position_3f.y = p2docs->transformY(pvs0->m_v);
@@ -795,10 +783,9 @@ void NLVSTAGEXSLICE::drawVStages(NLTRAJECTORY_PACK *ppack, NL2DOCS* p2docs, cons
 			}
 		}
 
-
 		for (Nu32 i = 1; i < m_vStageXArray.Size; i++, pvs++, pvs0 = pvs - 1)
 		{
-			//pvs0 to pvs
+			// pvs0 to pvs
 			va.Color0_4f = ceilcolor;
 			r = ppack->getTime(&interval, pvs0->m_s1);
 			va.Position_3f.x = p2docs->transformX(interval.start);
@@ -828,8 +815,7 @@ void NLVSTAGEXSLICE::drawVStages(NLTRAJECTORY_PACK *ppack, NL2DOCS* p2docs, cons
 				}
 			}
 
-
-			//pvs
+			// pvs
 			if (ISFLAG_ON(pvs->m_flags, FLAG_NLVSTAGEX_IS_CEIL))
 				va.Color0_4f = ceilcolor;
 			else
@@ -849,7 +835,7 @@ void NLVSTAGEXSLICE::drawVStages(NLTRAJECTORY_PACK *ppack, NL2DOCS* p2docs, cons
 			for (Nu32 j = 0; j < iter; j++)
 			{
 				s = pvs->m_s0 + (pvs->m_s1 - pvs->m_s0) * (Nf32)j / (Nf32)iter;
-				
+
 				r = ppack->getTime(&interval, s);
 				va.Position_3f.x = p2docs->transformX(interval.start);
 				va.Position_3f.y = p2docs->transformY(pvs->m_v);
@@ -868,9 +854,9 @@ void NLVSTAGEXSLICE::drawVStages(NLTRAJECTORY_PACK *ppack, NL2DOCS* p2docs, cons
 	{
 		// VELOCITY STAGES
 
-		//pvs = (NLVSTAGEX*)velocityStages_Array.pFirst;
-		//for (Nu32 i = 0; i < velocityStages_Array.Size; i++, pvs++)
-		pvs = (NLVSTAGEX*)m_vStageXArray.pFirst;
+		// pvs = (NLVSTAGEX*)velocityStages_Array.pFirst;
+		// for (Nu32 i = 0; i < velocityStages_Array.Size; i++, pvs++)
+		pvs = (NLVSTAGEX *)m_vStageXArray.pFirst;
 		if (ISFLAG_ON(pvs->m_flags, FLAG_NLVSTAGEX_IS_CEIL))
 			va.Color0_4f = ceilcolor;
 		else
@@ -904,8 +890,9 @@ void NLVSTAGEXSLICE::drawVStages(NLTRAJECTORY_PACK *ppack, NL2DOCS* p2docs, cons
 			}
 		}
 
-		// ADDITIONNAL INFOS		
-		if (ISFLAG_ON(p2docs->m_Flags, FLAG_NL2DOCS_MOTIONPROFILE_LAYER_VIEW_INFO_SUB))
+		// ADDITIONNAL INFOS
+		/*
+		if (ISFLAG_ON(p2docs->m_Flags, FLAG_NL2DOCS_DASHBOARD_MP_INFO_SUB))
 		{
 
 			pvs = (NLVSTAGEX*)m_vStageXArray.pFirst;
@@ -943,25 +930,26 @@ void NLVSTAGEXSLICE::drawVStages(NLTRAJECTORY_PACK *ppack, NL2DOCS* p2docs, cons
 				// ---- text
 			}
 		}
+		*/
 	}
 }
-void NLVSTAGEXSLICE::drawKnodes(NL2DOCS* p2docs, const NCOLORPICKPACK pickpack)
+void NLVSTAGEXSLICE::drawKnodes(NL2DOCS *p2docs, const NCOLORPICKPACK pickpack)
 {
 	NLFMOTIONSHAPE fprime;
 	Nf32 ds;
 
-	// On démarre à 1 car le premier knode n'est pas valable ( généralement )
-	// en effet il represente la premiere tentative sur l'intervalle [debut,fin] avec une vitesse nulle au debut et à la fin donc pas de Motion Profile par defaut !
-	NLKNODE* pkn = ((NLKNODE*)m_knodeArray.pFirst) + 1;
+	// On dï¿½marre ï¿½ 1 car le premier knode n'est pas valable ( gï¿½nï¿½ralement )
+	// en effet il represente la premiere tentative sur l'intervalle [debut,fin] avec une vitesse nulle au debut et ï¿½ la fin donc pas de Motion Profile par defaut !
+	NLKNODE *pkn = ((NLKNODE *)m_knodeArray.pFirst) + 1;
 	for (Nu32 i = 1; i < m_knodeArray.Size; i++, pkn++)
 	{
 		// Y a t'il une flat shape d'amorcage ?
 		ds = pkn->m_pVfrom->m_s1Prime - pkn->m_pVfrom->m_s0Prime;
-		//NErrorIf(ds < 0.0f, NERROR_SYSTEM_GURU_MEDITATION);
+		// NErrorIf(ds < 0.0f, NERROR_SYSTEM_GURU_MEDITATION);
 		if (ds > 0.0f)
 		{
 			fprime.forwardVs(pkn->m_pVfrom->m_s0Prime, pkn->m_pVfrom->m_v, ds);
-			fprime.drawVs(p2docs,pickpack);
+			fprime.drawVs(p2docs, pickpack);
 			/*
 			NVEC3 v;
 			Nchar txt[32];
@@ -977,7 +965,7 @@ void NLVSTAGEXSLICE::drawKnodes(NL2DOCS* p2docs, const NCOLORPICKPACK pickpack)
 			NUT_Draw_Text(txt, &v, &drawtxt);
 			*/
 		}
-		pkn->m_motionProfile.pdraw(&pkn->m_motionProfile, p2docs,pickpack);
+		pkn->m_motionProfile.pdraw(&pkn->m_motionProfile, p2docs, pickpack);
 	}
 }
 #endif
@@ -1004,7 +992,7 @@ Nu32 NLVSTAGEXSLICE::buildAndSolve(const NARRAY* pvstage_array, const NLKINLIMIT
 	NSetupArray(&tmp_array, pvstage_array->Size + 2, sizeof(NLVSTAGE));
 	NLVstageArrayTools::slice(&tmp_array, pvstage_array, pkey0->m_s, pkey1->m_s, NTRUE);
 
-	//	Création l'array de VStages à partir de l'Array final de trims.
+	//	Crï¿½ation l'array de VStages ï¿½ partir de l'Array final de trims.
 
 	NResizeArray(&m_vStageXArray, 0, NULL, NLclearVSTAGEXSLICECallBack);
 	pvs = (NLVSTAGE*)tmp_array.pFirst;
@@ -1017,9 +1005,9 @@ Nu32 NLVSTAGEXSLICE::buildAndSolve(const NARRAY* pvstage_array, const NLKINLIMIT
 //	|
 //	+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
-	// Check intermédiaire
-	NErrorIf(NGetFirstArrayPtr(&m_vStageXArray) && ((NLVSTAGEX*)NGetFirstArrayPtr(&m_vStageXArray))->m_s1	< pkey0->m_s, NERROR_VALUE_OUTOFRANGE); // inférieure à l'abscisse minimale
-	NErrorIf(NGetLastArrayPtr(&m_vStageXArray) && ((NLVSTAGEX*)NGetLastArrayPtr(&m_vStageXArray))->m_s1		> pkey1->m_s, NERROR_VALUE_OUTOFRANGE); // supérieure à l'abscisse maximale
+	// Check intermï¿½diaire
+	NErrorIf(NGetFirstArrayPtr(&m_vStageXArray) && ((NLVSTAGEX*)NGetFirstArrayPtr(&m_vStageXArray))->m_s1	< pkey0->m_s, NERROR_VALUE_OUTOFRANGE); // infï¿½rieure ï¿½ l'abscisse minimale
+	NErrorIf(NGetLastArrayPtr(&m_vStageXArray) && ((NLVSTAGEX*)NGetLastArrayPtr(&m_vStageXArray))->m_s1		> pkey1->m_s, NERROR_VALUE_OUTOFRANGE); // supï¿½rieure ï¿½ l'abscisse maximale
 
 //	+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------
 //	|
@@ -1036,8 +1024,8 @@ Nu32 NLVSTAGEXSLICE::buildAndSolve(const NARRAY* pvstage_array, const NLKINLIMIT
 	}
 
 	// B) Alternance Floor, Ceil
-	//		On redistribue ceil et floor au sein de l'array et si besoin on insère des ceils de longueur nulle, 
-	//		pour conserver l'alternance ... floor ... ceil  ... floor ... 
+	//		On redistribue ceil et floor au sein de l'array et si besoin on insï¿½re des ceils de longueur nulle,
+	//		pour conserver l'alternance ... floor ... ceil  ... floor ...
 	NLVSTAGEX	vsx;
 	for (i = 1; i < m_vStageXArray.Size - 1; i++)
 	{
@@ -1049,57 +1037,57 @@ Nu32 NLVSTAGEXSLICE::buildAndSolve(const NARRAY* pvstage_array, const NLKINLIMIT
 			{
 				// In: -	Out: -		>>>		HYBRID [FLOOR,ceil] !
 				//
-				// Il est nécéssaire de diviser pvsx en 2 : 1 FLOOR et 1 CEIL de longueur nulle.
-				// On va donc insérer un nouveau VStage dans l'Array. Comme l'insertion se fait Avant l'index de ref. on va avoir, après insertion:
-				// 
+				// Il est nï¿½cï¿½ssaire de diviser pvsx en 2 : 1 FLOOR et 1 CEIL de longueur nulle.
+				// On va donc insï¿½rer un nouveau VStage dans l'Array. Comme l'insertion se fait Avant l'index de ref. on va avoir, aprï¿½s insertion:
+				//
 				// pvsx actuel deviendra ceil de longueur nulle
-				// vsx inséré sera FLOOR
+				// vsx insï¿½rï¿½ sera FLOOR
 				vsx = *pvsx;
-				vsx.m_kinXOut.null();	// ce FLOOR donne sur le CEIL de longueur nulle ayant la même vitesse que lui !
+				vsx.m_kinXOut.null();	// ce FLOOR donne sur le CEIL de longueur nulle ayant la mï¿½me vitesse que lui !
 				FLAG_OFF(vsx.m_flags, FLAG_NLVSTAGEX_IS_CEIL);
 
-				pvsx->m_s0 = pvsx->m_s1;	// pvs = Vstage de longueur nulle à droite de FLOOR (vs)
-				pvsx->m_kinXIn.null();	// ce CEIL de longueur nulle se trouve juste après le FLOOR ayant la même vitesse que lui !
+				pvsx->m_s0 = pvsx->m_s1;	// pvs = Vstage de longueur nulle ï¿½ droite de FLOOR (vs)
+				pvsx->m_kinXIn.null();	// ce CEIL de longueur nulle se trouve juste aprï¿½s le FLOOR ayant la mï¿½me vitesse que lui !
 				FLAG_ON(pvsx->m_flags, FLAG_NLVSTAGEX_IS_CEIL);
 
 				// insert un nouveau VStage avant le vstage i
 				NInsertArrayElement(&m_vStageXArray, i, (NBYTE*)&vsx);
 				i++;
 			}
-			else // (pvsx->m_kinXOut.m_a > 0.0f) OU ... (pvs->m_kinXOut.m_a == 0.0f) ce qui est normalement impossible à ce stade ( thx to _trim_aggregate )
+			else // (pvsx->m_kinXOut.m_a > 0.0f) OU ... (pvs->m_kinXOut.m_a == 0.0f) ce qui est normalement impossible ï¿½ ce stade ( thx to _trim_aggregate )
 			{
 				NErrorIf(pvsx->m_kinXOut.m_a == 0.0f, NERROR_SYSTEM_GURU_MEDITATION);
-				// ... Nous sommes sûrs à partir d'ici que 'pvsx->m_kinXOut.m_a > 0.0f'
+				// ... Nous sommes sï¿½rs ï¿½ partir d'ici que 'pvsx->m_kinXOut.m_a > 0.0f'
 				// In: -	Out: +		>>>		FLOOR !
 				FLAG_OFF(pvsx->m_flags, FLAG_NLVSTAGEX_IS_CEIL);
 			}
 		}
-		else // (pvs->m_kinXIn.m_a > 0.0f) OU ... (pvs->m_kinXIn.m_a == 0.0f) ce qui est normalement impossible à ce stade ( thx to _trim_aggregate )
+		else // (pvs->m_kinXIn.m_a > 0.0f) OU ... (pvs->m_kinXIn.m_a == 0.0f) ce qui est normalement impossible ï¿½ ce stade ( thx to _trim_aggregate )
 		{
 			NErrorIf(pvsx->m_kinXIn.m_a == 0.0f, NERROR_SYSTEM_GURU_MEDITATION);
-			// ... Nous sommes sûrs à partir d'ici que 'pvs->m_kinXIn.m_a > 0.0f'
+			// ... Nous sommes sï¿½rs ï¿½ partir d'ici que 'pvs->m_kinXIn.m_a > 0.0f'
 			if (pvsx->m_kinXOut.m_a < 0.0f)
 			{
 				// In: +	Out: -		>>>		CEIL !
 				FLAG_ON(pvsx->m_flags, FLAG_NLVSTAGEX_IS_CEIL);
 			}
-			else // (pvs->m_kinXOut.m_a > 0.0f) OU ... (pvs->m_kinXOut.m_a == 0.0f) ce qui est normalement impossible à ce stade ( thx to _trim_aggregate )
+			else // (pvs->m_kinXOut.m_a > 0.0f) OU ... (pvs->m_kinXOut.m_a == 0.0f) ce qui est normalement impossible ï¿½ ce stade ( thx to _trim_aggregate )
 			{
 				NErrorIf(pvsx->m_kinXOut.m_a == 0.0f, NERROR_SYSTEM_GURU_MEDITATION);
-				// ... Nous sommes sûrs à partir d'ici que 'pvs->m_kinXOut.m_a > 0.0f'
+				// ... Nous sommes sï¿½rs ï¿½ partir d'ici que 'pvs->m_kinXOut.m_a > 0.0f'
 				// In: +	Out: +		>>>		HYBRID [ceil,FLOOR]!
 				//
-				// Il est nécéssaire de diviser pvs en 2 : 1 CEIL de longueur nulle et 1 FLOOR.
-				// On va donc insérer un nouveau VStage dan sl'Array. Comme l'insertion se fait Avant l'index de ref. on va avoir, après insertion:
-				// 
+				// Il est nï¿½cï¿½ssaire de diviser pvs en 2 : 1 CEIL de longueur nulle et 1 FLOOR.
+				// On va donc insï¿½rer un nouveau VStage dan sl'Array. Comme l'insertion se fait Avant l'index de ref. on va avoir, aprï¿½s insertion:
+				//
 				// pvs actuel deviendra FLOOR
-				// vs inséré sera ceil de longueur nulle
+				// vs insï¿½rï¿½ sera ceil de longueur nulle
 				vsx = *pvsx;
-				vsx.m_kinXOut.null();	// ce CEIL de longueur nulle se trouve juste avant le FLOOR ayant la même vitesse que lui !
-				vsx.m_s1 = vsx.m_s0;	// vsx = Vstage de longueur nulle à Gauche de FLOOR (pvs)
+				vsx.m_kinXOut.null();	// ce CEIL de longueur nulle se trouve juste avant le FLOOR ayant la mï¿½me vitesse que lui !
+				vsx.m_s1 = vsx.m_s0;	// vsx = Vstage de longueur nulle ï¿½ Gauche de FLOOR (pvs)
 				FLAG_ON(vsx.m_flags, FLAG_NLVSTAGEX_IS_CEIL);
 
-				pvsx->m_kinXIn.null();	// ce FLOOR se trouve juste après le CEIL ayant la même vitesse que lui !
+				pvsx->m_kinXIn.null();	// ce FLOOR se trouve juste aprï¿½s le CEIL ayant la mï¿½me vitesse que lui !
 				FLAG_OFF(pvsx->m_flags, FLAG_NLVSTAGEX_IS_CEIL);
 
 				// insert un nouveau VStage avant le vstage i
@@ -1109,19 +1097,19 @@ Nu32 NLVSTAGEXSLICE::buildAndSolve(const NARRAY* pvstage_array, const NLKINLIMIT
 		}
 	}
 
-	// Check repartition ceil/floor 
+	// Check repartition ceil/floor
 	// Nous savons que :
 	//
 	//	a)	Il y a alternance floor,ceil.
 	//	b)	L'array des vstageX commence et termine par un floor.
-	//	c)	L'array des vstageX contient un nombre impair de vstageX. ( Size est impaire ) la répartition étant: 
-	//	
-	//						VstageX floor : (size + 1) / 2 
-	//						VstageX ceil :  (size - 1) / 2 
-	//	
+	//	c)	L'array des vstageX contient un nombre impair de vstageX. ( Size est impaire ) la rï¿½partition ï¿½tant:
+	//
+	//						VstageX floor : (size + 1) / 2
+	//						VstageX ceil :  (size - 1) / 2
+	//
 	// Nous allons donc checker toutes ces assertions !
 	#ifdef _DEBUG
-	// vérification de a) en sachant qu'on commence par un floor ...
+	// vï¿½rification de a) en sachant qu'on commence par un floor ...
 	Nu32 dbg_type = 0; // 0 floor, 1 ceil
 	NLVSTAGEX* dbg_pvx = (NLVSTAGEX*)m_vStageXArray.pFirst;
 	for (Nu32 dbg_i = 0; dbg_i < m_vStageXArray.Size; dbg_i++, dbg_pvx++, dbg_type = 1 - dbg_type)
@@ -1130,13 +1118,13 @@ Nu32 NLVSTAGEXSLICE::buildAndSolve(const NARRAY* pvstage_array, const NLKINLIMIT
 		NErrorIf(ISFLAG_OFF(dbg_pvx->m_flags, FLAG_NLVSTAGEX_IS_CEIL) && dbg_type == 1, NERROR_SYSTEM_GURU_MEDITATION);
 	}
 
-	// vérification de b)
+	// vï¿½rification de b)
 	dbg_pvx = (NLVSTAGEX*)m_vStageXArray.pFirst;
 	NErrorIf(ISFLAG_ON(dbg_pvx->m_flags, FLAG_NLVSTAGEX_IS_CEIL), NERROR_SYSTEM_GURU_MEDITATION);
 	dbg_pvx += (m_vStageXArray.Size - 1);
 	NErrorIf(ISFLAG_ON(dbg_pvx->m_flags, FLAG_NLVSTAGEX_IS_CEIL), NERROR_SYSTEM_GURU_MEDITATION);
 
-	// vérification de c)
+	// vï¿½rification de c)
 	NErrorIf( !NISODD(m_vStageXArray.Size), NERROR_SYSTEM_GURU_MEDITATION );
 	Nu32 dbg_ceil_count		= 0;
 	Nu32 dbg_floor_count	= 0;
@@ -1162,34 +1150,34 @@ Nu32 NLVSTAGEXSLICE::buildAndSolve(const NARRAY* pvstage_array, const NLKINLIMIT
 //	|	PHASE 3)	CONSTRUCTION DE L'ARBRE DES SOLUTIONS
 // 	|
 // 	|
-//				 Création de la file de travail à la taille maximum possible pour une utilisation optimisée:
-//				 Allouer suffisement de mémoire pour être en mesure de stocker l'ensemble des pointeurs sur noeuds dans la file sans reallocation va permettre
+//				 Crï¿½ation de la file de travail ï¿½ la taille maximum possible pour une utilisation optimisï¿½e:
+//				 Allouer suffisement de mï¿½moire pour ï¿½tre en mesure de stocker l'ensemble des pointeurs sur noeuds dans la file sans reallocation va permettre
 //				 une gestion plus efficace du FIFO sur la file.
-//				 En effet, nous allons allouer la "taille" de la file en 1 seule fois et ne jamais désalloué les éléments sortis de la file !
-//				
+//				 En effet, nous allons allouer la "taille" de la file en 1 seule fois et ne jamais dï¿½sallouï¿½ les ï¿½lï¿½ments sortis de la file !
+//
 //				 Calcul du nombre de KNODE:
 //						soit F,		le nombre de VstageX de type floor total
 //							 K,		le nombre de Knode total
 //							 size,	le nombre de VStageX
 //
-//						On a, F = (size + 1) / 2 
-//				
-//						Chaque KNODE se construit entre 1 floor de depart et 1 floor d'arrivée.
-//						La premiere paire de floor ( premier et dernier vstageX) génère 1 Knode.
-//						Chaque floor suplémentaire génère 2 Knodes supplémentaire ( car chaque floor supl. découpe l'intervalle en 2 )
+//						On a, F = (size + 1) / 2
+//
+//						Chaque KNODE se construit entre 1 floor de depart et 1 floor d'arrivï¿½e.
+//						La premiere paire de floor ( premier et dernier vstageX) gï¿½nï¿½re 1 Knode.
+//						Chaque floor suplï¿½mentaire gï¿½nï¿½re 2 Knodes supplï¿½mentaire ( car chaque floor supl. dï¿½coupe l'intervalle en 2 )
 //						Donc,
 //						K = 1 + (F-1)*2
 //						K = 1 + 2*F -2
 //						K = 2*F -1
-//						K = 2*[(size+1)/2] - 1 
-//						K = (size + 1 ) - 1 
+//						K = 2*[(size+1)/2] - 1
+//						K = (size + 1 ) - 1
 //						K = size
 Ns32 diff = m_vStageXArray.Size - m_knodeArray.Capacity;
 	if (diff > 0)
 		NIncreaseArrayCapacity(&m_knodeArray, diff);
 
-	// Création d'un premier noeud qu'on ajoute simplement en fin de file
-	// On gère manuellement le nombre de noeuds de la file restant à traiter.( filesize )
+	// Crï¿½ation d'un premier noeud qu'on ajoute simplement en fin de file
+	// On gï¿½re manuellement le nombre de noeuds de la file restant ï¿½ traiter.( filesize )
 	NLKNODE				*phead;
 	Nu32				filesize;
 
@@ -1206,7 +1194,7 @@ Ns32 diff = m_vStageXArray.Size - m_knodeArray.Capacity;
 	Nf32				v_left_in, v_right_out;
 	Nf32				tmp_dbg;
 
-	Nu32				mps_count	= 0;	// nombre de MotionProfile feuilles ( car déclaré optimum et non "splitable") déclaré SUP ou SDOWN ( donc plus simples et légers que le SUP_FLAT_SDOWN )
+	Nu32				mps_count	= 0;	// nombre de MotionProfile feuilles ( car dï¿½clarï¿½ optimum et non "splitable") dï¿½clarï¿½ SUP ou SDOWN ( donc plus simples et lï¿½gers que le SUP_FLAT_SDOWN )
 	Nu32				split_count = 0;	// nombre de split effectif. ( permet de connaitre le nombre de NLKNODE feuilles soit split_count + 1 )
 
 	NLKNODE* pkn = (NLKNODE*)NArrayAllocBack(&m_knodeArray);
@@ -1217,7 +1205,7 @@ Ns32 diff = m_vStageXArray.Size - m_knodeArray.Capacity;
 	// ... Et c'est parti !
 	while (filesize)
 	{
-		// on récupère le noeud le plus ancien ( celui en tête de File )
+		// on rï¿½cupï¿½re le noeud le plus ancien ( celui en tï¿½te de File )
 		pkn = phead;
 		filesize--;
 		phead++;
@@ -1226,20 +1214,20 @@ Ns32 diff = m_vStageXArray.Size - m_knodeArray.Capacity;
 		{
 			// +----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 			// |																																														|
-			// | L'idée est de Diviser ( Split ) l'intervalle "pkn" [m_pVfrom, m_pVto] en deux intervalles fils avec comme point de split le VStage "le plus bas" dans l'intervalle.					|	
-			// | Chacun des deux intervalles est vérifié pour être sûr qu'il est possible de rejoindre les deux bornes sans les dépasser, ni en abscisse, ni en vitesse.								|
+			// | L'idï¿½e est de Diviser ( Split ) l'intervalle "pkn" [m_pVfrom, m_pVto] en deux intervalles fils avec comme point de split le VStage "le plus bas" dans l'intervalle.					|
+			// | Chacun des deux intervalles est vï¿½rifiï¿½ pour ï¿½tre sï¿½r qu'il est possible de rejoindre les deux bornes sans les dï¿½passer, ni en abscisse, ni en vitesse.								|
 			// | Les tests sont les suivants:																																							|
 			// |	A) Croisement(s):	(Motion Profile Crossing)																																		|
-			// |						On vérifie que le "Motion Profile Minimum" de l'intervalle fils de gauche ne croise pas le "Motion Profile Minimum" de l'intervalle fils de droite.				|
-			// |						On appelle "Motion Profile Minimum" la S-Shape permettant de passer directement de la vitesse de début d'intervalle à celle de fin d'intervalle.				|
+			// |						On vï¿½rifie que le "Motion Profile Minimum" de l'intervalle fils de gauche ne croise pas le "Motion Profile Minimum" de l'intervalle fils de droite.				|
+			// |						On appelle "Motion Profile Minimum" la S-Shape permettant de passer directement de la vitesse de dï¿½but d'intervalle ï¿½ celle de fin d'intervalle.				|
 			// |																																														|
-			// |	B) Dépassement(s):	(Abscissa Overshooting )																																			|
+			// |	B) Dï¿½passement(s):	(Abscissa Overshooting )																																			|
 			// |																																														|
 			// |	C) Plafonnement(s)	? (capping)																																														|
 			// |																																														|
-			// s_left_in est l'abscisse la plus à gauche de l'intervalle [from,to]et s_right_out est l'abscisse la plus à droite.
+			// s_left_in est l'abscisse la plus ï¿½ gauche de l'intervalle [from,to]et s_right_out est l'abscisse la plus ï¿½ droite.
 
-			// Abscisses des intervalles fils après split ...
+			// Abscisses des intervalles fils aprï¿½s split ...
 			// Pour l'intervalle fils [from,split]		[s_left_in, s_left_out]
 			// Pour l'intervalle fils [split, to]		[s_right_in, s_right_out]
 
@@ -1256,23 +1244,23 @@ Ns32 diff = m_vStageXArray.Size - m_knodeArray.Capacity;
 			// ... la distance couverte par les 2 motion S shapes ( sleft et sright ) est plus grande que la distance disponible entre les 2 vstage
 			if ((sleft.m_ds + sright.m_ds) > (s_right_out - s_left_in))
 			{
-				// En cas de "croisement" des motion profiles : pas de SPLIT ! 
-				// On en reste donc à la solution déjà calculée précédement et stoskée dans pkn. ( calculée precedement = lors du précédent passage ici avec construction de la solution minimum avec left ou right ) 
+				// En cas de "croisement" des motion profiles : pas de SPLIT !
+				// On en reste donc ï¿½ la solution dï¿½jï¿½ calculï¿½e prï¿½cï¿½dement et stoskï¿½e dans pkn. ( calculï¿½e precedement = lors du prï¿½cï¿½dent passage ici avec construction de la solution minimum avec left ou right )
 				continue;
 			}
 			// +------------------------------------------------+
-			// | B) Dépassement(s) ? (Abscissa Overshooting)	|
+			// | B) Dï¿½passement(s) ? (Abscissa Overshooting)	|
 			// +------------------------------------------------+
-			// ... Pas de croisement, nous sommes sûrs que les 2 profils S "tiennent", sans se percuter l'un l'autre.
-			// Il est cependant possible que l'un d'eux ( pas les deux car sinon il y aurait croisement ) dépasse  à droite, ou à gauche, de Split.
+			// ... Pas de croisement, nous sommes sï¿½rs que les 2 profils S "tiennent", sans se percuter l'un l'autre.
+			// Il est cependant possible que l'un d'eux ( pas les deux car sinon il y aurait croisement ) dï¿½passe  ï¿½ droite, ou ï¿½ gauche, de Split.
 			else if (sleft.forwardOvershoot(&cutout, &immediate_start, pkn->m_pVfrom, pvsplit))
 			{
-				// Dépassement à droite de split, ... donc calcul des contraintes associées
-				// Cela signifie que la "distance maximum" séparant From de Split n'est pas suffisante pour atteindre Split.V depuis From.V...
-				// Du coup, Split.V est atteinte plus tard/plus loin dans l'intervalle voisin, c'est à dire dans [Split,To]...
-				// En conséquence, on considère que [From,Split] ne sera plus subdivisable.
-				// A priori il ne devrait pas y avoir d'autres Vstages dans l'intervalle [From,Split] mais cela n'est pas non plus impossible, 
-				// On veillera donc à bloquer toute nouvelle subdivision, en flaggant le knode "FLAG_NLSMOTIONPROFILE_OPTIMUM_SOLUTION"
+				// Dï¿½passement ï¿½ droite de split, ... donc calcul des contraintes associï¿½es
+				// Cela signifie que la "distance maximum" sï¿½parant From de Split n'est pas suffisante pour atteindre Split.V depuis From.V...
+				// Du coup, Split.V est atteinte plus tard/plus loin dans l'intervalle voisin, c'est ï¿½ dire dans [Split,To]...
+				// En consï¿½quence, on considï¿½re que [From,Split] ne sera plus subdivisable.
+				// A priori il ne devrait pas y avoir d'autres Vstages dans l'intervalle [From,Split] mais cela n'est pas non plus impossible,
+				// On veillera donc ï¿½ bloquer toute nouvelle subdivision, en flaggant le knode "FLAG_NLSMOTIONPROFILE_OPTIMUM_SOLUTION"
 				pvsplit->nullPrimeFlatShape();
 
 				pknchild_left = (NLKNODE*)NArrayAllocBack(&m_knodeArray);
@@ -1288,8 +1276,8 @@ Ns32 diff = m_vStageXArray.Size - m_knodeArray.Capacity;
 
 				// build left Child:
 				// -----------------
-				// La Shape de gauche construite en forward build up et donc en dépassement à droite de Vsplit devient donc le motion profile de left child.
-				// On prend soin de renseigner son cutout, c'est à dire "quand" et "ou" l'arrivée de la shape devra être "coupée" ( avant son dernier kin 'classique' )
+				// La Shape de gauche construite en forward build up et donc en dï¿½passement ï¿½ droite de Vsplit devient donc le motion profile de left child.
+				// On prend soin de renseigner son cutout, c'est ï¿½ dire "quand" et "ou" l'arrivï¿½e de la shape devra ï¿½tre "coupï¿½e" ( avant son dernier kin 'classique' )
 				pknchild_left->m_motionProfile.sUp(&sleft, &pkn->m_pVfrom->m_stitch.m_start.m_cutIn, &cutout);
 				// On flag cette solution comme optimum pour bloquer toute subdivision future.
 				FLAG_ON(pknchild_left->m_motionProfile.m_flags, FLAG_NLSMOTIONPROFILE_OPTIMUM_SOLUTION);
@@ -1297,38 +1285,38 @@ Ns32 diff = m_vStageXArray.Size - m_knodeArray.Capacity;
 
 				// build right Child:
 				// ------------------
-				// Dans ce cas, nous avons un Ramped Motion Profile à droite.
-				// Il est bien sûr composé de 2 S_SHAPEs, une à sa gauche, une à sa droite !
+				// Dans ce cas, nous avons un Ramped Motion Profile ï¿½ droite.
+				// Il est bien sï¿½r composï¿½ de 2 S_SHAPEs, une ï¿½ sa gauche, une ï¿½ sa droite !
 				// La S_SHAPE de gauche (du motion profile de droite ! )
-				// Elle permet le "Redémarrage" depuis le point fantôme créé à droite de l'intervalle de gauche (pknchild_left) ;)
+				// Elle permet le "Redï¿½marrage" depuis le point fantï¿½me crï¿½ï¿½ ï¿½ droite de l'intervalle de gauche (pknchild_left) ;)
 				//
 				sleft.m_s0 = pvsplit->m_s1 + immediate_start.m_s1Offsets.m_ds;
 				sleft.m_v0 = pvsplit->m_v + immediate_start.m_s1Offsets.m_dv;					// vitesse initiale
 				sleft.m_v1 = pvsplit->m_v;																// vitesse finale
-				// sleft.m_jx = ...;		identique à celui déjà présent dans sleft	// Jerk initial (et max).	Est du même signe que (v1 - v0) et null si v1 == v0
-				sleft.m_tx = -cutout.m_dt;																// Durée nécéssaire pour que l'accel. (initialement nulle) atteigne sa valeur max. ( soit m_ax ).
-				sleft.m_ax = cutout.m_da; // sleft.m_jx*sleft.m_tx;									// Acceleration Max.		Est du même signe que (v1 - v0) et nulle si v1 == v0
+				// sleft.m_jx = ...;		identique ï¿½ celui dï¿½jï¿½ prï¿½sent dans sleft	// Jerk initial (et max).	Est du mï¿½me signe que (v1 - v0) et null si v1 == v0
+				sleft.m_tx = -cutout.m_dt;																// Durï¿½e nï¿½cï¿½ssaire pour que l'accel. (initialement nulle) atteigne sa valeur max. ( soit m_ax ).
+				sleft.m_ax = cutout.m_da; // sleft.m_jx*sleft.m_tx;									// Acceleration Max.		Est du mï¿½me signe que (v1 - v0) et nulle si v1 == v0
 
 				//tmp_dbg = sleft.m_jx*sleft.m_tx;
 				//NErrorIf(cutout.m_da != tmp_dbg, NERROR_SYSTEM_CHECK);
 				sleft.m_vx = -cutout.m_dv;																// Vitesse acquise quand l'acceleration (initialement nulle) atteind sa valeur max. ( soit m_ax ).
-				sleft.m_tb = 0.0f;																		// Durée de maintient de l'acceleration maximum.
-				sleft.m_sx = sleft.m_jx * NPOW3(sleft.m_tx) / 6.0f;											// Portion de distance couverte pas la SShape sur une durée de m_tx pendant que l'acceleration
+				sleft.m_tb = 0.0f;																		// Durï¿½e de maintient de l'acceleration maximum.
+				sleft.m_sx = sleft.m_jx * NPOW3(sleft.m_tx) / 6.0f;											// Portion de distance couverte pas la SShape sur une durï¿½e de m_tx pendant que l'acceleration
 																										// ... (initialement nulle) atteind sa valeur maximum ( soit m_ax )
-																										// ! 'm_sx' est une 'portion de distance' et ne représente qu'une partie de la distance
-																										// ( c'est pourquoi on parle de portion ) parcourue pendant la durée 'm_tx'.
-																										// ! La distance totale parcourue pendnat la durée 'm_tx' (i.e durant la phase montante) 
-																										// étant: s = m_sx + v0*m_tx
+																										// ! 'm_sx' est une 'portion de distance' et ne reprï¿½sente qu'une partie de la distance
+																										// ( c'est pourquoi on parle de portion ) parcourue pendant la durï¿½e 'm_tx'.
+																										// ! La distance totale parcourue pendnat la durï¿½e 'm_tx' (i.e durant la phase montante)
+																										// ï¿½tant: s = m_sx + v0*m_tx
 				sleft.m_ds = (sleft.m_v0 + sleft.m_v1) * sleft.m_tx;										// Distance totale couverte pas la S Motion Shape
 				pknchild_right->m_motionProfile.sRamped(&sleft, &sright, &immediate_start.m_cutIn, &pkn->m_pVto->m_stitch.m_end.m_cutOut);
 			}
 			else if (sright.backwardOvershoot(&cutin, &immediate_end, pvsplit, pkn->m_pVto))
 			{
-				// Dépassement à gauche de split, ... donc calcul des contraintes associées
-				// Cela signifie que la "distance maximum" séparant Split de To n'est pas suffisante pour atteindre To.V depuis Split.V...
-				// Du coup, cela obligerait à partir "avant split" avec une vitesse de Split.V et donc "d'envahir" l'intervalle voisin, c'est à dire [From,Split]...
-				// En conséquence, on considère que [Split,To] ne sera plus subdivisable.
-				// A priori il ne devrait pas y avoir d'autres Vstages dans l'intervalle [Split,To] mais cela n'est pas non plus impossible, donc on veille à bloquer toute nouvelle subdivision.
+				// Dï¿½passement ï¿½ gauche de split, ... donc calcul des contraintes associï¿½es
+				// Cela signifie que la "distance maximum" sï¿½parant Split de To n'est pas suffisante pour atteindre To.V depuis Split.V...
+				// Du coup, cela obligerait ï¿½ partir "avant split" avec une vitesse de Split.V et donc "d'envahir" l'intervalle voisin, c'est ï¿½ dire [From,Split]...
+				// En consï¿½quence, on considï¿½re que [Split,To] ne sera plus subdivisable.
+				// A priori il ne devrait pas y avoir d'autres Vstages dans l'intervalle [Split,To] mais cela n'est pas non plus impossible, donc on veille ï¿½ bloquer toute nouvelle subdivision.
 				//pvsplit->m_overshootOffsets = ovs;
 				pvsplit->nullPrimeFlatShape();
 
@@ -1353,23 +1341,23 @@ Ns32 diff = m_vStageXArray.Size - m_knodeArray.Capacity;
 				// build LEFT:
 				// -----------
 				// LEFT.right
-				sright.m_tx = -immediate_end.m_cutOut.m_dt;													// Durée nécéssaire pour que l'accel. (initialement nulle) atteigne sa valeur max. ( soit m_ax ).
+				sright.m_tx = -immediate_end.m_cutOut.m_dt;													// Durï¿½e nï¿½cï¿½ssaire pour que l'accel. (initialement nulle) atteigne sa valeur max. ( soit m_ax ).
 				sright.m_v0 = pvsplit->m_v;																	// vitesse initiale
 				sright.m_v1 = pvsplit->m_v + immediate_end.m_s0Offsets.m_dv;								// vitesse finale
 				sright.m_ds = (sright.m_v0 + sright.m_v1) * sright.m_tx;										// Distance totale couverte pas la S Motion Shape
 
 				sright.m_s0 = pvsplit->m_s0 + immediate_end.m_s0Offsets.m_ds - sright.m_ds;
-				// sright.m_jx = ...;		identique à celui déjà présent dans sright	// Jerk initial (et max).	Est du même signe que (v1 - v0) et null si v1 == v0
-				sright.m_ax = immediate_end.m_cutOut.m_da;													// Acceleration Max.		Est du même signe que (v1 - v0) et nulle si v1 == v0
+				// sright.m_jx = ...;		identique ï¿½ celui dï¿½jï¿½ prï¿½sent dans sright	// Jerk initial (et max).	Est du mï¿½me signe que (v1 - v0) et null si v1 == v0
+				sright.m_ax = immediate_end.m_cutOut.m_da;													// Acceleration Max.		Est du mï¿½me signe que (v1 - v0) et nulle si v1 == v0
 
 				sright.m_vx = -immediate_end.m_cutOut.m_dv;													// Vitesse acquise quand l'acceleration (initialement nulle) atteind sa valeur max. ( soit m_ax ).
-				sright.m_tb = 0.0f;																			// Durée de maintient de l'acceleration maximum.
-				sright.m_sx = sright.m_jx * NPOW3(sright.m_tx) / 6.0f;										// Portion de distance couverte pas la SShape sur une durée de m_tx pendant que l'acceleration
+				sright.m_tb = 0.0f;																			// Durï¿½e de maintient de l'acceleration maximum.
+				sright.m_sx = sright.m_jx * NPOW3(sright.m_tx) / 6.0f;										// Portion de distance couverte pas la SShape sur une durï¿½e de m_tx pendant que l'acceleration
 																											// ... (initialement nulle) atteind sa valeur maximum ( soit m_ax )
-																											// ! 'm_sx' est une 'portion de distance' et ne représente qu'une partie de la distance
-																											// ( c'est pourquoi on parle de portion ) parcourue pendant la durée 'm_tx'.
-																											// ! La distance totale parcourue pendnat la durée 'm_tx' (i.e durant la phase montante) 
-																											// étant: s = m_sx + v0*m_tx
+																											// ! 'm_sx' est une 'portion de distance' et ne reprï¿½sente qu'une partie de la distance
+																											// ( c'est pourquoi on parle de portion ) parcourue pendant la durï¿½e 'm_tx'.
+																											// ! La distance totale parcourue pendnat la durï¿½e 'm_tx' (i.e durant la phase montante)
+																											// ï¿½tant: s = m_sx + v0*m_tx
 
 				pknchild_left->m_motionProfile.sRamped(&sleft, &sright, &pkn->m_pVfrom->m_stitch.m_start.m_cutIn, &immediate_end.m_cutOut);
 			}
@@ -1382,7 +1370,7 @@ Ns32 diff = m_vStageXArray.Size - m_knodeArray.Capacity;
 				s_right_in = sright.m_s0;
 				s_left_out = s_left_in + sleft.m_ds;
 
-				// Ni croisement, ni dépassement, les deux intervalles fils de "pkn" sont "buildables"
+				// Ni croisement, ni dï¿½passement, les deux intervalles fils de "pkn" sont "buildables"
 				pknchild_left = (NLKNODE*)NArrayAllocBack(&m_knodeArray);
 				pknchild_right = (NLKNODE*)NArrayAllocBack(&m_knodeArray);
 				split_count++;
@@ -1392,17 +1380,17 @@ Ns32 diff = m_vStageXArray.Size - m_knodeArray.Capacity;
 				pknchild_left->setup(pkn->m_pVfrom, pvsplit, pknchild_right, pkn);
 				pknchild_right->setup(pvsplit, pkn->m_pVto, pknchild_left, pkn);
 
-				// Sera-t'il possible de traverser chacun de ces 2 intervalles en dépassant la vitesse "Split.V" en cours de route ... 
-				// ... et en rejoingnant Split.V  à la toute fin ? 
-				// En fait, la seule raison qui, à partir de maintenant, peut empêcher de le faire est le 'plafonnement' de l'intervalle.
+				// Sera-t'il possible de traverser chacun de ces 2 intervalles en dï¿½passant la vitesse "Split.V" en cours de route ...
+				// ... et en rejoingnant Split.V  ï¿½ la toute fin ?
+				// En fait, la seule raison qui, ï¿½ partir de maintenant, peut empï¿½cher de le faire est le 'plafonnement' de l'intervalle.
 
 				// +----------------------------------------+
-				// | C.1) [From,Split] est-il plafonné ?	|
+				// | C.1) [From,Split] est-il plafonnï¿½ ?	|
 				// +----------------------------------------+
 				if (s_left_out >= pvsplit->m_s0)
 				{
-					// Plafonnement à l'arrivée sur l'intervalle [From,Split]. C'est à dire qu'en rejoignant directement la vitesse Split.V depuis From.V on  dépasse Split.s0.
-					// Cela est autorisé certes, mais cela indique qu'il ne sera pas possible de faire mieux !
+					// Plafonnement ï¿½ l'arrivï¿½e sur l'intervalle [From,Split]. C'est ï¿½ dire qu'en rejoignant directement la vitesse Split.V depuis From.V on  dï¿½passe Split.s0.
+					// Cela est autorisï¿½ certes, mais cela indique qu'il ne sera pas possible de faire mieux !
 					// L'intervalle [From,Split] permet donc la construction d'un Motion Profile de type SUP ou SUP_FLAT
 					pknchild_left->m_motionProfile.sUp(&sleft, &pkn->m_pVfrom->m_stitch.m_start.m_cutIn, NULL);
 					pvsplit->setPrimeFlatShapeS0(s_left_out);
@@ -1416,18 +1404,18 @@ Ns32 diff = m_vStageXArray.Size - m_knodeArray.Capacity;
 				{
 					pknchild_left->m_motionProfile.sUpFlat(&sleft, &pkn->m_pVfrom->m_stitch.m_start.m_cutIn, pvsplit->m_s0 - s_left_out);
 				}
-				else  // .... left est FLAT car sleft.m_ds est null !!! ( rappel sleft a été construite  par 'sleft.forwardBuildUp' )
+				else  // .... left est FLAT car sleft.m_ds est null !!! ( rappel sleft a ï¿½tï¿½ construite  par 'sleft.forwardBuildUp' )
 				{
 					pknchild_left->m_motionProfile.flat(s_left_in, pvsplit->m_s0, sleft.m_v0);
 				}
 
 				// +------------------------------------+
-				// | E) [Split,To] est-il plafonné ?	|
+				// | E) [Split,To] est-il plafonnï¿½ ?	|
 				// +------------------------------------+
 				if (s_right_in <= pvsplit->m_s1)
 				{
-					// Plafonnement au départ sur l'intervalle [Split,To]. C'est à dire qu'en rejoignant directement la vitesse To.V depuis Split.V on  doit commencer à décélérer avant Split.s1.
-					// Cela est autorisé certes, mais cela indique qu'il ne sera pas possible de faire mieux !
+					// Plafonnement au dï¿½part sur l'intervalle [Split,To]. C'est ï¿½ dire qu'en rejoignant directement la vitesse To.V depuis Split.V on  doit commencer ï¿½ dï¿½cï¿½lï¿½rer avant Split.s1.
+					// Cela est autorisï¿½ certes, mais cela indique qu'il ne sera pas possible de faire mieux !
 					// L'intervalle [Split,To] permet donc la construction d'un Motion Profile de type SDOWN ou FLAT_SDOWN
 					pknchild_right->m_motionProfile.sDown(&sright, NULL, &pkn->m_pVto->m_stitch.m_end.m_cutOut);
 					pvsplit->setPrimeFlatShapeS1(s_right_in);
