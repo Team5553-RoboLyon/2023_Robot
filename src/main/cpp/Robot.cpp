@@ -67,26 +67,27 @@ void Robot::TeleopPeriodic()
   //******************LOGGING******************
 
   frc::SmartDashboard::PutNumber("voltage", m_voltageDouble);
-  if (m_stick.GetRawButtonPressed(2))
+  // if (m_stick.GetRawButtonPressed(2))
+  // {
+  //   m_voltage += units::volt_t{0.1};
+  //   m_voltageDouble += 0.1;
+  // }
+  double volt = 12.0;
+  m_voltage = units::volt_t{volt};
+  m_voltageDouble = volt;
+  if (m_encoderGetDistance < 3.35)
   {
-    m_voltage += units::volt_t{0.1};
-    m_voltageDouble += 0.1;
-  }
-  if (m_encoderGetDistance < 3.4)
-  {
-    if (m_stick.GetRawButton(1))
-    {
-      m_motor.SetVoltage(m_voltage);
-    }
-    else
-    {
-      m_motor.Set(-m_stick.GetY() * 0.2);
-    }
+    m_motor.SetVoltage(m_voltage);
   }
   else
   {
     m_motor.Set(0.0);
   }
+
+  // else
+  // {
+  //   m_motor.Set(0.0);
+  // }
 
   m_logCSV.write();
   //********************************************************************************
