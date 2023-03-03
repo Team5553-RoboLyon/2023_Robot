@@ -4,7 +4,34 @@
 
 #include "subsystem/Elevator.h"
 
-Elevator::Elevator() = default;
+Elevator::Elevator()
+{
+    m_elevatorEncoder.Reset();
+    m_elevatorEncoder.SetDistancePerPulse((1 / 2048) * 1 / 3.44 * 0.96);
+    m_elevatorPid.SetSetpoint(0);
 
-// This method will be called once per scheduler run
-void Elevator::Periodic() {}
+    m_elevatorMotor.SetInverted(true);
+    m_elevatorMotor.SetIdleMode(rev::CANSparkMax::IdleMode::kBrake);
+    m_elevatorMotor.SetSmartCurrentLimit(40);
+    m_elevatorMotor.EnableVoltageCompensation(10);
+}
+
+void Elevator::SetSetpoint(double setpoint)
+{
+    m_elevatorPid.SetSetpoint(setpoint);
+}
+
+void Elevator::SetGains(double p, double i, double d)
+{
+    m_elevatorPid.SetGains(p, i, d);
+}
+
+double Elevator::GetEncoder()
+{
+    return m_elevatorEncoder.GetDistance();
+}
+
+void Elevator::Periodic()
+{
+    m_elevatorMotor.Set(m_elevatorPid.Calculate(GetEncoder()));
+}

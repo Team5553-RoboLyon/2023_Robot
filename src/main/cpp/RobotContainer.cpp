@@ -4,4 +4,9 @@
 
 #include "RobotContainer.h"
 
-RobotContainer::RobotContainer() = default;
+RobotContainer::RobotContainer()
+{
+    m_copiloter.SetDefaultCommand(AutoCopiloter([=]
+                                                { return m_joystickRight.GetY(); },
+                                                &m_copiloter));
+};

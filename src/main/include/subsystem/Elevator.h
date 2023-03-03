@@ -6,17 +6,21 @@
 
 #include <frc2/command/SubsystemBase.h>
 #include "rev/CANSparkMax.h"
+#include <frc/Encoder.h>
+#include "lib/Pid.h"
 
 class Elevator : public frc2::SubsystemBase
 {
 public:
   Elevator();
 
-  /**
-   * Will be called periodically whenever the CommandScheduler runs.
-   */
+  void SetSetpoint(double setpoint);
   void Periodic() override;
+  void SetGains(double p, double i, double d);
+  double GetEncoder();
 
 private:
   rev::CANSparkMax m_elevatorMotor{1, rev::CANSparkMaxLowLevel::MotorType::kBrushless};
+  frc::Encoder m_elevatorEncoder{0, 1};
+  Pid m_elevatorPid{0, 0.1, 0.1, 0.1};
 };

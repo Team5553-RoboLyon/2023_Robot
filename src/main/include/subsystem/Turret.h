@@ -5,17 +5,22 @@
 #pragma once
 
 #include <frc2/command/SubsystemBase.h>
+#include "rev/CANSparkMax.h"
+#include <frc/Encoder.h>
+#include "lib/Pid.h"
 
-class Turret : public frc2::SubsystemBase {
- public:
+class Turret : public frc2::SubsystemBase
+{
+public:
   Turret();
 
-  /**
-   * Will be called periodically whenever the CommandScheduler runs.
-   */
+  void SetSetpoint(double setpoint);
   void Periodic() override;
+  void SetGains(double p, double i, double d);
+  double GetEncoder();
 
- private:
-  // Components (e.g. motor controllers and sensors) should generally be
-  // declared private and exposed only through public methods.
+private:
+  rev::CANSparkMax m_turretMotor{1, rev::CANSparkMaxLowLevel::MotorType::kBrushless};
+  frc::Encoder m_turretEncoder{0, 1};
+  Pid m_turretPid{0, 0.1, 0.1, 0.1};
 };

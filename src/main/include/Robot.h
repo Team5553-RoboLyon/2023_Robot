@@ -5,9 +5,12 @@
 #pragma once
 
 #include <frc/TimedRobot.h>
+#include <frc/smartdashboard/SmartDashboard.h>
+#include "RobotContainer.h"
 
-class Robot : public frc::TimedRobot {
- public:
+class Robot : public frc::TimedRobot
+{
+public:
   void RobotInit() override;
   void RobotPeriodic() override;
 
@@ -25,4 +28,7 @@ class Robot : public frc::TimedRobot {
 
   void SimulationInit() override;
   void SimulationPeriodic() override;
+
+private:
+  RobotContainer m_robotContainer;
 };
