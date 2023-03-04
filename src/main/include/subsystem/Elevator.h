@@ -21,7 +21,7 @@ public:
   double GetEncoder();
   void Set(double speed);
 
-  Pid m_elevatorPid{0, 2.25, 0.1, 0.1};
+  Pid m_elevatorPid{0, 2.25, 0.0, 0.0};
   // Pid m_elevatorPid{0, 0.0, 0.0, 0.0};
 
 private:

@@ -8,7 +8,7 @@ Elevator::Elevator()
 {
     m_elevatorEncoder.Reset();
     m_elevatorEncoder.SetDistancePerPulse((1.0 / 2048.0) * 1.0 / 3.44 * 0.96);
-    m_elevatorPid.SetSetpoint(0);
+    m_elevatorPid.SetSetpoint(0.0);
 
     m_elevatorMotor.SetInverted(false);
     m_elevatorMotor.SetIdleMode(rev::CANSparkMax::IdleMode::kBrake);

@@ -6,4 +6,4 @@
 #define Length_CenterElevator_To_FloorX 0.32 // meters
 #define Coef_IncrementationX 0.005           // coefficient
 #define Min_X 0.3                            // meters
-#define Max_X 0.6                            // meters
+#define Max_X 1.1                            // meters
