@@ -10,7 +10,7 @@
 #include <frc/smartdashboard/SmartDashboard.h>
 #include <frc/Joystick.h>
 #include <frc/Encoder.h>
-#include <NLCsv.h>
+#include <ctre/phoenix/motorcontrol/can/TalonSRX.h>
 #include <units/voltage.h>
 
 class Robot : public frc::TimedRobot
@@ -40,4 +40,5 @@ private:
       9,
   };
   frc::Joystick m_joystick{0};
+  ctre::phoenix::motorcontrol::can::TalonSRX m_motor{1};
 };

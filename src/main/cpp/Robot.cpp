@@ -3,6 +3,7 @@
 // the WPILib BSD license file in the root directory of this project.
 
 #include "Robot.h"
+#include "frc/smartdashboard/SmartDashboard.h"
 // cc
 // cc
 void Robot::RobotInit() {}
@@ -18,6 +19,9 @@ void Robot::TeleopInit()
 
 void Robot::TeleopPeriodic()
 {
+  double joystickZ = m_joystick.GetZ();
+  m_motor.Set(ctre::phoenix::motorcontrol::ControlMode::PercentOutput, joystickZ);
+  frc::SmartDashboard::PutNumber("encoder", m_encoder.GetDistance());
 }
 
 void Robot::DisabledInit() {}
