@@ -20,7 +20,8 @@ public:
   double GetEncoder();
 
 private:
-  rev::CANSparkMax m_armMotor{1, rev::CANSparkMaxLowLevel::MotorType::kBrushless};
-  frc::Encoder m_armEncoder{0, 1};
-  Pid m_armPid{0, 0.1, 0.1, 0.1};
+  rev::CANSparkMax m_armMotor{9, rev::CANSparkMaxLowLevel::MotorType::kBrushless};
+  frc::Encoder m_armEncoder{3, 4, true};
+  Pid m_armPid{0, 1.5, 0.0, 1.0};
+  // Pid m_armPid{0, 0.0, 0.0, 0.0};
 };

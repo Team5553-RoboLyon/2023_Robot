@@ -18,5 +18,5 @@ public:
   void Periodic() override;
 
 private:
-  rev::CANSparkMax m_gripperMotor{1, rev::CANSparkMaxLowLevel::MotorType::kBrushless};
+  rev::CANSparkMax m_gripperMotor{12, rev::CANSparkMaxLowLevel::MotorType::kBrushless};
 };

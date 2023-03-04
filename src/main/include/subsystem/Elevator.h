@@ -8,6 +8,7 @@
 #include "rev/CANSparkMax.h"
 #include <frc/Encoder.h>
 #include "lib/Pid.h"
+#include "lib/RblUtils.h"
 
 class Elevator : public frc2::SubsystemBase
 {
@@ -18,9 +19,12 @@ public:
   void Periodic() override;
   void SetGains(double p, double i, double d);
   double GetEncoder();
+  void Set(double speed);
+
+  Pid m_elevatorPid{0, 2.25, 0.1, 0.1};
+  // Pid m_elevatorPid{0, 0.0, 0.0, 0.0};
 
 private:
-  rev::CANSparkMax m_elevatorMotor{1, rev::CANSparkMaxLowLevel::MotorType::kBrushless};
-  frc::Encoder m_elevatorEncoder{0, 1};
-  Pid m_elevatorPid{0, 0.1, 0.1, 0.1};
+  rev::CANSparkMax m_elevatorMotor{8, rev::CANSparkMaxLowLevel::MotorType::kBrushless};
+  frc::Encoder m_elevatorEncoder{1, 2, true};
 };

@@ -7,13 +7,14 @@
 Elevator::Elevator()
 {
     m_elevatorEncoder.Reset();
-    m_elevatorEncoder.SetDistancePerPulse((1 / 2048) * 1 / 3.44 * 0.96);
+    m_elevatorEncoder.SetDistancePerPulse((1.0 / 2048.0) * 1.0 / 3.44 * 0.96);
     m_elevatorPid.SetSetpoint(0);
 
-    m_elevatorMotor.SetInverted(true);
+    m_elevatorMotor.SetInverted(false);
     m_elevatorMotor.SetIdleMode(rev::CANSparkMax::IdleMode::kBrake);
     m_elevatorMotor.SetSmartCurrentLimit(40);
     m_elevatorMotor.EnableVoltageCompensation(10);
+    m_elevatorMotor.SetOpenLoopRampRate(0.8);
 }
 
 void Elevator::SetSetpoint(double setpoint)
@@ -28,10 +29,16 @@ void Elevator::SetGains(double p, double i, double d)
 
 double Elevator::GetEncoder()
 {
+    std::cout << m_elevatorEncoder.GetDistance() << std::endl;
     return m_elevatorEncoder.GetDistance();
+}
+
+void Elevator::Set(double speed)
+{
+    m_elevatorMotor.SetVoltage(units::volt_t(speed));
 }
 
 void Elevator::Periodic()
 {
-    m_elevatorMotor.Set(m_elevatorPid.Calculate(GetEncoder()));
+    m_elevatorMotor.Set((NCLAMP(-0.5, m_elevatorPid.Calculate(GetEncoder()) + 0.08, 0.5)));
 }

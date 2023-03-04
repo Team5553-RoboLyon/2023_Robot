@@ -14,6 +14,7 @@
 #include "subsystem/Drivetrain.h"
 #include "subsystem/Copiloter.h"
 #include "command/AutoCopiloter.h"
+#include "lib/rate_limiter.h"
 
 class RobotContainer
 {
@@ -21,9 +22,12 @@ public:
   RobotContainer();
   Copiloter m_copiloter;
   Turret m_turret;
-  Arm m_arm;
-  Elevator m_elevator;
-  Gripper m_gripper;
+  // Arm m_arm;
+  // Elevator m_elevator;
+  // Gripper m_gripper;
+
+  RateLimiter m_JoystickPrelimited_V; // joystick V rate limiter 1
+  RateLimiter m_JoystickLimited_V;
 
 private:
   frc::Joystick m_joystickRight{0};

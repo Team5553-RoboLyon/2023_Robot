@@ -17,6 +17,7 @@ void AutoCopiloter::Execute()
 {
   double forward = m_Forward();
   m_pCopiloter->UpdateX(forward);
+  std::cout << "on passe" << std::endl;
 }
 
 // Called once the command ends or is interrupted.

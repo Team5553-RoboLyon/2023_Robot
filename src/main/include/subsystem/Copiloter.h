@@ -20,11 +20,11 @@ public:
   void Calcul();
   void UpdateX(double joystickX);
   void Periodic() override;
-
-private:
   double m_x;
   double m_theta;
   double m_h;
   Arm m_arm;
   Elevator m_elevator;
+
+private:
 };

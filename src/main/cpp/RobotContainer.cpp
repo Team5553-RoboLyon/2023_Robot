@@ -6,6 +6,7 @@
 
 RobotContainer::RobotContainer()
 {
+    // m_JoystickLimited_V.Update(m_JoystickPrelimited_V.Update(m_joystickRight.GetY()));
     m_copiloter.SetDefaultCommand(AutoCopiloter([=]
                                                 { return m_joystickRight.GetY(); },
                                                 &m_copiloter));
