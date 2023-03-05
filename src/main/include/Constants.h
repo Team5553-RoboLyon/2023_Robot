@@ -10,12 +10,13 @@
 
 // #########################    ID Motor    #########################
 
-#define ID_MOTOR_DRIVE_TRAIN_LEFT 1
-#define ID_MOTOR_DRIVE_TRAIN_RIGHT 2
-#define ID_MOTOR_DRIVE_TRAIN_LEFT_2 3
-#define ID_MOTOR_DRIVE_TRAIN_RIGHT_2 4
-#define ID_MOTOR_DRIVE_TRAIN_LEFT_3 5
-#define ID_MOTOR_DRIVE_TRAIN_RIGHT_3 6
+#define ID_MOTOR_DRIVE_TRAIN_RIGHT 1
+#define ID_MOTOR_DRIVE_TRAIN_RIGHT_2 2
+#define ID_MOTOR_DRIVE_TRAIN_RIGHT_3 3
+#define ID_MOTOR_DRIVE_TRAIN_LEFT 4
+#define ID_MOTOR_DRIVE_TRAIN_LEFT_2 5
+#define ID_MOTOR_DRIVE_TRAIN_LEFT_3 6
+
 #define ID_MOTOR_TURRET 7
 #define ID_MOTOR_ELEVATOR 8
 #define ID_MOTOR_ARM 9
@@ -30,10 +31,11 @@
 #define ID_SOLENOID_GRIPPER_B 5
 
 // #########################    ID Encoder    #########################
-#define ID_ENCODER_DRIVE_TRAIN_LEFT_A 0
-#define ID_ENCODER_DRIVE_TRAIN_LEFT_B 1
-#define ID_ENCODER_DRIVE_TRAIN_RIGHT_A 2
-#define ID_ENCODER_DRIVE_TRAIN_RIGHT_B 3
+
+#define ID_ENCODER_DRIVE_TRAIN_RIGHT_A 0
+#define ID_ENCODER_DRIVE_TRAIN_RIGHT_B 1
+#define ID_ENCODER_DRIVE_TRAIN_LEFT_A 2
+#define ID_ENCODER_DRIVE_TRAIN_LEFT_B 3
 #define ID_ENCODER_TURRET_A 4
 #define ID_ENCODER_TURRET_B 5
 #define ID_ENCODER_ELEVATOR_A 6
@@ -85,8 +87,8 @@
 
 // #########################    SetInvertedMotor    #########################
 
-#define DRIVETRAIN_MOTOR_LEFT_INVERTED false
-#define DRIVETRAIN_MOTOR_RIGHT_INVERTED true
+#define DRIVETRAIN_MOTOR_LEFT_INVERTED true
+#define DRIVETRAIN_MOTOR_RIGHT_INVERTED false
 #define TURRET_MOTOR_INVERTED true
 #define ELEVATOR_MOTOR_INVERTED false
 #define ARM_MOTOR_INVERTED false

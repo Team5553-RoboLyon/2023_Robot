@@ -34,21 +34,21 @@ Drivetrain::Drivetrain() : m_GearboxLeftOutAveragedRpt(AVERAGE_SAMPLES_NUMBER),
     m_MotorRight2.RestoreFactoryDefaults();
     m_MotorRight3.RestoreFactoryDefaults();
 
-    m_MotorLeft1.SetSmartCurrentLimit(40); // limite de courant
-    m_MotorLeft2.SetSmartCurrentLimit(40);
-    m_MotorLeft3.SetSmartCurrentLimit(40);
+    m_MotorLeft1.SetSmartCurrentLimit(DRIVETRAIN_CURRENT_LIMIT); // limite de courant
+    m_MotorLeft2.SetSmartCurrentLimit(DRIVETRAIN_CURRENT_LIMIT);
+    m_MotorLeft3.SetSmartCurrentLimit(DRIVETRAIN_CURRENT_LIMIT);
 
-    m_MotorRight1.SetSmartCurrentLimit(40);
-    m_MotorRight2.SetSmartCurrentLimit(40);
-    m_MotorRight3.SetSmartCurrentLimit(40);
+    m_MotorRight1.SetSmartCurrentLimit(DRIVETRAIN_CURRENT_LIMIT);
+    m_MotorRight2.SetSmartCurrentLimit(DRIVETRAIN_CURRENT_LIMIT);
+    m_MotorRight3.SetSmartCurrentLimit(DRIVETRAIN_CURRENT_LIMIT);
 
-    m_MotorLeft1.SetInverted(true); // inversion des moteurs
-    m_MotorLeft2.SetInverted(true);
-    m_MotorLeft3.SetInverted(true);
+    m_MotorLeft1.SetInverted(DRIVETRAIN_MOTOR_LEFT_INVERTED); // inversion des moteurs
+    m_MotorLeft2.SetInverted(DRIVETRAIN_MOTOR_LEFT_INVERTED);
+    m_MotorLeft3.SetInverted(DRIVETRAIN_MOTOR_LEFT_INVERTED);
 
-    m_MotorRight1.SetInverted(false);
-    m_MotorRight2.SetInverted(false);
-    m_MotorRight3.SetInverted(false);
+    m_MotorRight1.SetInverted(DRIVETRAIN_MOTOR_RIGHT_INVERTED);
+    m_MotorRight2.SetInverted(DRIVETRAIN_MOTOR_RIGHT_INVERTED);
+    m_MotorRight3.SetInverted(DRIVETRAIN_MOTOR_RIGHT_INVERTED);
 
     m_MotorLeft1.SetIdleMode(rev::CANSparkMax::IdleMode::kBrake); // init brake mode moteur
     m_MotorLeft2.SetIdleMode(rev::CANSparkMax::IdleMode::kBrake);
