@@ -6,6 +6,7 @@
 
 #include <frc2/command/CommandBase.h>
 #include <frc2/command/CommandHelper.h>
+#include "subsystem/Drivetrain.h"
 
 /**
  * An example command.
@@ -15,9 +16,10 @@
  * Command will *not* work!
  */
 class Drive
-    : public frc2::CommandHelper<frc2::CommandBase, Drive> {
- public:
-  Drive();
+    : public frc2::CommandHelper<frc2::CommandBase, Drive>
+{
+public:
+  Drive(std::function<double()> forward, std::function<double()> turn, Drivetrain *pDrivetrain);
 
   void Initialize() override;
 
@@ -26,4 +28,9 @@ class Drive
   void End(bool interrupted) override;
 
   bool IsFinished() override;
+
+private:
+  std::function<double()> m_Forward;
+  std::function<double()> m_Turn;
+  Drivetrain *m_pDrivetrain;
 };

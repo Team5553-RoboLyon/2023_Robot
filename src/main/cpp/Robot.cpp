@@ -17,21 +17,7 @@ void Robot::AutonomousPeriodic() {}
 
 void Robot::TeleopInit()
 {
-  m_robotContainer.m_JoystickPrelimited_V_Robot.Reset(0.0, 0.0, 2.0); // reset des rate limiters
-  m_robotContainer.m_JoystickPrelimited_V_Robot.Reset(0.0, 0.0, 0.05);
-  frc::SmartDashboard::PutNumber("Pelevator", 0);
-  frc::SmartDashboard::PutNumber("Parm", 0);
-  frc::SmartDashboard::PutNumber("Pturret", 0);
-  frc::SmartDashboard::PutNumber("Ielevator", 0);
-  frc::SmartDashboard::PutNumber("Iarm", 0);
-  frc::SmartDashboard::PutNumber("Iturret", 0);
-  frc::SmartDashboard::PutNumber("Delevator", 0);
-  frc::SmartDashboard::PutNumber("Darm", 0);
-  frc::SmartDashboard::PutNumber("Dturret", 0);
-  frc::SmartDashboard::PutNumber("Setpointelevator", 0);
-  frc::SmartDashboard::PutNumber("Setpointarm", 0);
-  frc::SmartDashboard::PutNumber("Setpointturret", 0);
-  frc::SmartDashboard::PutNumber("voltage", 0);
+  m_robotContainer.m_drivetrain.m_logCSV.open("/home/lvuser/", true); // ouverture du fichier de log
 }
 void Robot::TeleopPeriodic()
 {
@@ -62,7 +48,10 @@ void Robot::TeleopPeriodic()
   // m_robotContainer.m_copiloter.m_elevator.Set(frc::SmartDashboard::GetNumber("voltage", 0.0));
 }
 
-void Robot::DisabledInit() {}
+void Robot::DisabledInit()
+{
+  m_robotContainer.m_drivetrain.m_logCSV.close(); // fermeture du fichier de log
+}
 void Robot::DisabledPeriodic() {}
 
 void Robot::TestInit() {}

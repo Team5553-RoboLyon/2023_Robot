@@ -22,6 +22,7 @@ public:
   RobotContainer();
   Copiloter m_copiloter;
   Turret m_turret;
+  Drivetrain m_drivetrain;
   // Arm m_arm;
   // Elevator m_elevator;
   // Gripper m_gripper;
