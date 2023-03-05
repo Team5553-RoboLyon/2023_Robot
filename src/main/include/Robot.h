@@ -35,7 +35,7 @@ public:
 
 private:
   frc::Joystick m_joystick{0};
-  ctre::phoenix::motorcontrol::can::VictorSPX m_motorRight{1};
+  ctre::phoenix::motorcontrol::can::VictorSPX m_motorRight{8};
   ctre::phoenix::motorcontrol::can::VictorSPX m_motorLeft{2};
   frc::DoubleSolenoid m_solenoid{frc::PneumaticsModuleType::REVPH, 12, 13};
   frc::Compressor m_compressor{frc::PneumaticsModuleType::REVPH};
