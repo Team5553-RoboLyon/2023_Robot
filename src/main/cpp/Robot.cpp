@@ -17,8 +17,8 @@ void Robot::AutonomousPeriodic() {}
 
 void Robot::TeleopInit()
 {
-  m_robotContainer.m_JoystickPrelimited_V.Reset(0.0, 0.0, 2.0); // reset des rate limiters
-  m_robotContainer.m_JoystickLimited_V.Reset(0.0, 0.0, 0.05);
+  m_robotContainer.m_JoystickPrelimited_V_Robot.Reset(0.0, 0.0, 2.0); // reset des rate limiters
+  m_robotContainer.m_JoystickPrelimited_V_Robot.Reset(0.0, 0.0, 0.05);
   frc::SmartDashboard::PutNumber("Pelevator", 0);
   frc::SmartDashboard::PutNumber("Parm", 0);
   frc::SmartDashboard::PutNumber("Pturret", 0);
