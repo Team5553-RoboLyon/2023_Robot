@@ -33,14 +33,14 @@ void Robot::TeleopPeriodic()
   m_compressor.EnableDigital();
   m_speed = frc::SmartDashboard::GetNumber("speed", 0.0);
 
-  // if (m_joystick.GetRawButton(1))
-  // {
-  //   m_motorLeft.Set(ctre::phoenix::motorcontrol::VictorSPXControlMode::PercentOutput, m_speed);
-  // }
-  // else
-  // {
-  //   m_motorLeft.Set(ctre::phoenix::motorcontrol::VictorSPXControlMode::PercentOutput, 0.0);
-  // }
+  if (m_joystick.GetRawButton(1))
+  {
+    m_motorLeft.Set(ctre::phoenix::motorcontrol::VictorSPXControlMode::PercentOutput, m_speed);
+  }
+  else
+  {
+    m_motorLeft.Set(ctre::phoenix::motorcontrol::VictorSPXControlMode::PercentOutput, 0.0);
+  }
   // frc::SmartDashboard::GetBoolean("oui", false) == false
   if (m_joystick.GetRawButton(1))
   {
