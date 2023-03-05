@@ -7,13 +7,13 @@
 Elevator::Elevator()
 {
     m_elevatorEncoder.Reset();
-    m_elevatorEncoder.SetDistancePerPulse((1.0 / 2048.0) * 1.0 / 3.44 * 0.96);
+    m_elevatorEncoder.SetDistancePerPulse(ELEVATOR_DISTANCE_PER_PULSE); //(1.0 / 2048.0) * 1.0 / 3.44 * 0.96 en m
     m_elevatorPid.SetSetpoint(0.0);
 
-    m_elevatorMotor.SetInverted(false);
+    m_elevatorMotor.SetInverted(ELEVATOR_MOTOR_INVERTED);
     m_elevatorMotor.SetIdleMode(rev::CANSparkMax::IdleMode::kBrake);
-    m_elevatorMotor.SetSmartCurrentLimit(40);
-    m_elevatorMotor.EnableVoltageCompensation(10);
+    m_elevatorMotor.SetSmartCurrentLimit(ELEVATOR_CURRENT_LIMIT);
+    m_elevatorMotor.EnableVoltageCompensation(ELEVATOR_VOLTAGE_COMPENSATION);
     m_elevatorMotor.SetOpenLoopRampRate(0.8);
 }
 

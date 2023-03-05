@@ -9,6 +9,7 @@
 #include <frc/Encoder.h>
 #include "lib/Pid.h"
 #include "lib/RblUtils.h"
+#include "Constants.h"
 
 class Elevator : public frc2::SubsystemBase
 {
@@ -21,10 +22,9 @@ public:
   double GetEncoder();
   void Set(double speed);
 
-  Pid m_elevatorPid{0, 2.25, 0.0, 0.0};
-  // Pid m_elevatorPid{0, 0.0, 0.0, 0.0};
+  Pid m_elevatorPid{0, P_ELEVATOR, I_ELEVATOR, D_ELEVATOR};
 
 private:
-  rev::CANSparkMax m_elevatorMotor{8, rev::CANSparkMaxLowLevel::MotorType::kBrushless};
-  frc::Encoder m_elevatorEncoder{1, 2, true};
+  rev::CANSparkMax m_elevatorMotor{ID_MOTOR_ELEVATOR, rev::CANSparkMaxLowLevel::MotorType::kBrushless};
+  frc::Encoder m_elevatorEncoder{ID_ENCODER_ELEVATOR_A, ID_ENCODER_ELEVATOR_B, true};
 };

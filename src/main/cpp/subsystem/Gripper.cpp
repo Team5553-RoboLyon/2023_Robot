@@ -4,7 +4,22 @@
 
 #include "subsystem/Gripper.h"
 
-Gripper::Gripper() = default;
+Gripper::Gripper()
+{
+    m_gripperSolenoid.Set(frc::DoubleSolenoid::Value::kForward);
+}
 
-// This method will be called once per scheduler run
-void Gripper::Periodic() {}
+void Gripper::Open()
+{
+    m_gripperSolenoid.Set(frc::DoubleSolenoid::Value::kForward);
+}
+
+void Gripper::Close()
+{
+    m_gripperSolenoid.Set(frc::DoubleSolenoid::Value::kReverse);
+}
+
+void Gripper::ChangePosition()
+{
+    (m_gripperSolenoid.Get() == frc::DoubleSolenoid::Value::kForward) ? Close() : Open();
+}

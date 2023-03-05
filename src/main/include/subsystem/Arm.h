@@ -8,6 +8,7 @@
 #include "rev/CANSparkMax.h"
 #include <frc/Encoder.h>
 #include "lib/Pid.h"
+#include "Constants.h"
 
 class Arm : public frc2::SubsystemBase
 {
@@ -20,8 +21,7 @@ public:
   double GetEncoder();
 
 private:
-  rev::CANSparkMax m_armMotor{9, rev::CANSparkMaxLowLevel::MotorType::kBrushless};
-  frc::Encoder m_armEncoder{3, 4, true};
-  Pid m_armPid{0, 0.4, 0.0, 0.0};
-  // Pid m_armPid{0, 0.0, 0.0, 0.0};
+  rev::CANSparkMax m_armMotor{ID_MOTOR_ARM, rev::CANSparkMaxLowLevel::MotorType::kBrushless};
+  frc::Encoder m_armEncoder{ID_ENCODER_ARM_A, ID_ENCODER_ARM_B, true};
+  Pid m_armPid{0, P_ARM, I_ARM, D_ARM};
 };

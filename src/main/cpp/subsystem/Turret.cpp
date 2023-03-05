@@ -7,13 +7,13 @@
 Turret::Turret()
 {
     m_turretEncoder.Reset();
-    m_turretEncoder.SetDistancePerPulse((1 / 2048) * 1 / 3.44 * 0.96);
+    m_turretEncoder.SetDistancePerPulse(TURRET_DISTANCE_PER_PULSE); //(1 / 2048) * 1 / 3.44 * 0.96 en degré
     m_turretPid.SetSetpoint(0);
 
-    m_turretMotor.SetInverted(true);
+    m_turretMotor.SetInverted(TURRET_MOTOR_INVERTED);
     m_turretMotor.SetIdleMode(rev::CANSparkMax::IdleMode::kBrake);
-    m_turretMotor.SetSmartCurrentLimit(40);
-    m_turretMotor.EnableVoltageCompensation(10);
+    m_turretMotor.SetSmartCurrentLimit(TURRET_CURRENT_LIMIT);
+    m_turretMotor.EnableVoltageCompensation(TURRET_VOLTAGE_COMPENSATION);
 };
 
 void Turret::SetSetpoint(double setpoint)

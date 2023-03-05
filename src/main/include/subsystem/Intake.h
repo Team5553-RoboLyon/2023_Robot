@@ -8,15 +8,16 @@
 #include <frc/DoubleSolenoid.h>
 #include <frc/PneumaticsModuleType.h>
 #include "Constants.h"
-class Gripper : public frc2::SubsystemBase
+
+class Intake : public frc2::SubsystemBase
 {
 public:
-  Gripper();
+  Intake();
 
   void Open();
   void Close();
   void ChangePosition();
 
 private:
-  frc::DoubleSolenoid m_gripperSolenoid{frc::PneumaticsModuleType::REVPH, ID_SOLENOID_GRIPPER_A, ID_SOLENOID_GRIPPER_B};
+  frc::DoubleSolenoid m_intakeSolenoid{frc::PneumaticsModuleType::REVPH, ID_SOLENOID_INTAKE_A, ID_SOLENOID_INTAKE_B};
 };
