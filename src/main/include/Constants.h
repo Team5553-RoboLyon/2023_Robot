@@ -21,6 +21,7 @@
 #define ID_MOTOR_ELEVATOR 8
 #define ID_MOTOR_ARM 9
 #define ID_MOTOR_INTAKE 10
+#define ID_MOTOR_INTAKE_FOLLOWER 11
 
 // #########################    ID Solenoid    #########################
 #define ID_SOLENOID_SHIFTER_A 0
