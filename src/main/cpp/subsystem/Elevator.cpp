@@ -10,6 +10,7 @@ Elevator::Elevator()
     m_elevatorEncoder.SetDistancePerPulse(ELEVATOR_DISTANCE_PER_PULSE); //(1.0 / 2048.0) * 1.0 / 3.44 * 0.96 en m
     m_elevatorPid.SetSetpoint(0.0);
 
+    m_elevatorMotor.RestoreFactoryDefaults();
     m_elevatorMotor.SetInverted(ELEVATOR_MOTOR_INVERTED);
     m_elevatorMotor.SetIdleMode(rev::CANSparkMax::IdleMode::kBrake);
     m_elevatorMotor.SetSmartCurrentLimit(ELEVATOR_CURRENT_LIMIT);

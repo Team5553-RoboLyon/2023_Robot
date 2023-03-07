@@ -10,6 +10,7 @@ Turret::Turret()
     m_turretEncoder.SetDistancePerPulse(TURRET_DISTANCE_PER_PULSE); //(1 / 2048) * 1 / 3.44 * 0.96 en degré
     m_turretPid.SetSetpoint(0);
 
+    m_turretMotor.RestoreFactoryDefaults();
     m_turretMotor.SetInverted(TURRET_MOTOR_INVERTED);
     m_turretMotor.SetIdleMode(rev::CANSparkMax::IdleMode::kBrake);
     m_turretMotor.SetSmartCurrentLimit(TURRET_CURRENT_LIMIT);

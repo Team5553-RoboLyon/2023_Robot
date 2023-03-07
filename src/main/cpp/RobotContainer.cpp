@@ -16,3 +16,14 @@ RobotContainer::RobotContainer()
                                          { return -m_joystickRight.GetZ(); },
                                          &m_drivetrain));
 };
+
+// ################### COMMANDS ###################
+
+void RobotContainer::ConfigureButtonBindings()
+{
+    frc2::JoystickButton m_ButtonGripperCatch = frc2::JoystickButton(&m_joystickRight, 2);
+    m_ButtonGripperCatch.WhenActive(Catch(&m_gripper));
+
+    frc2::JoystickButton m_ButtonDropHigh = frc2::JoystickButton(&m_joystickRight, 3);
+    m_ButtonDropHigh.WhenActive(DropHigh(&m_gripper, &m_elevator, &m_arm));
+}

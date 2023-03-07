@@ -7,6 +7,26 @@
 Intake::Intake()
 {
     m_intakeSolenoid.Set(frc::DoubleSolenoid::Value::kForward);
+
+    m_intakeMotor.ConfigFactoryDefault();
+    m_intakeMotorFollower.ConfigFactoryDefault();
+
+    m_intakeMotor.SetInverted(true);
+    m_intakeMotorFollower.SetInverted(false);
+
+    m_intakeMotor.SetNeutralMode(ctre::phoenix::motorcontrol::NeutralMode::Brake);
+    m_intakeMotorFollower.SetNeutralMode(ctre::phoenix::motorcontrol::NeutralMode::Brake);
+
+    m_intakeMotor.ConfigOpenloopRamp(INTAKE_RAMP);
+    m_intakeMotorFollower.ConfigOpenloopRamp(INTAKE_RAMP);
+
+    m_intakeMotor.EnableVoltageCompensation(true);
+    m_intakeMotorFollower.EnableVoltageCompensation(true);
+
+    m_intakeMotor.ConfigVoltageCompSaturation(INTAKE_VOLTAGE_COMPENSATION);
+    m_intakeMotorFollower.ConfigVoltageCompSaturation(INTAKE_VOLTAGE_COMPENSATION);
+
+    m_intakeMotorFollower.Follow(m_intakeMotor);
 }
 
 void Intake::Open()
@@ -22,4 +42,9 @@ void Intake::Close()
 void Intake::ChangePosition()
 {
     (m_intakeSolenoid.Get() == frc::DoubleSolenoid::Value::kForward) ? Close() : Open();
+}
+
+void Intake::SetSpeed(double speed)
+{
+    m_intakeMotor.Set(ctre::phoenix::motorcontrol::ControlMode::PercentOutput, speed);
 }

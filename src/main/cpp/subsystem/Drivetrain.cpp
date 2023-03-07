@@ -114,18 +114,18 @@ void Drivetrain::Set(double v_motor) // set des moteurs
 void Drivetrain::ActiveBallShifterV1() // active ball shifter V1
 {
     std::cout << "ActiveBallShifterV1" << std::endl;
-    m_BallShifterSolenoidLeft.Set(frc::DoubleSolenoid::Value::kForward);
+    m_BallShifterSolenoid.Set(frc::DoubleSolenoid::Value::kForward);
 }
 
 void Drivetrain::ActiveBallShifterV2() // active ball shifter V2
 {
     std::cout << "ActiveBallShifterV2" << std::endl;
-    m_BallShifterSolenoidLeft.Set(frc::DoubleSolenoid::Value::kReverse);
+    m_BallShifterSolenoid.Set(frc::DoubleSolenoid::Value::kReverse);
 }
 
 void Drivetrain::InvertBallShifter() // inverse ball shifter
 {
-    if (m_BallShifterSolenoidLeft.Get() == frc::DoubleSolenoid::Value::kForward)
+    if (m_BallShifterSolenoid.Get() == frc::DoubleSolenoid::Value::kForward)
     {
         ActiveBallShifterV1();
     }
