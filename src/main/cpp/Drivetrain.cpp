@@ -125,8 +125,10 @@ void Drivetrain::ActiveBallShifterV2() // active ball shifter V2
 
 void Drivetrain::InvertBallShifter() // inverse ball shifter
 {
-    if (m_BallShifterSolenoidLeft.Get() == frc::DoubleSolenoid::Value::kForward)
+    std::cout << m_BallShifterSolenoidLeft.Get() << std::endl;
+    if (m_BallShifterSolenoidLeft.Get() == frc::DoubleSolenoid::Value::kReverse)
     {
+
         ActiveBallShifterV1();
     }
     else
@@ -242,7 +244,7 @@ bool Drivetrain::isUpshiftingAllowed() // mode up, détermine si on peut passer 
 bool Drivetrain::isKickdownShiftingAllowed() // mode kickdown, détermine si on peut passer en V1
 {
     // double speedRobot, double accelerationRobot, double joystick
-    return false;
+    // return false;
     if (m_GearboxesOutAdjustedRpm.m_current > 0.0)
     {
         if (m_GearboxesOutAdjustedRpm.m_current < KICKDOWN_SHIFTING_POINT_GEARBOXES_OUT_RPM and

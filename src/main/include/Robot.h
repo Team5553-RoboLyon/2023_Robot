@@ -8,6 +8,7 @@
 #include <ctre/Phoenix/motorcontrol/can/TalonFX.h>
 #include <frc/Joystick.h>
 #include <Drivetrain.h>
+#include "frc/Compressor.h"
 
 class Robot : public frc::TimedRobot
 {
@@ -31,8 +32,8 @@ public:
   void SimulationPeriodic() override;
 
 private:
+  frc::Compressor m_Compressor{frc::PneumaticsModuleType::REVPH};
   Drivetrain m_Drivetrain;
   frc::Joystick m_JoystickRight{0};
   frc::Joystick m_JoystickLeft{1};
 };
-

@@ -15,25 +15,25 @@ void Robot::AutonomousPeriodic() {}
 
 void Robot::TeleopInit()
 {
-  m_Drivetrain.m_logCSV.open("/home/lvuser/",true);
-
+  m_Drivetrain.m_logCSV.open("/home/lvuser/", true);
 }
 
 void Robot::TeleopPeriodic()
 {
-  
+  // m_Compressor.EnableDigital();
+
   if (m_JoystickLeft.GetRawButtonPressed(1))
   {
-    m_Drivetrain.ActiveBallShifterV1();
+    m_Drivetrain.InvertBallShifter();
   }
-  
-  m_Drivetrain.Drive(-m_JoystickRight.GetY(), -m_JoystickLeft.GetZ());
 
+  m_Drivetrain.Drive(
+      m_JoystickRight.GetY(), -m_JoystickLeft.GetZ());
 }
 
-void Robot::DisabledInit() {
+void Robot::DisabledInit()
+{
   m_Drivetrain.m_logCSV.close();
-
 }
 void Robot::DisabledPeriodic() {}
 
@@ -49,4 +49,3 @@ int main()
   return frc::StartRobot<Robot>();
 }
 #endif
-
