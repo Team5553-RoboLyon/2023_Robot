@@ -14,7 +14,7 @@
 #include <lib/Dynamic.h>
 #include <rev/CANSparkMax.h>
 
-#define VOLTAGE_COMPENSATION 12.0
+#define VOLTAGE_COMPENSATION 10.0
 
 #define VOLTAGE_REF 12.0    // tension de référence
 #define MOTOR_WF_RPM 5874.0 // Free Speed théorique du moteur à la tension de reference (12V)
@@ -35,7 +35,7 @@
 #define KICKDOWN_SHIFTING_POINT_JOYSTICK_V 0.6                                    // Valeur minimum du joystick V pour retrograder en vitesse 1 afin de re-accelerer fort
 #define KICKDOWN_SHIFTING_POINT_JOYSTICK_V_VARIATION 0.2                          // Valeur minimum de la variation (=delta) du joystick V pour retrograder en vitesse 1
 
-#define COASTDOWN_SHIFTING_POINT_GEARBOXES_OUT_RPM (MOTOR_WF_RPM * 0.05 / REDUC_V2) // Valeur max "basse" de la vitesse de sortie de boites pour retrograder en vitesse 1
+#define COASTDOWN_SHIFTING_POINT_GEARBOXES_OUT_RPM (MOTOR_WF_RPM * 0.3 / REDUC_V2) // Valeur max "basse" de la vitesse de sortie de boites pour retrograder en vitesse 1
 
 #define GEARSHIFTING_TIMELOCK 0.5
 

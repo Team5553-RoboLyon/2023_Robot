@@ -8,7 +8,9 @@
 #include <ctre/Phoenix/motorcontrol/can/TalonFX.h>
 #include <frc/Joystick.h>
 #include <Drivetrain.h>
+#include <Turret.h>
 #include "frc/Compressor.h"
+#include "units/pressure.h"
 
 class Robot : public frc::TimedRobot
 {
@@ -34,6 +36,7 @@ public:
 private:
   frc::Compressor m_Compressor{frc::PneumaticsModuleType::REVPH};
   Drivetrain m_Drivetrain;
+  Turret m_Turret;
   frc::Joystick m_JoystickRight{0};
   frc::Joystick m_JoystickLeft{1};
 };

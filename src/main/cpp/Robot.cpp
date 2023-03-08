@@ -20,8 +20,18 @@ void Robot::TeleopInit()
 
 void Robot::TeleopPeriodic()
 {
-  // m_Compressor.EnableDigital();
 
+  if (m_JoystickRight.GetRawButtonPressed(1))
+  {
+    if (m_Compressor.Enabled())
+    {
+      m_Compressor.Disable();
+    }
+    else
+    {
+      m_Compressor.EnableDigital();
+    }
+  }
   if (m_JoystickLeft.GetRawButtonPressed(1))
   {
     m_Drivetrain.InvertBallShifter();
@@ -29,6 +39,8 @@ void Robot::TeleopPeriodic()
 
   m_Drivetrain.Drive(
       m_JoystickRight.GetY(), -m_JoystickLeft.GetZ());
+
+  m_Turret.Set(-m_JoystickRight.GetZ());
 }
 
 void Robot::DisabledInit()
