@@ -37,8 +37,8 @@
 #define ID_ENCODER_DRIVE_TRAIN_RIGHT_B 1
 #define ID_ENCODER_DRIVE_TRAIN_LEFT_A 2
 #define ID_ENCODER_DRIVE_TRAIN_LEFT_B 3
-#define ID_ENCODER_TURRET_A 4
-#define ID_ENCODER_TURRET_B 5
+#define ID_ENCODER_TURRET_A 0
+#define ID_ENCODER_TURRET_B 21
 #define ID_ENCODER_ELEVATOR_A 6
 #define ID_ENCODER_ELEVATOR_B 7
 #define ID_ENCODER_ARM_A 8
@@ -48,7 +48,7 @@
 
 // Turret
 
-#define P_TURRET 0.0
+#define P_TURRET 0.02
 #define I_TURRET 0.0
 #define D_TURRET 0.0
 
@@ -98,6 +98,6 @@
 
 // #########################    SetDistancePerPulse    #########################
 
-#define TURRET_DISTANCE_PER_PULSE ((1 / 2048) * 1 / 3.44 * 0.96)
+#define TURRET_DISTANCE_PER_PULSE ((1.0 / 2048.0) * (14.0 / 54.0) * 360.0)
 #define ELEVATOR_DISTANCE_PER_PULSE ((1.0 / 2048.0) * 1.0 / 3.44 * 0.96)
 #define ARM_DISTANCE_PER_PULSE ((1.0 / 2048.0 * 2.0 * 3.14159265358979323846))

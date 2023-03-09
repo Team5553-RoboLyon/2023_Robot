@@ -34,21 +34,21 @@ Drivetrain::Drivetrain() : m_GearboxLeftOutAveragedRpt(AVERAGE_SAMPLES_NUMBER),
     m_MotorRight2.RestoreFactoryDefaults();
     m_MotorRight3.RestoreFactoryDefaults();
 
-    m_MotorLeft1.SetSmartCurrentLimit(DRIVETRAIN_CURRENT_LIMIT); // limite de courant
-    m_MotorLeft2.SetSmartCurrentLimit(DRIVETRAIN_CURRENT_LIMIT);
-    m_MotorLeft3.SetSmartCurrentLimit(DRIVETRAIN_CURRENT_LIMIT);
+    m_MotorLeft1.SetSmartCurrentLimit(40); // limite de courant
+    m_MotorLeft2.SetSmartCurrentLimit(40);
+    m_MotorLeft3.SetSmartCurrentLimit(40);
 
-    m_MotorRight1.SetSmartCurrentLimit(DRIVETRAIN_CURRENT_LIMIT);
-    m_MotorRight2.SetSmartCurrentLimit(DRIVETRAIN_CURRENT_LIMIT);
-    m_MotorRight3.SetSmartCurrentLimit(DRIVETRAIN_CURRENT_LIMIT);
+    m_MotorRight1.SetSmartCurrentLimit(40);
+    m_MotorRight2.SetSmartCurrentLimit(40);
+    m_MotorRight3.SetSmartCurrentLimit(40);
 
-    m_MotorLeft1.SetInverted(DRIVETRAIN_MOTOR_LEFT_INVERTED); // inversion des moteurs
-    m_MotorLeft2.SetInverted(DRIVETRAIN_MOTOR_LEFT_INVERTED);
-    m_MotorLeft3.SetInverted(DRIVETRAIN_MOTOR_LEFT_INVERTED);
+    m_MotorLeft1.SetInverted(true); // inversion des moteurs
+    m_MotorLeft2.SetInverted(true);
+    m_MotorLeft3.SetInverted(true);
 
-    m_MotorRight1.SetInverted(DRIVETRAIN_MOTOR_RIGHT_INVERTED);
-    m_MotorRight2.SetInverted(DRIVETRAIN_MOTOR_RIGHT_INVERTED);
-    m_MotorRight3.SetInverted(DRIVETRAIN_MOTOR_RIGHT_INVERTED);
+    m_MotorRight1.SetInverted(false);
+    m_MotorRight2.SetInverted(false);
+    m_MotorRight3.SetInverted(false);
 
     m_MotorLeft1.SetIdleMode(rev::CANSparkMax::IdleMode::kBrake); // init brake mode moteur
     m_MotorLeft2.SetIdleMode(rev::CANSparkMax::IdleMode::kBrake);
@@ -114,19 +114,21 @@ void Drivetrain::Set(double v_motor) // set des moteurs
 void Drivetrain::ActiveBallShifterV1() // active ball shifter V1
 {
     std::cout << "ActiveBallShifterV1" << std::endl;
-    m_BallShifterSolenoid.Set(frc::DoubleSolenoid::Value::kForward);
+    m_BallShifterSolenoidLeft.Set(frc::DoubleSolenoid::Value::kForward);
 }
 
 void Drivetrain::ActiveBallShifterV2() // active ball shifter V2
 {
     std::cout << "ActiveBallShifterV2" << std::endl;
-    m_BallShifterSolenoid.Set(frc::DoubleSolenoid::Value::kReverse);
+    m_BallShifterSolenoidLeft.Set(frc::DoubleSolenoid::Value::kReverse);
 }
 
 void Drivetrain::InvertBallShifter() // inverse ball shifter
 {
-    if (m_BallShifterSolenoid.Get() == frc::DoubleSolenoid::Value::kForward)
+    std::cout << m_BallShifterSolenoidLeft.Get() << std::endl;
+    if (m_BallShifterSolenoidLeft.Get() == frc::DoubleSolenoid::Value::kReverse)
     {
+
         ActiveBallShifterV1();
     }
     else
@@ -206,6 +208,7 @@ double Drivetrain::Calcul_De_Notre_Brave_JM(double forward, double turn, bool wh
 
 bool Drivetrain::isUpshiftingAllowed() // mode up, détermine si on peut passer en V2
 {
+    // return false;
     // Le Gear shifting précédent est-il suffisamment "ancien" ?  (m_GearShiftingTimeLock doit être  null )
     // Le robot est-il en train de rouler tout droit, sans tourner ?  (m_GearboxLeftOutAdjustedRpm/m_GearboxRightOutAdjustedRpm doit être proche de 1 )
     // La vérification se fait pour un robot allant en marche avant (m_GearboxesOutAdjustedRpm.m_current > 0.0)
@@ -242,7 +245,7 @@ bool Drivetrain::isUpshiftingAllowed() // mode up, détermine si on peut passer 
 bool Drivetrain::isKickdownShiftingAllowed() // mode kickdown, détermine si on peut passer en V1
 {
     // double speedRobot, double accelerationRobot, double joystick
-    return false;
+    // return false;
     if (m_GearboxesOutAdjustedRpm.m_current > 0.0)
     {
         if (m_GearboxesOutAdjustedRpm.m_current < KICKDOWN_SHIFTING_POINT_GEARBOXES_OUT_RPM and

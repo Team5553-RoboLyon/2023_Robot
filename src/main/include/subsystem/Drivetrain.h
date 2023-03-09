@@ -3,39 +3,39 @@
 #include <frc2/command/SubsystemBase.h>
 #include <frc/Encoder.h>
 #include <frc/Doublesolenoid.h>
+#include <ctre/Phoenix/motorcontrol/can/TalonFX.h>
 #include <frc/PowerDistribution.h>
 #include <lib/NRollingAverage.h>
+#include <lib/rate_limiter.h>
 #include <lib/NLCsv.h>
 #include <frc/Compressor.h>
 #include <ostream>
 #include <fstream>
 #include <lib/Dynamic.h>
 #include <rev/CANSparkMax.h>
-#include "lib/rate_limiter.h"
-#include "Constants.h"
 
-#define VOLTAGE_COMPENSATION 12.0
+#define VOLTAGE_COMPENSATION 10.0
 
 #define VOLTAGE_REF 12.0    // tension de référence
-#define MOTOR_WF_RPM 6380.0 // Free Speed théorique du moteur à la tension de reference (12V)
+#define MOTOR_WF_RPM 5874.0 // Free Speed théorique du moteur à la tension de reference (12V)
 #define MOTOR_TS_NM 4.69    // Stall Torque théorique du moteur à la tension de reference (12V)
 
-#define REDUC_V1 13.3
-#define REDUC_V2 8.8
+#define REDUC_V1 11.1
+#define REDUC_V2 7.3
 
 #define TRUST_GEARBOX_OUT_ENCODER 0.7
 #define TURNING_TOLERANCE 0.05
 
-#define UP_SHIFTING_POINT_JOYSTICK_V 0.8                              // Valeur minimum du joystick V pour passer en vitesse 2
-#define UP_SHIFTING_POINT_JOYSTICK_V_VARIATION 0.0                    // Valeur minimum de la variation (=delta) du joystick V pour passer en vitesse 2
-#define UP_SHIFTING_POINT_GEARBOXES_OUT_RPM (6380.0 * 0.5 / REDUC_V1) // Valeur minimum de la vitesse de sortie de boites pour passer en vitesse 2
-#define UP_SHIFTING_POINT_GEARBOXES_OUT_RPM2 0.0                      // Valeur minimum de l'accel.  de sortie de boites pour passer en vitesse 2
+#define UP_SHIFTING_POINT_JOYSTICK_V 0.8                                    // Valeur minimum du joystick V pour passer en vitesse 2
+#define UP_SHIFTING_POINT_JOYSTICK_V_VARIATION 0.0                          // Valeur minimum de la variation (=delta) du joystick V pour passer en vitesse 2
+#define UP_SHIFTING_POINT_GEARBOXES_OUT_RPM (MOTOR_WF_RPM * 0.5 / REDUC_V1) // Valeur minimum de la vitesse de sortie de boites pour passer en vitesse 2
+#define UP_SHIFTING_POINT_GEARBOXES_OUT_RPM2 0.0                            // Valeur minimum de l'accel.  de sortie de boites pour passer en vitesse 2
 
-#define KICKDOWN_SHIFTING_POINT_GEARBOXES_OUT_RPM (6380.0 * 0.5 / REDUC_V2) // Valeur max "haute" de la vitesse de sortie de boites pour retrograder en vitesse 1
-#define KICKDOWN_SHIFTING_POINT_JOYSTICK_V 0.6                              // Valeur minimum du joystick V pour retrograder en vitesse 1 afin de re-accelerer fort
-#define KICKDOWN_SHIFTING_POINT_JOYSTICK_V_VARIATION 0.2                    // Valeur minimum de la variation (=delta) du joystick V pour retrograder en vitesse 1
+#define KICKDOWN_SHIFTING_POINT_GEARBOXES_OUT_RPM (MOTOR_WF_RPM * 0.5 / REDUC_V2) // Valeur max "haute" de la vitesse de sortie de boites pour retrograder en vitesse 1
+#define KICKDOWN_SHIFTING_POINT_JOYSTICK_V 0.6                                    // Valeur minimum du joystick V pour retrograder en vitesse 1 afin de re-accelerer fort
+#define KICKDOWN_SHIFTING_POINT_JOYSTICK_V_VARIATION 0.2                          // Valeur minimum de la variation (=delta) du joystick V pour retrograder en vitesse 1
 
-#define COASTDOWN_SHIFTING_POINT_GEARBOXES_OUT_RPM (6380.0 * 0.05 / REDUC_V2) // Valeur max "basse" de la vitesse de sortie de boites pour retrograder en vitesse 1
+#define COASTDOWN_SHIFTING_POINT_GEARBOXES_OUT_RPM (MOTOR_WF_RPM * 0.3 / REDUC_V2) // Valeur max "basse" de la vitesse de sortie de boites pour retrograder en vitesse 1
 
 #define GEARSHIFTING_TIMELOCK 0.5
 
@@ -115,16 +115,17 @@ public:
   NLCSV m_logCSV{5}; // log csv
 
 private:
-  rev::CANSparkMax m_MotorRight1{ID_MOTOR_DRIVE_TRAIN_RIGHT, rev::CANSparkMax::MotorType::kBrushless};
-  rev::CANSparkMax m_MotorRight2{ID_MOTOR_DRIVE_TRAIN_RIGHT_2, rev::CANSparkMax::MotorType::kBrushless};
-  rev::CANSparkMax m_MotorRight3{ID_MOTOR_DRIVE_TRAIN_RIGHT_3, rev::CANSparkMax::MotorType::kBrushless};
+  rev::CANSparkMax m_MotorRight1{1, rev::CANSparkMax::MotorType::kBrushless};
+  rev::CANSparkMax m_MotorRight2{2, rev::CANSparkMax::MotorType::kBrushless};
+  rev::CANSparkMax m_MotorRight3{3, rev::CANSparkMax::MotorType::kBrushless};
 
-  rev::CANSparkMax m_MotorLeft1{ID_MOTOR_DRIVE_TRAIN_LEFT, rev::CANSparkMax::MotorType::kBrushless};
-  rev::CANSparkMax m_MotorLeft2{ID_MOTOR_DRIVE_TRAIN_LEFT_2, rev::CANSparkMax::MotorType::kBrushless};
-  rev::CANSparkMax m_MotorLeft3{ID_MOTOR_DRIVE_TRAIN_LEFT_3, rev::CANSparkMax::MotorType::kBrushless};
+  rev::CANSparkMax m_MotorLeft1{4, rev::CANSparkMax::MotorType::kBrushless};
+  rev::CANSparkMax m_MotorLeft2{5, rev::CANSparkMax::MotorType::kBrushless};
+  rev::CANSparkMax m_MotorLeft3{6, rev::CANSparkMax::MotorType::kBrushless};
 
-  frc::Encoder m_EncoderRight{ID_ENCODER_DRIVE_TRAIN_RIGHT_A, ID_ENCODER_DRIVE_TRAIN_RIGHT_B, false};
-  frc::Encoder m_EncoderLeft{ID_ENCODER_DRIVE_TRAIN_LEFT_A, ID_ENCODER_DRIVE_TRAIN_LEFT_B, true};
+  frc::Encoder m_EncoderRight{1, 3, true};
+  frc::Encoder m_EncoderLeft{2, 4, false};
 
-  frc::DoubleSolenoid m_BallShifterSolenoid{frc::PneumaticsModuleType::REVPH, ID_SOLENOID_SHIFTER_A, ID_SOLENOID_SHIFTER_B};
+  frc::DoubleSolenoid m_BallShifterSolenoidLeft{frc::PneumaticsModuleType::REVPH, 0, 1};
+  // frc::PowerDistribution::ModuleType m_PDP{0};
 };

@@ -12,18 +12,19 @@
 // ################### SUBSYSTEMS ###################
 
 #include "subsystem/Turret.h"
-#include "subsystem/Arm.h"
-#include "subsystem/Elevator.h"
-#include "subsystem/Gripper.h"
+// #include "subsystem/Arm.h"
+// #include "subsystem/Elevator.h"
+// #include "subsystem/Gripper.h"
 #include "subsystem/Drivetrain.h"
-#include "subsystem/Copiloter.h"
+// #include "subsystem/Copiloter.h"
 
 // ################### COMMANDS ###################
 
-#include "command/AutoCopiloter.h"
+// #include "command/AutoCopiloter.h"
 #include "command/Drive.h"
-#include "command/Gripper/Catch.h"
-#include "command/DropHigh.h"
+// #include "command/Gripper/Catch.h"
+// #include "command/DropHigh.h"
+#include "command/Turret/TurnTurret.h"
 
 class RobotContainer
 {
@@ -32,13 +33,12 @@ public:
 
   void ConfigureButtonBindings();
 
-  Copiloter m_copiloter;
+  // Copiloter m_copiloter;
   Turret m_turret;
   Drivetrain m_drivetrain;
-  Gripper m_gripper;
-
-  Arm m_arm;
-  Elevator m_elevator;
+  // Gripper m_gripper;
+  // Arm m_arm;
+  // Elevator m_elevator;
 
 private:
   frc::Joystick m_joystickRight{0};

@@ -6,24 +6,28 @@
 
 RobotContainer::RobotContainer()
 {
-    m_copiloter.SetDefaultCommand(AutoCopiloter([=]
-                                                { return m_joystickRight.GetY(); },
-                                                &m_copiloter));
+    // m_copiloter.SetDefaultCommand(AutoCopiloter([=]
+    //                                             { return m_joystickLeft.GetY(); },
+    //                                             &m_copiloter));
 
     m_drivetrain.SetDefaultCommand(Drive([=]
-                                         { return -m_joystickLeft.GetY(); },
+                                         { return m_joystickRight.GetY(); },
                                          [=]
-                                         { return -m_joystickRight.GetZ(); },
+                                         { return -m_joystickLeft.GetZ(); },
                                          &m_drivetrain));
+
+    m_turret.SetDefaultCommand(TurnTurret([=]
+                                          { return m_joystickRight.GetZ(); },
+                                          &m_turret));
 };
 
 // ################### COMMANDS ###################
 
 void RobotContainer::ConfigureButtonBindings()
 {
-    frc2::JoystickButton m_ButtonGripperCatch = frc2::JoystickButton(&m_joystickRight, 2);
-    m_ButtonGripperCatch.WhenActive(Catch(&m_gripper));
+    // frc2::JoystickButton m_ButtonGripperCatch = frc2::JoystickButton(&m_joystickRight, 2);
+    // m_ButtonGripperCatch.WhenActive(Catch(&m_gripper));
 
-    frc2::JoystickButton m_ButtonDropHigh = frc2::JoystickButton(&m_joystickRight, 3);
-    m_ButtonDropHigh.WhenActive(DropHigh(&m_gripper, &m_elevator, &m_arm));
+    // frc2::JoystickButton m_ButtonDropHigh = frc2::JoystickButton(&m_joystickRight, 3);
+    // m_ButtonDropHigh.WhenActive(DropHigh(&m_gripper, &m_elevator, &m_arm));
 }
