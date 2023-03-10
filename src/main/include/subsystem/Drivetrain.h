@@ -13,6 +13,7 @@
 #include <fstream>
 #include <lib/Dynamic.h>
 #include <rev/CANSparkMax.h>
+#include "Constants.h"
 
 #define VOLTAGE_COMPENSATION 10.0
 
@@ -115,17 +116,17 @@ public:
   NLCSV m_logCSV{5}; // log csv
 
 private:
-  rev::CANSparkMax m_MotorRight1{1, rev::CANSparkMax::MotorType::kBrushless};
-  rev::CANSparkMax m_MotorRight2{2, rev::CANSparkMax::MotorType::kBrushless};
-  rev::CANSparkMax m_MotorRight3{3, rev::CANSparkMax::MotorType::kBrushless};
+  rev::CANSparkMax m_MotorRight1{ID_MOTOR_DRIVE_TRAIN_RIGHT, rev::CANSparkMax::MotorType::kBrushless};
+  rev::CANSparkMax m_MotorRight2{ID_MOTOR_DRIVE_TRAIN_RIGHT_2, rev::CANSparkMax::MotorType::kBrushless};
+  rev::CANSparkMax m_MotorRight3{ID_MOTOR_DRIVE_TRAIN_RIGHT_3, rev::CANSparkMax::MotorType::kBrushless};
 
-  rev::CANSparkMax m_MotorLeft1{4, rev::CANSparkMax::MotorType::kBrushless};
-  rev::CANSparkMax m_MotorLeft2{5, rev::CANSparkMax::MotorType::kBrushless};
-  rev::CANSparkMax m_MotorLeft3{6, rev::CANSparkMax::MotorType::kBrushless};
+  rev::CANSparkMax m_MotorLeft1{ID_MOTOR_DRIVE_TRAIN_LEFT, rev::CANSparkMax::MotorType::kBrushless};
+  rev::CANSparkMax m_MotorLeft2{ID_MOTOR_DRIVE_TRAIN_LEFT_2, rev::CANSparkMax::MotorType::kBrushless};
+  rev::CANSparkMax m_MotorLeft3{ID_MOTOR_DRIVE_TRAIN_LEFT_3, rev::CANSparkMax::MotorType::kBrushless};
 
   frc::Encoder m_EncoderRight{1, 3, true};
   frc::Encoder m_EncoderLeft{2, 4, false};
 
-  frc::DoubleSolenoid m_BallShifterSolenoidLeft{frc::PneumaticsModuleType::REVPH, 0, 1};
+  frc::DoubleSolenoid m_BallShifterSolenoidLeft{frc::PneumaticsModuleType::REVPH, ID_SOLENOID_SHIFTER_A, ID_SOLENOID_SHIFTER_B};
   // frc::PowerDistribution::ModuleType m_PDP{0};
 };

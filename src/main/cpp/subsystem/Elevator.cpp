@@ -41,5 +41,14 @@ void Elevator::Set(double speed)
 
 void Elevator::Periodic()
 {
-    m_elevatorMotor.Set((NCLAMP(-0.5, m_elevatorPid.Calculate(GetEncoder()) + 0.08, 0.5)));
+    double output = m_elevatorPid.Calculate(GetEncoder());
+    // if (m_elevatorHall.ShouldIStop(GetEncoder(), NSIGN(output)))
+    // {
+    //     m_elevatorMotor.Set(NCLAMP(-0.5, output, 0.5));
+    // }
+    // else
+    // {
+    //     m_elevatorMotor.Set(0.0);
+    // }
+    m_elevatorMotor.Set((NCLAMP(-0.5, output + 0.08, 0.5))); // 0.08 coef de frottement
 }

@@ -8,6 +8,7 @@ Turret::Turret()
 {
     m_turretEncoder.Reset();
     m_turretEncoder.SetDistancePerPulse(TURRET_DISTANCE_PER_PULSE); //(1 / 2048) * 1 / 3.44 * 0.96 en degré
+
     m_turretPid.SetSetpoint(0.0);
 
     m_turretMotor.RestoreFactoryDefaults();
@@ -35,7 +36,16 @@ double Turret::GetEncoder()
 
 void Turret::Periodic()
 {
-    std::cout << m_turretPid.Calculate(GetEncoder()) << "output" << std::endl;
+    double output = m_turretPid.Calculate(GetEncoder());
+    std::cout << output << "output" << std::endl;
     std::cout << "error" << m_turretPid.m_error << std::endl;
+    // if (m_turretHall.ShouldIStop(GetEncoder(), NSIGN(output)))
+    // {
+    //     m_turretMotor.Set(NCLAMP(-0.4, output, 0.4));
+    // }
+    // else
+    // {
+    //     m_turretMotor.Set(0.0);
+    // }
     m_turretMotor.Set(NCLAMP(-0.4, m_turretPid.Calculate(GetEncoder()), 0.4));
 }
