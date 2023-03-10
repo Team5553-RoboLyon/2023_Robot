@@ -51,8 +51,7 @@
 #define ID_HALL_TURRET_RIGHT 1
 
 // Elevator
-#define ID_HALL_ELEVATOR_DOWN 2
-#define ID_HALL_ELEVATOR_UP 3
+#define ID_HALL_ELEVATOR_UP 10
 
 // #########################    PID Value    #########################
 

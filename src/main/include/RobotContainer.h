@@ -25,6 +25,7 @@
 // #include "command/Gripper/Catch.h"
 // #include "command/DropHigh.h"
 #include "command/Turret/TurnTurret.h"
+#include "command/Elevator/MoveElevator.h"
 
 class RobotContainer
 {
@@ -38,9 +39,10 @@ public:
   Drivetrain m_drivetrain;
   // Gripper m_gripper;
   // Arm m_arm;
-  // Elevator m_elevator;
+  Elevator m_elevator;
 
 private:
   frc::Joystick m_joystickRight{0};
   frc::Joystick m_joystickLeft{1};
+  frc::Joystick m_joystickCopilot{2};
 };

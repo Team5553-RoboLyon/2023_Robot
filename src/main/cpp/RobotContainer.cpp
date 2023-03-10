@@ -17,8 +17,12 @@ RobotContainer::RobotContainer()
                                          &m_drivetrain));
 
     m_turret.SetDefaultCommand(TurnTurret([=]
-                                          { return m_joystickRight.GetZ(); },
+                                          { return m_joystickCopilot.GetZ(); },
                                           &m_turret));
+
+    m_elevator.SetDefaultCommand(MoveElevator([=]
+                                              { return m_joystickCopilot.GetY(); },
+                                              &m_elevator));
 };
 
 // ################### COMMANDS ###################
