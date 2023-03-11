@@ -1,16 +1,16 @@
 #include "lib/N/NCStandard.h"
 #include "lib/N/NType.h"
 #include "lib/N/Containers/NNode.h"
-#include "../Containers/NXNode.h"
-#include "../NPostUpdate.h"
+#include "lib/N/Containers/NXNode.h"
+#include "lib/N/NPostUpdate.h"
 
-#include "../Render/Renderable/NRenderable_UpdateAndExtract_LUT.h"
-#include "../Render/NFrustum_Culling.h"
-#include "../NCore.h"
+#include "lib/N/Render/Renderable/NRenderable_UpdateAndExtract_LUT.h"
+#include "lib/N/Render/NFrustum_Culling.h"
+#include "lib/N/NCore.h"
 #include "lib/N/NErrorHandling.h"
 
-#include "../NStructureForceField.h"
-#include "../NStructure.h"
+#include "lib/N/NStructureForceField.h"
+#include "lib/N/NStructure.h"
 
 extern NXNODELIST *NpActivePhysicStructureCollisionCoupleList; // Global define into "NStructureCollision.cpp" for engine internal use only.
 extern NARRAY NActivePhysicStructure_ForceFields_Array;		   // Global define into "NStructureForceField.cpp" for engine internal use only.

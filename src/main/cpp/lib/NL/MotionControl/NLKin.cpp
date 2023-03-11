@@ -4,7 +4,7 @@
 #include "lib/N/Utilities/Draw/NUT_Draw.h"
 #include "lib/N/Utilities/Draw/NUT_DrawPencil.h"
 
-#include "../NL2DOrthogonalCoordinateSystem_MotionProfileFlags.h"
+#include "lib/NL/NL2DOrthogonalCoordinateSystem_MotionProfileFlags.h"
 #include "lib/NL/MotionControl/NLKin.h"
 
 /*

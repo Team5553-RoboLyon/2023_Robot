@@ -8,7 +8,7 @@
 // ***************************************************************************************
 // ***************************************************************************************
 #include "NType.h"
-#include "./Containers/NNode.h"
+#include "lib/N/Containers/NNode.h"
 #include "NTexture.h"
 #include "NCoordinateSystemConversions.h"
 

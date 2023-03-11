@@ -1,18 +1,18 @@
 #ifdef _NEDITOR
 // -----------------------------------------------------------------------
-#include "../../NCStandard.h"
-#include "../../UI/NUI.h"
+#include "lib/N/NCStandard.h"
+#include "lib/N/UI/NUI.h"
 #include "../../NCamera.h"
-#include "../../Maths/NVec3f32.h"
+#include "lib/N/Maths/NVec3f32.h"
 #include "../../NCoordinateSystemConversions.h"
-#include "../../NEditor.h"
+#include "lib/N/NEditor.h"
 #include "../../Utilities/NUT_X.h"
 #include "../../Utilities/NUT_3DMouse.h"
 #include "../../Utilities/Maths/NUT_MathsMisc.h"
 #include "../../Utilities/NUT_Spline.h"
 
 #include "../../Event/NEventTouch.h"
-#include "../../Maths/NMatrix3x3.h"
+#include "lib/N/Maths/NMatrix3x3.h"
 #include "NUT_Editor_SplinesPack_Tools.h"
 
 static inline void _lookfor_spline_element(const NARRAY *parrayofsplineptr, const NVEC2s16 *ppointer, NEDITOR_SELECTION *pselect,NVEC3 *phitpoint)

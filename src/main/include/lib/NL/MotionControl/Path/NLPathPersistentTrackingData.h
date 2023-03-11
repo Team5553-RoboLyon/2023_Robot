@@ -3,7 +3,7 @@
 #include "lib/N/Maths/NVec2f32.h"
 
 #include "lib/N/Miscellaneous/NColor.h"
-#include "./Geometry/NLPathGeometry.h"
+#include "lib/NL/MotionControl/Path/Geometry/NLPathGeometry.h"
 
 #define DEFAULT_NLPATH_PERSISTENT_TRACKING_DATA_CLOTHOID_ERROR_THRESHOLD 0.01f // Tolérance par défaut sur l'estimation de la position de l'image de la position recherchée sur la clothoide.
 #define FLAG_NLPATH_PERSISTENT_TRACKING_DATA_BACKWARD BIT_0					   // Si ce flag est ON, alors cela signifie que le chemin est parcouru 'à l'envers'. Sinon, à l'endroit...

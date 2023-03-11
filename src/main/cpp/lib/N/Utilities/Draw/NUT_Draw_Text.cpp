@@ -1,8 +1,8 @@
-#include "../../NCStandard.h"
+#include "lib/N/NCStandard.h"
 #include "../../NCoordinateSystemConversions.h"
 #include "../../NErrorHandling.h"
-#include "../../Geometry/Components/NGeometryVertex.h"
-#include "../../Maths/NMatrix3x3.h"
+#include "lib/N/Geometry/Components/NGeometryVertex.h"
+#include "lib/N/Maths/NMatrix3x3.h"
 #include "NUT_DrawPencil.h"
 #include "NUT_Draw.h"
 

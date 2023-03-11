@@ -10,10 +10,10 @@
 // ***************************************************************************************
 #include "lib/N/NCStandard.h"
 #include "lib/N/NType.h"
-#include "../Maths/NVec3f32.h"
-#include "../NScreenPoint.h"
-#include "../NUsualCoordinates.h"
-#include "../GameLoop/NGameStatesUID.h"
+#include "lib/N/Maths/NVec3f32.h"
+#include "lib/N/NScreenPoint.h"
+#include "lib/N/NUsualCoordinates.h"
+#include "lib/N/Gameloop/NGameStatesUID.h"
 
 #ifdef __cplusplus
 extern "C"

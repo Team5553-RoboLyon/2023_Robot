@@ -3,7 +3,7 @@
 #include "lib/N/Maths/NVec2f32.h"
 #include "lib/N/Miscellaneous/NColor.h"
 
-#include "../Geometry/NLPathGeometry.h"
+#include "lib/NL/MotionControl/Path/Geometry/NLPathGeometry.h"
 
 // Arc de cercle de construction ( "Build Arc" )
 typedef struct NLPATH_BARC NLPATH_BARC;

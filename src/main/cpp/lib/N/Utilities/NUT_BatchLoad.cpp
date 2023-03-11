@@ -4,14 +4,14 @@
 // -
 // -
 #include "lib/N/GL/Ngl.h"
-#include "../Containers/NHashMap.h"
-#include "../Image/NTga.h"
+#include "lib/N/Containers/NHashMap.h"
+#include "lib/N/Image/NTga.h"
 #include "lib/N/NErrorHandling.h"
 #include "lib/N/NString.h"
 #include "lib/N/File/NFile.h"
 
 #ifdef _NLIBS
-#include "../Libraries/NLibraries.h"
+#include "lib/N/Libraries/NLibraries.h"
 extern NOAHASHMAP TexturesLibrary;
 extern NOAHASHMAP BlendsLibrary;
 extern NOAHASHMAP MaterialsLibrary;

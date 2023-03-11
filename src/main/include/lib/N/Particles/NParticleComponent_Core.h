@@ -9,10 +9,10 @@
 // ***************************************************************************************
 // ***************************************************************************************
 #include "lib/N/NType.h"
-#include "../Core/NSafeConversion.h"
+#include "lib/N/Core/NSafeConversion.h"
 #include "lib/N/Geometry/NGeometry.h"
-#include "../Geometry/Components/NGeometryAppearance.h"
-#include "../Render/Renderable/NRenderable_UpdateAndExtract_LUT.h"
+#include "lib/N/Geometry/Components/NGeometryAppearance.h"
+#include "lib/N/Render/Renderable/NRenderable_UpdateAndExtract_LUT.h"
 
 #ifdef __cplusplus
 extern "C"

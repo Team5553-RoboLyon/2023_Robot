@@ -8,12 +8,12 @@
 // **																					**
 // ***************************************************************************************
 // ***************************************************************************************
-#include "../../NCStandard.h"
-#include "../../NType.h"
-#include "../../NTexture.h"
-#include "../../NMatrix.h"
+#include "lib/N/NCStandard.h"
+#include "lib/N/NType.h"
+#include "lib/N/NTexture.h"
+#include "lib/N/NMatrix.h"
 #include "NGeometryTextureMatrixAnimation.h"
-#include "./Specifications/NGeometryTextureUnit_Flags.h"
+#include "lib/N/Geometry/Components/Specifications/NGeometryTextureUnit_Flags.h"
 
 #ifdef __cplusplus
 extern "C"

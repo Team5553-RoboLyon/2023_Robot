@@ -2,8 +2,8 @@
 // !!! ONLY IF COMPILER '_NEDITOR' FLAG IS SET TO ON !!! ONLY IF COMPILER '_NEDITOR' FLAG IS SET TO ON !!!
 // !!! ONLY IF COMPILER '_NEDITOR' FLAG IS SET TO ON !!! ONLY IF COMPILER '_NEDITOR' FLAG IS SET TO ON !!!
 // +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-#include "../../NCStandard.h"
-#include "../../Geometry/Components/NGeometryAppearance.h"
+#include "lib/N/NCStandard.h"
+#include "lib/N/Geometry/Components/NGeometryAppearance.h"
 
 #include "NUT_Editor_ATxC_Gizmo_Drag_InLine.h"
 #include "NUT_Editor_ATxC_Gizmo_Texture_InLine.h"

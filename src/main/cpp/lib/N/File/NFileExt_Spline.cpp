@@ -1,8 +1,8 @@
 #include "lib/N/NCStandard.h"
 #include "lib/N/NType.h"
-#include "../NSpline.h"
+#include "lib/N/NSpline.h"
 #include "lib/N/File/NFile.h"
-#include "../File/NFileExt.h"
+#include "lib/N/File/NFileExt.h"
 #include "lib/N/NErrorHandling.h"
 
 // ------------------------------------------------------------------------------------------

@@ -15,8 +15,8 @@
 // **																					**
 // ***************************************************************************************
 // ***************************************************************************************
-#include "../../NType.h"
-#include "../../Maths/NVec3f32.h"
+#include "lib/N/NType.h"
+#include "lib/N/Maths/NVec3f32.h"
 #include "NUT_Editor_ATxC_Gizmo.h"
 
 #ifdef __cplusplus

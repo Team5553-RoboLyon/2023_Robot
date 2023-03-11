@@ -1,10 +1,10 @@
 #include "lib/N/NCStandard.h"
 #include "lib/N/GL/Ngl.h"
-#include "../NViewport.h"
+#include "lib/N/NViewport.h"
 #include "lib/N/NErrorHandling.h"
-#include "../Utilities/NUT_Shape.h"
-#include "../NCore.h"
-#include "../Geometry/NGeometryMisc.h"
+#include "lib/N/Utilities/NUT_Shape.h"
+#include "lib/N/NCore.h"
+#include "lib/N/Geometry/NGeometryMisc.h"
 
 extern NGEOMETRY_SPECS NGeometrySpecs[];
 // N GLobals

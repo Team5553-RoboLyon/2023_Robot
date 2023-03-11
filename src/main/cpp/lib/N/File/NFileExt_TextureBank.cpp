@@ -1,12 +1,12 @@
 #include "lib/N/NCStandard.h"
-#include "../NCore.h"
+#include "lib/N/NCore.h"
 #include "lib/N/NType.h"
 #include "lib/N/NString.h"
 #include "lib/N/File/NFile.h"
-#include "../File/NFileExt.h"
+#include "lib/N/File/NFileExt.h"
 #include "lib/N/NErrorHandling.h"
-#include "../Containers/NHashMap.h"
-#include "../Libraries/NLibraries.h"
+#include "lib/N/Containers/NHashMap.h"
+#include "lib/N/Libraries/NLibraries.h"
 
 /*
 extern NOAHASHMAP	TexturesLibrary;

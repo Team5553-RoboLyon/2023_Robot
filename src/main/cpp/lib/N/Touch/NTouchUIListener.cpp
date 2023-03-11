@@ -1,7 +1,7 @@
 #include "lib/N/NCStandard.h"
 #include "lib/N/NErrorHandling.h"
 #include "NTouchUIListener.h"
-#include "../UI/NUI.h"
+#include "lib/N/UI/NUI.h"
 
 // UI Touch Listening Management.
 // These 2 NODE LISTS store the NTOUCH_UI_LISTENER structures used and referenced by UIs to Listen Touch as quick as possible.

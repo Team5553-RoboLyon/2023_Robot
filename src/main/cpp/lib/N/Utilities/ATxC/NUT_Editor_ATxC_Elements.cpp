@@ -2,8 +2,8 @@
 // !!! ONLY IF COMPILER '_NEDITOR' FLAG IS SET TO ON !!! ONLY IF COMPILER '_NEDITOR' FLAG IS SET TO ON !!!
 // !!! ONLY IF COMPILER '_NEDITOR' FLAG IS SET TO ON !!! ONLY IF COMPILER '_NEDITOR' FLAG IS SET TO ON !!!
 // +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-#include "../../NType.h"
-#include "../../NCStandard.h"
+#include "lib/N/NType.h"
+#include "lib/N/NCStandard.h"
 #include "NUT_Editor_ATxC_Tool.h"
 
 void NUT_Editor_ATxC_SetupElements(NUT_EDITOR_ATXC_ELEMENTS *pelements)

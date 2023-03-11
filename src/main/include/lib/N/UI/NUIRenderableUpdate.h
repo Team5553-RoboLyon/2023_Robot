@@ -9,8 +9,8 @@
 // ***************************************************************************************
 // ***************************************************************************************
 #include "lib/N/NCStandard.h"
-#include "../Render/Renderable/NRenderable.h"
-#include "../Core/NTime.h"
+#include "lib/N/Render/Renderable/NRenderable.h"
+#include "lib/N/Core/NTime.h"
 
 #ifdef __cplusplus
 extern "C"

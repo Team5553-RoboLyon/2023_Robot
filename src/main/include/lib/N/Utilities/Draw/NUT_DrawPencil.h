@@ -8,8 +8,8 @@
 // **																					**
 // ***************************************************************************************
 // ***************************************************************************************
-#include "../../NType.h"
-#include "../../Geometry/NGeometry.h"
+#include "lib/N/NType.h"
+#include "lib/N/Geometry/NGeometry.h"
 
 #ifdef __cplusplus
 extern "C"

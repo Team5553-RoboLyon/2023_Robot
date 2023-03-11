@@ -7,10 +7,10 @@
 // **																					**
 // ***************************************************************************************
 // ***************************************************************************************
-#include "../../NCStandard.h"
-#include "../../Core/NTime.h"
-#include "../../NEditor.h"
-#include "../../Miscellaneous/NColor.h"
+#include "lib/N/NCStandard.h"
+#include "lib/N/Core/NTime.h"
+#include "lib/N/NEditor.h"
+#include "lib/N/Miscellaneous/NColor.h"
 #include "../../Utilities/Draw/NUT_Draw.h"
 #include "NUT_Editor_NVec3f32Pack_Tools.h"
 

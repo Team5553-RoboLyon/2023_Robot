@@ -1,6 +1,6 @@
 #ifdef _NEDITOR
 // -----------------------------------------------------------------------
-#include "../../NCStandard.h"
+#include "lib/N/NCStandard.h"
 #include "NUT_Editor_NVec3f32Pack_Tools.h"
 
 NUT_V3PACK_TOOLDATA*	NUT_SetupV3PackToolData(NUT_V3PACK_TOOLDATA* pv3pack, NARRAY *parrayofelements, const Nu32 offsettov3)

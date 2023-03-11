@@ -8,7 +8,7 @@
 #include "lib/NL/MotionControl/Trajectory/NLSovershoot.h"
 // #include "../NLScut.h"
 #ifdef _NEDITOR
-#include "../../NL2DOrthogonalCoordinateSystem.h"
+#include "lib/NL/MotionControl/NL2DOrthogonalCoordinateSystem.h"
 #define CONSTANT_NLSMOTIONSHAPE_DT_ACCURACY 0.001f // pas de calcul pour tracage des courbes en secondes.
 #endif
 

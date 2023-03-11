@@ -1,6 +1,6 @@
 #include "lib/N/NCStandard.h"
 #include "lib/N/NErrorHandling.h"
-#include "../Containers/NRingBuffer.h"
+#include "lib/N/Containers/NRingBuffer.h"
 #include "NTouchStream.h"
 #include "NTouch.h"
 #include "NTouchListener.h"

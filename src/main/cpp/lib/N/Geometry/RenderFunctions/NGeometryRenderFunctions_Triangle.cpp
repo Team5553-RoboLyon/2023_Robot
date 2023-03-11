@@ -1,6 +1,7 @@
-#include "../../NCStandard.h"
-#include "../../NType.h"
-#include "../NGeometry.h"
+#include "lib/N/NCStandard.h"
+#include "lib/N/NType.h"
+#include "lib/N/Geometry/NGeometry.h"
+
 #include "NGeometryRenderFunctions.h"
 
 

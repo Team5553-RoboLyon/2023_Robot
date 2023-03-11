@@ -1,6 +1,6 @@
 #include "lib/N/NCStandard.h"
-#include "../NCoordinateSystemConversions.h"
-#include "../Utilities/NUT_X.h"
+#include "lib/N/NCoordinateSystemConversions.h"
+#include "lib/N/Utilities/NUT_X.h"
 #include "NUI.h"
 #include "NUISlide.h"
 

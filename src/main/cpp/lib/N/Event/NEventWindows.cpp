@@ -1,19 +1,19 @@
 #include "lib/N/NCStandard.h"
 #include "lib/N/NType.h"
-#include "../NFlags.h"
+#include "lib/N/NFlags.h"
 #include "lib/N/NErrorHandling.h"
-#include "../NCore.h"
-#include "../NCoordinateSystemConversions.h"
-#include "../Core/NSafeConversion.h"
-#include "../Event/NEvent.h"
-#include "../Event/NEventBuffer.h"
-#include "../Touch/NTouchStream.h"
-#include "../Touch/NTouch.h"
+#include "lib/N/NCore.h"
+#include "lib/N/NCoordinateSystemConversions.h"
+#include "lib/N/Core/NSafeConversion.h"
+#include "lib/N/Event/NEvent.h"
+#include "lib/N/Event/NEventBuffer.h"
+#include "lib/N/Touch/NTouchStream.h"
+#include "lib/N/Touch/NTouch.h"
 
 extern Nu32 NEngineCoreFlags;
 
 #ifdef _NWINDOWS
-#include "../Touch/NTouchEmulation.h"
+#include "lib/N/Touch/NTouchEmulation.h"
 extern NARRAY NTouchEmulArray;
 #endif
 

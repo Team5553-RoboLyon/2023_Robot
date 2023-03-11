@@ -1,6 +1,6 @@
 #include "lib/N/NCStandard.h"
 #include "lib/N/NType.h"
-#include "../Render/Accumulator/NAccumulator.h"
+#include "lib/N/Render/Accumulator/NAccumulator.h"
 #include "lib/N/NErrorHandling.h"
 
 #include "NRenderCell.h"

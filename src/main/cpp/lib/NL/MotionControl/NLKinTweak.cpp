@@ -1,13 +1,13 @@
-#include "NLKinTweak.h"
+#include "lib/NL/MotionControl/NLKinTweak.h"
 
-NLKINTWEAK::NLKINTWEAK(NLKINTWEAK const& tobecopied)
+NLKINTWEAK::NLKINTWEAK(NLKINTWEAK const &tobecopied)
 {
 	*this = tobecopied;
 }
 
-NLKINTWEAK::NLKINTWEAK(const NLKINTWEAK* pktwk)
+NLKINTWEAK::NLKINTWEAK(const NLKINTWEAK *pktwk)
 {
-	if(pktwk)
+	if (pktwk)
 		*this = *pktwk;
 	else
 	{

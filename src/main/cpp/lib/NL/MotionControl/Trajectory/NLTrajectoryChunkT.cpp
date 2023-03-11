@@ -1,6 +1,6 @@
 /*
-#include "../../NL2DOrthogonalCoordinateSystem_MotionProfileFlags.h"
-#include "NLTrajectoryPackGetPointPersistentResult.h"
+#include "lib/NL/NL2DOrthogonalCoordinateSystem_MotionProfileFlags.h"
+#include "lib/NL/MotionControl/Trajectory/NLTrajectoryPackGetPointPersistentResult.h"
 #include "NLTrajectoryChunkT.h"
 
 // NLTRAJECTORY_CHUNK_T

@@ -1,14 +1,14 @@
 #pragma once
-#include "../../../N/NType.h"
-#include "../../../N/Containers/NRingBuffer.h"
-#include "NLTrajectoryChunk.h"
-#include "../NLRobotPose.h"
+#include "lib/N/NType.h"
+#include "lib/N/Containers/NRingBuffer.h"
+#include "lib/NL/MotionControl/Trajectory/NLTrajectoryChunk.h"
+#include "lib/NL/MotionControl/NLRobotPose.h"
 
-#include "NLTrajectoryPack.h"
-#include "NLTrajectoryPackGetPointPersistentResult.h"
+#include "lib/NL/MotionControl/Trajectory/NLTrajectoryPack.h"
+#include "lib/NL/MotionControl/Trajectory/NLTrajectoryPackGetPointPersistentResult.h"
 
 #ifdef _NEDITOR
-#include "../../NL2DOrthogonalCoordinateSystem.h"
+#include "lib/NL/MotionControl/NL2DOrthogonalCoordinateSystem.h"
 #endif
 
 typedef struct NLFOLLOWER_TANK_OUTPUT NLFOLLOWER_TANK_OUTPUT;

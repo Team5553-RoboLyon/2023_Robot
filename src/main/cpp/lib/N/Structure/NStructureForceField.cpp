@@ -7,7 +7,7 @@
 // ***************************************************************************************
 #include "lib/N/NCStandard.h"
 #include "lib/N/NType.h"
-#include "../NStructureForceField.h"
+#include "lib/N/NStructureForceField.h"
 
 NARRAY NActivePhysicStructure_ForceFields_Array;
 

@@ -10,18 +10,18 @@
 // ***************************************************************************************
 
 #include "lib/N/GL/Ngl.h"
-#include "../Image/NImage.h"
+#include "lib/N/Image/NImage.h"
 #include "lib/N/Containers/NNode.h"
-#include "../Containers/NArray.h"
+#include "lib/N/Containers/NArray.h"
 #include "lib/N/NType.h"
-#include "../NFlags.h"
-#include "../NScreenPoint.h"
-#include "../NScreenRect.h"
-#include "../NRectf32.h"
-#include "../NTexture.h"
-#include "../NCoordinateSystemConversions.h"
-#include "../Containers/NHashMap.h"
-#include "../Miscellaneous/NVertexTexCoordBuild.h"
+#include "lib/N/NFlags.h"
+#include "lib/N/NScreenPoint.h"
+#include "lib/N/NScreenRect.h"
+#include "lib/N/NRectf32.h"
+#include "lib/N/NTexture.h"
+#include "lib/N/NCoordinateSystemConversions.h"
+#include "lib/N/Containers/NHashMap.h"
+#include "lib/N/Miscellaneous/NVertexTexCoordBuild.h"
 
 #ifdef __cplusplus
 extern "C"

@@ -1,12 +1,12 @@
-#include "../../NCStandard.h"
-#include "../../NType.h"
-#include "../../Geometry/NGeometry.h"
+#include "lib/N/NCStandard.h"
+#include "lib/N/NType.h"
+#include "lib/N/Geometry/NGeometry.h"
 #include "../../NErrorHandling.h"
 #include "../../NCore.h"
 #include "../../NCamera.h"
 
 #include "../NFrustum_Culling.h"
-#include "../NRenderCell.h"
+#include "lib/N/NRenderCell.h"
 #include "NRenderable_Extract.h"
 
 // There are 4 extract Functions base models:

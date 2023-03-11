@@ -1,13 +1,13 @@
-#include "../../NCStandard.h"
-#include "../../NType.h"
-#include "../../Geometry/NGeometry.h"
+#include "lib/N/NCStandard.h"
+#include "lib/N/NType.h"
+#include "lib/N/Geometry/NGeometry.h"
 #include "../../NErrorHandling.h"
 #include "../../NCore.h"
 #include "../../NCamera.h"
 #include "../../UI/NUICustom.h"
 
 #include "../NFrustum_Culling.h"
-#include "../NRenderCell.h"
+#include "lib/N/NRenderCell.h"
 #include "NRenderable_Extract.h"
 
 // For One NEXTRACTSET SECTION we should have, at least, 16 (2x8) different extraction functions to cover all the possibilities

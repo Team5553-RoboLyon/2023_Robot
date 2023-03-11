@@ -1,7 +1,7 @@
 #include "lib/N/NCStandard.h"
 #include "lib/N/NType.h"
 #include "lib/N/Containers/NNode.h"
-#include "../NStructure.h"
+#include "lib/N/NStructure.h"
 #include "lib/N/NErrorHandling.h"
 
 // ------------------------------------------------------------------------------------------

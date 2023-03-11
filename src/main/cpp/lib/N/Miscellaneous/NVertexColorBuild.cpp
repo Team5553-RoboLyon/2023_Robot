@@ -1,4 +1,4 @@
-#include "../Core/NSafeConversion.h"
+#include "lib/N/Core/NSafeConversion.h"
 #include "NVertexColorBuild.h"
 
 NBUILDBASE_COLOR* NSetupBuildBaseColor(NBUILDBASE_COLOR *pbbcolor, const Nu16 flags, const Nu8 colorsetid, const NCOLOR *pcolorrange, const Nu32 colorangesize, const NCOLORGRADIENTID colorgradientid )

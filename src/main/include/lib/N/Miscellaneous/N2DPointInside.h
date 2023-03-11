@@ -10,8 +10,8 @@
 // ***************************************************************************************
 #include "lib/N/NCStandard.h"
 #include "lib/N/NType.h"
-#include "../Maths/NVec3f32.h"
-#include "../NRectf32.h"
+#include "lib/N/Maths/NVec3f32.h"
+#include "lib/N/NRectf32.h"
 
 #ifdef __cplusplus
 extern "C"

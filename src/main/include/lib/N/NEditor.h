@@ -64,12 +64,13 @@
 //		------------------------------------
 //		+ NCallCurrentToolTimeHandle
 
-#include "../N/NType.h"
-#include "../N/Containers/Narray.h"
-#include "../N/UI/NUI.h"
-#include "../N/Event/NEvent.h"
-#include "../N/Touch/NTouchListener.h"
-#include "../N/NCamera.h"
+#include "lib/N/NType.h"
+#include "lib/N/Containers/NArray.h"
+
+#include "lib/N/UI/NUI.h"
+#include "lib/N/Event/NEvent.h"
+#include "lib/N/Touch/NTouchListener.h"
+#include "lib/N/NCamera.h"
 
 #ifdef __cplusplus
 extern "C"

@@ -9,14 +9,14 @@
 // ***************************************************************************************
 // ***************************************************************************************
 #include "lib/N/NType.h"
-#include "../Maths/NVec3f32.h"
-#include "../NRectf32.h"
-#include "../NSpline.h"
+#include "lib/N/Maths/NVec3f32.h"
+#include "lib/N/NRectf32.h"
+#include "lib/N/NSpline.h"
 #include "lib/N/Geometry/NGeometry.h"
-#include "../Geometry/Components/NGeometryTextureCoordinate.h"
-#include "../Miscellaneous/NColorGradient.h"
-#include "../Miscellaneous/NVertexTexCoordBuild.h"
-#include "../Miscellaneous/NVertexColorBuild.h"
+#include "lib/N/Geometry/Components/NGeometryTextureCoordinate.h"
+#include "lib/N/Miscellaneous/NColorGradient.h"
+#include "lib/N/Miscellaneous/NVertexTexCoordBuild.h"
+#include "lib/N/Miscellaneous/NVertexColorBuild.h"
 
 #ifdef __cplusplus
 extern "C"

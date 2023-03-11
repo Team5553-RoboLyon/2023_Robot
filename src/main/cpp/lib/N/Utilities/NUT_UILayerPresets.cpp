@@ -1,6 +1,6 @@
 #include "lib/N/NCStandard.h"
-#include "../UI/NUI.h"
-#include "../UI/NUINull.h"
+#include "lib/N/UI/NUI.h"
+#include "lib/N/UI/NUINull.h"
 
 #include "NUT_UIPresets.h"
 

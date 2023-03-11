@@ -1,8 +1,8 @@
-#include "../../../N/NMemory.h"
-#include "../../../N/NMath.h"
-#include "../../../N/Utilities/Draw/NUT_Draw.h"
+#include "lib/N/NMemory.h"
+#include "lib/N/NMath.h"
+#include "lib/N/Utilities/Draw/NUT_Draw.h"
 
-#include "NLVirtualGyro.h"
+#include "lib/NL/Simulation/VirtualRobot/NLVirtualGyro.h"
 
 void NLVIRTUAL_GYRO::reset()
 {

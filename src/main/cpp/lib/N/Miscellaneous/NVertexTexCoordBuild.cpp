@@ -1,4 +1,4 @@
-#include "../Core/NSafeConversion.h"
+#include "lib/N/Core/NSafeConversion.h"
 #include "NVertexTexCoordBuild.h"
 
 NBUILDBASE_TEXCOORD *NSetupBuildBaseTexCoord(NBUILDBASE_TEXCOORD *pbbtxc, const Nu16 flags, const Nu8 txcset_id, const NRECTf32 *pusedoaarectf32, const NRECTf32 *psubaarectf32)
@@ -460,7 +460,7 @@ NMATRIX* NGetOAARectf32_TexCoords_Building3DMatrix4x4(NMATRIX *ptm, const NRECTf
 // Description :
 // Usually a RECT is ... a 'AA RECT'(Axis Aligned Rect)  with Top, Bottom, Left and Right are real Top, Bottom,
 // Left and Right Coordinates.  (BOTTOM > TOP and RIGHT > LEFT.) 
-// BUT ! When a RECT is used to represent UVs Area this rule could be broken to represents possible ATLAS ELEMENT 90° 
+// BUT ! When a RECT is used to represent UVs Area this rule could be broken to represents possible ATLAS ELEMENT 90ï¿½ 
 // snapped Orientation into texture.
 // Very often, ATLAS elements which are aggregate together into a single texture may have different orientation,
 // because in that way they fit better the whole texture surface. 
@@ -833,7 +833,7 @@ OLDIEST
 // Explanation(s):
 // Usually a RECT is ... a 'AA RECT'(Axis Aligned Rect)  with Top, Bottom, Left and Right are real Top, Bottom,
 // Left and Right Coordinates.  (BOTTOM > TOP and RIGHT > LEFT.) 
-// BUT ! When a RECT is used to represent UVs Area this rule could be broken to represents possible ATLAS ELEMENT 90° 
+// BUT ! When a RECT is used to represent UVs Area this rule could be broken to represents possible ATLAS ELEMENT 90ï¿½ 
 // snapped Orientation into texture.
 // Very often, ATLAS elements which are aggregate together into a single texture may have different orientation,
 // because in that way they fit better the whole texture surface. 
@@ -953,7 +953,7 @@ NTEXCOORD_BUILD_2DORTHOGONAL* NGetTexCoordBuildContext_Texture2DOrthogonal(NTEXC
 // Evaluate the Oriented base of an oriented (or non oriented ) Rect.
 // Usually a RECT is ... a 'AA RECT'(Axis Aligned Rect)  with Top, Bottom, Left and Right are real Top, Bottom,
 // Left and Right Coordinates.  (BOTTOM > TOP and RIGHT > LEFT.) 
-// BUT ! When a RECT is used to represent UVs this rule could be broken to represents possible ATLAS ELEMENT 90° 
+// BUT ! When a RECT is used to represent UVs this rule could be broken to represents possible ATLAS ELEMENT 90ï¿½ 
 // snapped Orientation into texture.
 // Very often, ATLAS elements which are aggregate together into a single texture may have different orientation,
 // because in that way they fit better the whole texture surface. 

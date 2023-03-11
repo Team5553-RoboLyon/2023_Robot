@@ -16,10 +16,10 @@ extern "C"
 // ***************************************************************************************
 /*
 
-#include "./Components/Specifications/NGeometryMesh_Specs.h"
-#include "./Components/Specifications/NGeometryAppearance_Specs.h"
-#include "./Components/Specifications/NGeometryPrimitive_Specs.h"
-#include "./Components/Specifications/NGeometryVertex_Specs.h"
+#include "lib/N/Geometry/Components/Specifications/NGeometryMesh_Specs.h"
+#include "lib/N/Geometry/Components/Specifications/NGeometryAppearance_Specs.h"
+#include "lib/N/Geometry/Components/Specifications/NGeometryPrimitive_Specs.h"
+#include "lib/N/Geometry/Components/Specifications/NGeometryVertex_Specs.h"
 
 
 

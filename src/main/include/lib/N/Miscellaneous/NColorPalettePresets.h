@@ -10,7 +10,7 @@
 // ***************************************************************************************
 #include "lib/N/NCStandard.h"
 #include "lib/N/NType.h"
-#include "../NFlags.h"
+#include "lib/N/NFlags.h"
 #include "lib/N/NErrorHandling.h"
 #include "NColorPalette.h"
 

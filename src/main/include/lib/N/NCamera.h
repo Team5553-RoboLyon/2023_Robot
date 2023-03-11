@@ -11,7 +11,7 @@
 // ***************************************************************************************
 #include "NType.h"
 #include "NFlags.h"
-#include "./Maths/NVec3f32.h"
+#include "lib/N/Maths/NVec3f32.h"
 #include "NMatrix.h"
 
 #ifdef __cplusplus

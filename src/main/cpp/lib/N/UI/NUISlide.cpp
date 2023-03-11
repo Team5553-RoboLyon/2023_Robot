@@ -1,11 +1,11 @@
 #include "lib/N/NCStandard.h"
-#include "../NCoordinateSystemConversions.h"
-#include "../Utilities/NUT_X.h"
-#include "../Event/NEventTouch.h"
+#include "lib/N/NCoordinateSystemConversions.h"
+#include "lib/N/Utilities/NUT_X.h"
+#include "lib/N/Event/NEventTouch.h"
 #include "NUI.h"
 #include "NUIClearWatchStack.h"
 #include "NUISlide.h"
-#include "../Miscellaneous/NDamping.h"
+#include "lib/N/Miscellaneous/NDamping.h"
 
 void NUISlide_EventToState_Handle(NUI *pui, const NEVENT *pevent)
 {

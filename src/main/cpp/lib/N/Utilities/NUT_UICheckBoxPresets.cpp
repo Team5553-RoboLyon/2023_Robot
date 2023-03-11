@@ -1,8 +1,8 @@
 #include "lib/N/NCStandard.h"
-#include "../NUsualCoordinates.h"
+#include "lib/N/NUsualCoordinates.h"
 #include "lib/N/NString.h"
-#include "../UI/NUICheckBox.h"
-#include "../BasicElements/NTextureAtlas.h"
+#include "lib/N/UI/NUICheckBox.h"
+#include "lib/N/BasicElements/NTextureAtlas.h"
 
 #include "NUT_UIPresets.h"
 #include "NUT_UIDesk_Set.h"

@@ -9,8 +9,8 @@
 // ***************************************************************************************
 // ***************************************************************************************
 #include "lib/N/NType.h"
-#include "../Maths/NVec3f32.h"
-#include "../NCCS_3DCoord.h"
+#include "lib/N/Maths/NVec3f32.h"
+#include "lib/N/NCCS_3DCoord.h"
 #include "NParticleParams.h"
 
 #ifdef __cplusplus

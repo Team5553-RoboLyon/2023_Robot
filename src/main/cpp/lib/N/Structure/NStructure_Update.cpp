@@ -1,7 +1,7 @@
 #include "lib/N/NCStandard.h"
 #include "lib/N/NType.h"
-#include "../NFlags.h"
-#include "../NStructure.h"
+#include "lib/N/NFlags.h"
+#include "lib/N/NStructure.h"
 
 // This is a little bit special for Physic elements because they have to be updated all together with a special time !
 // So keeping a pointer on it for that into a specific array to update all of them in the the same specific time loop.

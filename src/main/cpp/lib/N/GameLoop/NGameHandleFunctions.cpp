@@ -1,6 +1,6 @@
 #include "lib/N/NCStandard.h"
-#include "../NCore.h"
-#include "../Event/NEvent.h"
+#include "lib/N/NCore.h"
+#include "lib/N/Event/NEvent.h"
 #include "NGameHandleFunctions.h"
 
 void WindowProc(const NEVENT *pevent, const Nu32 user_Nu32)

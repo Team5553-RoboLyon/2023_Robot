@@ -9,10 +9,10 @@
 // ***************************************************************************************
 // ***************************************************************************************
 #include "lib/N/NType.h"
-#include "../Maths/NVec3f32.h"
+#include "lib/N/Maths/NVec3f32.h"
 #include "lib/N/Geometry/NGeometry.h"
-#include "../NSpline.h"
-#include "../NStructure.h"
+#include "lib/N/NSpline.h"
+#include "lib/N/NStructure.h"
 
 #ifdef __cplusplus
 extern "C"

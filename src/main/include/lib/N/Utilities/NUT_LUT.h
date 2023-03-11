@@ -9,9 +9,9 @@
 // ***************************************************************************************
 // ***************************************************************************************
 #include "lib/N/NType.h"
-#include "../Maths/NVec3f32.h"
-#include "../Miscellaneous/NColor.h"
-#include "../NSpline.h"
+#include "lib/N/Maths/NVec3f32.h"
+#include "lib/N/Miscellaneous/NColor.h"
+#include "lib/N/NSpline.h"
 #include "NUT_X.h" // To spline understanding
 
 #ifdef __cplusplus

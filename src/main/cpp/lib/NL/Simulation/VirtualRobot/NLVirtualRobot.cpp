@@ -1,13 +1,13 @@
-#include "../../../N/NMemory.h"
-#include "../../../N/NFlags.h"
-#include "../../../N/Utilities/Draw/NUT_Draw.h"
-#include "../../../N/Utilities/Draw/NUT_DrawPencil.h"
+#include "lib/N/NMemory.h"
+#include "lib/N/NFlags.h"
+#include "lib/N/Utilities/Draw/NUT_Draw.h"
+#include "lib/N/Utilities/Draw/NUT_DrawPencil.h"
 
-#include "../../MotionControl/DriveTrain/NLOdometry.h"
-#include "../../MotionControl/DriveTrain/NLDriveTrainSpecs.h"
-#include "../../MotionControl/DriveTrain/Characterization/NLCharacterizationTable.h"
+#include "lib/NL/MotionControl/DriveTrain/NLOdometry.h"
+#include "lib/NL/MotionControl/DriveTrain/NLDriveTrainSpecs.h"
+#include "lib/NL/MotionControl/DriveTrain/Characterization/NLCharacterizationTable.h"
 
-#include "NLVirtualRobot.h"
+#include "lib/NL/Simulation/VirtualRobot/NLVirtualRobot.h"
 NLVIRTUAL_ROBOT::NLVIRTUAL_ROBOT()
 {
 	Nmem0(this, NLVIRTUAL_ROBOT);

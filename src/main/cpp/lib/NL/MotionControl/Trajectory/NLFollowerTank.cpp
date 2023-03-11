@@ -1,13 +1,13 @@
-#include "../../../N/NString.h"
-#include "../../../N/Utilities/NUT_Logging.h"
-#include "../../../N/Utilities/Draw/NUT_Draw.h"
-#include "../../../N/Utilities/Draw/NUT_DrawPencil.h"
-#include "../DriveTrain/NLOdometry.h"
-#include "../DriveTrain/Characterization/NLCharacterizationTable.h"
-#include "../../NL2DOrthogonalCoordinateSystem_MotionProfileFlags.h"
-#include "../../NLLogsChannels.h"
+#include "lib/N/NString.h"
+#include "lib/N/Utilities/NUT_Logging.h"
+#include "lib/N/Utilities/Draw/NUT_Draw.h"
+#include "lib/N/Utilities/Draw/NUT_DrawPencil.h"
+#include "lib/NL/MotionControl/DriveTrain/NLOdometry.h"
+#include "lib/NL/MotionControl/DriveTrain/Characterization/NLCharacterizationTable.h"
+#include "lib/NL/NL2DOrthogonalCoordinateSystem_MotionProfileFlags.h"
+#include "lib/NL/NLLogsChannels.h"
 
-#include "NLFollowerTank.h"
+#include "lib/NL/MotionControl/Trajectory/NLFollowerTank.h"
 
 Nu32 NLFOLLOWER_TANK::read(NLPATH_WORKBENCH *pwb)
 {
@@ -275,7 +275,7 @@ const NLFOLLOWER_TANK_OUTPUT *NLFOLLOWER_TANK::compute()
 		j.x = -si; // k.x = 0
 		i.y = si;
 		j.y = co; // k.y = 0
-		//	i.z = 0			j.z =  0	// k.z = 1
+				  //	i.z = 0			j.z =  0	// k.z = 1
 	}
 	else
 	{
@@ -283,7 +283,7 @@ const NLFOLLOWER_TANK_OUTPUT *NLFOLLOWER_TANK::compute()
 		j.x = si; // k.x = 0
 		i.y = -si;
 		j.y = -co; // k.y = 0
-		//	i.z = 0			j.z =  0	// k.z = 1
+				   //	i.z = 0			j.z =  0	// k.z = 1
 	}
 
 	// ------------------------------------------------------------------------------------------------------------------------------

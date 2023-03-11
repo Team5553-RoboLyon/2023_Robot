@@ -2,8 +2,8 @@
 #include "lib/N/File/NFile.h"
 #include "lib/N/NString.h"
 
-#include "../NFont.h"
-#include "../NCoordinateSystemConversions.h"
+#include "lib/N/NFont.h"
+#include "lib/N/NCoordinateSystemConversions.h"
 
 // Global
 NNODELIST NFontsList;

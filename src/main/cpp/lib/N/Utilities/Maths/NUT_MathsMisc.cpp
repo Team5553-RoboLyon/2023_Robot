@@ -5,9 +5,9 @@
 // Create	: 07/05/2012
 // Modified : 
 // ==========================================================================================
-#include "../../GL/Ngl.h"
+#include "lib/N/GL/Ngl.h"
 #include "../../NErrorHandling.h"
-#include "../../NUsualCoordinates.h"
+#include "lib/N/NUsualCoordinates.h"
 
 #include "NUT_MathsMisc.h"
 
@@ -122,7 +122,7 @@ NMATRIX3x3* NUT_Build3DOrthonormal(NMATRIX3x3 *porthonormal, const NVEC3 *pto, c
 // NMATRIX3x3* NUT_BuildHughesMoller3DOrthonormal
 // ------------------------------------------------------------------------------------------
 // Description :
-//	Based on the paper from Tomas Möller and John F.Hughes
+//	Based on the paper from Tomas Mï¿½ller and John F.Hughes
 //			"Extending a Unit Vector to an Orthonormal Basis of 3-Space"
 //
 //	This function build in a quick way a Right Hand 3D Orthonormal from a simple NVEC3.
@@ -213,8 +213,8 @@ void NUT_HughesMollerChooseUp(NVEC3 *pup, const NVEC3 *pforward)
 	// if pforward is almost NULL vector
 	NErrorIf(NVec3SquareLength(pforward) < NF32_EPSILON_VECTOR_LENGTH,NERROR_NULL_VECTOR);
 
-	// Up choose 3: “Take the smallest entry (in absolute value) of u and set it to zero,
-	// swap the other two entries and negate the first of them.” ... from Hughes-Möller
+	// Up choose 3: ï¿½Take the smallest entry (in absolute value) of u and set it to zero,
+	// swap the other two entries and negate the first of them.ï¿½ ... from Hughes-Mï¿½ller
 	Nf32 mini = NMIN(NABS(pforward->x),NMIN(NABS(pforward->y),NABS(pforward->z)));
 	if(mini == NABS(pforward->x))
 	{

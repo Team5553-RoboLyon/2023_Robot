@@ -1,8 +1,10 @@
 #pragma once
-#include "../../../N/NType.h"
-#include "../../../N/NFlags.h"
-#include "../../../N/Containers/NArray.h"
-#include "NLVstage.h"
+#include "lib/N/NType.h"
+#include "lib/N/NFlags.h"
+#include "lib/N/Containers/NArray.h"
+
+#include "lib/NL/MotionControl/Trajectory/NLVstage.h"
+
 
 namespace NLVstageArrayTools
 {

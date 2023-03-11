@@ -1,9 +1,9 @@
 #include "lib/N/NString.h"
 #include "lib/N/File/NFile.h"
-#include "../Image/NTga.h"
-#include "../BasicElements/NTextureAtlas.h"
+#include "lib/N/Image/NTga.h"
+#include "lib/N/BasicElements/NTextureAtlas.h"
 
-#include "../Libraries/NLibraries.h"
+#include "lib/N/Libraries/NLibraries.h"
 #include "NUT_TextureAtlas.h"
 
 // ------------------------------------------------------------------------------------------

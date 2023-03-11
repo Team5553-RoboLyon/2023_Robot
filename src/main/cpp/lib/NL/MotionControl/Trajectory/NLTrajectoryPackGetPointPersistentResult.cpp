@@ -1,5 +1,5 @@
-#include "NLTrajectoryPack.h"
-#include "NLTrajectoryPackGetPointPersistentResult.h"
+#include "lib/NL/MotionControl/Trajectory/NLTrajectoryPack.h"
+#include "lib/NL/MotionControl/Trajectory/NLTrajectoryPackGetPointPersistentResult.h"
 
 void NLTRAJECTORY_PACK_GETPOINT_PERSISTENT_RESULT::initialize(const NLTRAJECTORY_PACK* ppack)
 {

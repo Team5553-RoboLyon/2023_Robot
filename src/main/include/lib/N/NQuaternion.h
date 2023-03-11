@@ -10,8 +10,8 @@
 // ***************************************************************************************
 // ***************************************************************************************
 #include "NType.h"
-#include "./Maths/NVec3f32.h"
-#include "./Maths/NVec4f32.h"
+#include "lib/N/Maths/NVec3f32.h"
+#include "lib/N/Maths/NVec4f32.h"
 
 #include "NMatrix.h"
 

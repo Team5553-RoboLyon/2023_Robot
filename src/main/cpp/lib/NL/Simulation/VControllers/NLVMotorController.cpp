@@ -1,12 +1,10 @@
-#include "../../../N/NMemory.h"
-#include "../../../N/NMath.h"
-#include "../../../N/File/NFile.h"
-#include "../../../N/NString.h"
-#include "../../../N/NErrorHandling.h"
-#include "../VirtualRobot/NLVirtualRobot.h"
-#include "NLVMotorController.h"
-
-
+#include "lib/N/NMemory.h"
+#include "lib/N/NMath.h"
+#include "lib/N/File/NFile.h"
+#include "lib/N/NString.h"
+#include "lib/N/NErrorHandling.h"
+#include "lib/NL/Simulation/VirtualRobot/NLVirtualRobot.h"
+#include "lib/NL/Simulation/VControllers/NLVMotorController.h"
 
 /*
 NLVMOTOR_CONTROLLER::NLVMOTOR_CONTROLLER()
@@ -20,16 +18,16 @@ NLVMOTOR_CONTROLLER::NLVMOTOR_CONTROLLER(Nu8 channel_id, NLVIRTUAL_ROBOT * pvrob
 	m_pVirtualMotor = &pvrobot->m_motor[channel_id];
 }
 */
-void NLVMOTOR_CONTROLLER::Init(const Nu8 channelid, const NLVIRTUAL_ROBOT * pvrobot)
+void NLVMOTOR_CONTROLLER::Init(const Nu8 channelid, const NLVIRTUAL_ROBOT *pvrobot)
 {
 	if (BITGET(pvrobot->m_isMotorActive, channelid))
 	{
-		m_pVirtualMotor = &(((NLVIRTUAL_ROBOT*)pvrobot)->m_motor[channelid]);
+		m_pVirtualMotor = &(((NLVIRTUAL_ROBOT *)pvrobot)->m_motor[channelid]);
 	}
 #ifdef _DEBUG
 	else
 	{
-		NErrorIf(1, NERROR_INCONSISTENT_REQUEST); // moteur non connecté
+		NErrorIf(1, NERROR_INCONSISTENT_REQUEST); // moteur non connectï¿½
 	}
 #endif
 }
@@ -50,7 +48,7 @@ void NLVMOTOR_CONTROLLER::Set(const Nf32 signed_speed)
 
 void NLVMOTOR_CONTROLLER::SetInverted(Nbool is_inverted)
 {
-	if(is_inverted)
+	if (is_inverted)
 		FLAG_ON(m_flags, FLAG_NLVMOTOR_CONTROLLER_IS_INVERTED);
 	else
 		FLAG_OFF(m_flags, FLAG_NLVMOTOR_CONTROLLER_IS_INVERTED);

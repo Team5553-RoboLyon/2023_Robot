@@ -2,7 +2,7 @@
 #include "NUI.h"
 #include "NUIPush.h"
 #include "NUIValUpdater.h"
-#include "../Event/NEventTouch.h"
+#include "lib/N/Event/NEventTouch.h"
 
 Nchar *NUIValUpdater_SetupDisplayableIntegerCastString(Nchar *pdest, const Nchar *pcaption, const Nf32 currentvalue)
 {

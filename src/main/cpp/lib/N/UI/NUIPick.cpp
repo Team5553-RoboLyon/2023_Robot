@@ -1,9 +1,9 @@
 #include "lib/N/NCStandard.h"
-#include "../Containers/NArray.h"
-#include "../NMatrix.h"
-#include "../NViewport.h"
-#include "../Miscellaneous/N2DPointInside.h"
-#include "../Utilities/NUT_Pick.h"
+#include "lib/N/Containers/NArray.h"
+#include "lib/N/NMatrix.h"
+#include "lib/N/NViewport.h"
+#include "lib/N/Miscellaneous/N2DPointInside.h"
+#include "lib/N/Utilities/NUT_Pick.h"
 #include "NUI.h"
 
 extern NARRAY ActiveUIRootsList;

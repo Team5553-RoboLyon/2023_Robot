@@ -1,6 +1,6 @@
 #ifdef _NEDITOR
 // -----------------------------------------------------------------------
-#include "../../NCStandard.h"
+#include "lib/N/NCStandard.h"
 #include "NUT_Editor_SplinesPack_Tools.h"
 
 NUT_SPACK_TOOLDATA*	NUT_SetupSplinesPackToolData(NUT_SPACK_TOOLDATA* ps, const Nu32 splinesptr_array_capacity )

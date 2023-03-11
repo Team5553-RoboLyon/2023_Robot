@@ -13,9 +13,9 @@
 // **																					**
 // ***************************************************************************************
 // ***************************************************************************************
-#include "../../NType.h"
-#include "../../GL/Ngl.h"
-#include "../../NEditor.h"
+#include "lib/N/NType.h"
+#include "lib/N/GL/Ngl.h"
+#include "lib/N/NEditor.h"
 
 #ifdef __cplusplus
 extern "C"

@@ -8,7 +8,7 @@
 #include "lib/NL/MotionControl/Path/Builders/PolygonalChain/NLPathBuilderPolygonalVertex.h"
 
 #ifdef _NEDITOR
-#include "../../../../NL2DOrthogonalCoordinateSystem.h"
+#include "lib/NL/MotionControl/NL2DOrthogonalCoordinateSystem.h"
 
 // Pour dessiner les Polygonal Paths...
 /*

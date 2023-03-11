@@ -5,7 +5,7 @@
 // Create	: 07/05/2012
 // Modified : 
 // ==========================================================================================
-#include "../../GL/Ngl.h"
+#include "lib/N/GL/Ngl.h"
 #include "../../NErrorHandling.h"
 #include "NUT_MathsMisc.h"
 #include "NUT_Matrix.h"

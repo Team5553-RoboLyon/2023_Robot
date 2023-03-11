@@ -1,5 +1,5 @@
-#include "../../NL2DOrthogonalCoordinateSystem_MotionProfileFlags.h"
-#include "NLTrajectoryPointDesc.h"
+#include "lib/NL/NL2DOrthogonalCoordinateSystem_MotionProfileFlags.h"
+#include "lib/NL/MotionControl/Trajectory/NLTrajectoryPointDesc.h"
 
 void NLTRJPOINT_DESC::draw(NL2DOCS *p2docs, const NCOLORPICKPACK pickpack, const NLTRJPOINT_DESC *p0)
 {

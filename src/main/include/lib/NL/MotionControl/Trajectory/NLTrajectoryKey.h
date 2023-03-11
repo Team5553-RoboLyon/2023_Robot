@@ -1,12 +1,12 @@
 #pragma once
-#include "../../../N/NType.h"
-#include "../../../N/NFlags.h"
-#include "../../../N/NMemory.h"
-#include "../../../N/Core/NVersion.h"
-#include "../../../N/Maths/NIntervalf32.h"
+#include "lib/N/NType.h"
+#include "lib/N/NFlags.h"
+#include "lib/N/NMemory.h"
+#include "lib/N/Core/NVersion.h"
+#include "lib/N/Maths/NIntervalf32.h"
 
 #ifdef _NEDITOR
-#include "../../NLGfx.h"
+#include "lib/NL/NLGfx.h"
 #endif
 
 /*												_LOCKED		_STOP	_LINKABLE	_DISABLE_BROKEN_LINK	_DISABLE_TOO_CLOSE	_DISABLE_OUTOFPATH
@@ -16,7 +16,7 @@
 		IS_NLTRJKEY_ENABLE(flags)					x		  x			x				OFF						OFF					OFF
 
 */
-#include "NLTrajectoryAction.h"
+#include "lib/NL/MotionControl/Trajectory/NLTrajectoryAction.h"
 
 #define DEFAULT_NLTRJKEY_ACTIONSARRAY_CAPACITY 3
 

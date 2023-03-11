@@ -9,9 +9,9 @@
 // **																					**
 // ***************************************************************************************
 // ***************************************************************************************
-#include "../../NType.h"
-#include "../../Core/NTime.h"
-#include "../../Containers/NNode.h"
+#include "lib/N/NType.h"
+#include "lib/N/Core/NTime.h"
+#include "lib/N/Containers/NNode.h"
 
 #ifdef __cplusplus
 extern "C"

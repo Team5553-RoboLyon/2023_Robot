@@ -2,9 +2,9 @@
 // !!! ONLY IF COMPILER '_NEDITOR' FLAG IS SET TO ON !!! ONLY IF COMPILER '_NEDITOR' FLAG IS SET TO ON !!!
 // !!! ONLY IF COMPILER '_NEDITOR' FLAG IS SET TO ON !!! ONLY IF COMPILER '_NEDITOR' FLAG IS SET TO ON !!!
 // +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-#include "../../NType.h"
-#include "../../NCStandard.h"
-#include "../../Containers/NArray.h"
+#include "lib/N/NType.h"
+#include "lib/N/NCStandard.h"
+#include "lib/N/Containers/NArray.h"
 #include "NUT_Editor_ATxC_Gizmo.h"
 #include "NUT_Editor_ATxC_Tool.h"
 

@@ -13,10 +13,10 @@
 // **																					**
 // ***************************************************************************************
 // ***************************************************************************************
-#include "../../NType.h"
-#include "../../Maths/NVec3f32.h"
-#include "../../NEditor.h"
-#include "../../Containers/NArray.h"
+#include "lib/N/NType.h"
+#include "lib/N/Maths/NVec3f32.h"
+#include "lib/N/NEditor.h"
+#include "lib/N/Containers/NArray.h"
 #include "NUT_Editor_ATxC_Gizmo.h"
 #include "NUT_Editor_ATxC_Elements.h"
 #include "NUT_Editor_ATxC_Entity.h"

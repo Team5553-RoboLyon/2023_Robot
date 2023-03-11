@@ -9,7 +9,7 @@
 #include "lib/N/NCStandard.h"
 #include "lib/N/NType.h"
 #ifdef _NANDROID
-#include "../System/NAndroid.h"
+#include "lib/N/System/NAndroid.h"
 #endif
 
 #include "./NServiceInAppPurchase.h"

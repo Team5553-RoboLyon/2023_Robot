@@ -1,11 +1,11 @@
 #include "lib/N/NCStandard.h"
 #include "lib/N/NType.h"
 #include "lib/N/NErrorHandling.h"
-#include "../Core/NSafeConversion.h"
-#include "../Core/NVersion.h"
+#include "lib/N/Core/NSafeConversion.h"
+#include "lib/N/Core/NVersion.h"
 #include "lib/N/File/NFile.h"
-#include "../File/NFileExt.h"
-#include "../File/NFileExt_Appearance_RWCallBacks.h"
+#include "lib/N/File/NFileExt.h"
+#include "lib/N/File/NFileExt_Appearance_RWCallBacks.h"
 
 // ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 // + ABOUT WRITE/READ APPEARANCE

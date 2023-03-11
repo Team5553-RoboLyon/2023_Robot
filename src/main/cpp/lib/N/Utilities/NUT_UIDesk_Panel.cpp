@@ -1,6 +1,6 @@
 #include "lib/N/NCStandard.h"
-#include "../UI/NUI.h"
-#include "../UI/NUIPlacement.h"
+#include "lib/N/UI/NUI.h"
+#include "lib/N/UI/NUIPlacement.h"
 #include "NUT_UIDesk_Set.h"
 #include "NUT_UIDesk_Dummy.h"
 #include "NUT_UIDesk_Panel.h"

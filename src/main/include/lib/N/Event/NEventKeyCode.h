@@ -9,9 +9,9 @@
 // ***************************************************************************************
 // ***************************************************************************************
 #include "lib/N/NType.h"
-#include "../NScreenPoint.h"
-#include "../Miscellaneous/NColor.h"
-#include "../Touch/NTouch.h"
+#include "lib/N/NScreenPoint.h"
+#include "lib/N/Miscellaneous/NColor.h"
+#include "lib/N/Touch/NTouch.h"
 
 #ifdef __cplusplus
 extern "C"

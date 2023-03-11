@@ -9,8 +9,8 @@
 // ***************************************************************************************
 // ***************************************************************************************
 #include "lib/N/NType.h"
-#include "../NTransformationTree.h"
-#include "../Containers/NArray.h"
+#include "lib/N/NTransformationTree.h"
+#include "lib/N/Containers/NArray.h"
 #include "NThnAnimationKey.h"
 #include "NTimer.h"
 

@@ -9,11 +9,11 @@
 // **																					**
 // ***************************************************************************************
 // ***************************************************************************************
-#include "./Containers/NArray.h"
-#include "./Containers/NNode.h"
-#include "./Maths/NVec2f32.h"
-#include "./Maths/NVec3f32.h"
-#include "./Miscellaneous/NColor.h"
+#include "lib/N/Containers/NArray.h"
+#include "lib/N/Containers/NNode.h"
+#include "lib/N/Maths/NVec2f32.h"
+#include "lib/N/Maths/NVec3f32.h"
+#include "lib/N/Miscellaneous/NColor.h"
 #include "NFlags.h"
 
 #ifdef __cplusplus
@@ -559,7 +559,7 @@ inline void NBezierCurvatureRadius2f32(NVEC2f32 *R, const Nf32 t, const NSPLINEK
 	NBezierSecondDerivative3f32(&dd, t, A, B);
 
 
-	//  Le "vecteur Rayon" est le vecteur Normal à la tangente ( connue grace à la derivée  d ) de longeur R.
+	//  Le "vecteur Rayon" est le vecteur Normal ï¿½ la tangente ( connue grace ï¿½ la derivï¿½e  d ) de longeur R.
 	//	Pour obtenir N on part du vecteur (d.x,d.y) qu'on normalize, donc qu'on divise par sqrt( ds ) avec ds =  dx*dx + dy*dy
 	//	soit: 
 	//			N.x = -d.y / sqrt( ds )
@@ -570,7 +570,7 @@ inline void NBezierCurvatureRadius2f32(NVEC2f32 *R, const Nf32 t, const NSPLINEK
 	//			N.y *= ((ds * sqrt(ds)) / (d.x * dd.y - dd.x * d.y));
 	//
 	// On remarque qu'on divise N par sqrt(ds) pour ensuite le multiplier par sqrt(ds)....
-	// On peut optimiser en supprimant la racine carrée au numerateur et la racine carrée au denominateur !
+	// On peut optimiser en supprimant la racine carrï¿½e au numerateur et la racine carrï¿½e au denominateur !
 	// Le calcul  devient donc:	
 
 	Nf32 ds = d.x * d.x + d.y * d.y;

@@ -1,33 +1,32 @@
 #include <new>
-#include "../../../N/NMemory.h"
-#include "../../../N/NMath.h"
-#include "../../../N/NErrorHandling.h"
-#include "../../../N/Utilities/Draw/NUT_Draw.h"
-#include "../../../N/File/NDataPacker.h"
-#include "../../../N/Utilities/NUT_Logging.h"
+#include "lib/N/NMemory.h"
+#include "lib/N/NMath.h"
+#include "lib/N/NErrorHandling.h"
+#include "lib/N/Utilities/Draw/NUT_Draw.h"
+#include "lib/N/File/NDataPacker.h"
+#include "lib/N/Utilities/NUT_Logging.h"
 
-#include "../../NLProject.h"
-#include "../NLKin.h"
-#include "../NLPhysics.h"
-#include "../Path/Geometry/NLPathGeometry.h"
+#include "lib/NL/NLProject.h"
+#include "lib/NL/MotionControl/NLKin.h"
+#include "lib/NL/MotionControl/NLPhysics.h"
+#include "lib/NL/MotionControl/Path/Geometry/NLPathGeometry.h"
 
-#include "NLKnode.h"
-#include "NLTrajectory.h"
-#include "NLTrajectoryKey.h"
-#include "NLVstage.h"
-#include "NLVstageX.h"
-#include "NLVstageXSlice.h"
-#include "NLTrajectoryKey.h"
-#include "NLVstageArrayTools.h"
+#include "lib/NL/MotionControl/Trajectory/NLKNode.h"
+#include "lib/NL/MotionControl/Trajectory/NLTrajectory.h"
+#include "lib/NL/MotionControl/Trajectory/NLTrajectoryKey.h"
+#include "lib/NL/MotionControl/Trajectory/NLVstage.h"
+#include "lib/NL/MotionControl/Trajectory/NLVstageX.h"
+#include "lib/NL/MotionControl/Trajectory/NLVstageXSlice.h"
+#include "lib/NL/MotionControl/Trajectory/NLVstageArrayTools.h"
 
-#include "../../NLLogsChannels.h"
+#include "lib/NL/NLLogsChannels.h"
 
 #ifdef _NEDITOR
-// #include "../../N/NEditor.h"
-#include "../../../N/Utilities/Draw/NUT_Draw.h"
-#include "../../../N/Utilities/Draw/NUT_DrawPencil.h"
+// #include "lib/N/NEditor.h"
+#include "lib/N/Utilities/Draw/NUT_Draw.h"
+#include "lib/N/Utilities/Draw/NUT_DrawPencil.h"
 
-#include "../../NL2DOrthogonalCoordinateSystem_MotionProfileFlags.h"
+#include "lib/NL/NL2DOrthogonalCoordinateSystem_MotionProfileFlags.h"
 #endif
 
 // #define INTEGRATE_DT(time,dt,sens)		(((sens)==1) ? (time+=(dt)):(time-=(dt)))

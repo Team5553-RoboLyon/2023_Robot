@@ -10,10 +10,10 @@
 // ***************************************************************************************
 // ***************************************************************************************
 #include "NType.h"
-#include "./Maths/NMatrix3x3.h"
-#include "./Maths/NVec2f32.h"
-#include "./Maths/NVec3f32.h"
-#include "./Maths/NVec4f32.h"
+#include "lib/N/Maths/NMatrix3x3.h"
+#include "lib/N/Maths/NVec2f32.h"
+#include "lib/N/Maths/NVec3f32.h"
+#include "lib/N/Maths/NVec4f32.h"
 
 #ifdef __cplusplus
 extern "C"

@@ -1,9 +1,9 @@
-#include "../../../../../N/NMemory.h"
-#include "../../../../../N/NMath.h"
-#include "../../../../../N/NErrorHandling.h"
-#include "../../../../../N/Core/NLimits.h"
+#include "lib/N/NMemory.h"
+#include "lib/N/NMath.h"
+#include "lib/N/NErrorHandling.h"
+#include "lib/N/Core/NLimits.h"
 
-#include "NLPathSection.h"
+#include "lib/NL/MotionControl/Path/Builders/Waypoints/NLPathSection.h"
 
 
 Nu32 NLPATH_heuristic_shortest(const NLPATH_SECTION *psection/*, const NLDRIVETRAINSPECS *pdts*/)
@@ -50,8 +50,8 @@ Nu32 NLPATH_heuristic_lessCurvy(const NLPATH_SECTION *psection/*, const NLDRIVET
 
 Nu32 NLPATH_heuristic_quickest(const NLPATH_SECTION *psection/*, const NLDRIVETRAINSPECS *pdts*/)
 {
-	// Pas sur que cela soit une bonne idée...
-	// la fonction est remplacée par NLPATH_heuristic_shortest si pdts est null
+	// Pas sur que cela soit une bonne idï¿½e...
+	// la fonction est remplacï¿½e par NLPATH_heuristic_shortest si pdts est null
 	//if (!pdts)
 		return NLPATH_heuristic_shortest(psection/*, 0*/);
 /*
@@ -61,7 +61,7 @@ Nu32 NLPATH_heuristic_quickest(const NLPATH_SECTION *psection/*, const NLDRIVETR
 	Nf32 t;
 	Nf32 v0, v1;
 
-	// Celle qui prendra le moins de temps ( pour le robot... nécéssite des infos sur le robot, ici on utilise juste l'entraxe,  la position du CG serait bienvenue )
+	// Celle qui prendra le moins de temps ( pour le robot... nï¿½cï¿½ssite des infos sur le robot, ici on utilise juste l'entraxe,  la position du CG serait bienvenue )
 	for (j = 0; j < 4; j++)
 	{
 		v0 = 0.5f*(1.0f + (psection->m_pair[j].pcircle0->r - pdts->m_axleTrack) / (psection->m_pair[j].pcircle0->r + pdts->m_axleTrack));

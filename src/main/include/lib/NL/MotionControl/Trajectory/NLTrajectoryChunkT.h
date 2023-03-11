@@ -2,8 +2,8 @@
 /*
 #include "NLTrajectoryChunk.h"
 #include "NLTrajectoryPoint.h"
-#include "NLTrajectoryPointDesc.h"
-#include "../../NL2DOrthogonalCoordinateSystem.h"
+#include "lib/NL/MotionControl/Trajectory/NLTrajectoryPointDesc.h"
+#include "lib/NL/MotionControl/NL2DOrthogonalCoordinateSystem.h"
 
 #define DEFAULT_TRAJECTORYPOINTDESC_ARRAY_CAPACITY		4
 class NLTRAJECTORY_CHUNK_T : public NLTRAJECTORY_CHUNK

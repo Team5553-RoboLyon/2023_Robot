@@ -1,7 +1,7 @@
 #pragma once
 #include "lib/N/NType.h"
 #include "lib/N/Maths/NVec2f32.h"
-#include "./DriveTrain/NLDriveTrainSpecs.h"
+#include "lib/NL/MotionControl/DriveTrain/NLDriveTrainSpecs.h"
 
 typedef struct NLROBOTPOSE NLROBOTPOSE;
 struct NLROBOTPOSE

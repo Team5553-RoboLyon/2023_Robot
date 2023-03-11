@@ -1,5 +1,5 @@
 #include "lib/N/NCStandard.h"
-#include "../UI/NUI.h"
+#include "lib/N/UI/NUI.h"
 #include "NUT_UIPresets.h"
 #include "NUT_UIDesk_Set.h"
 #include "NUT_UIDesk_Panel.h"

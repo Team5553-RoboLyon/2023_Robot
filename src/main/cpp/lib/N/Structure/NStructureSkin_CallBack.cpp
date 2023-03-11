@@ -2,13 +2,13 @@
 #include "lib/N/NCStandard.h"
 #include "lib/N/NType.h"
 #include "lib/N/Containers/NNode.h"
-#include "../NStructure.h"
-#include "../NCamera.h"
+#include "lib/N/NStructure.h"
+#include "lib/N/NCamera.h"
 
 /*
 #ifdef _DEBUG
-#include "../Geometry/NGeometryMisc.h"
-#include "../Utilities/Maths/NUT_MathsMisc.h"
+#include "lib/N/Geometry/NGeometryMisc.h"
+#include "lib/N/Utilities/Maths/NUT_MathsMisc.h"
 #include "lib/N/Utilities/Draw/NUT_Draw.h"
 #endif
 */

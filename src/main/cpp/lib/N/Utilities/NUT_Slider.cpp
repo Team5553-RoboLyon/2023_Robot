@@ -1,7 +1,7 @@
-#include "../NCoordinateSystemConversions.h"
-#include "../NRectf32.h"
-#include "../Utilities/NUT_3DMouse.h"
-#include "../Utilities/NUT_X.h"
+#include "lib/N/NCoordinateSystemConversions.h"
+#include "lib/N/NRectf32.h"
+#include "lib/N/Utilities/NUT_3DMouse.h"
+#include "lib/N/Utilities/NUT_X.h"
 
 #include "NUT_Slider.h"
 

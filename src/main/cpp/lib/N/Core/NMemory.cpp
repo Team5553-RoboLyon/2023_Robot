@@ -12,7 +12,7 @@
 #if defined _DEBUG && defined _NWINDOWS
 
 #include "lib/N/NCStandard.h"
-#include "../NMemory.h"
+#include "lib/N/NMemory.h"
 #include "lib/N/NErrorHandling.h"
 
 static Nu32 NMalloc_AllocatedMemory_Size;

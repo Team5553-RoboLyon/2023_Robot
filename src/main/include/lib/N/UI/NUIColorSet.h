@@ -10,8 +10,8 @@
 // ***************************************************************************************
 #include "lib/N/NCStandard.h"
 #include "lib/N/NType.h"
-#include "../NFlags.h"
-#include "../Miscellaneous/NColor.h"
+#include "lib/N/NFlags.h"
+#include "lib/N/Miscellaneous/NColor.h"
 
 #ifdef __cplusplus
 extern "C"

@@ -6,11 +6,11 @@
 // ***************************************************************************************
 // ***************************************************************************************
 #include "lib/N/GL/Ngl.h"
-#include "../NTexture.h"
+#include "lib/N/NTexture.h"
 #include "NSplashScreen.h"
-#include "../Geometry/Components/NGeometryVertex.h"
-#include "../Geometry/Components/NGeometryPrimitive.h"
-#include "../Render/Accumulator/NStateSet.h"
+#include "lib/N/Geometry/Components/NGeometryVertex.h"
+#include "lib/N/Geometry/Components/NGeometryPrimitive.h"
+#include "lib/N/Render/Accumulator/NStateSet.h"
 // #define NSCREEN_WIDTH		960
 // #define NSCREEN_HEIGHT		640
 #define NSCREEN_DEPTH		32

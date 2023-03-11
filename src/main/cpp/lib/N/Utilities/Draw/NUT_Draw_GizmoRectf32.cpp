@@ -1,11 +1,11 @@
-#include "../../NCStandard.h"
-#include "../../Geometry/NGeometry.h"
+#include "lib/N/NCStandard.h"
+#include "lib/N/Geometry/NGeometry.h"
 #include "../../NErrorHandling.h"
 #include "../../NCoordinateSystemConversions.h"
 
-#include "../NUT_GizmoRectf32.h"
+#include "lib/N/Utilities/NUT_GizmoRectf32.h"
 #include "NUT_Draw.h"
-#include "../NUT_Slider.h"
+#include "lib/N/Utilities/NUT_Slider.h"
 #include "NUT_DrawPencil.h"
 
 

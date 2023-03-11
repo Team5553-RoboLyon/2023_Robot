@@ -9,7 +9,7 @@
 // ***************************************************************************************
 // ***************************************************************************************
 #include "lib/N/NType.h"
-#include "../Miscellaneous/NColor.h"
+#include "lib/N/Miscellaneous/NColor.h"
 
 #ifdef __cplusplus
 extern "C"

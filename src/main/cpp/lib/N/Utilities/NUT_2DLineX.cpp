@@ -1,8 +1,8 @@
 #include "lib/N/NCStandard.h"
 #include "lib/N/GL/Ngl.h"
 
-#include "../Containers/NArray.h"
-#include "../NViewport.h"
+#include "lib/N/Containers/NArray.h"
+#include "lib/N/NViewport.h"
 #include "NUT_X.h"
 
 Nbool NUT_2DLineXLine(const NVEC2 *A, const NVEC2 *B, const NVEC2 *C, const NVEC2 *D, NUT_2DLINE_XRESULT *pxr)

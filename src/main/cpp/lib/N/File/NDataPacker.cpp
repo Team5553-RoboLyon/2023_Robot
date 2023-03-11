@@ -2,14 +2,14 @@
 #include "lib/N/NMath.h"
 #include "lib/N/NErrorHandling.h"
 /*
-#include "../NCore.h"
+#include "lib/N/NCore.h"
 #include "lib/N/GL/Ngl.h"
 #include "lib/N/NType.h"
 #include "lib/N/File/NFile.h"
-#include "../File/NFileExt.h"
+#include "lib/N/File/NFileExt.h"
 #include "lib/N/NString.h"
 */
-#include "../Core/NVersion.h"
+#include "lib/N/Core/NVersion.h"
 #include "NFile.h"
 #include "NDataPackKey.h"
 #include "NDataPackNode.h"

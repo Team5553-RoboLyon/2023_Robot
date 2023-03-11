@@ -9,10 +9,10 @@
 // ***************************************************************************************
 // ***************************************************************************************
 #include "lib/N/NType.h"
-#include "../Maths/NVec3f32.h"
-#include "../NBoundingVolumes.h"
-#include "../Containers/NArray.h"
-#include "../NSpline.h"
+#include "lib/N/Maths/NVec3f32.h"
+#include "lib/N/NBoundingVolumes.h"
+#include "lib/N/Containers/NArray.h"
+#include "lib/N/NSpline.h"
 
 #ifdef __cplusplus
 extern "C"

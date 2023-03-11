@@ -1,15 +1,15 @@
-#include "../../NCStandard.h"
-#include "../../NType.h"
-#include "../../NFlags.h"
+#include "lib/N/NCStandard.h"
+#include "lib/N/NType.h"
+#include "lib/N/NFlags.h"
 #include "../../NCore.h"
 
-#include "../../NStructure.h"
+#include "lib/N/NStructure.h"
 //#include "../../NObjects.h"
 #include "../../Particles/NParticles.h"
 #include "../../Ntext.h"
 #include "../NFrustum_Culling.h"
 
-#include "../../UI/NUI.h"
+#include "lib/N/UI/NUI.h"
 
 // TEMPORARY
 #include"../../Collectibles/NCollectibles.h"

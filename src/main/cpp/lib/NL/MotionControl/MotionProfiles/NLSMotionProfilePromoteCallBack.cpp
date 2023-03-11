@@ -1,6 +1,6 @@
 
-#include "../NLKin.h"
-#include "NLSMotionProfile.h"
+#include "lib/NL/MotionControl/NLKin.h"
+#include "lib/NL/MotionControl/MotionProfiles/NLSMotionProfile.h"
 
 
 Nu32 promoteNull(NLSMOTIONPROFILE * psmp, NLKIN * pkbuff)

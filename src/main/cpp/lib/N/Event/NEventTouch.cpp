@@ -1,10 +1,10 @@
-#include "../UI/NUI.h"
-#include "../GameLoop/NGameStates.h"
+#include "lib/N/UI/NUI.h"
+#include "lib/N/Gameloop/NGameStates.h"
 
 #include "NEventTouch.h"
 
 #ifdef _NEDITOR
-#include "../NEditor.h"
+#include "lib/N/NEditor.h"
 extern NEDITOR NEditor;
 #endif
 

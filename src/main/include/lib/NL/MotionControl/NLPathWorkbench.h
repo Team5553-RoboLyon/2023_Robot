@@ -4,17 +4,17 @@
 #include <windows.h>
 #include <CommCtrl.h>
 #endif
-#include "../../N/NType.h"
-#include "../../N/NFlags.h"
-#include "../../N/File/NDataPacker.h"
-#include "../../N/Core/NVersion.h"
+#include "lib/N/NType.h"
+#include "lib/N/NFlags.h"
+#include "lib/N/File/NDataPacker.h"
+#include "lib/N/Core/NVersion.h"
 
-#include "./DriveTrain/NLRamsete.h"
+#include "lib/NL/MotionControl/DriveTrain/NLRamsete.h"
 
-#include "./Path/NLPath.h"
-#include "./Path/Builders/NLPathBuilder.h"
-#include "./Trajectory/NLTrajectory.h"
-#include "./Trajectory/NLTrajectoryPack.h"
+#include "lib/NL/MotionControl/Path/NLPath.h"
+#include "lib/NL/MotionControl/Path/Builders/NLPathBuilder.h"
+#include "lib/NL/MotionControl/Trajectory/NLTrajectory.h"
+#include "lib/NL/MotionControl/Trajectory/NLTrajectoryPack.h"
 
 #define FLAG_NLPATH_WORKBENCH_PATH_BUILD_REQUEST BIT_15
 #define FLAG_NLPATH_WORKBENCH_TRAJECTORY_BUILD_REQUEST BIT_14

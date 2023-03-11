@@ -1,5 +1,5 @@
-#include "../NCore.h"
-#include "../NViewport.h"
+#include "lib/N/NCore.h"
+#include "lib/N/NViewport.h"
 #include "Ngl.h"
 
 Nbool Ngl_Init()

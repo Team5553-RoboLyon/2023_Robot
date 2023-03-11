@@ -8,16 +8,16 @@
 // **																					**
 // ***************************************************************************************
 // ***************************************************************************************
-#include "../../NType.h"
-#include "../../Maths/NVec3f32.h"
-#include "../../NRectf32.h"
-#include "../../Miscellaneous/NColor.h"
-#include "../../NSpline.h"
-#include "../../NStructure.h"
-#include "../NUT_Slider.h"
+#include "lib/N/NType.h"
+#include "lib/N/Maths/NVec3f32.h"
+#include "lib/N/NRectf32.h"
+#include "lib/N/Miscellaneous/NColor.h"
+#include "lib/N/NSpline.h"
+#include "lib/N/NStructure.h"
+#include "lib/N/Utilities/NUT_Slider.h"
 #include "../NUT_Gizmo.h"
-#include "../NUT_2DAAColorCage.h"
-#include "../NUT_XMesh.h"
+#include "lib/N/Utilities/NUT_2DAAColorCage.h"
+#include "lib/N/Utilities/NUT_XMesh.h"
 
 #ifdef __cplusplus
 extern "C"

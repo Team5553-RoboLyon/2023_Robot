@@ -1,11 +1,11 @@
 #ifdef _NEDITOR
 // -----------------------------------------------------------------------
-#include "../../NCStandard.h"
-#include "../../UI/NUI.h"
+#include "lib/N/NCStandard.h"
+#include "lib/N/UI/NUI.h"
 #include "../../NCamera.h"
 #include "../../NCoordinateSystemConversions.h"
-#include "../../NEditor.h"
-#include "../../NSpline.h"
+#include "lib/N/NEditor.h"
+#include "lib/N/NSpline.h"
 #include "NUT_Editor_SplinesPack_Tools.h"
 
 

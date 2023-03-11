@@ -1,10 +1,10 @@
 
-#include "../NLKin.h"
-#include "NLSMotionProfile.h"
+#include "lib/NL/MotionControl/NLKin.h"
+#include "lib/NL/MotionControl/MotionProfiles/NLSMotionProfile.h"
 
 #ifdef _NEDITOR
-#include "../../../N/Utilities/Draw/NUT_Draw.h"
-#include "../../../N/Utilities/Draw/NUT_DrawPencil.h"
+#include "lib/N/Utilities/Draw/NUT_Draw.h"
+#include "lib/N/Utilities/Draw/NUT_DrawPencil.h"
 #endif
 
 // SMOTION PROFILE NCOLORPICKPACK index ventilation:

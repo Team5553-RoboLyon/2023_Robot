@@ -1,8 +1,8 @@
 #include "lib/N/NCStandard.h"
-#include "../NMemory.h"
+#include "lib/N/NMemory.h"
 #include "lib/N/NMath.h"
 #include "lib/N/NErrorHandling.h"
-// #include "../Core/NSafeConversion.h"
+// #include "lib/N/Core/NSafeConversion.h"
 
 #include "NDataPackNode.h"
 #include "NDataPack.h"

@@ -1,10 +1,10 @@
-#include "../../NCStandard.h"
-#include "../../Geometry/NGeometry.h"
+#include "lib/N/NCStandard.h"
+#include "lib/N/Geometry/NGeometry.h"
 #include "../../NErrorHandling.h"
-#include "../../NUsualCoordinates.h"
+#include "lib/N/NUsualCoordinates.h"
 
-#include "../../Maths/NMatrix3x3.h"
-#include "../Maths/NUT_MathsMisc.h"
+#include "lib/N/Maths/NMatrix3x3.h"
+#include "lib/N/Maths/NUT_MathsMisc.h"
 
 #include "NUT_DrawPencil.h"
 #include "NUT_Draw.h"

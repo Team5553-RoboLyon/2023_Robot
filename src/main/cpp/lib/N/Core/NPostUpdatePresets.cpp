@@ -7,12 +7,12 @@
 // ***************************************************************************************
 #include "lib/N/NCStandard.h"
 #include "lib/N/NType.h"
-#include "../Core/NTime.h"
-#include "../NPostUpdate.h"
-#include "../NPool.h"
-#include "../NStructure.h"
+#include "lib/N/Core/NTime.h"
+#include "lib/N/NPostUpdate.h"
+#include "lib/N/NPool.h"
+#include "lib/N/NStructure.h"
 
-#include "../NPostUpdatePresets.h"
+#include "lib/N/NPostUpdatePresets.h"
 /*
 // =======================================================================================
 // POOL POST UPDATE PROCESS

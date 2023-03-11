@@ -7,15 +7,15 @@
 // ***************************************************************************************
 #include "lib/N/NCStandard.h"
 #include "lib/N/NType.h"
-#include "../NMatrix.h"
-#include "../NScreenRect.h"
-#include "../NScreenPoint.h"
-#include "../Maths/NVec3f32.h"
-#include "../NRectf32.h"
-#include "../Core/NSafeConversion.h"
-#include "../Maths/NMatrix3x3.h"
+#include "lib/N/NMatrix.h"
+#include "lib/N/NScreenRect.h"
+#include "lib/N/NScreenPoint.h"
+#include "lib/N/Maths/NVec3f32.h"
+#include "lib/N/NRectf32.h"
+#include "lib/N/Core/NSafeConversion.h"
+#include "lib/N/Maths/NMatrix3x3.h"
 #include "lib/N/Geometry/NGeometry.h"
-#include "../Miscellaneous/NColorGradient.h"
+#include "lib/N/Miscellaneous/NColorGradient.h"
 
 #ifdef __cplusplus
 extern "C"

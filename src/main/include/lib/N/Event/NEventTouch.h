@@ -10,9 +10,9 @@
 // ***************************************************************************************
 #include "lib/N/NCStandard.h"
 #include "lib/N/NType.h"
-#include "../Event/NEvent.h"
-#include "../Touch/NTouch.h"
-#include "../Touch/NTouchListener.h"
+#include "lib/N/Event/NEvent.h"
+#include "lib/N/Touch/NTouch.h"
+#include "lib/N/Touch/NTouchListener.h"
 
 #ifdef __cplusplus
 extern "C"

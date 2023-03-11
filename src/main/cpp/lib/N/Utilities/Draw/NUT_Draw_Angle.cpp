@@ -1,7 +1,7 @@
-#include "../../NCStandard.h"
-#include "../../Geometry/NGeometry.h"
+#include "lib/N/NCStandard.h"
+#include "lib/N/Geometry/NGeometry.h"
 #include "../../NErrorHandling.h"
-#include "../../Maths/NMatrix3x3.h"
+#include "lib/N/Maths/NMatrix3x3.h"
 #include "NUT_DrawPencil.h"
 #include "NUT_Draw.h"
 
@@ -16,7 +16,7 @@ void NUT_Draw_Angle(const NVEC3f32 *pO, const NVEC2f32 *pA, const Nf32 angle, co
 	Nf32			norm = NVec2Length(pA);
 //	NErrorIf(norm == 0.0f, NERROR_INVALID_EXTENT); // pA must be a 'non null-vector'
 
-	// i2d,j2d base 2d 'directe'. ( règle de la main droite)
+	// i2d,j2d base 2d 'directe'. ( rï¿½gle de la main droite)
 	NVEC2	i2d, j2d;
 	NVEC2	vang;
 
@@ -35,7 +35,7 @@ void NUT_Draw_Angle(const NVEC3f32 *pO, const NVEC2f32 *pA, const Nf32 angle, co
 	v0.Position_3f = *pO;
 	NUT_DrawPencil_LineTo(&v0);
 
-	// .................. B ( angle AÔB )
+	// .................. B ( angle Aï¿½B )
 	Nf32	cosaob = cosf(angle);
 	Nf32	sinaob = sinf(angle);
 
@@ -81,7 +81,7 @@ void NUT_Draw_FastAngle(const NVEC3f32 *pO, const NVEC2f32 *pA, const Nu32 fasta
 	Nf32			norm = NVec2Length(pA);
 	NErrorIf(norm == 0.0f, NERROR_INVALID_EXTENT); // pA must be a 'non null-vector'
 
-	// i2d,j2d base 2d 'directe'. ( règle de la main droite)
+	// i2d,j2d base 2d 'directe'. ( rï¿½gle de la main droite)
 	NVEC2	i2d, j2d;
 	NVEC2	vang;
 
@@ -100,7 +100,7 @@ void NUT_Draw_FastAngle(const NVEC3f32 *pO, const NVEC2f32 *pA, const Nu32 fasta
 	v0.Position_3f = *pO;
 	NUT_DrawPencil_LineTo(&v0);
 
-	// .................. B ( angle AÔB )
+	// .................. B ( angle Aï¿½B )
 	Nf32	cosaob, sinaob;
 	NFastCosSin(fastangle, &cosaob, &sinaob);
 

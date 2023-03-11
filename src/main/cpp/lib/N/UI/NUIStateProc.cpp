@@ -1,5 +1,5 @@
 #include "lib/N/NCStandard.h"
-#include "../NFastAnimatedValue.h"
+#include "lib/N/NFastAnimatedValue.h"
 #include "NUI.h"
 
 void NUpdateUIState_Recursive(NUI *pui, const NTIME *ptime)

@@ -2,7 +2,7 @@
 #include <time.h>
 #include "lib/N/NCStandard.h"
 #include "lib/N/NType.h"
-#include "../NFlags.h"
+#include "lib/N/NFlags.h"
 
 #include "NUT_Core.h"
 #include "NUT_Logging.h"

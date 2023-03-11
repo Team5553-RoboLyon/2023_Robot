@@ -1,12 +1,12 @@
 /*
-#include "../../../N/NMemory.h"
-#include "../../../N/NMath.h"
-#include "../../../N/Maths/NVec2f32.h"
+#include "lib/N/NMemory.h"
+#include "lib/N/NMath.h"
+#include "lib/N/Maths/NVec2f32.h"
 #include "lib/N/Maths/NVecLimits.h"
-#include "../../../N/NErrorHandling.h"
+#include "lib/N/NErrorHandling.h"
 */
-#include "../Trajectory/NLVstage.h"
-#include "NLPath.h"
+#include "lib/NL/MotionControl/Trajectory/NLVstage.h"
+#include "lib/NL/MotionControl/Path/NLPath.h"
 
 #ifdef _NEDITOR
 #endif

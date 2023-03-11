@@ -1,19 +1,23 @@
 #include <new>
-#include "../../../N/NErrorHandling.h"
-#include "../../../N/Core/NLimits.h"
-#include "../../../N/NMemory.h"
-#include "../../../N/Maths/NIntervalf32.h"
-#include "NLKnode.h"
-#include "NLVstageArrayTools.h"
-#include "NLVstage.h"
-#include "NLVstageXSlice.h"
-#include "../../NL2DOrthogonalCoordinateSystem.h"
+#include "lib/N/NErrorHandling.h"
+#include "lib/N/Core/NLimits.h"
+
+#include "lib/N/NMemory.h"
+#include "lib/N/Maths/NIntervalf32.h"
+#include "lib/NL/MotionControl/Trajectory/NLKNode.h"
+#include "lib/NL/MotionControl/Trajectory/NLVstageArrayTools.h"
+
+#include "lib/NL/MotionControl/Trajectory/NLVstage.h"
+
+#include "lib/NL/MotionControl/Trajectory/NLVstageXSlice.h"
+
+#include "lib/NL/NL2DOrthogonalCoordinateSystem.h"
 
 #ifdef _NEDITOR
-// #include "../../N/NEditor.h"
-#include "../../../N/Utilities/Draw/NUT_Draw.h"
-#include "../../../N/Utilities/Draw/NUT_DrawPencil.h"
-#include "../../NL2DOrthogonalCoordinateSystem_MotionProfileFlags.h"
+// #include "lib/N/NEditor.h"
+#include "lib/N/Utilities/Draw/NUT_Draw.h"
+#include "lib/N/Utilities/Draw/NUT_DrawPencil.h"
+#include "lib/NL/NL2DOrthogonalCoordinateSystem_MotionProfileFlags.h"
 #endif
 
 NLVSTAGEXSLICE::NLVSTAGEXSLICE()

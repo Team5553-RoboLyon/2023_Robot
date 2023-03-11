@@ -1,12 +1,12 @@
 #ifdef _NEDITOR
 // -----------------------------------------------------------------------
 // #include "lib/N/NCStandard.h"
-// #include "../Event/NEvent.h"
-// #include "../NCamera.h"
-#include "../NViewport.h"
-#include "../NEditor.h"
-#include "../NCore.h"
-#include "../Event/NEventTouch.h"
+// #include "lib/N/Event/NEvent.h"
+// #include "lib/N/NCamera.h"
+#include "lib/N/NViewport.h"
+#include "lib/N/NEditor.h"
+#include "lib/N/NCore.h"
+#include "lib/N/Event/NEventTouch.h"
 // GLOBALES
 NEDITOR NEditor;
 

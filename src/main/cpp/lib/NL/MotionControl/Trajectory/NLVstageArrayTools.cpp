@@ -1,13 +1,15 @@
-#include "../../../N/NErrorHandling.h"
-#include "../../../N/NMath.h"
-#include "../../../N/Utilities/Draw/NUT_Draw.h"
-#include "../../../N/Utilities/Draw/NUT_DrawPencil.h"
+#include "lib/N/NErrorHandling.h"
+#include "lib/N/NMath.h"
+#include "lib/N/Utilities/Draw/NUT_Draw.h"
+#include "lib/N/Utilities/Draw/NUT_DrawPencil.h"
 
-#include "NLVstageArrayTools.h"
+#include "lib/NL/MotionControl/Trajectory/NLVstageArrayTools.h"
 
 
 
-// j'en suis là
+
+
+// j'en suis lï¿½
 Nu32 NLVstageArrayTools::insertVelocityStage(NARRAY* parray, NLVSTAGE* pnewvs, const Nu32 mode)
 {
 	NErrorIf(!pnewvs, NERROR_NULL_POINTER);
@@ -28,13 +30,13 @@ Nu32 NLVstageArrayTools::insertVelocityStage(NARRAY* parray, NLVSTAGE* pnewvs, c
 		NLVSTAGE* pvstage = (NLVSTAGE*)parray->pFirst;
 		for (i = 0; i < parray->Size; i++, pvstage++)
 		{
-			// La fonction cutOut est configurée pour:
-			//			1/ Ne pusher sur "tmp_out_array" que les parties à gauche ou à droite du cookiecutter
-			//			2/ Forcer la découpe systematique que pnewvs aie une vitesse plus élevée ou plus basse ...
+			// La fonction cutOut est configurï¿½e pour:
+			//			1/ Ne pusher sur "tmp_out_array" que les parties ï¿½ gauche ou ï¿½ droite du cookiecutter
+			//			2/ Forcer la dï¿½coupe systematique que pnewvs aie une vitesse plus ï¿½levï¿½e ou plus basse ...
 			if (ISFLAG_ON(pvstage->cutOut(&tmp_out_array, pnewvs, MAKE_CUTOUT_CFG(0, FLAG_CUTOUT_FORCE | FLAG_CUTOUT_LEFT | FLAG_CUTOUT_RIGHT)), FLAG_CUTOUT_RIGHT))
 			{
-				// Tout ou partie de pvstage a été poussé sur "tmp_out_array" en étant à droite de pnewvs ...
-				// tous les pvstage suivants ne pouvant être qu'encore plus à droite, on sort !
+				// Tout ou partie de pvstage a ï¿½tï¿½ poussï¿½ sur "tmp_out_array" en ï¿½tant ï¿½ droite de pnewvs ...
+				// tous les pvstage suivants ne pouvant ï¿½tre qu'encore plus ï¿½ droite, on sort !
 				_brk = 1;
 				break;
 			}
@@ -42,26 +44,26 @@ Nu32 NLVstageArrayTools::insertVelocityStage(NARRAY* parray, NLVSTAGE* pnewvs, c
 
 		if (_brk)
 		{
-			// On insère pnewvs juste avant le dernier vstage inséré ( et qui était donc à droite, soit après, pnewvdesc )
+			// On insï¿½re pnewvs juste avant le dernier vstage insï¿½rï¿½ ( et qui ï¿½tait donc ï¿½ droite, soit aprï¿½s, pnewvdesc )
 			NInsertArrayElement(&tmp_out_array, tmp_out_array.Size - 1, (NBYTE*)pnewvs);
 
-			// Reste-t'il des NLVSTAGE à insérer ? ( car peut-être que le 'break' (_brk = 1 ) c'est produit sur le dernier Vstage ... 
+			// Reste-t'il des NLVSTAGE ï¿½ insï¿½rer ? ( car peut-ï¿½tre que le 'break' (_brk = 1 ) c'est produit sur le dernier Vstage ... 
 			if (i < (parray->Size - 1))
 			{
-				// Cela signifie qu'on est sorti de la boucle "for" via un break sans attendre la condition de sortie 'officielle' càd : (i == parray->Size)
-				// le ième vstage de l'array 'parray' a bien été cutOut/inséré mais la boucle a été interrompue juste après.
-				// et on termine l'insertion de tous les suivants de manière plus "véloce" ...
+				// Cela signifie qu'on est sorti de la boucle "for" via un break sans attendre la condition de sortie 'officielle' cï¿½d : (i == parray->Size)
+				// le iï¿½me vstage de l'array 'parray' a bien ï¿½tï¿½ cutOut/insï¿½rï¿½ mais la boucle a ï¿½tï¿½ interrompue juste aprï¿½s.
+				// et on termine l'insertion de tous les suivants de maniï¿½re plus "vï¿½loce" ...
 				NArrayBufferPushBack(&tmp_out_array, pvstage + 1, parray->Size - 1 - i);
 			}
 		}
 		else
 		{
-			// On insère pnewvs à la fin ... tout simplement
-			// En effet, si _brk == 0 alors cela signifie que tous les Vstages ont été "poussés"  sur 'tmp_out_array' sans qu'aucun ne "dépasse" à droite de pnewvs ...
+			// On insï¿½re pnewvs ï¿½ la fin ... tout simplement
+			// En effet, si _brk == 0 alors cela signifie que tous les Vstages ont ï¿½tï¿½ "poussï¿½s"  sur 'tmp_out_array' sans qu'aucun ne "dï¿½passe" ï¿½ droite de pnewvs ...
 			NArrayPushBack(&tmp_out_array, (NBYTE*)pnewvs);
 		}
 
-		// pour finir on swap les contenus ( pour éviter une copie ;) )
+		// pour finir on swap les contenus ( pour ï¿½viter une copie ;) )
 		NSwapArrayContent(parray, &tmp_out_array);
 		NClearArray(&tmp_out_array, NULL);
 	}
@@ -71,7 +73,7 @@ Nu32 NLVstageArrayTools::insertVelocityStage(NARRAY* parray, NLVSTAGE* pnewvs, c
 
 Nu32 NLVstageArrayTools::slice(NARRAY* pout, const NARRAY* pin, Nf32 s0, Nf32 s1, const Nbool binsert_start_end)
 {
-	NErrorIf(pin == pout, NERROR_INCONSISTENT_VALUES);	// pin et pout doivent être 2 arrays differents !
+	NErrorIf(pin == pout, NERROR_INCONSISTENT_VALUES);	// pin et pout doivent ï¿½tre 2 arrays differents !
 	NErrorIf(!pin, NERROR_NULL_POINTER);
 	NErrorIf(!pout, NERROR_NULL_POINTER);
 	NErrorIf(pout->Size, NERROR_ARRAY_IS_NOT_EMPTY);
@@ -86,17 +88,17 @@ Nu32 NLVstageArrayTools::slice(NARRAY* pout, const NARRAY* pin, Nf32 s0, Nf32 s1
 	NLVSTAGE* pv1 = pv0 + pin->Size - 1;
 	NErrorIf(pv1 != (NLVSTAGE*)NGetLastArrayPtr(pin), NERROR_SYSTEM_CHECK);
 
-	// Si l'intervalle [s0,s1] est entierement avant ou entierement après l'intervalle [pv0->m_s0, pv1->m_s1] ...
+	// Si l'intervalle [s0,s1] est entierement avant ou entierement aprï¿½s l'intervalle [pv0->m_s0, pv1->m_s1] ...
 	if (s1 <= pv0->m_s0 || (s0 >= pv1->m_s1))
 		return 0;
 
-	// L'intervalle [s0,s1] ne saurait être plus 'large' que l'intervalle [pv0->m_s0, pv1->m_s1] ...
+	// L'intervalle [s0,s1] ne saurait ï¿½tre plus 'large' que l'intervalle [pv0->m_s0, pv1->m_s1] ...
 	s0 = NMAX(s0, pv0->m_s0);
 	s1 = NMIN(s1, pv1->m_s1);
 
 	// A partir d'ici nous sommes surs que ...
 	// L'intervalle [s0,s1] est inclus dans l'intervalle [pv0->m_s0, pv1->m_s1]
-	// On cherche maintenant à encadrer plus finement [s0,s1]
+	// On cherche maintenant ï¿½ encadrer plus finement [s0,s1]
 	while (pv0->m_s1 < s0) { pv0++; };	
 	while (pv1->m_s0 > s1) { pv1--; };
 
@@ -122,12 +124,12 @@ Nu32 NLVstageArrayTools::slice(NARRAY* pout, const NARRAY* pin, Nf32 s0, Nf32 s1
 	//			   s1							|										s1				|															s1
 	//											|														|	
 
-	// Pour Pv0 et Pv1, dans le cas #2 la fonction slice ... slice dans le vide ! ( c'est à dire entre 2 Vstages, soit une portion de clothoide reliant 1 segment et un arc de cercle.)
+	// Pour Pv0 et Pv1, dans le cas #2 la fonction slice ... slice dans le vide ! ( c'est ï¿½ dire entre 2 Vstages, soit une portion de clothoide reliant 1 segment et un arc de cercle.)
 	// Mais nous sommes egalement surs que pour s0 il y a un pv0-1 et pour s1 il y a un pv1+1
 	// On peut donc calculer:
 	//									1/ le point d'intersection entre [pv0-1->m_s1,pv0->m_s0] et la verticale passant par s0
 	//									2/ le point d'intersection entre [pv1->m_s1,pv1+1->m_s0] et la verticale passant par s1
-	// ... et créer un vstage "point" pour chacun d'eux.
+	// ... et crï¿½er un vstage "point" pour chacun d'eux.
 	NLVSTAGE	vstage;
 	Nu32		first;
 	Nu32		size = (pv1 - pv0) + 1;
@@ -160,7 +162,7 @@ Nu32 NLVstageArrayTools::slice(NARRAY* pout, const NARRAY* pin, Nf32 s0, Nf32 s1
 		pvout0 = (NLVSTAGE*)NGetArrayPtr(pout, first);
 		//pvout1 = pvout0 + pout->Size - 1;
 		pvout1 = pvout0 + size - 1;
-		// Dans les cas autres que le cas 2, l'abscisse m_s0 de pv0 devient s0 ! Normal on a s0 appartient à [pv0->m_s0, pv0->m_s1] et on commence par s0 !
+		// Dans les cas autres que le cas 2, l'abscisse m_s0 de pv0 devient s0 ! Normal on a s0 appartient ï¿½ [pv0->m_s0, pv0->m_s1] et on commence par s0 !
 		if (!(s0 < pv0->m_s0))
 		{
 			pvout0->m_s0 = s0;
@@ -178,7 +180,7 @@ Nu32 NLVstageArrayTools::slice(NARRAY* pout, const NARRAY* pin, Nf32 s0, Nf32 s1
 	else
 	{
 		NErrorIf(!size, NERROR_SYSTEM_CHECK);
-		// Dans les cas autres que le cas 2, l'abscisse m_s1 de pv1 devient s1 ! Normal on a s1 appartient à [pv1->m_s0, pv1->m_s1] et on termine par s1 !
+		// Dans les cas autres que le cas 2, l'abscisse m_s1 de pv1 devient s1 ! Normal on a s1 appartient ï¿½ [pv1->m_s0, pv1->m_s1] et on termine par s1 !
 		pvout1->m_s1 = s1;
 	}
 
@@ -195,30 +197,30 @@ Nu32 NLVstageArrayTools::slice(NARRAY* pout, const NARRAY* pin, Nf32 s0, Nf32 s1
 // ------------------------------------------------------------------------------------------
 /**
  *	@brief	Combine 2 arrays de NLVSTAGE en 1 seul.
- *			Pour se faire, les vstages de chaque array sont utilisés comme cookiecutters pour découper ceux de l'autre array.
- *			Ainsi les Vstages de pin0 sont découpés par ceux de pin1
- *			Ensuite les Vstages de pin1 sont découpés par les VStages résultant de la découpe précédente.
- *			Pour finir l'ensemble de ces Vstages sont fusionnés en 1 seule Array avec la certitude qu'il n'y a pas 
+ *			Pour se faire, les vstages de chaque array sont utilisï¿½s comme cookiecutters pour dï¿½couper ceux de l'autre array.
+ *			Ainsi les Vstages de pin0 sont dï¿½coupï¿½s par ceux de pin1
+ *			Ensuite les Vstages de pin1 sont dï¿½coupï¿½s par les VStages rï¿½sultant de la dï¿½coupe prï¿½cï¿½dente.
+ *			Pour finir l'ensemble de ces Vstages sont fusionnï¿½s en 1 seule Array avec la certitude qu'il n'y a pas 
  *			juxtaposition de 2 NLVStages.
  *
- *	@param	pout est l'array où sera stocké la combinaison des 2 autres.
+ *	@param	pout est l'array oï¿½ sera stockï¿½ la combinaison des 2 autres.
  *	@param	pin0 est le premier array de NLVSTAGE
  *	@param	pin1 est le second array de NLVSTAGE
- *	@param	in0_cutters_desc décrit comment construire les cutters des NLVSTAGE de pin0 quand ceux ci sont utilisés comme cookiecutters.
+ *	@param	in0_cutters_desc dï¿½crit comment construire les cutters des NLVSTAGE de pin0 quand ceux ci sont utilisï¿½s comme cookiecutters.
  *			Il y a deux valeurs possibles:	\b COMBINE_RESET_CUTTERS	les cutters seront simplement RESET ( et donc verticaux ).
  *											\b COMBINE_CHAINED_CUTTERS	les cutters seront construits par "chainage".  
- *	@param	in1_cutters_desc décrit comment construire les cutters des NLVSTAGE de pin1 quand ceux ci sont utilisés comme cookiecutters.
+ *	@param	in1_cutters_desc dï¿½crit comment construire les cutters des NLVSTAGE de pin1 quand ceux ci sont utilisï¿½s comme cookiecutters.
  *			Il y a deux valeurs possibles:	\b COMBINE_RESET_CUTTERS	les cutters seront simplement RESET ( et donc verticaux ).
  *											\b COMBINE_CHAINED_CUTTERS	les cutters seront construits par "chainage".
 
- *	@return	le nombre de NLVSTAGE créés et pushés sur pout:
+ *	@return	le nombre de NLVSTAGE crï¿½ï¿½s et pushï¿½s sur pout:
  */
  // ------------------------------------------------------------------------------------------
 Nu32 NLVstageArrayTools::combine(NARRAY* pout, const NARRAY* pin0, const NARRAY* pin1, const Nu32 in0_cutters_desc, const Nu32 in1_cutters_desc)
 {
-	NErrorIf(pin0 == pout, NERROR_INCONSISTENT_VALUES);	// pin0 et pout doivent être 2 arrays differents !
-	NErrorIf(pin1 == pout, NERROR_INCONSISTENT_VALUES);	// pin1 et pout doivent être 2 arrays differents !
-	NErrorIf(pin0 == pin1, NERROR_INCONSISTENT_VALUES);	// pin0 et pin1 doivent être 2 arrays differents !
+	NErrorIf(pin0 == pout, NERROR_INCONSISTENT_VALUES);	// pin0 et pout doivent ï¿½tre 2 arrays differents !
+	NErrorIf(pin1 == pout, NERROR_INCONSISTENT_VALUES);	// pin1 et pout doivent ï¿½tre 2 arrays differents !
+	NErrorIf(pin0 == pin1, NERROR_INCONSISTENT_VALUES);	// pin0 et pin1 doivent ï¿½tre 2 arrays differents !
 	NErrorIf(pin0 && pin0->ElementSize != sizeof(NLVSTAGE), NERROR_ARRAY_WRONG_ELEMENT_SIZE);
 	NErrorIf(pin1 && pin1->ElementSize != sizeof(NLVSTAGE), NERROR_ARRAY_WRONG_ELEMENT_SIZE);
 
@@ -252,11 +254,11 @@ Nu32 NLVstageArrayTools::combine(NARRAY* pout, const NARRAY* pin0, const NARRAY*
 	{
 		if (!pin1->Size)
 		{
-			return 0; // normalement pout est initialement 'vide' et aucun element n'a été ajouté.
+			return 0; // normalement pout est initialement 'vide' et aucun element n'a ï¿½tï¿½ ajoutï¿½.
 		}
 		else
 		{
-			// en debug nous sommes sûrs que pout->Size = 0 !
+			// en debug nous sommes sï¿½rs que pout->Size = 0 !
 			NCopyArray(pout, pin1);
 			return pin1->Size;
 		}
@@ -265,15 +267,15 @@ Nu32 NLVstageArrayTools::combine(NARRAY* pout, const NARRAY* pin0, const NARRAY*
 	{
 		if (!pin1->Size)
 		{
-			// en debug nous sommes sûrs que pout->Size = 0 !
+			// en debug nous sommes sï¿½rs que pout->Size = 0 !
 			NCopyArray(pout, pin0);
 			return pin0->Size;
 		}
 		/*
 		else ...  ( pin0->Size != 0 && pin1->Size != 0 )
 		{
-			Le cas où pin0->Size et pin1->Size sont tous les 2 non nulls.
-			est simplement traité juste en dessous, en dehors du test.
+			Le cas oï¿½ pin0->Size et pin1->Size sont tous les 2 non nulls.
+			est simplement traitï¿½ juste en dessous, en dehors du test.
 		}
 		*/
 	}
@@ -287,11 +289,11 @@ Nu32 NLVstageArrayTools::combine(NARRAY* pout, const NARRAY* pin0, const NARRAY*
 	}
 	*/
 
-	//	a)	On commence par découper les NLVSTAGE de pin0 avec les NLVSTAGES de pin1 comme cookiecutters.
-	//		Pour ne conserver que les portions effectives, c'est à dire les portions "non-masquées" des NLVSTAGE de pin0 par un NLVSTAGE de pin1.
-	//		Les portions de NLVSTAGE masquées ( = cookies ) totalement ou en partie, sont retirées.
+	//	a)	On commence par dï¿½couper les NLVSTAGE de pin0 avec les NLVSTAGES de pin1 comme cookiecutters.
+	//		Pour ne conserver que les portions effectives, c'est ï¿½ dire les portions "non-masquï¿½es" des NLVSTAGE de pin0 par un NLVSTAGE de pin1.
+	//		Les portions de NLVSTAGE masquï¿½es ( = cookies ) totalement ou en partie, sont retirï¿½es.
 	NARRAY	trimed_0_array;
-	NSetupArray(&trimed_0_array, pin0->Size + 1, sizeof(NLVSTAGE)); // capacité estimée très aproximative ...
+	NSetupArray(&trimed_0_array, pin0->Size + 1, sizeof(NLVSTAGE)); // capacitï¿½ estimï¿½e trï¿½s aproximative ...
 	pvs = (NLVSTAGE*)pin0->pFirst;
 	for (i = 0; i < pin0->Size; i++, pvs++)
 	{
@@ -314,9 +316,9 @@ Nu32 NLVstageArrayTools::combine(NARRAY* pout, const NARRAY* pin0, const NARRAY*
 			{
 				NArrayPopBack(&trimed_0_array, (NBYTE*)&vs);
 
-				// La fonction cutOut est configurée pour:
-				//			1/ Ne pusher sur "trimed_0_array" que les parties à gauche ou à droite du cookiecutter
-				//			2/ pusher le vstage tout entier sur "trimed_user_vs_array" en cas de coupe non initiée et retourner alors "FLAG_CUTOUT_RIGHT"
+				// La fonction cutOut est configurï¿½e pour:
+				//			1/ Ne pusher sur "trimed_0_array" que les parties ï¿½ gauche ou ï¿½ droite du cookiecutter
+				//			2/ pusher le vstage tout entier sur "trimed_user_vs_array" en cas de coupe non initiï¿½e et retourner alors "FLAG_CUTOUT_RIGHT"
 				if (ISFLAG_OFF(vs.cutOut(&trimed_0_array, pcookiecutter, MAKE_CUTOUT_CFG(FLAG_CUTOUT_RIGHT, FLAG_CUTOUT_LEFT | FLAG_CUTOUT_RIGHT)), FLAG_CUTOUT_RIGHT))
 					break;
 			}
@@ -324,10 +326,10 @@ Nu32 NLVstageArrayTools::combine(NARRAY* pout, const NARRAY* pin0, const NARRAY*
 				break;
 		}
 	}
-	//	b)	Ensuite, on fait l'inverse, c'est à dire qu'on va découper les NLVStages de pin1 pour ne conserver que les portions "non-masquées" par les NLStage de trimed_0_array
-	//		( soit ceux de pin0 fraichement découpés )
+	//	b)	Ensuite, on fait l'inverse, c'est ï¿½ dire qu'on va dï¿½couper les NLVStages de pin1 pour ne conserver que les portions "non-masquï¿½es" par les NLStage de trimed_0_array
+	//		( soit ceux de pin0 fraichement dï¿½coupï¿½s )
 	NARRAY	trimed_1_array;
-	NSetupArray(&trimed_1_array, pin1->Size + 1, sizeof(NLVSTAGE)); // capacité estimée très aproximative ...
+	NSetupArray(&trimed_1_array, pin1->Size + 1, sizeof(NLVSTAGE)); // capacitï¿½ estimï¿½e trï¿½s aproximative ...
 	pvs = (NLVSTAGE*)pin1->pFirst;
 	for (i = 0; i < pin1->Size; i++, pvs++)
 	{
@@ -348,9 +350,9 @@ Nu32 NLVstageArrayTools::combine(NARRAY* pout, const NARRAY* pin0, const NARRAY*
 			if (trimed_1_array.Size)
 			{
 				NArrayPopBack(&trimed_1_array, (NBYTE*)&vs);
-				// La fonction cutOut est configurée pour:
-				//			1/ Ne pusher sur "trimed_1_array" que les parties à gauche ou à droite du cookiecutter
-				//			2/ pusher le vstage tout entier sur "trimed_user_vs_array" en cas de coupe non initiée et retourner alors "FLAG_CUTOUT_RIGHT"
+				// La fonction cutOut est configurï¿½e pour:
+				//			1/ Ne pusher sur "trimed_1_array" que les parties ï¿½ gauche ou ï¿½ droite du cookiecutter
+				//			2/ pusher le vstage tout entier sur "trimed_user_vs_array" en cas de coupe non initiï¿½e et retourner alors "FLAG_CUTOUT_RIGHT"
 				if (ISFLAG_OFF(vs.cutOut(&trimed_1_array, pcookiecutter, MAKE_CUTOUT_CFG(FLAG_CUTOUT_RIGHT, FLAG_CUTOUT_LEFT | FLAG_CUTOUT_RIGHT)), FLAG_CUTOUT_RIGHT))
 					break;
 			}
@@ -360,11 +362,11 @@ Nu32 NLVstageArrayTools::combine(NARRAY* pout, const NARRAY* pin0, const NARRAY*
 	}
 
 	//	c)	On fusionne les 2 arrays de trims en un seul
-	//		En prenant soin au passage de rassembler les trims contigus qui auraient la même vitesse, ce qui est tout à fait possible lors de cette fusion
-	NLVSTAGE* ptrimed_0 = (NLVSTAGE*)trimed_0_array.pFirst;			// Pointeur VSTAGE "utilisateur" découpé
+	//		En prenant soin au passage de rassembler les trims contigus qui auraient la mï¿½me vitesse, ce qui est tout ï¿½ fait possible lors de cette fusion
+	NLVSTAGE* ptrimed_0 = (NLVSTAGE*)trimed_0_array.pFirst;			// Pointeur VSTAGE "utilisateur" dï¿½coupï¿½
 	NLVSTAGE* ptrimed_0_out = ptrimed_0 + trimed_0_array.Size;		// Valeur "hors tableau" ( = max + 1 )
 
-	NLVSTAGE* ptrimed_1 = (NLVSTAGE*)trimed_1_array.pFirst;			// Pointeur VSTAGE "computé (à partir du path)" découpé
+	NLVSTAGE* ptrimed_1 = (NLVSTAGE*)trimed_1_array.pFirst;			// Pointeur VSTAGE "computï¿½ (ï¿½ partir du path)" dï¿½coupï¿½
 	NLVSTAGE* ptrimed_1_out = ptrimed_1 + trimed_1_array.Size;		// Valeur "hors tableau" ( = max + 1 )
 	while (1)
 	{
@@ -374,12 +376,12 @@ Nu32 NLVstageArrayTools::combine(NARRAY* pout, const NARRAY* pin0, const NARRAY*
 			// Si ptrimed_0 est hors tableau ...
 			if (ptrimed_0 == ptrimed_0_out)
 			{
-				// C'est qu'on a terminé !
+				// C'est qu'on a terminï¿½ !
 				break;
 			}
 			else
 			{
-				// Il ne reste plus qu'à "empiler" les ptrimed_0 qui restent jusqu'au dernier !
+				// Il ne reste plus qu'ï¿½ "empiler" les ptrimed_0 qui restent jusqu'au dernier !
 				ptrimed_0->aggregate(pout);
 				ptrimed_0++;
 				// ---> continue
@@ -389,15 +391,15 @@ Nu32 NLVstageArrayTools::combine(NARRAY* pout, const NARRAY* pin0, const NARRAY*
 		// Si ptrimed_0 est hors tableau
 		else if (ptrimed_0 == ptrimed_0_out)
 		{
-			// Il ne reste plus qu'à "empiler" les ptrimed_1 qui restent jusqu'au dernier !
+			// Il ne reste plus qu'ï¿½ "empiler" les ptrimed_1 qui restent jusqu'au dernier !
 			ptrimed_1->aggregate(pout);
 			ptrimed_1++;
 			// ---> continue
 		}
-		// ptrimed_0 et ptrimed_1 sont valides tous les deux, il faut choisir lequel des deux insére ...
+		// ptrimed_0 et ptrimed_1 sont valides tous les deux, il faut choisir lequel des deux insï¿½re ...
 		else
 		{
-			// Les deux ont exactement la même abscisse départ
+			// Les deux ont exactement la mï¿½me abscisse dï¿½part
 			// Cela n'est possible que si au moins un des deux est un point ( m_s0 = m_s1 ).
 			// Notes: Si les deux sont des points alors 
 			if (ptrimed_1->m_s0 == ptrimed_0->m_s0)
@@ -409,8 +411,8 @@ Nu32 NLVstageArrayTools::combine(NARRAY* pout, const NARRAY* pin0, const NARRAY*
 					if (ptrimed_1->m_s1 == ptrimed_1->m_s0)
 					{
 						// Les deux VStages sont donc des points !
-						// Dans ce cas de figure inédit et normalement impossible tant qu'on autorise pas les user vstage POINT.
-						// Cependant, au cas ou cela évolue ... on gere le cas de manière simple et efficace:
+						// Dans ce cas de figure inï¿½dit et normalement impossible tant qu'on autorise pas les user vstage POINT.
+						// Cependant, au cas ou cela ï¿½volue ... on gere le cas de maniï¿½re simple et efficace:
 						// On ne conserve que le plus bas des deux !
 						if(ptrimed_0->m_v <ptrimed_1->m_v)
 							ptrimed_0->aggregate(pout);
@@ -421,7 +423,7 @@ Nu32 NLVstageArrayTools::combine(NARRAY* pout, const NARRAY* pin0, const NARRAY*
 					}
 					else
 					{
-						// On insère d'abord le point puis l'autre !
+						// On insï¿½re d'abord le point puis l'autre !
 						ptrimed_0->aggregate(pout);
 						ptrimed_1->aggregate(pout);
 						ptrimed_0++;
@@ -437,7 +439,7 @@ Nu32 NLVstageArrayTools::combine(NARRAY* pout, const NARRAY* pin0, const NARRAY*
 					// On considere donc, en mode normal que ptrimed_1 EST obligatoirement 1 point ...
 					// on ne le teste pas et on assumme donc que :  ptrimed_1->m_s1 = ptrimed_1->m_s0
 					// ptrimed_1 est un point egalement !
-					// On insère d'abord le point puis l'autre !
+					// On insï¿½re d'abord le point puis l'autre !
 					ptrimed_1->aggregate(pout);
 					ptrimed_0->aggregate(pout);
 					ptrimed_1++;
@@ -449,7 +451,7 @@ Nu32 NLVstageArrayTools::combine(NARRAY* pout, const NARRAY* pin0, const NARRAY*
 			{
 				NErrorIf(ptrimed_1->m_s0 < ptrimed_0->m_s1, NERROR_SYSTEM_GURU_MEDITATION);
 
-				// Le Trim 0 est situé AVANT le Trim 1
+				// Le Trim 0 est situï¿½ AVANT le Trim 1
 				ptrimed_0->aggregate(pout);
 				ptrimed_0++;
 				// ---> continue
@@ -480,7 +482,7 @@ Nu32 NLVstageArrayTools::combine(NARRAY* pout, const NARRAY* pin0, const NARRAY*
 	NClearArray(&trimed_1_array, NULL);
 
 
-//	NErrorIf((NGetLastArrayPtr(pout)) && ((NLVSTAGE*)NGetLastArrayPtr(pout))->m_s1 > m_pPath->m_geometry.m_ds, NERROR_VALUE_OUTOFRANGE); // supérieure à l'abscisse maximale
+//	NErrorIf((NGetLastArrayPtr(pout)) && ((NLVSTAGE*)NGetLastArrayPtr(pout))->m_s1 > m_pPath->m_geometry.m_ds, NERROR_VALUE_OUTOFRANGE); // supï¿½rieure ï¿½ l'abscisse maximale
 //	|
 //	|
 //	+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------

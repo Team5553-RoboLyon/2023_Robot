@@ -10,8 +10,8 @@
 #include "lib/N/NCStandard.h"
 #include "lib/N/NType.h"
 
-#include "../Maths/NVec4f32.h"
-#include "../Miscellaneous/NColor.h"
+#include "lib/N/Maths/NVec4f32.h"
+#include "lib/N/Miscellaneous/NColor.h"
 #include "lib/N/NErrorHandling.h"
 
 NCOLOR *NLerpColorRange(NCOLOR *presult, const NCOLOR *prange, const Nu32 range_size, const Nf32 ratio, const NCOLORRANGE_LERP_MODE_ENUM mode)

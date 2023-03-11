@@ -1,7 +1,7 @@
 #include "lib/N/NCStandard.h"
-#include "../Containers/NArray.h"
+#include "lib/N/Containers/NArray.h"
 #include "lib/N/NErrorHandling.h"
-#include "../Geometry/NGeometryMisc.h"
+#include "lib/N/Geometry/NGeometryMisc.h"
 
 #include "NUT_geometry.h"
 

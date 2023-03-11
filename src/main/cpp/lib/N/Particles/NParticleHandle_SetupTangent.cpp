@@ -1,8 +1,8 @@
 #include "lib/N/NCStandard.h"
 #include "lib/N/NType.h"
-#include "../NFastRandExtend.h"
-#include "../N3DCoordSystemConversion_CartesianCylindric.h"
-#include "../N3DCoordSystemConversion_CartesianSpheric.h"
+#include "lib/N/NFastRandExtend.h"
+#include "lib/N/N3DCoordSystemConversion_CartesianCylindric.h"
+#include "lib/N/N3DCoordSystemConversion_CartesianSpheric.h"
 #include "lib/N/GL/Ngl.h"
 #include "lib/N/NErrorHandling.h"
 

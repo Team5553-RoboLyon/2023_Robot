@@ -1,5 +1,5 @@
-#include "../../NCStandard.h"
-#include "../../Geometry/NGeometry.h"
+#include "lib/N/NCStandard.h"
+#include "lib/N/Geometry/NGeometry.h"
 #include "../../NErrorHandling.h"
 #include "NUT_DrawPencil.h"
 #include "NUT_Draw.h"

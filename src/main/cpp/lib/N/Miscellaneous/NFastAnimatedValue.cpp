@@ -10,9 +10,9 @@
 #include "lib/N/NCStandard.h"
 #include "lib/N/NType.h"
 
-#include "../Maths/NVec2f32.h"
-#include "../Core/NSafeConversion.h"
-#include "../NFastAnimatedValue.h"
+#include "lib/N/Maths/NVec2f32.h"
+#include "lib/N/Core/NSafeConversion.h"
+#include "lib/N/NFastAnimatedValue.h"
 // ------------------------------------------------------------------------------------------
 // NCreateFastAnimatedValueLUT
 // ------------------------------------------------------------------------------------------

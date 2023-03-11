@@ -1,16 +1,16 @@
 #pragma once
 
-#include "../../../N/NType.h"
-#include "../../../N/Maths/NVec2f32.h"
-#include "../../../N/Maths/NMatrix3x3.h"
-#include "../../../N/Miscellaneous/NColor.h"
+#include "lib/N/NType.h"
+#include "lib/N/Maths/NVec2f32.h"
+#include "lib/N/Maths/NMatrix3x3.h"
+#include "lib/N/Miscellaneous/NColor.h"
 
-#include "../../MotionControl/DriveTrain/NLDriveTrainSpecs.h"
+#include "lib/NL/MotionControl/DriveTrain/NLDriveTrainSpecs.h"
 #include "NLVirtualMotor.h"
 #include "NLVirtualGearBox.h"
-#include "NLVirtualEncoder.h"
+#include "lib/NL/SimulatioN/VirtualRobot/NLVirtualEncoder.h"
 #include "NLVirtualGyro.h"
-#include "../NLRobot.h"
+#include "lib/NL/Simulation/NLRobot.h"
 
 // Le robot virtuel ( VIRTUAL ROBOT ) est pour le simulateur l'�quivalant du robot r�el ( celui qui roule pour de vrai sur le terrain ).
 // Ainsi le robot virtuel est compos� de boites de vitesse virtuelles, moteurs virtuels, encodeurs virtuel, gyroscope virtuel ... qui repr�sentent

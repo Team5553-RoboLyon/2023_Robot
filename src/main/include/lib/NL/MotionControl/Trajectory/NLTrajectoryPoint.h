@@ -1,7 +1,7 @@
 #pragma once
-#include "../../../N/NType.h"
-#include "../../../N/Maths/NVec2f32.h"
-#include "../NLKIN.h"
+#include "lib/N/NType.h"
+#include "lib/N/Maths/NVec2f32.h"
+#include "lib/NL/MotionControl/NLKin.h"
 
 
 // FULL STATE : 
@@ -13,9 +13,9 @@ struct NLTRAJECTORY_POINT
 	inline void	null() { Nmem0(this, NLTRAJECTORY_POINT); }
 
 	NVEC2f32	m_p;		// position (x,y) sur la trajectoire.
-	Nf32		m_k;		// courbure à l'abscisse curviligne m_kin.m_s
-	NVEC2f32	m_u;		// tangente à la trajectoire en cette position ( pour l'instant n'est pas garanti unitaire à cause de l'appel à la fonction NLTRAJECTORY_PACK::getState )
-	NLKIN		m_kin;		// kin représentant le robot ( son centre d'inertie )
+	Nf32		m_k;		// courbure ï¿½ l'abscisse curviligne m_kin.m_s
+	NVEC2f32	m_u;		// tangente ï¿½ la trajectoire en cette position ( pour l'instant n'est pas garanti unitaire ï¿½ cause de l'appel ï¿½ la fonction NLTRAJECTORY_PACK::getState )
+	NLKIN		m_kin;		// kin reprï¿½sentant le robot ( son centre d'inertie )
 };
 /* Trick:
  *	Il est possible de caster un NLTRAJECTORY_POINT en NLPATH_POINT !
@@ -39,6 +39,6 @@ struct NLTRAJECTORY_POINT_XTD
 	inline void	null() { Nmem0(this, NLTRAJECTORY_POINT); }
 
 	NLPATH_POINT		m_Point;			// Point de chemin.
-	NLKIN				m_kin;				// kin représentant le robot ( son centre d'inertie )
+	NLKIN				m_kin;				// kin reprï¿½sentant le robot ( son centre d'inertie )
 };
 */

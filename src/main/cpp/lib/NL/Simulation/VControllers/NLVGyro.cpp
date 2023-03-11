@@ -1,8 +1,8 @@
-#include "../../../N/NErrorHandling.h"
-#include "../VirtualRobot/NLVirtualRobot.h"
-#include "NLVGyro.h"
+#include "lib/N/NErrorHandling.h"
+#include "lib/NL/Simulation/VirtualRobot/NLVirtualRobot.h"
+#include "lib/NL/Simulation/VControllers/NLVGyro.h"
 #ifdef _NEDITOR
-#include "../../../N/Utilities/Draw/NUT_Draw.h"
+#include "lib/N/Utilities/Draw/NUT_Draw.h"
 #endif
 
 void NLVGYRO::Init(/*const Nu8 channelid,*/ const Nu32 flags, const NLVIRTUAL_ROBOT *pvrobot)

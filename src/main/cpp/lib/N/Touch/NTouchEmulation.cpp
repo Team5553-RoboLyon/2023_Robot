@@ -1,12 +1,12 @@
 #ifdef _NWINDOWS
 
 #include "lib/N/NCStandard.h"
-#include "../Containers/NRingBuffer.h"
+#include "lib/N/Containers/NRingBuffer.h"
 #include "lib/N/Containers/NNode.h"
-#include "../Containers/NArray.h"
+#include "lib/N/Containers/NArray.h"
 
 #include "lib/N/NErrorHandling.h"
-#include "../NCoordinateSystemConversions.h"
+#include "lib/N/NCoordinateSystemConversions.h"
 #include "NTouchStream.h"
 #include "NTouchUIListener.h"
 #include "NTouch.h"

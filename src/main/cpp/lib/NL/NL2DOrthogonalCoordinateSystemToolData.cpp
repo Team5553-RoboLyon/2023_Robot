@@ -1,13 +1,13 @@
 
-#include "../N/UI/NUI.h"
-#include "../N/Event/NEventTouch.h"
-#include "NL2DOrthogonalCoordinateSystemToolData.h"
+#include "lib/N/UI/NUI.h"
+#include "lib/N/Event/NEventTouch.h"
+#include "lib/NL/NL2DOrthogonalCoordinateSystemToolData.h"
 
 NL2DOCS_TOOLDATA::NL2DOCS_TOOLDATA(const NVEC2f32 *phandle_extend)
 {
 	Nmem0(this, NL2DOCS_TOOLDATA);
 	NUT_SetupGizmoRectf32(&m_Gizmo, phandle_extend);
-	NSetupArray(&m_ArrayOfOcsPtr, DEFAULT_NL2DOCS_TOOLDATA_ARRAY_OF_OCS_PTR_CAPACITY, sizeof(NL2DOCS*));
+	NSetupArray(&m_ArrayOfOcsPtr, DEFAULT_NL2DOCS_TOOLDATA_ARRAY_OF_OCS_PTR_CAPACITY, sizeof(NL2DOCS *));
 }
 
 NL2DOCS_TOOLDATA::~NL2DOCS_TOOLDATA()

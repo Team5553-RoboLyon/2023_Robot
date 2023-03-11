@@ -9,10 +9,10 @@
 // ***************************************************************************************
 // ***************************************************************************************
 // Utilities for MATRIX 4x4 and 3x3
-#include "../../NCStandard.h"
-#include "../../NType.h"
-#include "../../NMatrix.h"
-#include "../../Maths/NMatrix3x3.h"
+#include "lib/N/NCStandard.h"
+#include "lib/N/NType.h"
+#include "lib/N/NMatrix.h"
+#include "lib/N/Maths/NMatrix3x3.h"
 
 #ifdef __cplusplus
 extern "C"

@@ -1,9 +1,9 @@
 #include "lib/N/NCStandard.h"
 #include "lib/N/NType.h"
-#include "../NFlags.h"
+#include "lib/N/NFlags.h"
 #include "lib/N/Containers/NNode.h"
 #include "lib/N/NErrorHandling.h"
-#include "../NStructure.h"
+#include "lib/N/NStructure.h"
 #include "NUT_Structure.h"
 
 static inline Nu32 _is_IJ_center(const NUT_STRCT_2DGRID_DESC *pstrct_desc)

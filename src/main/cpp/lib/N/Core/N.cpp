@@ -21,7 +21,7 @@
 #include "lib/N/Render/Renderable/NRenderable_UpdateAndExtract_LUT.h"
 
 #ifdef _NLIBS
-#include "../Libraries/NLibraries.h"
+#include "lib/N/Libraries/NLibraries.h"
 #endif
 
 // #if defined _NIOS || defined _NANDROID

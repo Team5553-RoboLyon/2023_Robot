@@ -1,4 +1,4 @@
-#include "../NCoordinateSystemConversions.h"
+#include "lib/N/NCoordinateSystemConversions.h"
 #include "NUT_Slider.h"
 
 NUT_SLIDER* NUT_SetupSlider(NUT_SLIDER* pslider,const Nf32 valuemin, const Nf32 valuemax,const NVEC2* pdirection,const NVEC2* psize, const Nu16 intermediate_steps, const Nu8 snap_strength)

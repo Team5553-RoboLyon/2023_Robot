@@ -1,10 +1,10 @@
 #include "lib/N/NCStandard.h"
-#include "../Containers/NArray.h"
-#include "../Maths/NMatrix3x3.h"
+#include "lib/N/Containers/NArray.h"
+#include "lib/N/Maths/NMatrix3x3.h"
 
-#include "../Geometry/NGeometryMisc.h"
+#include "lib/N/Geometry/NGeometryMisc.h"
 #include "lib/N/NErrorHandling.h"
-#include "./Maths/NUT_MathsMisc.h"
+#include "lib/N/Maths/NUT_MathsMisc.h"
 #include "NUT_XMesh.h"
 
 // ------------------------------------------------------------------------------------------

@@ -1,6 +1,6 @@
-#include "../../NCStandard.h"
-#include "../../NType.h"
-#include "../../NFlags.h"
+#include "lib/N/NCStandard.h"
+#include "lib/N/NType.h"
+#include "lib/N/NFlags.h"
 #include "../NFrustum_Culling.h"
 #include "../Accumulator/NAccumulator.h"
 
@@ -11,10 +11,10 @@
 #include "../../Particles/NAdvancedHomingParticles.h"
 
 #include "../../Ntext.h"
-#include "../../UI/NUI.h"
+#include "lib/N/UI/NUI.h"
 #include "../../UI/NUIRenderableUpdate.h"
-#include "../../NStructure.h"
-#include "../NRenderCell.h"
+#include "lib/N/NStructure.h"
+#include "lib/N/NRenderCell.h"
 
 // #include "../../Collectibles/NCollectibles.h"
 #include "../../UI/NUICheckBox.h"

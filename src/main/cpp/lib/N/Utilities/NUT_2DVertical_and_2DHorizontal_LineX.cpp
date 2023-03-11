@@ -1,8 +1,8 @@
 #include "lib/N/NCStandard.h"
 #include "lib/N/GL/Ngl.h"
 
-#include "../Containers/NArray.h"
-#include "../NViewport.h"
+#include "lib/N/Containers/NArray.h"
+#include "lib/N/NViewport.h"
 #include "NUT_X.h"
 
 Nbool NUT_2DVerticalLineXBezierFastAABB(const NVEC2 *plineA, const NSPLINEKNOT *spa, const NSPLINEKNOT *spb)

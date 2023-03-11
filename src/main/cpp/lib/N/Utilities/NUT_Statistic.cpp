@@ -1,5 +1,5 @@
 #include "lib/N/NCStandard.h"
-#include "../Core/NLimits.h"
+#include "lib/N/Core/NLimits.h"
 #include "lib/N/NMath.h"
 #include "NUT_Statistic.h"
 

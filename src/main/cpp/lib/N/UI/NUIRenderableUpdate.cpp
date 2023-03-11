@@ -1,6 +1,6 @@
 #include "lib/N/NCStandard.h"
 #include "lib/N/NType.h"
-#include "../NFlags.h"
+#include "lib/N/NFlags.h"
 #include "NUI.h"
 #include "NUICheckBox.h"
 #include "NUIRenderableUpdate.h"

@@ -3,13 +3,13 @@
 #include "lib/N/Maths/NVec2f32.h"
 #include "lib/N/Containers/NArray.h"
 
-// #include "NLDriveTrainSpecs.h"
-#include "../../NLPath.h"
+// #include "lib/NL/MotionControl/Drivetrain/NLDriveTrainSpecs.h"
+#include "lib/NL/MotionControl/Path/NLPath.h"
 
-#include "NLPathWayPoint.h"
-#include "NLPathHeuristics.h"
-#include "NLPathSectionBuildCircle.h"
-#include "NLPathSectionBuildPair.h"
+#include "lib/NL/MotionControl/Path/Builders/WayPoints/NLPathWayPoint.h"
+#include "lib/NL/MotionControl/Path/Builders/WayPoints/NLPathHeuristics.h"
+#include "lib/NL/MotionControl/Path/Builders/WayPoints/NLPathSectionBuildCircle.h"
+#include "lib/NL/MotionControl/Path/Builders/WayPoints/NLPathSectionBuildPair.h"
 
 // ***************************************************************************************
 // **					Path Section UID												**

@@ -8,7 +8,7 @@
 #include "lib/N/NCStandard.h"
 #include "lib/N/NType.h"
 #include "lib/N/GL/Ngl.h"
-#include "../Miscellaneous/NColor.h"
+#include "lib/N/Miscellaneous/NColor.h"
 #include "lib/N/NErrorHandling.h"
 #include "NImage.h"
 

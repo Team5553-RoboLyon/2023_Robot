@@ -10,9 +10,9 @@
 // ***************************************************************************************
 #include "lib/N/NCStandard.h"
 #include "lib/N/NType.h"
-#include "../NFlags.h"
-#include "../Containers/NHashMap.h"
-#include "../Core/NVersion.h"
+#include "lib/N/NFlags.h"
+#include "lib/N/Containers/NHashMap.h"
+#include "lib/N/Core/NVersion.h"
 
 #include "NDataPack.h"
 

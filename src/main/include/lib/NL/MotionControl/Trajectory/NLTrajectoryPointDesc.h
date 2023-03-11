@@ -1,9 +1,9 @@
 #pragma once
-#include "../../../N/NType.h"
-#include "../../../N/NMemory.h"
+#include "lib/N/NType.h"
+#include "lib/N/NMemory.h"
 
-#include "../NLKIN.h"
-#include "../Path/Geometry/NLPathGeometry.h"
+#include "lib/NL/MotionControl/NLKin.h"
+#include "lib/NL/MotionControl/Path/Geometry/NLPathGeometry.h"
 
 // *****************************************************************************************************************************************************
 // *

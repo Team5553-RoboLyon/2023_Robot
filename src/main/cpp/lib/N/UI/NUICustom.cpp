@@ -1,6 +1,6 @@
 #include "lib/N/NCStandard.h"
 #include "NUI.h"
-#include "../Render/Renderable/NRenderable_UpdateAndExtract_LUT.h"
+#include "lib/N/Render/Renderable/NRenderable_UpdateAndExtract_LUT.h"
 #include "NUIPush.h"
 #include "NUICustom.h"
 

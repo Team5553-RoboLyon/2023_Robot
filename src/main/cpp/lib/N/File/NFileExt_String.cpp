@@ -2,7 +2,7 @@
 #include "lib/N/NType.h"
 #include "lib/N/NString.h"
 #include "lib/N/File/NFile.h"
-#include "../File/NFileExt.h"
+#include "lib/N/File/NFileExt.h"
 #include "lib/N/NErrorHandling.h"
 
 /*

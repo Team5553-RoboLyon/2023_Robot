@@ -10,10 +10,10 @@
 #include "NType.h"
 #include "NUsualCoordinates.h"
 #include "NFlags.h"
-#include "./Maths/NVec3f32.h"
+#include "lib/N/Maths/NVec3f32.h"
 #include "NMatrix.h"
 #include "NQuaternion.h"
-#include "./Containers/NHNode.h"
+#include "lib/N/Containers/NHNode.h"
 
 #ifdef __cplusplus
 extern "C"

@@ -9,10 +9,10 @@
 // ***************************************************************************************
 // ***************************************************************************************
 #include "lib/N/NType.h"
-#include "../NTransformationTree.h"
-#include "../Containers/NArray.h"
-#include "../Miscellaneous/NEasing.h"
-#include "../UI/NUI.h"
+#include "lib/N/NTransformationTree.h"
+#include "lib/N/Containers/NArray.h"
+#include "lib/N/Miscellaneous/NEasing.h"
+#include "lib/N/UI/NUI.h"
 #include "NThnAnimationPlayer.h"
 #include "NTimer.h"
 

@@ -10,8 +10,8 @@
 // ***************************************************************************************
 // ***************************************************************************************
 #include "NType.h"
-#include "./Maths/NVec3f32.h"
-#include "./Core/NLimits.h"
+#include "lib/N/Maths/NVec3f32.h"
+#include "lib/N/Core/NLimits.h"
 //#include "NGeometry.h"
 //#include "NArray.h"
 

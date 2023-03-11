@@ -1,10 +1,10 @@
 #pragma once
-#include "../../../N/NType.h"
-#include "../../../N/NMemory.h"
+#include "lib/N/NType.h"
+#include "lib/N/NMemory.h"
 
 // ------------------------------------------------------------------------------------------
 /**
- *	@brief	offsets applicables en début de S.Shape pour promouvoir le premier KIN.
+ *	@brief	offsets applicables en dï¿½but de S.Shape pour promouvoir le premier KIN.
  *			Si ces offsets sont nulls, alors le premier Kin d'une S-shape correspond bien au dernier Kin de la phase 1.
  *			Sinon, les offsets placent ce dernier KIN avant la fin de la phase 1
  */
@@ -39,7 +39,7 @@ struct NLSCUTOUTOFFSETS
 // ------------------------------------------------------------------------------------------
 /**
  *	@brief	offsets applicables au point NLVSTAGEX.m_s0 ou NLVSTAGEX.m_s1, lors de la construction d'une S.Shape. 
- *			Ces offsets permettent de créer des "stitchs" ( i-e points de sutures ) entre deux S-Shapes.
+ *			Ces offsets permettent de crï¿½er des "stitchs" ( i-e points de sutures ) entre deux S-Shapes.
  */
  // ------------------------------------------------------------------------------------------
 typedef struct NLSANCHOROFFSETS NLSANCHOROFFSETS;
@@ -53,7 +53,7 @@ struct NLSANCHOROFFSETS
 
 // ------------------------------------------------------------------------------------------
 /**
- *	@brief	Résultats des calculs effectués par les fonctions NLSMOTIONSHAPE::forwardOvershoot et NLSMOTIONSHAPE::backwardOvershoot.
+ *	@brief	Rï¿½sultats des calculs effectuï¿½s par les fonctions NLSMOTIONSHAPE::forwardOvershoot et NLSMOTIONSHAPE::backwardOvershoot.
  *
  */
 // ------------------------------------------------------------------------------------------
@@ -61,9 +61,9 @@ struct NLSANCHOROFFSETS
 typedef struct NLSOVERSHOOT NLSOVERSHOOT;
 struct NLSOVERSHOOT							//		forwardOvershoot							|				backwardOvershoot				
 {											//	------------------------------------------------+--------------------------------------------------
-	NLSCUTOUTOFFSETS	m_cutOut;			//	à appliquer à la S-shape en cours				|		à appliquer à la S-Shape soeur "de Gauche"
-	NLSANCHOROFFSETS	m_sOffsets;			//	à apppliquer à la S-Shape soeur "de Droite". 	|		à appliquer à la S-Shape soeur "de Gauche"
-	Nf32				m_t0Offset;			//  à apppliquer à la S-Shape soeur "de Droite".	|		à appliquer à la S-shape en cours
+	NLSCUTOUTOFFSETS	m_cutOut;			//	ï¿½ appliquer ï¿½ la S-shape en cours				|		ï¿½ appliquer ï¿½ la S-Shape soeur "de Gauche"
+	NLSANCHOROFFSETS	m_sOffsets;			//	ï¿½ apppliquer ï¿½ la S-Shape soeur "de Droite". 	|		ï¿½ appliquer ï¿½ la S-Shape soeur "de Gauche"
+	Nf32				m_t0Offset;			//  ï¿½ apppliquer ï¿½ la S-Shape soeur "de Droite".	|		ï¿½ appliquer ï¿½ la S-shape en cours
 	inline void null() { Nmem0(this, NLSOVERSHOOT); }
 };
 */
@@ -71,8 +71,8 @@ struct NLSOVERSHOOT							//		forwardOvershoot							|				backwardOvershoot
 
 // ------------------------------------------------------------------------------------------
 /**
- *	@brief	Données d'Overshoot stockées dans un VStage de type "From" et donc utilisées par les S.Shapes situées à droite
- *			de la S.shape Overshootée à partir de laquelle elles* ont été calculées (*ces données ) par la fonction forwardOvershoot.
+ *	@brief	Donnï¿½es d'Overshoot stockï¿½es dans un VStage de type "From" et donc utilisï¿½es par les S.Shapes situï¿½es ï¿½ droite
+ *			de la S.shape Overshootï¿½e ï¿½ partir de laquelle elles* ont ï¿½tï¿½ calculï¿½es (*ces donnï¿½es ) par la fonction forwardOvershoot.
  */
 // ------------------------------------------------------------------------------------------
 typedef struct NLSTARTSTITCH NLSTARTSTITCH;
@@ -86,8 +86,8 @@ struct NLSTARTSTITCH
 
 // ------------------------------------------------------------------------------------------
 /**
- *	@brief	Données d'Overshoot stockées dans un VStage de type "To" et donc utilisées par les S.Shapes situées à gauche
- *			de la S.shape Overshootée à partir de laquelle elles* ont été calculées (*ces données ) par la fonction backwardOvershoot.
+ *	@brief	Donnï¿½es d'Overshoot stockï¿½es dans un VStage de type "To" et donc utilisï¿½es par les S.Shapes situï¿½es ï¿½ gauche
+ *			de la S.shape Overshootï¿½e ï¿½ partir de laquelle elles* ont ï¿½tï¿½ calculï¿½es (*ces donnï¿½es ) par la fonction backwardOvershoot.
  */
  // ------------------------------------------------------------------------------------------
 typedef struct NLENDSTITCH NLENDSTITCH;
@@ -100,34 +100,34 @@ struct NLENDSTITCH
 
 // ------------------------------------------------------------------------------------------
 /**
- *	@brief	Format de stockage des données d'Overshoot dans un NLVSTAGEX
- *			Les fonctions utilisées par l'algorithme de construction de trajectoire "savent" comment interpréter et donc choisir
+ *	@brief	Format de stockage des donnï¿½es d'Overshoot dans un NLVSTAGEX
+ *			Les fonctions utilisï¿½es par l'algorithme de construction de trajectoire "savent" comment interprï¿½ter et donc choisir
  *			entre le format NLSTARTSTITCH et NLENDSTITCH
  */			
  // ------------------------------------------------------------------------------------------
 typedef union NLSSTITCH NLSSTITCH;
 union NLSSTITCH
 {
-	NLSTARTSTITCH	m_start;		// formatage des données "pour repartir" en cas de forward overshoot 
-	NLENDSTITCH		m_end;		// formatage des données "pour repartir en arriere" en cas de backward overshoot  
+	NLSTARTSTITCH	m_start;		// formatage des donnï¿½es "pour repartir" en cas de forward overshoot 
+	NLENDSTITCH		m_end;		// formatage des donnï¿½es "pour repartir en arriere" en cas de backward overshoot  
 	inline void null() { Nmem0(this, NLSSTITCH); }
 };
 
 // Rappels:
-		//		D début du premier intervalle, soit le début de la S_SHAPE
-		//		P début du troisième intervalle
-		//		O point d'Overshoot approché par dichotomie
-		//		F fin de la S_SHAPE et donc du troisième intervalle
+		//		D dï¿½but du premier intervalle, soit le dï¿½but de la S_SHAPE
+		//		P dï¿½but du troisiï¿½me intervalle
+		//		O point d'Overshoot approchï¿½ par dichotomie
+		//		F fin de la S_SHAPE et donc du troisiï¿½me intervalle
 		//		et	
-		//		G le point de redemarrage "fantôme".
+		//		G le point de redemarrage "fantï¿½me".
 		//
-		//		Chacun de ces 5 points est défini par un quadruplet (t,a,v,s)
+		//		Chacun de ces 5 points est dï¿½fini par un quadruplet (t,a,v,s)
 
 //	OVERSHOOT	|	Forward Overshoot												|		Backward Overshoot										|
 //				|		( CutOut )													|			( CutIn )											|
 //				|																	|																|
 //	m_dt		|	Temps		de F vers O				[0 <=]						|		Temps		de D vers O				[>= 0]				|		
-//	m_dv		|	Vitesse		de F vers O				[signe opposé à m_jx]		|		Vitesse		de D vers O				[signe de m_jx]		|
+//	m_dv		|	Vitesse		de F vers O				[signe opposï¿½ ï¿½ m_jx]		|		Vitesse		de D vers O				[signe de m_jx]		|
 //	m_ds		|	Distance	de F vers O				[0 <=]						|		Distance	de D vers O				[>= 0]				|	
 //				|																	|																|		
 //	m_dsx		|	Distance	de Vstage.m_s1 vers G	[0 <=]						|		Distance	de Vstage.m_s0 vers G	[>= 0]				|	

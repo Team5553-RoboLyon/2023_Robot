@@ -1,10 +1,10 @@
 #include "lib/N/NCStandard.h"
 #include "lib/N/NType.h"
 #include "lib/N/GL/Ngl.h"
-#include "../Render/Renderable/NRenderable.h"
-#include "../Render/NFrustum_Culling.h"
-#include "../NCore.h"
-#include "../Utilities/Maths/NUT_MathsMisc.h"
+#include "lib/N/Render/Renderable/NRenderable.h"
+#include "lib/N/Render/NFrustum_Culling.h"
+#include "lib/N/NCore.h"
+#include "lib/N/Utilities/Maths/NUT_MathsMisc.h"
 #include "NAdvancedParticles.h"
 
 /*

@@ -1,6 +1,6 @@
 #include "lib/N/NCStandard.h"
 #include "lib/N/GL/Ngl.h"
-#include "../NViewPort.h"
+#include "lib/N/NViewport.h"
 
 #include "NUT_3DMouse.h"
 

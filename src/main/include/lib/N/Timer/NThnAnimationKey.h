@@ -9,10 +9,10 @@
 // ***************************************************************************************
 // ***************************************************************************************
 #include "lib/N/NType.h"
-#include "../Maths/NVec3f32.h"
-#include "../NQuaternion.h"
-#include "../Miscellaneous/NEasing.h"
-#include "../NTransformationTree.h"
+#include "lib/N/Maths/NVec3f32.h"
+#include "lib/N/NQuaternion.h"
+#include "lib/N/Miscellaneous/NEasing.h"
+#include "lib/N/NTransformationTree.h"
 
 #ifdef __cplusplus
 extern "C"

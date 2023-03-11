@@ -1,9 +1,9 @@
 #pragma once
-#include "../../../N/NFlags.h"
-#include "../../../N/NType.h"
-#include "../../../N/NMath.h"
+#include "lib/N/NFlags.h"
+#include "lib/N/NType.h"
+#include "lib/N/NMath.h"
 
-#include "../../../N/Maths/NVec2f32.h"
+#include "lib/N/Maths/NVec2f32.h"
 
 #include "NLVirtualOutPut.h"
 

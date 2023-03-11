@@ -1,12 +1,12 @@
 #include "lib/N/NCStandard.h"
-#include "../NCoordinateSystemConversions.h"
-#include "../NViewport.h"
-#include "../NCore.h"
-#include "../UI/NUI.h"
-#include "../UI/NUIClearWatchStack.h"
+#include "lib/N/NCoordinateSystemConversions.h"
+#include "lib/N/NViewport.h"
+#include "lib/N/NCore.h"
+#include "lib/N/UI/NUI.h"
+#include "lib/N/UI/NUIClearWatchStack.h"
 #include "NEvent.h"
 
-// #include "../Utilities/NUT_Draw.h"
+// #include "lib/N/Utilities/NUT_Draw.h"
 /*
 static Nu32 UIFocusCount;
 static inline void	_DecreaseFocusCount(){UIFocusCount--;/ *printf("UIFocusCount = %d\n",UIFocusCount);* /}

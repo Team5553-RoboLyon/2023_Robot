@@ -1,5 +1,5 @@
 #include "NUT_GizmoRectf32.h"
-#include "../NCoordinateSystemConversions.h"
+#include "lib/N/NCoordinateSystemConversions.h"
 
 
 // ------------------------------------------------------------------------------------------

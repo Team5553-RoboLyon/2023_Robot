@@ -2,7 +2,7 @@
 #include "lib/N/GL/Ngl.h"
 
 #include "lib/N/Geometry/NGeometry.h"
-// #include "../Render/Renderable/NRenderable_UpdateAndExtract.h"
+// #include "lib/N/Render/Renderable/NRenderable_UpdateAndExtract.h"
 #include "lib/N/Containers/NNode.h"
 #include "lib/N/Collectibles/NCollectibles.h"
 #include "lib/N/Utilities/Draw/NUT_Draw.h"

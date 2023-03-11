@@ -1,14 +1,15 @@
 #pragma once
 /*
-#include "../../../N/Containers/NArray.h"
-#include "../../../N/Core/NVersion.h"
+#include "lib/N/Containers/NArray.h"
 
-#include "../Path/Geometry/NLPathGeometry.h"
-#include "../../NL2DOrthogonalCoordinateSystem.h"
+#include "lib/N/Core/NVersion.h"
+
+#include "lib/NL/Simulation/NLPathGeometry.h"
+#include "lib/NL/MotionControl/NL2DOrthogonalCoordinateSystem.h"
 
 #include "NLTrajectoryChunk.h"
 #include "NLTrajectoryPoint.h"
-//#include "NLTrajectoryPointDesc.h"
+//#include "lib/NL/MotionControl/Trajectory/NLTrajectoryPointDesc.h"
 
 class NLTRAJECTORY_CHUNK_R : public NLTRAJECTORY_CHUNK
 {

@@ -1,6 +1,6 @@
-#include "../../../N/NString.h"
-#include "../NLKin.h"
-#include "../NLPathWorkbench.h"
+#include "lib/N/NString.h"
+#include "lib/NL/MotionControl/NLKin.h"
+#include "lib/NL/MotionControl/NLPathWorkbench.h"
 #include "./Characterization/NLCharacterizationTable.h"
 #include "NLDriveTrainTankPack.h"
 
@@ -81,12 +81,12 @@ Nu32 NLDRIVETRAIN_TANK_PACK::read(FILE* pfile)
 
 Nu32 NLDRIVETRAIN_TANK_PACK::write(FILE* pfile)
 {
-	// 1) écriture Version
+	// 1) ï¿½criture Version
 	Nu32	version_u32 = VERSION_NLDRIVETRAIN_TANK_PACK_HEADER;
 	if (fwrite(&version_u32, sizeof(Nu32), 1, pfile) != 1)
 		return 0;
 
-	// 2) écriture Header
+	// 2) ï¿½criture Header
 	NLDRIVETRAIN_TANK_PACK_HEADER	header;
 	header.m_gearBoxNumber		= GEARBOX::NB;
 	header.m_flags				= m_flags;
@@ -94,7 +94,7 @@ Nu32 NLDRIVETRAIN_TANK_PACK::write(FILE* pfile)
 	if (fwrite(&header, sizeof(NLDRIVETRAIN_TANK_PACK_HEADER), 1, pfile) != 1)
 		return 0;
 
-	// 3) écriture des charaterizations moteur à la main et en une fois
+	// 3) ï¿½criture des charaterizations moteur ï¿½ la main et en une fois
 	if (fwrite(m_pCtrz, sizeof(NLMOTOR_CHARACTERIZATION), header.m_gearBoxNumber * header.m_motorNbPerGearBox, pfile) != header.m_gearBoxNumber * header.m_motorNbPerGearBox)
 		return 0;
 	
@@ -197,9 +197,9 @@ Nu32 NLDRIVETRAIN_TANK_PACK::importTxt(const Nchar* ptxtfilename)
 	Nchar* pstr;
 
 	pfile = fopen(ptxtfilename, "r");	// ouverture du fichier
-	fseek(pfile, 0, SEEK_SET);			// on se place au début du fichier
+	fseek(pfile, 0, SEEK_SET);			// on se place au dï¿½but du fichier
 
-	// recupérer la siganture du fichier
+	// recupï¿½rer la siganture du fichier
 	pstr = fgets(tempstring, 1024, pfile);
 	pstr = NStrGet_String_AfterLabel(pstr, "signature= ", name);
 	if (!strcmp(name, SIGNATURE_NLRAMSETE))
@@ -217,7 +217,7 @@ Nu32 NLDRIVETRAIN_TANK_PACK::importTxt(const Nchar* ptxtfilename)
 		fclose(pfile);
 		NLCHARACTERIZATION_TABLE	characterization_table(4);
 		characterization_table.importTxt(ptxtfilename,NTRUE);
-		NErrorIf(characterization_table.m_gearBoxNb < GEARBOX::NB, NERROR_INCONSISTENT_VALUES); // au moins 2 Gearbox doivent être décrite dans le fichier txt !
+		NErrorIf(characterization_table.m_gearBoxNb < GEARBOX::NB, NERROR_INCONSISTENT_VALUES); // au moins 2 Gearbox doivent ï¿½tre dï¿½crite dans le fichier txt !
 
 		Nu32 gb1_motor_nb = characterization_table.getMotorNb(0);
 		Nu32 gb2_motor_nb = characterization_table.getMotorNb(1);

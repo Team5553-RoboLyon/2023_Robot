@@ -1,6 +1,6 @@
 #include "lib/N/NCStandard.h"
-#include "../UI/NUIPush.h"
-#include "../UI/NUIPushButton.h"
+#include "lib/N/UI/NUIPush.h"
+#include "lib/N/UI/NUIPushButton.h"
 
 void NUIPushButton_EventToState_Handle(NUI *pui, const NEVENT *pevent)
 {

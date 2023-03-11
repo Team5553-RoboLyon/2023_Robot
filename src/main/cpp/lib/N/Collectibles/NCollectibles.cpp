@@ -1,15 +1,15 @@
 #include "lib/N/NCStandard.h"
 #include "lib/N/GL/Ngl.h"
-#include "../Geometry/Components/NGeometryAppearance.h"
+#include "lib/N/Geometry/Components/NGeometryAppearance.h"
 #include "lib/N/Geometry/NGeometry.h"
 
-// #include "../Render/Renderable/NRenderable_UpdateAndExtract.h"
+// #include "lib/N/Render/Renderable/NRenderable_UpdateAndExtract.h"
 #include "lib/N/Containers/NNode.h"
 #include "lib/N/NErrorHandling.h"
-#include "../Render/NFrustum_Culling.h"
-#include "../Render/Renderable/NRenderable_Update.h"
-#include "../Render/Renderable/NRenderable_UpdateAndExtract_LUT.h"
-#include "../Utilities/NUT_Shape.h"
+#include "lib/N/Render/NFrustum_Culling.h"
+#include "lib/N/Render/Renderable/NRenderable_Update.h"
+#include "lib/N/Render/Renderable/NRenderable_UpdateAndExtract_LUT.h"
+#include "lib/N/Utilities/NUT_Shape.h"
 #include "lib/N/Collectibles/NCollectibles.h"
 
 static void NGetCollectibleElementPosition_DefaultFCT(NVEC3 *pvpos, const NCOLLECTIBLE *pcollectible, const Nu32 i)

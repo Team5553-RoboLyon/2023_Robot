@@ -12,7 +12,7 @@
 #include "lib/N/File/NFile.h"
 
 #ifdef _NANDROID
-#include "../System/NAndroid.h"
+#include "lib/N/System/NAndroid.h"
 #endif
 
 #include "./NServiceMedia.h"

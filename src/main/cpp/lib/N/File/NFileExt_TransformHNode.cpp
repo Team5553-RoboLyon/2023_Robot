@@ -2,9 +2,9 @@
 #include "lib/N/NType.h"
 #include "lib/N/Containers/NNode.h"
 #include "lib/N/NString.h"
-#include "../NTexture.h"
+#include "lib/N/NTexture.h"
 #include "lib/N/File/NFile.h"
-#include "../File/NFileExt.h"
+#include "lib/N/File/NFileExt.h"
 #include "lib/N/NErrorHandling.h"
 
 static Nu32 _get_treelocationmap(NARRAY *pmap_array, const NTRANSFORM_HNODE *pthn)

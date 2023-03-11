@@ -3,15 +3,15 @@
 // !!! ONLY IF COMPILER '_NEDITOR' FLAG IS SET TO ON !!! ONLY IF COMPILER '_NEDITOR' FLAG IS SET TO ON !!!
 // +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
-#include "../../NCStandard.h"
-#include "../../GL/Ngl.h"
-#include "../../NRectf32.h"
-#include "../../Containers/NArray.h"
+#include "lib/N/NCStandard.h"
+#include "lib/N/GL/Ngl.h"
+#include "lib/N/NRectf32.h"
+#include "lib/N/Containers/NArray.h"
 #include "../../NViewport.h"
-#include "../../Miscellaneous/N2DPointInside.h"
+#include "lib/N/Miscellaneous/N2DPointInside.h"
 #include "../../NCoordinateSystemConversions.h"
 
-#include "../Draw/NUT_Draw.h"
+#include "lib/N/Utilities/Draw/NUT_Draw.h"
 //#include "./Draw/NUT_DrawText.h"
 
 #include "../NUT_3DMouse.h"

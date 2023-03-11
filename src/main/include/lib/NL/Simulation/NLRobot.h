@@ -1,21 +1,21 @@
 #pragma once
-#include "../../N/NType.h"
-#include "../../N/NFlags.h"
+#include "lib/N/NType.h"
+#include "lib/N/NFlags.h"
 
-#include "../MotionControl/Trajectory/NLTrajectory.h"
-#include "../MotionControl/Path/NLPathPersistentTrackingData.h"
-#include "../Simulation/VControllers/NLVMotorController.h"
-#include "../Simulation/VControllers/NLVEncoder.h"
-#include "../Simulation/VControllers/NLVGyro.h"
+#include "lib/NL/MotionControl/Trajectory/NLTrajectory.h"
+#include "lib/NL/MotionControl/Path/NLPathPersistentTrackingData.h"
+#include "lib/NL/Simulation/VControllers/NLVMotorController.h"
+#include "lib/NL/Simulation/VControllers/NLVEncoder.h"
+#include "lib/NL/Simulation/VControllers/NLVGyro.h"
 
-#include "../MotionControl/NLPid.h"
-#include "../MotionControl/NLRobotPose.h"
-#include "../MotionControl/DriveTrain/Characterization/NLCharacterizationTable.h"
-#include "../MotionControl/DriveTrain/Characterization/NLMotorCharacterization.h"
-#include "../MotionControl/NLPathWorkbench.h"
+#include "lib/NL/MotionControl/NLPid.h"
+#include "lib/NL/MotionControl/NLRobotPose.h"
+#include "lib/NL/MotionControl/DriveTrain/Characterization/NLCharacterizationTable.h"
+#include "lib/NL/MotionControl/DriveTrain/Characterization/NLMotorCharacterization.h"
+#include "lib/NL/MotionControl/NLPathWorkbench.h"
 
-#include "../MotionControl/Trajectory/NLFollowerTank.h"
-#include "../NLCsv.h"
+#include "lib/NL/MotionControl/Trajectory/NLFollowerTank.h"
+#include "lib/NL/NLCsv.h"
 // GESTION DES
 //
 // NCOLORPICKPACK index ventilation (4 bits / index):
@@ -30,7 +30,7 @@
 */
 #define NLROBOT_COLORPICKPACK_drawDashboard NSTCPLT_4b_MPCK(0, 0, 0, 4, 1, 3, 8, 11, 14) // equivalant � NSTCPLT_4B_PCK(6,5,4,0,0,15)
 
-// #include "./VirtualRobot/NLVirtualRobot.h"
+// #include "lib/NL/Simulation/VirtualRobot/NLVirtualRobot.h"
 // #define FLAG_NLROBOT_IS_ON	BIT_0
 #define FLAG_NLROBOT_IS_INITIALIZED BIT_0 // la classe Robot est initialis�e., c'est � dire que la fonction RobotInit � �t� appel�e et que les appels � la fonction RobotPeriodic() sont possibles.
 class NLVIRTUAL_ROBOT;
@@ -59,7 +59,7 @@ public:
 	// void TestPeriodic();
 
 	void inline setVirtualRobot(NLVIRTUAL_ROBOT *pvr) { m_pVirtualRobot = pvr; }
-	inline Nbool IsInitialized() { return (ISFLAG_ON(m_flags, FLAG_NLROBOT_IS_INITIALIZED) ? NTRUE : FALSE); }
+	inline Nbool IsInitialized() { return (ISFLAG_ON(m_flags, FLAG_NLROBOT_IS_INITIALIZED) ? NTRUE : NFALSE); }
 
 	void draw();
 	void drawDashBoard(NL2DOCS *p2docs, const NCOLORPICKPACK pickpack);

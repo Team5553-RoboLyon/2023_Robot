@@ -1,5 +1,5 @@
-#include "../../NCStandard.h"
-#include "../../NType.h"
+#include "lib/N/NCStandard.h"
+#include "lib/N/NType.h"
 #include "NRenderable.h"
 #include "NRenderable_Update.h"
 

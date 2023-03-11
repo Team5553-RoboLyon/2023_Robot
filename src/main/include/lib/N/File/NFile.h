@@ -10,8 +10,8 @@
 // ***************************************************************************************
 #include "lib/N/NCStandard.h"
 #include "lib/N/NType.h"
-#include "../NFlags.h"
-#include "../Containers/NArray.h"
+#include "lib/N/NFlags.h"
+#include "lib/N/Containers/NArray.h"
 
 #ifdef __cplusplus
 extern "C"

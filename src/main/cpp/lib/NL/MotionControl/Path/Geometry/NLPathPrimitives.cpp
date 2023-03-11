@@ -1,13 +1,13 @@
-#include "../../../../N/Core/NSafeConversion.h"
-#include "../../../../N/NMemory.h"
-#include "../../../../N/NMath.h"
-#include "../../../../N/Maths/NVec2f32.h"
-#include "../../../../N/Maths/NVecLimits.h"
-#include "../../../../N/NErrorHandling.h"
-#include "../../../../N/Utilities/NUT_X.h"
+#include "lib/N/Core/NSafeConversion.h"
+#include "lib/N/NMemory.h"
+#include "lib/N/NMath.h"
+#include "lib/N/Maths/NVec2f32.h"
+#include "lib/N/Maths/NVecLimits.h"
+#include "lib/N/NErrorHandling.h"
+#include "lib/N/Utilities/NUT_X.h"
 
-#include "NLPathPoint.h"
-#include "NLPathPrimitives.h"
+#include "lib/NL/MotionControl/Path/Geometry/NLPathPoint.h"
+#include "lib/NL/MotionControl/Path/Geometry/NLPathPrimitives.h"
 
 /*
 Nu32 NL_ExtractSegmentPrimitives(const NVEC2f32 *pA, const NVEC2f32 *pB, const Nu8 primflags, NARRAY *pkeypointsarray, NARRAY *pprimitivesarray)
@@ -25,7 +25,7 @@ Nu32 NL_ExtractSegmentPrimitives(const NVEC2f32 *pA, const NVEC2f32 *pB, const N
 	pprim->m_segment.m_core.m_l		= lv;
 
 	// extraction keypoint
-	pprim->m_core.m_keyPoint0		= _SafeNu32ToNu16(pkeypointsarray->Size - 1); // '-1' car on veut l'index du keypoint précédent ( déjà inséré !) 
+	pprim->m_core.m_keyPoint0		= _SafeNu32ToNu16(pkeypointsarray->Size - 1); // '-1' car on veut l'index du keypoint prï¿½cï¿½dent ( dï¿½jï¿½ insï¿½rï¿½ !)
 	NLPATH_POINT *pkey = (NLPATH_POINT*)NArrayAllocBack0(pkeypointsarray);
 	pkey->s = (pkey - 1)->s + lv;
 	pkey->p = *pB;

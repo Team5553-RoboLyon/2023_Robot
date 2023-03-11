@@ -5,9 +5,9 @@
 // **																					**
 // ***************************************************************************************
 // ***************************************************************************************
-#include "../NCore.h"
-#include "../Containers/NArray.h"
-#include "../Core/NSafeConversion.h"
+#include "lib/N/NCore.h"
+#include "lib/N/Containers/NArray.h"
+#include "lib/N/Core/NSafeConversion.h"
 #include "NUIThnAnimationPlayer.h"
 #include "NThnAnimationPlayer.h"
 #include "NElapsedTimer.h"

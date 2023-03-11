@@ -9,9 +9,9 @@
 // ***************************************************************************************
 // ***************************************************************************************
 #include "lib/N/NType.h"
-#include "../Maths/NVec3f32.h"
+#include "lib/N/Maths/NVec3f32.h"
 #include "lib/N/Geometry/NGeometry.h"
-#include "../Miscellaneous/NVertexTexCoordBuild.h"
+#include "lib/N/Miscellaneous/NVertexTexCoordBuild.h"
 
 #ifdef __cplusplus
 extern "C"

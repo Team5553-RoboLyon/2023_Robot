@@ -1,7 +1,7 @@
 #include "lib/N/NCStandard.h"
 #include "lib/N/GL/Ngl.h"
-#include "../Containers/NArray.h"
-#include "../NViewport.h"
+#include "lib/N/Containers/NArray.h"
+#include "lib/N/NViewport.h"
 #include "NUT_X.h"
 
 Nbool NUT_2DLineXSpline(const NVEC2 *plineA, const NVEC2 *plineB, const NSPLINE *pspline, NUT_2DSPLINE_XRESULT *pxr)

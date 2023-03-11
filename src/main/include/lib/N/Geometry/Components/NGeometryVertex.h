@@ -8,12 +8,12 @@
 // **																					**
 // ***************************************************************************************
 // ***************************************************************************************
-#include "../../NType.h"
-#include "../../Maths/NVec4f32.h"
-#include "../../Maths/NVec3f32.h"
-#include "../../Miscellaneous/NColor.h"
+#include "lib/N/NType.h"
+#include "lib/N/Maths/NVec4f32.h"
+#include "lib/N/Maths/NVec3f32.h"
+#include "lib/N/Miscellaneous/NColor.h"
 #include "NGeometryTextureCoordinate.h"
-#include "./Specifications/NGeometryVertex_Flags.h"
+#include "lib/N/Geometry/Components/Specifications/NGeometryVertex_Flags.h"
 
 #ifdef __cplusplus
 extern "C"

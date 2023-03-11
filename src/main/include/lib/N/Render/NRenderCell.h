@@ -9,10 +9,10 @@
 // ***************************************************************************************
 // ***************************************************************************************
 #include "lib/N/NType.h"
-#include "../NTransformationTree.h"
+#include "lib/N/NTransformationTree.h"
 #include "lib/N/Geometry/NGeometry.h"
 #include "lib/N/NErrorHandling.h"
-#include "./Renderable/NRenderable.h"
+#include "lib/N/Render/Renderable/NRenderable.h"
 
 #ifdef __cplusplus
 extern "C"

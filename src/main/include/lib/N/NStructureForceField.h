@@ -10,16 +10,16 @@
 // ***************************************************************************************
 // ***************************************************************************************
 #include "NType.h"
-#include "./Maths/NVec3f32.h"
+#include "lib/N/Maths/NVec3f32.h"
 #include "NFlags.h"
 #include "NBoundingVolumes.h"
 #include "NStructure.h"
 #include "./Particles/NParticleComponent_Core.h"
 #include "./Particles/NParticleComponent_Standard.h"
-#include "./Containers/NNode.h"
-#include "./Containers/NXNode.h"
-#include "./Containers/NArray.h"
-#include "./Core/NTime.h"
+#include "lib/N/Containers/NNode.h"
+#include "lib/N/Containers/NXNode.h"
+#include "lib/N/Containers/NArray.h"
+#include "lib/N/Core/NTime.h"
 
 #ifdef __cplusplus
 extern "C"

@@ -5,9 +5,9 @@
 // -
 // -
 // -
-#include "../Containers/NHashMap.h"
-#include "../NTexture.h"
-#include "../NCore.h"
+#include "lib/N/Containers/NHashMap.h"
+#include "lib/N/NTexture.h"
+#include "lib/N/NCore.h"
 #include "lib/N/NErrorHandling.h"
 #include "lib/N/File/NFile.h"
 #include "NLibraries.h"

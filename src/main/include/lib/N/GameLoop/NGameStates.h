@@ -9,10 +9,10 @@
 // ***************************************************************************************
 // ***************************************************************************************
 #include "lib/N/NType.h"
-#include "../Containers/NArray.h"
-#include "../Event/NEvent.h"
-#include "../Core/NTime.h"
-#include "../Touch/NTouchListener.h"
+#include "lib/N/Containers/NArray.h"
+#include "lib/N/Event/NEvent.h"
+#include "lib/N/Core/NTime.h"
+#include "lib/N/Touch/NTouchListener.h"
 #include "NGameStatesUID.h"
 
 #ifdef __cplusplus

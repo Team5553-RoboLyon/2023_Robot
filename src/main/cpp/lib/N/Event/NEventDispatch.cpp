@@ -1,11 +1,11 @@
 #include "lib/N/NCStandard.h"
 #include "lib/N/NType.h"
-#include "../NCoordinateSystemConversions.h"
-#include "../UI/NUI.h"
-#include "../Containers/NRingBuffer.h"
-#include "../Touch/NTouchStream.h"
-#include "../GameLoop/NGameStates.h"
-#include "../NCore.h"
+#include "lib/N/NCoordinateSystemConversions.h"
+#include "lib/N/UI/NUI.h"
+#include "lib/N/Containers/NRingBuffer.h"
+#include "lib/N/Touch/NTouchStream.h"
+#include "lib/N/Gameloop/NGameStates.h"
+#include "lib/N/NCore.h"
 #include "NEvent.h"
 
 extern NGAMESTATEMACHINE NGameStateMachine; // THE 'NGameState' machine

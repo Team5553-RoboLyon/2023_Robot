@@ -2,7 +2,7 @@
 #include "lib/N/NType.h"
 #include "lib/N/Containers/NNode.h"
 
-#include "../NStructure.h"
+#include "lib/N/NStructure.h"
 #include "NUT_Structure.h"
 
 Nbool NUT_IterateUntilPhysicStructureStabilization(NSTRUCTURE *ps, const Nu32 time_max, const Nf32 error_tolerance)

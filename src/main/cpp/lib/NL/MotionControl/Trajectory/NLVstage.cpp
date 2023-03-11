@@ -1,9 +1,10 @@
-#include "../../../N/NErrorHandling.h"
-#include "../../../N/NMath.h"
-#include "../../../N/Utilities/Draw/NUT_Draw.h"
-#include "../../../N/Utilities/Draw/NUT_DrawPencil.h"
+#include "lib/N/NErrorHandling.h"
+#include "lib/N/NMath.h"
+#include "lib/N/Utilities/Draw/NUT_Draw.h"
+#include "lib/N/Utilities/Draw/NUT_DrawPencil.h"
 
-#include "NLVstage.h"
+#include "lib/NL/MotionControl/Trajectory/NLVstage.h"
+
 
 void NLVSTAGE::set(const Nf32 s0, const Nf32 s1, const Nf32 val, const NLVSTAGE::TYPE type)
 {
@@ -67,10 +68,10 @@ void NLVSTAGE::draw(NL2DOCS* p2docs, const NCOLORPICKPACK pickpack)
 
 void NLVSTAGE::draw(NLPATH* ppath, const Nf32 width, const NCOLORPICKPACK pickpack)
 {
-	NErrorIf(m_s0 < 0.0f, NERROR_VALUE_OUTOFRANGE); // inférieure à l'abscisse minimale
-	NErrorIf(m_s0 > ppath->m_geometry.m_ds, NERROR_VALUE_OUTOFRANGE); // supérieure à l'abscisse maximale
-	NErrorIf(m_s1 < 0.0f, NERROR_VALUE_OUTOFRANGE); // inférieure à l'abscisse minimale
-	NErrorIf(m_s1 > ppath->m_geometry.m_ds, NERROR_VALUE_OUTOFRANGE); // supérieure à l'abscisse maximale
+	NErrorIf(m_s0 < 0.0f, NERROR_VALUE_OUTOFRANGE); // infï¿½rieure ï¿½ l'abscisse minimale
+	NErrorIf(m_s0 > ppath->m_geometry.m_ds, NERROR_VALUE_OUTOFRANGE); // supï¿½rieure ï¿½ l'abscisse maximale
+	NErrorIf(m_s1 < 0.0f, NERROR_VALUE_OUTOFRANGE); // infï¿½rieure ï¿½ l'abscisse minimale
+	NErrorIf(m_s1 > ppath->m_geometry.m_ds, NERROR_VALUE_OUTOFRANGE); // supï¿½rieure ï¿½ l'abscisse maximale
 
 	ppath->m_geometry.draw(&ppath->m_matrix, width, m_s0, m_s1);
 }
@@ -82,8 +83,8 @@ void NLVSTAGE::aggregate(NARRAY* poutput_array, const AGGREGATE_FLAGS flags)
 	{
 		NErrorIf(m_s1 < prev->m_s1, NERROR_SYSTEM_GURU_MEDITATION);
 		
-		if (	((m_s0 == prev->m_s1)	&& (ISFLAG_ON(flags, AGGREGATE_FLAGS::PRESERVE_JOINT))) ||			// Il y a un joint et on doit le ppréserver
-				((m_s0 > prev->m_s1)	&& (ISFLAG_ON(flags, AGGREGATE_FLAGS::PRESERVE_GAP	)))		)		// il y a un gap et on doit le ppréserver
+		if (	((m_s0 == prev->m_s1)	&& (ISFLAG_ON(flags, AGGREGATE_FLAGS::PRESERVE_JOINT))) ||			// Il y a un joint et on doit le pprï¿½server
+				((m_s0 > prev->m_s1)	&& (ISFLAG_ON(flags, AGGREGATE_FLAGS::PRESERVE_GAP	)))		)		// il y a un gap et on doit le pprï¿½server
 		{
 			NArrayPushBack(poutput_array, (NBYTE*)this);
 			return;
@@ -100,23 +101,23 @@ void NLVSTAGE::aggregate(NARRAY* poutput_array, const AGGREGATE_FLAGS flags)
 
 // ------------------------------------------------------------------------------------------
 /**
- *	@brief	Découpe le NLVSTAGE à l'emporte pièce ( = pcookiecutter )
+ *	@brief	Dï¿½coupe le NLVSTAGE ï¿½ l'emporte piï¿½ce ( = pcookiecutter )
  *
- *	@param	poutput_array est l'array où seront stockés le/les morceaux issus de cette découpe.
- *	@param	pcookiecutter est 'l'emporte pièce' utilisé pour découper ce Velocity Stage.
- *	@param	mode est le mode de restitution qui est composé de deux flags:
+ *	@param	poutput_array est l'array oï¿½ seront stockï¿½s le/les morceaux issus de cette dï¿½coupe.
+ *	@param	pcookiecutter est 'l'emporte piï¿½ce' utilisï¿½ pour dï¿½couper ce Velocity Stage.
+ *	@param	mode est le mode de restitution qui est composï¿½ de deux flags:
  *	@return	Une combinaison des BITS suivants:
- *			+ \b FLAG_CUTOUT_LEFT		représente tout ou partie du Vstage situé à GAUCHE de l'emporte piece de decoupe
- *			+ \b FLAG_CUTOUT_COOKIE		représente tout ou partie du Vstage situé 'à l'intérieur' l'emporte piece de decoupe
- *			+ \b FLAG_CUTOUT_RIGHT		représente tout ou partie du Vstage situé à DROITE de l'emporte piece de decoupe
+ *			+ \b FLAG_CUTOUT_LEFT		reprï¿½sente tout ou partie du Vstage situï¿½ ï¿½ GAUCHE de l'emporte piece de decoupe
+ *			+ \b FLAG_CUTOUT_COOKIE		reprï¿½sente tout ou partie du Vstage situï¿½ 'ï¿½ l'intï¿½rieur' l'emporte piece de decoupe
+ *			+ \b FLAG_CUTOUT_RIGHT		reprï¿½sente tout ou partie du Vstage situï¿½ ï¿½ DROITE de l'emporte piece de decoupe
  *			+ \b FLAG_CUTOUT_CUT		indique si une tentative de coupe a eut lieu.
  */
 // ------------------------------------------------------------------------------------------
 Nu32 NLVSTAGE::cutOut(NARRAY* poutput_array, const NLVSTAGE* pcookiecutter, const Nu32 cfg)
 {
 	NErrorIf(poutput_array->ElementSize != sizeof(NLVSTAGE), NERROR_SYSTEM_GURU_MEDITATION);
-	NErrorIf(GET_CUTOUT_CFG_EXPECTED_DEFAULT_RESULT(cfg) && ISFLAG_ON(cfg, FLAG_CUTOUT_FORCE), NERROR_INCONSISTENT_FLAGS);	// Une valeur de retour par défaut est précisée alors que la coupe est forcée
-																															// ... et que cette valeur par défaut ne sera donc jamais retournée !			
+	NErrorIf(GET_CUTOUT_CFG_EXPECTED_DEFAULT_RESULT(cfg) && ISFLAG_ON(cfg, FLAG_CUTOUT_FORCE), NERROR_INCONSISTENT_FLAGS);	// Une valeur de retour par dï¿½faut est prï¿½cisï¿½e alors que la coupe est forcï¿½e
+																															// ... et que cette valeur par dï¿½faut ne sera donc jamais retournï¿½e !			
 	
 	NLVSTAGE		trim;
 	Nf32			ps0, ps1;
@@ -129,39 +130,39 @@ Nu32 NLVSTAGE::cutOut(NARRAY* poutput_array, const NLVSTAGE* pcookiecutter, cons
 	//	NErrorIf(ISFLAG_ON((pcookiecutter->m_flags | m_flags), FLAG_NLVSTAGE_FORCE_CUT_OUT) && pcookiecutter->m_cutter0.y, NERROR_INCONSISTENT_VALUES); // Normalement impossible !!!
 	//	NErrorIf(ISFLAG_ON((pcookiecutter->m_flags | m_flags), FLAG_NLVSTAGE_FORCE_CUT_OUT) && pcookiecutter->m_cutter1.y, NERROR_INCONSISTENT_VALUES); // Normalement impossible !!!
 
-		//	c)	On recherche ps0 et ps1 les abscisses des projections de pcutter->m_s0 et pcutter->m_s1 sur ce VSTAGE_DESC selon les directions/Axes fixées par les "cutters" ( m_cutter0 et m_cutter1 )
+		//	c)	On recherche ps0 et ps1 les abscisses des projections de pcutter->m_s0 et pcutter->m_s1 sur ce VSTAGE_DESC selon les directions/Axes fixï¿½es par les "cutters" ( m_cutter0 et m_cutter1 )
 		ps0 = pcookiecutter->m_cutter0.y ? pcookiecutter->m_s0 + (pcookiecutter->m_cutter0.x * (m_v - pcookiecutter->m_v)) / pcookiecutter->m_cutter0.y : pcookiecutter->m_s0;
 		ps1 = pcookiecutter->m_cutter1.y ? pcookiecutter->m_s1 + (pcookiecutter->m_cutter1.x * (m_v - pcookiecutter->m_v)) / pcookiecutter->m_cutter1.y : pcookiecutter->m_s1;
 
-		//	d)	ps0 (projection de pcutters->m_s0) est-il à droite de m_s1 ?
+		//	d)	ps0 (projection de pcutters->m_s0) est-il ï¿½ droite de m_s1 ?
 		if (m_s1 <= ps0)
 		{
 			if (cfg & FLAG_CUTOUT_LEFT)
 			{
-				// Cela signifie que la totalité de ce NLVSTAGE est situé AVANT le "cone en V" ou le "tube" créé par les 2 cutters ( DONC A GAUCHE DU CONE )
+				// Cela signifie que la totalitï¿½ de ce NLVSTAGE est situï¿½ AVANT le "cone en V" ou le "tube" crï¿½ï¿½ par les 2 cutters ( DONC A GAUCHE DU CONE )
 				NArrayPushBack(poutput_array, (NBYTE*)this);
-				// Entierement à gauche du cone. Le cookiecutter ne peut l'affecté
+				// Entierement ï¿½ gauche du cone. Le cookiecutter ne peut l'affectï¿½
 				return FLAG_CUTOUT_CUT | FLAG_CUTOUT_LEFT;
 			}
 			else
 			{
-				// L'utilisateur n'à pas demander à ce que les parties situées à gauche du cookie cutter soit pushée ...
+				// L'utilisateur n'ï¿½ pas demander ï¿½ ce que les parties situï¿½es ï¿½ gauche du cookie cutter soit pushï¿½e ...
 				return FLAG_CUTOUT_CUT;
 			}
 		}
 
-		//	e)	ps1 (projection de pcutters->m_s1) est-il à gauche de m_s0 ?
+		//	e)	ps1 (projection de pcutters->m_s1) est-il ï¿½ gauche de m_s0 ?
 		if (ps1 <= m_s0)
 		{
 			if (cfg & FLAG_CUTOUT_RIGHT)
 			{
-				// Cela signifie que la totalité de NLVSTAGE est situé APRES le "cone en V" ou le "tube" créé par les 2 cutters ( DONC A DROITE DU CONE )
+				// Cela signifie que la totalitï¿½ de NLVSTAGE est situï¿½ APRES le "cone en V" ou le "tube" crï¿½ï¿½ par les 2 cutters ( DONC A DROITE DU CONE )
 				NArrayPushBack(poutput_array, (NBYTE*)this);
-				return FLAG_CUTOUT_CUT | FLAG_CUTOUT_RIGHT;// ... à droite du cone et peut donc potentiellement être affecté par les pcutters suivants.
+				return FLAG_CUTOUT_CUT | FLAG_CUTOUT_RIGHT;// ... ï¿½ droite du cone et peut donc potentiellement ï¿½tre affectï¿½ par les pcutters suivants.
 			}
 			else
 			{
-				// L'utilisateur n'à pas demander à ce que les parties situées à droite du cookie cutter soit pushée ...
+				// L'utilisateur n'ï¿½ pas demander ï¿½ ce que les parties situï¿½es ï¿½ droite du cookie cutter soit pushï¿½e ...
 				return FLAG_CUTOUT_CUT;
 			}
 		}
@@ -169,47 +170,47 @@ Nu32 NLVSTAGE::cutOut(NARRAY* poutput_array, const NLVSTAGE* pcookiecutter, cons
 		Nu32 _ret = FLAG_CUTOUT_CUT;
 		NLVSTAGE cookie = *this;
 		//	f)	Il y a intersection entre le cone  et la gauche de ce NLVSTAGE.
-		if (ps0 >= m_s0) // rappel: ici on a aussi ps0 < m_s1  -> En effet, (d) n'est pas validé ! Sinon on ne serait pas ici !
+		if (ps0 >= m_s0) // rappel: ici on a aussi ps0 < m_s1  -> En effet, (d) n'est pas validï¿½ ! Sinon on ne serait pas ici !
 		{
-			//  C'est à dire que le début de ce NLVSTAGE est avant le Cone de pcutters et qu'ensuite, il entre dans le cone ...
+			//  C'est ï¿½ dire que le dï¿½but de ce NLVSTAGE est avant le Cone de pcutters et qu'ensuite, il entre dans le cone ...
 			if (cfg & FLAG_CUTOUT_LEFT)
 			{
 				trim = *this;
 				trim.m_s1 = ps0;
 				NArrayPushBack(poutput_array, (NBYTE*)&trim);
-				// Pas de return ici car il reste potentiellement une partie de ce NLVSTAGE qui peut sortir à droite du cone ...
-				// par contre on specifie le push back  de la partie située à gauche du cone:
+				// Pas de return ici car il reste potentiellement une partie de ce NLVSTAGE qui peut sortir ï¿½ droite du cone ...
+				// par contre on specifie le push back  de la partie situï¿½e ï¿½ gauche du cone:
 				_ret |= FLAG_CUTOUT_LEFT;
 			}
 			cookie.m_s0 = ps0;
 		}
 
 		//	g)	Il y a intersection entre le cone et la droite de ce NLVSTAGE.
-		if (ps1 <= m_s1) // rappel: ici on a aussi ps1 > m_s0  -> ! (e) n'est pas validé sinon on ne serait pas ici !
+		if (ps1 <= m_s1) // rappel: ici on a aussi ps1 > m_s0  -> ! (e) n'est pas validï¿½ sinon on ne serait pas ici !
 		{
 			
 			if (cfg & FLAG_CUTOUT_COOKIE)
 			{
 				cookie.m_s1 = ps1;
 				NArrayPushBack(poutput_array, (NBYTE*)&cookie);
-				// on specifie le push back  de la partie située dans le cone:
+				// on specifie le push back  de la partie situï¿½e dans le cone:
 				_ret |= FLAG_CUTOUT_COOKIE;
 			}
 
-			//  C'est à dire que la fin de ce NLVSTAGE est après le Cone et donc que ce NLVSTAGE est dans le cone et en sort
+			//  C'est ï¿½ dire que la fin de ce NLVSTAGE est aprï¿½s le Cone et donc que ce NLVSTAGE est dans le cone et en sort
 			if (cfg & FLAG_CUTOUT_RIGHT)
 			{
 				trim = *this;
 				trim.m_s0 = ps1;
 				NArrayPushBack(poutput_array, (NBYTE*)&trim);
-				// on specifie le push back  de la partie située à droite du cone:
+				// on specifie le push back  de la partie situï¿½e ï¿½ droite du cone:
 				_ret |= FLAG_CUTOUT_RIGHT;
 			}
 		}
 		else if (cfg & FLAG_CUTOUT_COOKIE)
 		{
 			NArrayPushBack(poutput_array, (NBYTE*)&cookie);
-			// on specifie le push back  de la partie située dans le cone:
+			// on specifie le push back  de la partie situï¿½e dans le cone:
 			_ret |= FLAG_CUTOUT_COOKIE;
 		}
 
@@ -252,9 +253,9 @@ void NLVSTAGE::setCutters(const NLVSTAGE* p0, const NLVSTAGE* p1)
 	}
 /*
 	if(_null == 2)
-		FLAG_ON(m_flags, FLAG_NLVSTAGE_FORCE_CUT_OUT);	// setCutters c'est comporté comme un ResetCutters
+		FLAG_ON(m_flags, FLAG_NLVSTAGE_FORCE_CUT_OUT);	// setCutters c'est comportï¿½ comme un ResetCutters
 	else
-		FLAG_OFF(m_flags, FLAG_NLVSTAGE_FORCE_CUT_OUT);	// setCutters c'est comporté comme un ... setCutters	:)
+		FLAG_OFF(m_flags, FLAG_NLVSTAGE_FORCE_CUT_OUT);	// setCutters c'est comportï¿½ comme un ... setCutters	:)
 */
 }
 
@@ -316,7 +317,7 @@ NLVSTAGE_EDIT::IRESULT NLVSTAGE_EDIT::intersect(const NLVSTAGEX* pvs)
 
 	if (pvs->m_s0 <= m_s0)
 	{
-		// ! Le cas c) pourrait aussi apparaitre ici, mais il est a déjà été détecter dan sle test juste audessus et à retourner "VSTAGE_IS_INCLUDED"
+		// ! Le cas c) pourrait aussi apparaitre ici, mais il est a dï¿½jï¿½ ï¿½tï¿½ dï¿½tecter dan sle test juste audessus et ï¿½ retourner "VSTAGE_IS_INCLUDED"
 		if (pvs->m_s1 >= m_s1)
 			return NLVSTAGE_EDIT::USERKEY_IS_INCLUDED;
 	}

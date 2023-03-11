@@ -3,8 +3,8 @@
 
 #include "NType.h"
 #include "NMath.h"
-#include "./Maths/NVec2f32.h"
-#include "./Maths/NVec3f32.h"
+#include "lib/N/Maths/NVec2f32.h"
+#include "lib/N/Maths/NVec3f32.h"
 #include "NSpheric.h"
 #include "NCylindric.h"
 

@@ -1,5 +1,5 @@
 #include "lib/N/NCStandard.h"
-#include "../Core/NSafeConversion.h"
+#include "lib/N/Core/NSafeConversion.h"
 #include "NUI.h"
 #include "NUIColor.h"
 #include "NUIPush.h"

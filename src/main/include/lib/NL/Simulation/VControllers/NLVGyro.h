@@ -1,8 +1,8 @@
 #pragma once
-#include "../../../N/NType.h"
-#include "../../../N/NFlags.h"
+#include "lib/N/NType.h"
+#include "lib/N/NFlags.h"
 
-#include "../VirtualRobot/NLVirtualGyro.h"
+#include "lib/NL/Simulation/VirtualRobot/NLVirtualGyro.h"
 
 #define FLAG_NLVGYRO_IS_CLOCKWISE BIT_0 // sens anti-trigonometrique
 #define FLAG_NLVGYRO_IS_DEGREE BIT_1	// la fonction get() retournera une valeur exprim�e en degr�s. ( l'unit� par d�faut est le radian )

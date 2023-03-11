@@ -1,15 +1,15 @@
-#include "../../../N/NMemory.h"
-#include "../../../N/NMath.h"
-#include "../../../N/Maths/NVec2f32.h"
+#include "lib/N/NMemory.h"
+#include "lib/N/NMath.h"
+#include "lib/N/Maths/NVec2f32.h"
 #include "lib/N/Maths/NVecLimits.h"
-#include "../../../N/NErrorHandling.h"
+#include "lib/N/NErrorHandling.h"
 
-#include "NLPathPersistentTrackingData.h"
+#include "lib/NL/MotionControl/Path/NLPathPersistentTrackingData.h"
 
 #ifdef _NEDITOR
-#include "../../../N/NEditor.h"
-#include "../../../N/Utilities/Draw/NUT_Draw.h"
-#include "../../../N/Utilities/Draw/NUT_DrawPencil.h"
+#include "lib/N/NEditor.h"
+#include "lib/N/Utilities/Draw/NUT_Draw.h"
+#include "lib/N/Utilities/Draw/NUT_DrawPencil.h"
 #endif
 
 void NLPATH_PERSISTENT_TRACKING_DATA::reset()

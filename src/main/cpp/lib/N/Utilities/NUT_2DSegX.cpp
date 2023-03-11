@@ -1,6 +1,6 @@
 #include "lib/N/NCStandard.h"
 #include "lib/N/GL/Ngl.h"
-#include "../NViewport.h"
+#include "lib/N/NViewport.h"
 
 #include "NUT_X.h"
 

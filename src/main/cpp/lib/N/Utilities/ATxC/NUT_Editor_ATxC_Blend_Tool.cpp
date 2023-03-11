@@ -2,7 +2,7 @@
 // !!! ONLY IF COMPILER '_NEDITOR' FLAG IS SET TO ON !!! ONLY IF COMPILER '_NEDITOR' FLAG IS SET TO ON !!!
 // !!! ONLY IF COMPILER '_NEDITOR' FLAG IS SET TO ON !!! ONLY IF COMPILER '_NEDITOR' FLAG IS SET TO ON !!!
 // +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-#include "../../NCStandard.h"
+#include "lib/N/NCStandard.h"
 #include "../../Libraries/NLibraries.h"
 #include "NUT_Editor_ATxC_Tool.h"
 #include "NUT_Editor_ATxC_Gizmo_Blend_InLine.h"

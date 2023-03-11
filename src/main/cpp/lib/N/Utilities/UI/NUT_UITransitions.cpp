@@ -1,4 +1,4 @@
-#include "../../NCStandard.h"
+#include "lib/N/NCStandard.h"
 #include "NUT_UITransitions.h"
 
 NUITHNANIM_PLAYER*	NUT_SetupUITransition( NUITHNANIM_PLAYER *puithnanimplayer, const NUI *pui, const NVEC3 *pv, const NUT_UITRANSITION_ENUM transition_id, const Nf32 time, const NEASING_HANDLE_ID_ENUM easing, const Nbool ui_hide_force_transition_end_key_and_delete, const Nbool send_nnotify_start_end_events )

@@ -4,7 +4,7 @@
 #include "lib/N/Maths/NVec2f32.h"
 #include "lib/N/Containers/NArray.h"
 
-#include "NLPathSectionBuildCircle.h"
+#include "lib/NL/MotionControl/Path/Builders/WayPoints/NLPathSectionBuildCircle.h"
 
 typedef struct NLPATH_SECTION_BPAIR NLPATH_SECTION_BPAIR;
 struct NLPATH_SECTION_BPAIR

@@ -9,15 +9,15 @@
 // ***************************************************************************************
 // ***************************************************************************************
 #include "lib/N/NType.h"
-#include "../NMatrix.h"
-#include "../NTransformationTree.h"
-#include "../Containers/NArray.h"
-#include "../NTexture.h"
-#include "../Miscellaneous/NColor.h"
-#include "../NBoundingVolumes.h"
-#include "./Components/NGeometryMesh.h"
-#include "./Components/NGeometryAppearance.h"
-#include "../Render/Accumulator/NAccumulator.h"
+#include "lib/N/NMatrix.h"
+#include "lib/N/NTransformationTree.h"
+#include "lib/N/Containers/NArray.h"
+#include "lib/N/NTexture.h"
+#include "lib/N/Miscellaneous/NColor.h"
+#include "lib/N/NBoundingVolumes.h"
+#include "lib/N/Geometry/Components/NGeometryMesh.h"
+#include "lib/N/Geometry/Components/NGeometryAppearance.h"
+#include "lib/N/Render/Accumulator/NAccumulator.h"
 
 #ifdef __cplusplus
 extern "C"

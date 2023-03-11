@@ -1,9 +1,9 @@
 #include "lib/N/NCStandard.h"
 #include "lib/N/NType.h"
-#include "../Containers/NArray.h"
-#include "./Components/NGeometryAppearance.h"
+#include "lib/N/Containers/NArray.h"
+#include "lib/N/Geometry/Components/NGeometryAppearance.h"
 #include "Ngeometry.h"
-#include "./Components/NGeometryVertex.h"
+#include "lib/N/Geometry/Components/NGeometryVertex.h"
 
 extern NGEOMETRY_SPECS NGeometrySpecs[];
 extern NPRIMITIVE_SPECS NPrimitiveSpecs[];

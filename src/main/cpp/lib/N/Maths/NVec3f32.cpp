@@ -8,7 +8,7 @@
 // Vectors management.
 // ==========================================================================================
 #include "lib/N/NCStandard.h"
-#include "../Maths/NVec3f32.h"
+#include "lib/N/Maths/NVec3f32.h"
 #include "lib/N/NType.h"
 // -------------------------------------------------------------------------------------------
 // NVec3Normalize

@@ -1,5 +1,5 @@
 #include "lib/N/NCStandard.h"
-#include "../Containers/NRingBuffer.h"
+#include "lib/N/Containers/NRingBuffer.h"
 #include "lib/N/Containers/NNode.h"
 
 #include "lib/N/NErrorHandling.h"

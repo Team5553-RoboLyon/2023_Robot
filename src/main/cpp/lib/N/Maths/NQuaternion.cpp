@@ -11,7 +11,7 @@
 #include "lib/N/NType.h"
 #include "lib/N/NMath.h"
 
-#include "../NQuaternion.h"
+#include "lib/N/NQuaternion.h"
 
 // ------------------------------------------------------------------------------------------
 // NIdentityQuat

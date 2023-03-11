@@ -15,8 +15,8 @@ extern "C"
 // ***************************************************************************************
 // ***************************************************************************************
 /*
-#include "./Components/NGeometryComponent_Base.h"
-#include "./Components/NGeometryComponent_Mesh.h"
+#include "lib/N/Geometry/Components/NGeometryComponent_Base.h"
+#include "lib/N/Geometry/Components/NGeometryComponent_Mesh.h"
 */
 
 /*

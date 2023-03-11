@@ -1,10 +1,10 @@
 ﻿#pragma once
 #include "lib/N/NCStandard.h"
 #include "lib/N/NType.h"
-#include "../../Path/NLPath.h"
+#include "lib/NL/MotionControl/Path/NLPath.h"
 
 #ifdef _NEDITOR
-#include "../../../NL2DOrthogonalCoordinateSystem.h"
+#include "lib/NL/MotionControl/NL2DOrthogonalCoordinateSystem.h"
 #endif
 
 class NLPATH_BUILDER

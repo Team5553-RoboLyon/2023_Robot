@@ -14,7 +14,7 @@ extern "C"
 // ***************************************************************************************
 // ***************************************************************************************
 #include "lib/N/NType.h"
-#include "./RenderFunctions/NGeometryRenderFunctionsID.h"
+#include "lib/N/Geometry/RenderFunctions/NGeometryRenderFunctionsID.h"
 
 	typedef struct
 	{

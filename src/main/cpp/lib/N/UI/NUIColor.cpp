@@ -1,6 +1,6 @@
 #include "lib/N/NErrorHandling.h"
-#include "../Ntext.h"
-#include "../Geometry/NGeometryMisc.h"
+#include "lib/N/Ntext.h"
+#include "lib/N/Geometry/NGeometryMisc.h"
 
 #include "NUIColor.h"
 

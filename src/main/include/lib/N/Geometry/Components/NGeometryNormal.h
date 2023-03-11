@@ -7,8 +7,8 @@
 // **							  NGeometryNormal.h										**
 // **																					**
 // ***************************************************************************************
-#include "../../NCStandard.h"
-#include "../../NType.h"
+#include "lib/N/NCStandard.h"
+#include "lib/N/NType.h"
 
 #ifdef __cplusplus
 extern "C"

@@ -1,7 +1,7 @@
-#include "../../NCStandard.h"
-#include "../../Geometry/NGeometry.h"
+#include "lib/N/NCStandard.h"
+#include "lib/N/Geometry/NGeometry.h"
 #include "../../NErrorHandling.h"
-#include "../../Maths/NMatrix3x3.h"
+#include "lib/N/Maths/NMatrix3x3.h"
 #include "NUT_Draw.h"
 #include "NUT_DrawPencil.h"
 

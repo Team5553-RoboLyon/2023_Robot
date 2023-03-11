@@ -1,10 +1,10 @@
 
-#include "../N/NString.h"
-#include "../N/File/NFile.h"
-#include "../N/Utilities/NUT_Shape.h"
-#include "../N/Utilities/Draw/NUT_Draw.h"
-#include "../N/NCore.h"
-#include "NLPlayground.h"
+#include "lib/N/NString.h"
+#include "lib/N/File/NFile.h"
+#include "lib/N/Utilities/NUT_Shape.h"
+#include "lib/N/Utilities/Draw/NUT_Draw.h"
+#include "lib/N/NCore.h"
+#include "lib/NL/NLPlayground.h"
 /*
 NLPLAYGROUND::~NLPLAYGROUND()
 {
@@ -27,13 +27,13 @@ NLPLAYGROUND::NLPLAYGROUND()
 }
 */
 
-NLPLAYGROUND* NLPLAYGROUND::setup(const Nf32 ppm, const Nchar* ptxname)
+NLPLAYGROUND *NLPLAYGROUND::setup(const Nf32 ppm, const Nchar *ptxname)
 {
-	NOBJECT_DESC	objdesc;
-	NGEOMETRY_DESC	geomdesc;
-	NGEOMETRY		*pgeom;
-	NIMAGE			image;
-	NIMAGEDESC		imagedesc;
+	NOBJECT_DESC objdesc;
+	NGEOMETRY_DESC geomdesc;
+	NGEOMETRY *pgeom;
+	NIMAGE image;
+	NIMAGEDESC imagedesc;
 
 	m_fieldImagePixelPerMeter = ppm;
 
@@ -68,15 +68,15 @@ NLPLAYGROUND* NLPLAYGROUND::setup(const Nf32 ppm, const Nchar* ptxname)
 	}
 
 	// sizes:
-	m_fieldTrueSize.x = 16.46f;	// Width
+	m_fieldTrueSize.x = 16.46f; // Width
 	m_fieldTrueSize.y = 8.23f;	// Length
 
 	return this;
 }
 void NLPLAYGROUND::clear()
 {
-	NTRANSFORM_HNODE* pthn = m_fieldObject.pRenderable->pTransformHNode;
-	NTEXTURE* ptexture = NGetGeometryTexture(NGetFirstIncludedGeometry(m_fieldObject.pRenderable), 0);
+	NTRANSFORM_HNODE *pthn = m_fieldObject.pRenderable->pTransformHNode;
+	NTEXTURE *ptexture = NGetGeometryTexture(NGetFirstIncludedGeometry(m_fieldObject.pRenderable), 0);
 	NErrorIf(!ptexture, NERROR_SYSTEM_CHECK);
 	NErrorIf(!pthn, NERROR_SYSTEM_CHECK);
 
@@ -88,10 +88,10 @@ void NLPLAYGROUND::clear()
 		Nfree(m_pfieldTextureName);
 }
 
-void NLPLAYGROUND::drawFieldTrueEdges(const NCOLOR* pcol)
+void NLPLAYGROUND::drawFieldTrueEdges(const NCOLOR *pcol)
 {
-	NVEC3f32	v0;
-	NVEC2f32	xtd;
+	NVEC3f32 v0;
+	NVEC2f32 xtd;
 
 	v0.x = v0.y = v0.z = 0.0f;
 	xtd.x = m_fieldTrueSize.x / 2.0f;
@@ -99,31 +99,31 @@ void NLPLAYGROUND::drawFieldTrueEdges(const NCOLOR* pcol)
 	NUT_Draw_Quad(&v0, &xtd, pcol);
 }
 
-void NLPLAYGROUND::addInRenderPipeline(NXNODELIST* pxdisplaylist)
+void NLPLAYGROUND::addInRenderPipeline(NXNODELIST *pxdisplaylist)
 {
 	NErrorIf(NGetXNodeByX(pxdisplaylist, &m_fieldObject), NERROR_ALREADY_DONE);
 	NXNodeInsertEnd(NCreateXNode(&m_fieldObject), pxdisplaylist);
 }
 
-void NLPLAYGROUND::removeFromRenderPipeline(NXNODELIST* pxdisplaylist)
+void NLPLAYGROUND::removeFromRenderPipeline(NXNODELIST *pxdisplaylist)
 {
 	NErrorIf(!NGetXNodeByX(pxdisplaylist, &m_fieldObject), NERROR_ALREADY_DONE);
 	NDeleteXNode(NGetXNodeByX(pxdisplaylist, &m_fieldObject), NULL);
 }
 
-void NLPLAYGROUND::setTexture(const NTEXTURE* ptx, const Nbool brebuild)
+void NLPLAYGROUND::setTexture(const NTEXTURE *ptx, const Nbool brebuild)
 {
-	NTEXTURE* ptexture = NGetGeometryTexture(NGetFirstIncludedGeometry(m_fieldObject.pRenderable), 0);
-	NSetGeometryTexture((NGEOMETRY*)m_fieldObject.pRenderable->GeomArray.pFirst, 0, ptx);
+	NTEXTURE *ptexture = NGetGeometryTexture(NGetFirstIncludedGeometry(m_fieldObject.pRenderable), 0);
+	NSetGeometryTexture((NGEOMETRY *)m_fieldObject.pRenderable->GeomArray.pFirst, 0, ptx);
 	if (ptexture)
 	{
 		NDeleteTexture(ptexture);
 	}
 
-	if(brebuild)
+	if (brebuild)
 		rebuildFieldObject();
 }
-void NLPLAYGROUND::setTextureFilename(const Nchar* pfilename)
+void NLPLAYGROUND::setTextureFilename(const Nchar *pfilename)
 {
 	if (m_pfieldTextureName)
 		Nfree(m_pfieldTextureName);
@@ -138,7 +138,7 @@ void NLPLAYGROUND::setPpM(const Nf32 ppm, const Nbool brebuild)
 void NLPLAYGROUND::updatePpcFromImageWidth(const Nf32 texture_width_in_meter, const Nbool brebuild)
 {
 	NErrorIf(!texture_width_in_meter, NERROR_NULL_VALUE);
-	NTEXTURE* ptx = NGetGeometryTexture(NGetFirstIncludedGeometry(m_fieldObject.pRenderable), 0);
+	NTEXTURE *ptx = NGetGeometryTexture(NGetFirstIncludedGeometry(m_fieldObject.pRenderable), 0);
 	if (ptx)
 	{
 		m_fieldImagePixelPerMeter = (Nf32)ptx->size.x / texture_width_in_meter;
@@ -155,7 +155,7 @@ void NLPLAYGROUND::updatePpcFromImageWidth(const Nf32 texture_width_in_meter, co
 void NLPLAYGROUND::updatePpcFromImageHeight(const Nf32 texture_height_in_meter, const Nbool brebuild)
 {
 	NErrorIf(!texture_height_in_meter, NERROR_NULL_VALUE);
-	NTEXTURE* ptx = NGetGeometryTexture(NGetFirstIncludedGeometry(m_fieldObject.pRenderable), 0);
+	NTEXTURE *ptx = NGetGeometryTexture(NGetFirstIncludedGeometry(m_fieldObject.pRenderable), 0);
 	if (ptx)
 	{
 		m_fieldImagePixelPerMeter = (Nf32)ptx->size.y / texture_height_in_meter;
@@ -168,7 +168,7 @@ void NLPLAYGROUND::updatePpcFromImageHeight(const Nf32 texture_height_in_meter, 
 	if (brebuild)
 		rebuildFieldObject();
 }
-Nu32 NLPLAYGROUND::write(FILE* pfile)
+Nu32 NLPLAYGROUND::write(FILE *pfile)
 {
 	if (fwrite(&m_fieldImagePixelPerMeter, sizeof(Nf32), 1, pfile) != 1)
 		return 0;
@@ -190,7 +190,7 @@ Nu32 NLPLAYGROUND::write(FILE* pfile)
 	}
 	return 1;
 }
-Nu32 NLPLAYGROUND::read(FILE* pfile)
+Nu32 NLPLAYGROUND::read(FILE *pfile)
 {
 	if (fread(&m_fieldImagePixelPerMeter, sizeof(Nf32), 1, pfile) != 1)
 		return 0;
@@ -204,7 +204,7 @@ Nu32 NLPLAYGROUND::read(FILE* pfile)
 		return 0;
 	if (l)
 	{
-		m_pfieldTextureName = (Nchar*)Nrealloc(m_pfieldTextureName, l * sizeof(Nchar));
+		m_pfieldTextureName = (Nchar *)Nrealloc(m_pfieldTextureName, l * sizeof(Nchar));
 		if (fread(m_pfieldTextureName, l * sizeof(Nchar), 1, pfile) != 1)
 			return 0;
 
@@ -244,7 +244,7 @@ void NLPLAYGROUND::rebuildFieldObject()
 {
 	if (m_fieldImagePixelPerMeter)
 	{
-		NTEXTURE* ptx = NGetGeometryTexture(NGetFirstIncludedGeometry(m_fieldObject.pRenderable), 0);
+		NTEXTURE *ptx = NGetGeometryTexture(NGetFirstIncludedGeometry(m_fieldObject.pRenderable), 0);
 
 		if (ptx)
 		{
@@ -263,14 +263,14 @@ void NLPLAYGROUND::rebuildFieldObject()
 		m_fieldObjectSize.y = 0.0f;
 	}
 	// The Quad
-	NUT_QUAD_DESC		quad_desc;
-	NCOLOR				color0 = { NCOLOR_PRESET3F_WHITE,1.0f };
+	NUT_QUAD_DESC quad_desc;
+	NCOLOR color0 = {NCOLOR_PRESET3F_WHITE, 1.0f};
 	memset(&quad_desc, 0, sizeof(NUT_QUAD_DESC));
-	//FLAG_ON(quad_desc.CoreDesc.TexCoordBuild.Flags,FLAG_NBUILDBASE_TEXCOORD_USEPARAM_USEDOAARECTf32); // The simple default UV will be used automatically if the format vertex includes UV
+	// FLAG_ON(quad_desc.CoreDesc.TexCoordBuild.Flags,FLAG_NBUILDBASE_TEXCOORD_USEPARAM_USEDOAARECTf32); // The simple default UV will be used automatically if the format vertex includes UV
 	FLAG_ON(quad_desc.CoreDesc.ColorBuild.Flags, FLAG_NBUILDBASE_COLOR_USEPARAMS_COLORRANGE);
 	FLAG_ON(quad_desc.CoreDesc.Flags, FLAG_NUTSCD_USEPARAM_SIZE);
 	FLAG_ON(quad_desc.CoreDesc.Flags, FLAG_NUTSCD_USEPARAM_CONSTRUCTIONPLANE);
-	
+
 	//	FLAG_ON(quad_desc.CoreDesc.Flags,FLAG_NUTSCD_USEPARAM_CONSTRUCTION_ORIGIN);
 	// 	quad_desc.CoreDesc.ConstructionOrigin.x = ;
 	// 	quad_desc.CoreDesc.ConstructionOrigin.y = ;
@@ -287,17 +287,16 @@ void NLPLAYGROUND::rebuildFieldObject()
 	// Dimension Terrain 2021 Infinite Recharge at Home: 457.2 cm
 
 	quad_desc.CoreDesc.Size = m_fieldObjectSize;
-	
+
 	FLAG_ON(quad_desc.CoreDesc.Flags, FLAG_NUTSCD_USEPARAM_ANCHOR);
 	quad_desc.CoreDesc.Anchor.x = ANCHOR_MIDWIDTH;
 	quad_desc.CoreDesc.Anchor.y = ANCHOR_MIDHEIGHT;
 	quad_desc.CoreDesc.Anchor.z = 0.0f;
 
-
 	quad_desc.CoreDesc.ColorBuild.pColorRange = &color0;
 	quad_desc.CoreDesc.ColorBuild.ColorRangeSize = 1;
-	
-	NGEOMETRY* pgeom = NGetFirstIncludedGeometry(m_fieldObject.pRenderable);
+
+	NGEOMETRY *pgeom = NGetFirstIncludedGeometry(m_fieldObject.pRenderable);
 	NEraseGeometryMesh(pgeom);
 	NUT_InsertQuad(pgeom, &quad_desc);
 }

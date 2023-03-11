@@ -1,9 +1,9 @@
 #include "lib/N/NCStandard.h"
 #include "lib/N/NType.h"
-#include "../Containers/NArray.h"
+#include "lib/N/Containers/NArray.h"
 #include "lib/N/Geometry/NGeometry.h"
 #include "lib/N/File/NFile.h"
-#include "../File/NFileExt.h"
+#include "lib/N/File/NFileExt.h"
 #include "lib/N/NErrorHandling.h"
 
 extern NPRIMITIVE_SPECS NPrimitiveSpecs[];

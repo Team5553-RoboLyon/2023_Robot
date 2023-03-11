@@ -8,11 +8,11 @@
 #ifndef __NLIBRARIES_H
 #define __NLIBRARIES_H
 
-#include "../NType.h" 
-#include "../NTexture.h"
-#include "../Geometry/Components/NGeometryBlend.h"
-#include "../Geometry/Components/NGeometryMaterial.h"
-#include "../Containers/NHashMap.h"
+#include "lib/N/NType.h" 
+#include "lib/N/NTexture.h"
+#include "lib/N/Geometry/Components/NGeometryBlend.h"
+#include "lib/N/Geometry/Components/NGeometryMaterial.h"
+#include "lib/N/Containers/NHashMap.h"
 
 #ifdef __cplusplus
 extern "C"

@@ -6,12 +6,12 @@
 // ***************************************************************************************
 // ***************************************************************************************
 #include "lib/N/NCStandard.h"
-#include "../NFlags.h"
+#include "lib/N/NFlags.h"
 #include "lib/N/NType.h"
-#include "../Containers/NArray.h"
-#include "../Core/NTime.h"
-#include "../NCore.h"
-#include "../NPostUpdate.h"
+#include "lib/N/Containers/NArray.h"
+#include "lib/N/Core/NTime.h"
+#include "lib/N/NCore.h"
+#include "lib/N/NPostUpdate.h"
 
 NPOSTUPDATE *NpPostUpdates;
 

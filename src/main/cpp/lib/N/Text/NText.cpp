@@ -1,14 +1,14 @@
 #include "lib/N/NCStandard.h"
-#include "../Containers/NArray.h"
-#include "../NViewport.h"
-#include "../NText.h"
+#include "lib/N/Containers/NArray.h"
+#include "lib/N/NViewport.h"
+#include "lib/N/Ntext.h"
 #include "lib/N/NErrorHandling.h"
 #include "lib/N/Geometry/NGeometry.h"
-#include "../Geometry/Components/NGeometryAppearance.h"
-#include "../Render/NFrustum_Culling.h"
-#include "../Render/Renderable/NRenderable.h"
-#include "../Render/Renderable/NRenderable_ExtractSet.h"
-#include "../Render/Renderable/NRenderable_UpdateAndExtract_LUT.h"
+#include "lib/N/Geometry/Components/NGeometryAppearance.h"
+#include "lib/N/Render/NFrustum_Culling.h"
+#include "lib/N/Render/Renderable/NRenderable.h"
+#include "lib/N/Render/Renderable/NRenderable_ExtractSet.h"
+#include "lib/N/Render/Renderable/NRenderable_UpdateAndExtract_LUT.h"
 
 NTEXT *NSetupText(NTEXT *ptext, const NTEXT_DESC *ptextdesc)
 {

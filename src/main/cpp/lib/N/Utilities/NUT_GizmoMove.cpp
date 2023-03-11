@@ -1,4 +1,4 @@
-#include "../Maths/NMatrix3x3.h"
+#include "lib/N/Maths/NMatrix3x3.h"
 #include "NUT_X.h"
 #include "NUT_3DMouse.h"
 

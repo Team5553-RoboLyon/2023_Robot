@@ -1,11 +1,11 @@
 #include "lib/N/NCStandard.h"
-#include "../Containers/NArray.h"
+#include "lib/N/Containers/NArray.h"
 #include "lib/N/NErrorHandling.h"
-#include "../Maths/NMatrix3x3.h"
+#include "lib/N/Maths/NMatrix3x3.h"
 
 #include "NUT_geometry.h"
 #include "NUT_XMesh.h"
-#include "./Maths/NUT_MathsMisc.h"
+#include "lib/N/Maths/NUT_MathsMisc.h"
 
 extern NVERTEX_SPECS NVertexSpecs[];
 

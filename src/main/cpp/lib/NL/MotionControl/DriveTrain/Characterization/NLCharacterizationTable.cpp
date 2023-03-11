@@ -1,90 +1,88 @@
-#include "../../../../N/NCStandard.h"
-#include "../../../../N/NFlags.h"
-#include "../../../../N/NString.h"
-#include "../../../../N/Core/NLimits.h"
-#include "../../../../N/Core/NVersion.h"
-#include "../../../../N/Core/NSafeConversion.h"
+#include "lib/N/NCStandard.h"
+#include "lib/N/NFlags.h"
+#include "lib/N/NString.h"
+#include "lib/N/Core/NLimits.h"
+#include "lib/N/Core/NVersion.h"
+#include "lib/N/Core/NSafeConversion.h"
 
-#include "NLCharacterizationTable.h"
+#include "lib/NL/MotionControl/Drivetrain/Characterization/NLCharacterizationTable.h"
 
-
-NLCHARACTERIZATION_TABLE::NLCHARACTERIZATION_TABLE():m_gearBoxNb(0)
+NLCHARACTERIZATION_TABLE::NLCHARACTERIZATION_TABLE() : m_gearBoxNb(0)
 {
 	NSetupArray(&m_table, 4, sizeof(NLCHARACTERIZATION_TABLE_ROW));
 }
 
-NLCHARACTERIZATION_TABLE::NLCHARACTERIZATION_TABLE(const Nu8 capacity) :m_gearBoxNb(0)
+NLCHARACTERIZATION_TABLE::NLCHARACTERIZATION_TABLE(const Nu8 capacity) : m_gearBoxNb(0)
 {
 	NSetupArray(&m_table, capacity, sizeof(NLCHARACTERIZATION_TABLE_ROW));
 }
 
 NLCHARACTERIZATION_TABLE::~NLCHARACTERIZATION_TABLE()
 {
-	NClearArray(&m_table,NULL);
+	NClearArray(&m_table, NULL);
 }
 
-Nu32 NLCHARACTERIZATION_TABLE::read(FILE* pfile)
+Nu32 NLCHARACTERIZATION_TABLE::read(FILE *pfile)
 {
 	// 1) lecture Version
-	Nu32	version_u32;
+	Nu32 version_u32;
 	if (fread(&version_u32, sizeof(Nu32), 1, pfile) != 1)
 		return 0;
 
 	// 2) lecture Header
-	NLCHARACTERIZATION_TABLE_HEADER	header;
+	NLCHARACTERIZATION_TABLE_HEADER header;
 
 	switch (NGETVERSION_MAIN(version_u32))
 	{
-		// all versions 0.0.x
-		case NGETVERSION_MAIN(VERSION_NLCHARACTERIZATION_TABLE_HEADER):
+	// all versions 0.0.x
+	case NGETVERSION_MAIN(VERSION_NLCHARACTERIZATION_TABLE_HEADER):
+	{
+		if (fread(&header, sizeof(NLCHARACTERIZATION_TABLE_HEADER), 1, pfile) != 1)
+			return 0;
+
+		m_gearBoxNb = header.m_gearBoxNb;
+		// Recherche de potentiels pbs sur l'array.
+		// ('NIsArrayCorruptedOrInconsistent' se charge de faire un setup auto en cas de array full of ZEROS)
+		if (NIsArrayCorruptedOrInconsistent(&m_table, &header.m_tableBounds, NTRUE))
+			return 0;
+		NResizeArray(&m_table, header.m_tableBounds.Size, NULL, NULL);
+		if (m_table.Size)
 		{
-			if (fread(&header, sizeof(NLCHARACTERIZATION_TABLE_HEADER), 1, pfile) != 1)
-				return 0;
-
-			m_gearBoxNb = header.m_gearBoxNb;
-			// Recherche de potentiels pbs sur l'array.
-			// ('NIsArrayCorruptedOrInconsistent' se charge de faire un setup auto en cas de array full of ZEROS)
-			if (NIsArrayCorruptedOrInconsistent(&m_table, &header.m_tableBounds, NTRUE))
-				return 0;
-			NResizeArray(&m_table, header.m_tableBounds.Size, NULL, NULL);
-			if (m_table.Size)
+			NLCHARACTERIZATION_TABLE_ROW *prow = (NLCHARACTERIZATION_TABLE_ROW *)m_table.pFirst;
+			for (Nu32 i = 0; i < m_table.Size; i++, prow++)
 			{
-				NLCHARACTERIZATION_TABLE_ROW* prow = (NLCHARACTERIZATION_TABLE_ROW*)m_table.pFirst;
-				for (Nu32 i = 0; i < m_table.Size; i++, prow++)
-				{
-					if (!prow->read(pfile))
-						return 0;
-				}
+				if (!prow->read(pfile))
+					return 0;
 			}
-			return 1;
 		}
+		return 1;
+	}
 
-		default:
-			break;
+	default:
+		break;
 	}
 	return 0;
 }
 
-Nu32 NLCHARACTERIZATION_TABLE::write(FILE* pfile)
+Nu32 NLCHARACTERIZATION_TABLE::write(FILE *pfile)
 {
-	NLCHARACTERIZATION_TABLE_HEADER	header;
+	NLCHARACTERIZATION_TABLE_HEADER header;
 
-	// 1) écriture Version
-	Nu32	version_u32 = VERSION_NLCHARACTERIZATION_TABLE_HEADER;
+	// 1) ï¿½criture Version
+	Nu32 version_u32 = VERSION_NLCHARACTERIZATION_TABLE_HEADER;
 	if (fwrite(&version_u32, sizeof(Nu32), 1, pfile) != 1)
 		return 0;
 
-
-	// 2) écriture header
-	NGetArrayBounds(&header.m_tableBounds,&m_table);
+	// 2) ï¿½criture header
+	NGetArrayBounds(&header.m_tableBounds, &m_table);
 	header.m_gearBoxNb = m_gearBoxNb;
 	if (fwrite(&header, sizeof(NLCHARACTERIZATION_TABLE_HEADER), 1, pfile) != 1)
 		return 0;
 
-	// 3) écriture m_table à la main et en une fois
+	// 3) ï¿½criture m_table ï¿½ la main et en une fois
 	if (m_table.Size)
 	{
-		NLCHARACTERIZATION_TABLE_ROW* prow = (NLCHARACTERIZATION_TABLE_ROW*)m_table.pFirst;
+		NLCHARACTERIZATION_TABLE_ROW *prow = (NLCHARACTERIZATION_TABLE_ROW *)m_table.pFirst;
 		for (Nu32 i = 0; i < m_table.Size; i++, prow++)
 		{
 			if (!prow->write(pfile))
@@ -94,26 +92,26 @@ Nu32 NLCHARACTERIZATION_TABLE::write(FILE* pfile)
 	return 1;
 }
 
-Nu32 NLCHARACTERIZATION_TABLE::load(const Nchar* pfilename)
+Nu32 NLCHARACTERIZATION_TABLE::load(const Nchar *pfilename)
 {
 	/* -----------------------------------------------------------------------------------------------------------------
- *
- *  Check extension
- *
- */
+	 *
+	 *  Check extension
+	 *
+	 */
 	if (!NStrCheckEnd(pfilename, EXTENSION_NLCHARACTERIZATION_TABLE_BIN))
 	{
 		NErrorIf(1, NERROR_FILE_OPENING_ERROR);
 		return 0;
 	}
 	// 0) Ouverture du fichier en lecture
-	FILE* pfile = fopen(pfilename, "rb");
+	FILE *pfile = fopen(pfilename, "rb");
 	NErrorIf(!pfile, NERROR_FILE_OPENING_ERROR);
 	if (!pfile)
 		return 0;
 
 	// 1) Lecture Signature
-	Nu32	_u32;
+	Nu32 _u32;
 	if (fread(&_u32, sizeof(Nu32), 1, pfile) != 1)
 	{
 		fclose(pfile);
@@ -138,7 +136,7 @@ Nu32 NLCHARACTERIZATION_TABLE::load(const Nchar* pfilename)
 	return 1;
 }
 
-Nu32 NLCHARACTERIZATION_TABLE::save(const Nchar* pfilename)
+Nu32 NLCHARACTERIZATION_TABLE::save(const Nchar *pfilename)
 {
 	/* -----------------------------------------------------------------------------------------------------------------
 	 *
@@ -149,13 +147,13 @@ Nu32 NLCHARACTERIZATION_TABLE::save(const Nchar* pfilename)
 		return 0;
 
 	// 0) Ouverture du fichier en ecriture
-	FILE* pfile = fopen(pfilename, "wb");
+	FILE *pfile = fopen(pfilename, "wb");
 	NErrorIf(!pfile, NERROR_FILE_OPENING_ERROR);
 	if (!pfile)
 		return 0;
 
 	// 1) Ecriture Signature
-	Nu32	_u32 = SIGNATURE_NLCHARACTERIZATION_TABLE_BIN;
+	Nu32 _u32 = SIGNATURE_NLCHARACTERIZATION_TABLE_BIN;
 	if (fwrite(&_u32, sizeof(Nu32), 1, pfile) != 1)
 	{
 		fclose(pfile);
@@ -172,31 +170,31 @@ Nu32 NLCHARACTERIZATION_TABLE::save(const Nchar* pfilename)
 	return 1;
 }
 
-Nu32 NLCHARACTERIZATION_TABLE::importTxt(const Nchar * pfilename, const Nbool bclear_table_before_loading)
+Nu32 NLCHARACTERIZATION_TABLE::importTxt(const Nchar *pfilename, const Nbool bclear_table_before_loading)
 {
 	NErrorIf(!pfilename, NERROR_NULL_POINTER);
 	/* -----------------------------------------------------------------------------------------------------------------
-	* 
-	*  Check extension
-	* 
-	*/
+	 *
+	 *  Check extension
+	 *
+	 */
 	if (!NStrCheckEnd(pfilename, EXTENSION_NLCHARACTERIZATION_TABLE_TXT))
 	{
 		NErrorIf(1, NERROR_FILE_OPENING_ERROR);
 		return 0;
 	}
 
-	FILE								*pfile;
-	Nchar								tempstring[1024];
-	Nchar								name[32];
-	Nchar								*pstr;
-	Ns32								gearbox_nb	= 0;
-	Ns32								motor_nb	= 0;
-	Ns32								inverted	= 0;
-	Nf32								gb_ratio	= 1.0f;
-	Nf32								wscale		= 0.0f;
-	Nu8									g,m;
-	NLCHARACTERIZATION_TABLE_ROW		row;
+	FILE *pfile;
+	Nchar tempstring[1024];
+	Nchar name[32];
+	Nchar *pstr;
+	Ns32 gearbox_nb = 0;
+	Ns32 motor_nb = 0;
+	Ns32 inverted = 0;
+	Nf32 gb_ratio = 1.0f;
+	Nf32 wscale = 0.0f;
+	Nu8 g, m;
+	NLCHARACTERIZATION_TABLE_ROW row;
 
 	// Reset de la table avant chargement ?
 	if (bclear_table_before_loading)
@@ -204,10 +202,10 @@ Nu32 NLCHARACTERIZATION_TABLE::importTxt(const Nchar * pfilename, const Nbool bc
 		NEraseArray(&m_table, NULL);
 		m_gearBoxNb = 0;
 	}
-	pfile = fopen(pfilename, "r");		// ouverture du fichier
-	fseek(pfile, 0, SEEK_SET);			// on se place au début du fichier
+	pfile = fopen(pfilename, "r"); // ouverture du fichier
+	fseek(pfile, 0, SEEK_SET);	   // on se place au dï¿½but du fichier
 
-	// recupérer la siganture du fichier
+	// recupï¿½rer la siganture du fichier
 	pstr = fgets(tempstring, 1024, pfile);
 	pstr = NStrGet_String_AfterLabel(pstr, "signature= ", name);
 	if (strcmp(name, SIGNATURE_NLCHARACTERIZATION_TABLE_TXT))
@@ -215,12 +213,12 @@ Nu32 NLCHARACTERIZATION_TABLE::importTxt(const Nchar * pfilename, const Nbool bc
 		fclose(pfile);
 		return 0;
 	}
-	// recupérer le nombre de gearbox décrites dans le fichier
+	// recupï¿½rer le nombre de gearbox dï¿½crites dans le fichier
 	pstr = fgets(tempstring, 1024, pfile);
 	pstr = NStrGet_Ns32_AfterLabel(pstr, "gearbox= ", &gearbox_nb);
-	// Si le nombre de gearbox décrites dans le fichier est superieur au nombre MAX de gearbox  on génère une erreur !
-	// Si cela produit, il faut, augmenter la valeur static du nombre max de moteurs .. ou vérifier qu'il n'y a pas une erreur dans le fichier entrant.
-	NErrorIf((gearbox_nb <= 0) || ((gearbox_nb + m_gearBoxNb)> NU8_MAX), NERROR_INDEX_OUTOFRANGE);
+	// Si le nombre de gearbox dï¿½crites dans le fichier est superieur au nombre MAX de gearbox  on gï¿½nï¿½re une erreur !
+	// Si cela produit, il faut, augmenter la valeur static du nombre max de moteurs .. ou vï¿½rifier qu'il n'y a pas une erreur dans le fichier entrant.
+	NErrorIf((gearbox_nb <= 0) || ((gearbox_nb + m_gearBoxNb) > NU8_MAX), NERROR_INDEX_OUTOFRANGE);
 
 	for (g = 0; g < gearbox_nb; g++)
 	{
@@ -234,8 +232,8 @@ Nu32 NLCHARACTERIZATION_TABLE::importTxt(const Nchar * pfilename, const Nbool bc
 		pstr = NStrGet_Nf32_AfterLabel(pstr, "vmax-= ", &row.m_backwardVelocityMax);
 		pstr = NStrGet_Nf32_AfterLabel(pstr, "amax-= ", &row.m_backwardAccelerationMax);
 
-		// Si le nombre de moteurs décrit dans le fichier est superieur au nombre MAX de moteurs  on génère une erreur !
-		// Si cela produit, il faut, augmenter la valeur static du nombre max de moteurs .. ou vérifier qu'il n'y a pas une erreur dans le fichier entrant.
+		// Si le nombre de moteurs dï¿½crit dans le fichier est superieur au nombre MAX de moteurs  on gï¿½nï¿½re une erreur !
+		// Si cela produit, il faut, augmenter la valeur static du nombre max de moteurs .. ou vï¿½rifier qu'il n'y a pas une erreur dans le fichier entrant.
 		NErrorIf((motor_nb <= 0) || (motor_nb > NU8_MAX), NERROR_INDEX_OUTOFRANGE);
 		// On charge autant de lignes que de moteurs
 		for (m = 0; m < motor_nb; m++)
@@ -244,13 +242,13 @@ Nu32 NLCHARACTERIZATION_TABLE::importTxt(const Nchar * pfilename, const Nbool bc
 
 			row.m_flags = 0;
 			pstr = NStrGet_Ns32_AfterLabel(pstr, "inv= ", &inverted);
-			if(inverted)
+			if (inverted)
 				FLAG_ON(row.m_flags, FLAG_NLCHARACTERIZATION_TABLE_ROW_IS_INVERTED);
 
-			row.m_gearboxId	= m_gearBoxNb + g;
-			row.m_motorId	= m;
+			row.m_gearboxId = m_gearBoxNb + g;
+			row.m_motorId = m;
 
-			pstr = NStrGet_String_BetweenLabels(pstr, "name= "," ",name);
+			pstr = NStrGet_String_BetweenLabels(pstr, "name= ", " ", name);
 			NStrCopy(row.m_motorName, name, 8);
 
 			// Forward Kv, Ka, et intercept
@@ -263,27 +261,27 @@ Nu32 NLCHARACTERIZATION_TABLE::importTxt(const Nchar * pfilename, const Nbool bc
 			pstr = NStrGet_Nf32_AfterLabel(pstr, "ka-= ", &row.m_characterization.m_backwardKa);
 			pstr = NStrGet_Nf32_AfterLabel(pstr, "intercept-= ", &row.m_characterization.m_backwardIntercept);
 
-			NArrayPushBack(&m_table, (NBYTE*)&row);
+			NArrayPushBack(&m_table, (NBYTE *)&row);
 		}
 	}
-	m_gearBoxNb += _SafeNs32ToNu8( gearbox_nb );
+	m_gearBoxNb += _SafeNs32ToNu8(gearbox_nb);
 	fclose(pfile);
 	return 1;
 }
 // ------------------------------------------------------------------------------------------
 /**
- *	@brief	Extrait une characterization specifique de la table des characterizations. La characterization extraite peut être modulée
- *			pour travailler avec des mètres/secondes en sortie de boite (après réduction), où des rad/sec en entrée de boite ( avant réduction ).
- *			Le coefficient utilisé pour moduler dépend directement du rayon des roues et de la réduction des boites de vitesse lors des tests de 
-*			characterization. ( coef = traction Wheel Radius / GearBox_fact)
- *	@param		pdst est un pointeur sur la structure charaterization à remplir avec les données extraites de la table.
- *	@param		table_index est l'index de la characterization qu'on veut extraire de la table 
- *	@param		angular_velocity_scaled_coef est un booléen qui, si il est à TRUE indique que la characterization attendue est celle travaillant avec des rad/s ( entrée de boite ) et si il est à FALSE des valeurs sortie de boite en m/s 
- *	@return		Si table_index est valide alors la fonction rempli la structure pointée par pdst et retourne pdst en sortie.
- *				Sinon la fonction retourne le pointeur null et la structure pointée par pdst demeure inchangée.	
+ *	@brief	Extrait une characterization specifique de la table des characterizations. La characterization extraite peut ï¿½tre modulï¿½e
+ *			pour travailler avec des mï¿½tres/secondes en sortie de boite (aprï¿½s rï¿½duction), oï¿½ des rad/sec en entrï¿½e de boite ( avant rï¿½duction ).
+ *			Le coefficient utilisï¿½ pour moduler dï¿½pend directement du rayon des roues et de la rï¿½duction des boites de vitesse lors des tests de
+ *			characterization. ( coef = traction Wheel Radius / GearBox_fact)
+ *	@param		pdst est un pointeur sur la structure charaterization ï¿½ remplir avec les donnï¿½es extraites de la table.
+ *	@param		table_index est l'index de la characterization qu'on veut extraire de la table
+ *	@param		angular_velocity_scaled_coef est un boolï¿½en qui, si il est ï¿½ TRUE indique que la characterization attendue est celle travaillant avec des rad/s ( entrï¿½e de boite ) et si il est ï¿½ FALSE des valeurs sortie de boite en m/s
+ *	@return		Si table_index est valide alors la fonction rempli la structure pointï¿½e par pdst et retourne pdst en sortie.
+ *				Sinon la fonction retourne le pointeur null et la structure pointï¿½e par pdst demeure inchangï¿½e.
  */
- // ------------------------------------------------------------------------------------------
-NLMOTOR_CHARACTERIZATION* NLCHARACTERIZATION_TABLE::get(NLMOTOR_CHARACTERIZATION *pdst, const Nu8 table_index, const Nbool angular_velocity_scaled_coef)
+// ------------------------------------------------------------------------------------------
+NLMOTOR_CHARACTERIZATION *NLCHARACTERIZATION_TABLE::get(NLMOTOR_CHARACTERIZATION *pdst, const Nu8 table_index, const Nbool angular_velocity_scaled_coef)
 {
 	NLCHARACTERIZATION_TABLE_ROW *pcz;
 
@@ -292,26 +290,24 @@ NLMOTOR_CHARACTERIZATION* NLCHARACTERIZATION_TABLE::get(NLMOTOR_CHARACTERIZATION
 	{
 		if (angular_velocity_scaled_coef)
 		{
-			pcz = (NLCHARACTERIZATION_TABLE_ROW*)NGetArrayPtr(&m_table, table_index);
+			pcz = (NLCHARACTERIZATION_TABLE_ROW *)NGetArrayPtr(&m_table, table_index);
 			pdst->setFrom(&pcz->m_characterization, pcz->m_angularVelocityScaleFactor);
 		}
 		else
 		{
-			*pdst = ((NLCHARACTERIZATION_TABLE_ROW*)NGetArrayPtr(&m_table, table_index))->m_characterization;
+			*pdst = ((NLCHARACTERIZATION_TABLE_ROW *)NGetArrayPtr(&m_table, table_index))->m_characterization;
 		}
 		return pdst;
 	}
 	return NULL;
 }
 
-
-
-NLMOTOR_CHARACTERIZATION* NLCHARACTERIZATION_TABLE::get(NLMOTOR_CHARACTERIZATION *pdst, const Nu8 gearboxid, const Nu8 motorid, const Nbool angular_velocity_scaled_coef)
+NLMOTOR_CHARACTERIZATION *NLCHARACTERIZATION_TABLE::get(NLMOTOR_CHARACTERIZATION *pdst, const Nu8 gearboxid, const Nu8 motorid, const Nbool angular_velocity_scaled_coef)
 {
 	NErrorIf(gearboxid >= m_gearBoxNb, NERROR_ARRAY_INDEX_BEYOND_LIMITS);
 
 	Nu8 i;
-	NLCHARACTERIZATION_TABLE_ROW* pcz = (NLCHARACTERIZATION_TABLE_ROW*)m_table.pFirst;
+	NLCHARACTERIZATION_TABLE_ROW *pcz = (NLCHARACTERIZATION_TABLE_ROW *)m_table.pFirst;
 	for (i = 0; i < m_table.Size; i++, pcz++)
 	{
 		if ((pcz->m_gearboxId == gearboxid) && (pcz->m_motorId == motorid))
@@ -330,13 +326,13 @@ NLMOTOR_CHARACTERIZATION* NLCHARACTERIZATION_TABLE::get(NLMOTOR_CHARACTERIZATION
 	return NULL;
 }
 
-NLMOTOR_CHARACTERIZATION* NLCHARACTERIZATION_TABLE::get(NLMOTOR_CHARACTERIZATION *pdst, const Nchar * pmotorname, const Nbool angular_velocity_scaled_coef)
+NLMOTOR_CHARACTERIZATION *NLCHARACTERIZATION_TABLE::get(NLMOTOR_CHARACTERIZATION *pdst, const Nchar *pmotorname, const Nbool angular_velocity_scaled_coef)
 {
 	Nu8 i;
-	NLCHARACTERIZATION_TABLE_ROW* pcz = (NLCHARACTERIZATION_TABLE_ROW*)m_table.pFirst;
+	NLCHARACTERIZATION_TABLE_ROW *pcz = (NLCHARACTERIZATION_TABLE_ROW *)m_table.pFirst;
 	for (i = 0; i < m_table.Size; i++, pcz++)
 	{
-		if (strcmp(pmotorname,pcz->m_motorName)==0)
+		if (strcmp(pmotorname, pcz->m_motorName) == 0)
 		{
 			if (angular_velocity_scaled_coef)
 			{
@@ -357,7 +353,7 @@ Nu32 NLCHARACTERIZATION_TABLE::getMotorNb(const Nu8 gearboxid)
 	NErrorIf(gearboxid >= m_gearBoxNb, NERROR_ARRAY_INDEX_BEYOND_LIMITS);
 	Nu8 i;
 	Nu32 nbm = 0;
-	NLCHARACTERIZATION_TABLE_ROW* pcz = (NLCHARACTERIZATION_TABLE_ROW*)m_table.pFirst;
+	NLCHARACTERIZATION_TABLE_ROW *pcz = (NLCHARACTERIZATION_TABLE_ROW *)m_table.pFirst;
 	for (i = 0; i < m_table.Size; i++, pcz++)
 	{
 		if ((pcz->m_gearboxId == gearboxid))

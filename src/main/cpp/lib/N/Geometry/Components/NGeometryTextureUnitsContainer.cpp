@@ -1,5 +1,5 @@
 #include "NGeometryTextureUnit.h"
-#include "../../NMatrix.h"
+#include "lib/N/NMatrix.h"
 /*
 // ------------------------------------------------------------------------------------------
 // NSetupTextureUnitsContainer_T

@@ -1,43 +1,42 @@
 
 #include <float.h>
-//#include "../../N/NMemory.h"
-#include "../../../N/NMath.h"
-#include "../../../N/NString.h"
-#include "../../../N/NErrorHandling.h"
-#include "../NLPathWorkbench.h"
-#include "NLRamsete.h"
+// #include "lib/N/NMemory.h"
+#include "lib/N/NMath.h"
+#include "lib/N/NString.h"
+#include "lib/N/NErrorHandling.h"
+#include "lib/NL/MotionControl/NLPathWorkbench.h"
+#include "lib/NL/MotionControl/Drivetrain/NLRamsete.h"
 
-
-NLRAMSETEOUTPUT* NLRAMSETE::compute(NLRAMSETEOUTPUT* pout, const Nf32 vref, const Nf32 wref, const Nf32 erra, const Nf32 cos_erra, const Nf32 errx, const Nf32 erry )
+NLRAMSETEOUTPUT *NLRAMSETE::compute(NLRAMSETEOUTPUT *pout, const Nf32 vref, const Nf32 wref, const Nf32 erra, const Nf32 cos_erra, const Nf32 errx, const Nf32 erry)
 {
-	Nf32 _k					= 2.0f * m_zeta * sqrt(NPOW2(wref) + m_b * NPOW2(vref));
-	pout->m_velocity		= vref * cos_erra + _k * (errx);
+	Nf32 _k = 2.0f * m_zeta * sqrt(NPOW2(wref) + m_b * NPOW2(vref));
+	pout->m_velocity = vref * cos_erra + _k * (errx);
 	pout->m_angularVelocity = wref + _k * erra + m_b * vref * NSinc(erra) * (erry);
 
-//	Nf32 _k					= NLRAMSETE_Compute_k(m_zeta, m_b, vref, wref);
-//	pout->m_velocity		= NLRAMSETE_Compute_velocity(_k, cos_erra, errx, vref);
-//	pout->m_angularVelocity = NLRAMSETE_Compute_angularVelocity(_k, m_b, erra, erry, vref, wref);
+	//	Nf32 _k					= NLRAMSETE_Compute_k(m_zeta, m_b, vref, wref);
+	//	pout->m_velocity		= NLRAMSETE_Compute_velocity(_k, cos_erra, errx, vref);
+	//	pout->m_angularVelocity = NLRAMSETE_Compute_angularVelocity(_k, m_b, erra, erry, vref, wref);
 	return pout;
 }
 
 #ifdef _NEDITOR
 
-Nu32 NLRAMSETE::read(NLPATH_WORKBENCH* pwb)
+Nu32 NLRAMSETE::read(NLPATH_WORKBENCH *pwb)
 {
 	if (pwb)
 	{
-		m_b		= (pwb->m_specificRamsete.m_b == NF32_MAX) ? (pwb->m_pRamsete ? pwb->m_pRamsete->m_b: DEFAULT_NLRAMSETEPARAMS_B) : pwb->m_specificRamsete.m_b;
-		m_zeta	= (pwb->m_specificRamsete.m_zeta == NF32_MAX) ? (pwb->m_pRamsete ? pwb->m_pRamsete->m_zeta: DEFAULT_NLRAMSETEPARAMS_ZETA) : pwb->m_specificRamsete.m_zeta;
+		m_b = (pwb->m_specificRamsete.m_b == NF32_MAX) ? (pwb->m_pRamsete ? pwb->m_pRamsete->m_b : DEFAULT_NLRAMSETEPARAMS_B) : pwb->m_specificRamsete.m_b;
+		m_zeta = (pwb->m_specificRamsete.m_zeta == NF32_MAX) ? (pwb->m_pRamsete ? pwb->m_pRamsete->m_zeta : DEFAULT_NLRAMSETEPARAMS_ZETA) : pwb->m_specificRamsete.m_zeta;
 	}
 	else
 	{
-		m_b		= DEFAULT_NLRAMSETEPARAMS_B;
-		m_zeta	= DEFAULT_NLRAMSETEPARAMS_ZETA;
+		m_b = DEFAULT_NLRAMSETEPARAMS_B;
+		m_zeta = DEFAULT_NLRAMSETEPARAMS_ZETA;
 	}
 	return 1;
 }
 #endif
-Nu32 NLRAMSETE::read(FILE* pfile)
+Nu32 NLRAMSETE::read(FILE *pfile)
 {
 	if (fread(&m_b, sizeof(Nf32), 1, pfile) != 1)
 		return 0;
@@ -45,7 +44,7 @@ Nu32 NLRAMSETE::read(FILE* pfile)
 		return 0;
 	return 1;
 }
-Nu32 NLRAMSETE::write(FILE* pfile)
+Nu32 NLRAMSETE::write(FILE *pfile)
 {
 	if (fwrite(&m_b, sizeof(Nf32), 1, pfile) != 1)
 		return 0;
@@ -54,26 +53,26 @@ Nu32 NLRAMSETE::write(FILE* pfile)
 	return 1;
 }
 
-Nu32  NLRAMSETE::importTxt(const Nchar* ptxtfilename)
+Nu32 NLRAMSETE::importTxt(const Nchar *ptxtfilename)
 {
 	NErrorIf(!ptxtfilename, NERROR_NULL_POINTER);
 	/* -----------------------------------------------------------------------------------------------------------------
-	*
-	*  Check extension
-	*
-	*/
+	 *
+	 *  Check extension
+	 *
+	 */
 	if (!NStrCheckEnd(ptxtfilename, EXTENSION_NLRAMSETE_TXT))
 		return 0;
 
-	FILE* pfile;
-	Nchar								tempstring[1024];
-	Nchar								name[32];
-	Nchar* pstr;
+	FILE *pfile;
+	Nchar tempstring[1024];
+	Nchar name[32];
+	Nchar *pstr;
 
-	pfile = fopen(ptxtfilename, "r");	// ouverture du fichier
-	fseek(pfile, 0, SEEK_SET);			// on se place au début du fichier
+	pfile = fopen(ptxtfilename, "r"); // ouverture du fichier
+	fseek(pfile, 0, SEEK_SET);		  // on se place au dï¿½but du fichier
 
-	// recupérer la siganture du fichier
+	// recupï¿½rer la siganture du fichier
 	pstr = fgets(tempstring, 1024, pfile);
 	pstr = NStrGet_String_AfterLabel(pstr, "signature= ", name);
 	if (strcmp(name, SIGNATURE_NLRAMSETE))
@@ -81,7 +80,7 @@ Nu32  NLRAMSETE::importTxt(const Nchar* ptxtfilename)
 		fclose(pfile);
 		return 0;
 	}
-	// recupérer le parametre b dans le fichier
+	// recupï¿½rer le parametre b dans le fichier
 	pstr = fgets(tempstring, 1024, pfile);
 	pstr = NStrGet_Nf32_AfterLabel(pstr, "b= ", &m_b);
 	pstr = NStrGet_Nf32_AfterLabel(pstr, "zeta= ", &m_zeta);

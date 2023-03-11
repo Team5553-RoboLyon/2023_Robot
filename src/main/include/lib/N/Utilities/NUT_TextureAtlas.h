@@ -9,8 +9,8 @@
 // ***************************************************************************************
 // ***************************************************************************************
 #include "lib/N/NType.h"
-#include "../Maths/NVec3f32.h"
-#include "../BasicElements/NTextureAtlas.h"
+#include "lib/N/Maths/NVec3f32.h"
+#include "lib/N/BasicElements/NTextureAtlas.h"
 
 #ifdef __cplusplus
 extern "C"

@@ -1,8 +1,8 @@
-#include "../../NCStandard.h"
-#include "../../NType.h"
-#include "../../Containers/NArray.h"
+#include "lib/N/NCStandard.h"
+#include "lib/N/NType.h"
+#include "lib/N/Containers/NArray.h"
 #include "../../NErrorHandling.h"
-#include "../NRenderCell.h"
+#include "lib/N/NRenderCell.h"
 #include "NAccumulator.h"
 #include "NAccumulatorQuickSorting.h"
 

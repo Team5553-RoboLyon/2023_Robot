@@ -1,6 +1,6 @@
 #include "lib/N/NCStandard.h"
 #include "lib/N/NType.h"
-#include "../Containers/NArray.h"
+#include "lib/N/Containers/NArray.h"
 #include "lib/N/Geometry/NGeometry.h"
 #include "lib/N/NErrorHandling.h"
 #include "NGeometryBoundingVolume.h"

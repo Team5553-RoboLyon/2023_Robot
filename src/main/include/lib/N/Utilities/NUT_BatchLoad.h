@@ -9,9 +9,9 @@
 // ***************************************************************************************
 // ***************************************************************************************
 #include "lib/N/NType.h"
-#include "../NTexture.h"
-#include "../Geometry/Components/NGeometryBlend.h"
-#include "../Geometry/Components/NGeometryMaterial.h"
+#include "lib/N/NTexture.h"
+#include "lib/N/Geometry/Components/NGeometryBlend.h"
+#include "lib/N/Geometry/Components/NGeometryMaterial.h"
 
 #ifdef __cplusplus
 extern "C"

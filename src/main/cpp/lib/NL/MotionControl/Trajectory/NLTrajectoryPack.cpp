@@ -1,12 +1,12 @@
-#include "../../../N/NString.h"
-#include "../../../N/Core/NSafeConversion.h"
-#include "../../../N/Utilities/NUT_Logging.h"
-#include "../NLKin.h"
-#include "../NLPathWorkbench.h"
-#include "../../NLLogsChannels.h"
+#include "lib/N/NString.h"
+#include "lib/N/Core/NSafeConversion.h"
+#include "lib/N/Utilities/NUT_Logging.h"
+#include "lib/NL/MotionControl/NLKin.h"
+#include "lib/NL/MotionControl/NLPathWorkbench.h"
+#include "lib/NL/NLLogsChannels.h"
 
-#include "NLTrajectoryPackGetPointPersistentResult.h"
-#include "NLTrajectoryPack.h"
+#include "lib/NL/MotionControl/Trajectory/NLTrajectoryPackGetPointPersistentResult.h"
+#include "lib/NL/MotionControl/Trajectory/NLTrajectoryPack.h"
 
 NLTRAJECTORY_PACK::NLTRAJECTORY_PACK()
 {

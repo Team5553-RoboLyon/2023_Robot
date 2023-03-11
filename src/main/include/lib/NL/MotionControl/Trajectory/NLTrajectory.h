@@ -1,26 +1,28 @@
 #pragma once
-#include "../../../N/NType.h"
-#include "../../../N/NFlags.h"
-#include "../../../N/Maths/NVec2f32.h"
-#include "../../../N/Containers/NArray.h"
-#include "../../../N/File/NDataPacker.h"
-#include "../../../N/Core/NVersion.h"
+#include "lib/N/NType.h"
+#include "lib/N/NFlags.h"
+#include "lib/N/Maths/NVec2f32.h"
+#include "lib/N/Containers/NArray.h"
+
+#include "lib/N/File/NDataPacker.h"
+#include "lib/N/Core/NVersion.h"
 
 #ifdef _NEDITOR
-#include "../../NL2DOrthogonalCoordinateSystem.h"
-#include "../../NLGfx.h"
+#include "lib/NL/MotionControl/NL2DOrthogonalCoordinateSystem.h"
+#include "lib/NL/NLGfx.h"
 #endif
 
-#include "../NLPhysics.h"
-#include "../DriveTrain/NLDriveTrainSpecs.h"
-#include "../NLKin.h"
-#include "../NLKinLimits.h"
-#include "../NLKinTweak.h"
-#include "../Path/NLPath.h"
+#include "lib/NL/MotionControl/NLPhysics.h"
+#include "lib/NL/MotionControl/DriveTrain/NLDriveTrainSpecs.h"
+#include "lib/NL/MotionControl/NLKin.h"
+#include "lib/NL/MotionControl/NLKinLimits.h"
 
-#include "NLTrajectoryKey.h"
-#include "NLVstageX.h"
-#include "NLTrajectoryPack.h"
+#include "lib/NL/MotionControl/NLKinTweak.h"
+#include "lib/NL/MotionControl/Path/NLPath.h"
+
+#include "lib/NL/MotionControl/Trajectory/NLTrajectoryKey.h"
+
+#include "lib/NL/MotionControl/Trajectory/NLVstageX.h"#include "lib/NL/MotionControl/Trajectory/NLTrajectoryPack.h"
 
 // #define DEFAULT_NLTRAJECTORY_KEYPOINT_ARRAY_CAPACITY							8
 // #define DEFAULT_NLTRAJECTORY_VSTAGES_ARRAYCAPACITY								8

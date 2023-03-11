@@ -9,16 +9,16 @@
 // ***************************************************************************************
 // ***************************************************************************************
 #include "lib/N/NCStandard.h"
-#include "../NFlags.h"
+#include "lib/N/NFlags.h"
 #include "lib/N/NType.h"
-#include "../NRectf32.h"
-#include "../Maths/NVec3f32.h"
+#include "lib/N/NRectf32.h"
+#include "lib/N/Maths/NVec3f32.h"
 
-#include "../NScreenPoint.h"
+#include "lib/N/NScreenPoint.h"
 #include "lib/N/NErrorHandling.h"
-#include "../NCoordinateSystemConversions.h"
+#include "lib/N/NCoordinateSystemConversions.h"
 
-#include "../Core/NSafeConversion.h"
+#include "lib/N/Core/NSafeConversion.h"
 #include "NUT_Slider.h"
 
 #ifdef __cplusplus

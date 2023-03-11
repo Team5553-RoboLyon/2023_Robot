@@ -1,5 +1,5 @@
 #include "../../NErrorHandling.h"
-#include "./Specifications/NGeometryVertex_Flags.h"
+#include "lib/N/Geometry/Components/Specifications/NGeometryVertex_Flags.h"
 
 #include "NGeometryVertex.h"
 

@@ -1,7 +1,7 @@
 #include "NGeometry.h"
 #include "NGeometryDebugChecking.h"
 #include "lib/N/NErrorHandling.h"
-#include "./RenderFunctions/NGeometryRenderFunctions.h"
+#include "lib/N/Geometry/RenderFunctions/NGeometryRenderFunctions.h"
 
 NGEOMETRY_SPECS			NGeometrySpecs[NGEOMETRY_FORMAT_ENUM_SIZE];
 

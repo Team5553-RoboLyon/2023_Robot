@@ -1,11 +1,11 @@
 #include "lib/N/NCStandard.h"
-#include "../GameLoop/NGameStates.h"
-#include "../GameLoop/NGameStatesUID.h"
-#include "../Event/NEvent.h"
-#include "../Touch/NTouch.h"
-#include "../Touch/NTouchListener.h"
+#include "lib/N/Gameloop/NGameStates.h"
+#include "lib/N/Gameloop/NGameStatesUID.h"
+#include "lib/N/Event/NEvent.h"
+#include "lib/N/Touch/NTouch.h"
+#include "lib/N/Touch/NTouchListener.h"
 
-#include "../Core/NSafeConversion.h"
+#include "lib/N/Core/NSafeConversion.h"
 #include "lib/N/NErrorHandling.h"
 
 /*

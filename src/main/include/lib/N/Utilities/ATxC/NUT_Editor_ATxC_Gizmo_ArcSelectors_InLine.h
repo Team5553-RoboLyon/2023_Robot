@@ -15,10 +15,10 @@
 // **																					**
 // ***************************************************************************************
 // ***************************************************************************************
-#include "../../NType.h"
-#include "../../NFlags.h"
-#include "../../Maths/NVec3f32.h"
-#include "../../Miscellaneous/NColor.h"
+#include "lib/N/NType.h"
+#include "lib/N/NFlags.h"
+#include "lib/N/Maths/NVec3f32.h"
+#include "lib/N/Miscellaneous/NColor.h"
 #include "NUT_Editor_ATxC_Gizmo.h"
 
 #ifdef __cplusplus

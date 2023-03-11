@@ -9,11 +9,11 @@
 // ***************************************************************************************
 // ***************************************************************************************
 #include "lib/N/NType.h"
-#include "../NMatrix.h"
-#include "../Containers/NArray.h"
-#include "../Render/Accumulator/NAccumulator.h"
+#include "lib/N/NMatrix.h"
+#include "lib/N/Containers/NArray.h"
+#include "lib/N/Render/Accumulator/NAccumulator.h"
 #include "lib/N/Geometry/NGeometry.h"
-#include "../NBoundingVolumes.h"
+#include "lib/N/NBoundingVolumes.h"
 
 #ifdef __cplusplus
 extern "C"

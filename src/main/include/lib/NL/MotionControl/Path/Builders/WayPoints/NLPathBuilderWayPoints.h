@@ -4,12 +4,12 @@
 #include "lib/N/Containers/NArray.h"
 #include "lib/N/Core/NVersion.h"
 
-#include "NLPathHeuristics.h"
-#include "NLPathWayPoint.h"
+#include "lib/NL/MotionControl/Path/Builders/WayPoints/NLPathHeuristics.h"
+#include "lib/NL/MotionControl/Path/Builders/WayPoints/NLPathWayPoint.h"
 #include "lib/NL/MotionControl/Path/Builders/NLPathBuilder.h"
 
 #ifdef _NEDITOR
-#include "../../../../NL2DOrthogonalCoordinateSystem.h"
+#include "lib/NL/NL2DOrthogonalCoordinateSystem.h"
 #endif
 
 #define DEFAULT_NLPATH_WAYPOINTS_ARRAYCAPACITY 4

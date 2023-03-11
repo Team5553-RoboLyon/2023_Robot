@@ -1,8 +1,8 @@
-#include "../../../N/NString.h"
-#include "../../../N/File/NFile.h"
-#include "../NLPhysics.h"
-#include "../NLPathWorkbench.h"
-#include "NLDriveTrainSpecs.h"
+#include "lib/N/NString.h"
+#include "lib/N/File/NFile.h"
+#include "lib/NL/MotionControl/NLPhysics.h"
+#include "lib/NL/MotionControl/NLPathWorkbench.h"
+#include "lib/NL/MotionControl/Drivetrain/NLDriveTrainSpecs.h"
 
 NLDRIVETRAINSPECS::NLDRIVETRAINSPECS(const Nf32 mass, const NVEC3f32 *pcenterofmass, const Nf32 axletrack, const Nf32 wheelrad, const Nf32 staticfriction, const NLKINLIMITS *plimits)
 {

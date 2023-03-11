@@ -1,7 +1,6 @@
 #ifndef __NGEOMETRYCOMPONENT_CORE_H_
 #define __NGEOMETRYCOMPONENT_CORE_H_
 
-
 // ***************************************************************************************
 // ***************************************************************************************
 // **																					**
@@ -9,9 +8,9 @@
 // **																					**
 // ***************************************************************************************
 // ***************************************************************************************
-#include "../../NType.h"
-#include "../../NTransformationTree.h"
-#include "../RenderFunctions/NGeometryRenderFunctionsID.h"
+#include "lib/N/NType.h"
+#include "lib/N/NTransformationTree.h"
+#include "lib/N/Geometry/RenderFunctions/NGeometryRenderFunctionsID.h"
 
 #ifdef __cplusplus
 extern "C"
@@ -22,27 +21,27 @@ extern "C"
 // #include "../NGeometryLUTS.h"
 // #include "../NAccumulator.h"
 // ------------------------------------------------------------------------------------------------------------------------------------------
-// The "smallest" possible Geometry structure :Just the render function, the associated statesetID (=accumulator ID) and the geometryID     
+// The "smallest" possible Geometry structure :Just the render function, the associated statesetID (=accumulator ID) and the geometryID
 // Actually this kind of structure is not used. There is no vertex and no primitive inside...
-// BUT, like this it will be possible to create all the geometry we want, with all the possible structure of data ... 
+// BUT, like this it will be possible to create all the geometry we want, with all the possible structure of data ...
 // Each derivative GEOMETRY structure must have the NGEOMETRY_BASE component has it first component !
 // Like this
-// 				typedef struct 
+// 				typedef struct
 // 				{
-// 					NGEOMETRY_BASE	Base;	
-// 					Additional GEOMETRY Component 1 		
-// 					Additional GEOMETRY Component 2 			
+// 					NGEOMETRY_BASE	Base;
+// 					Additional GEOMETRY Component 1
+// 					Additional GEOMETRY Component 2
 // 					Additional GEOMETRY Component 3
-//					Additional GEOMETRY Component n 
+//					Additional GEOMETRY Component n
 // 				}NGEOMETRY_mygeometry;
 
-//Notes: We are going to use "NGEOMETRY" instead of "NGEOMETRY_BASE" in the whole program excepting inside the core geometry code.
-//		 The main reason is to mark a difference between the component "NGEOMETRY_COMPONENT_CORE" and the generic name of all the 
+// Notes: We are going to use "NGEOMETRY" instead of "NGEOMETRY_BASE" in the whole program excepting inside the core geometry code.
+//		 The main reason is to mark a difference between the component "NGEOMETRY_COMPONENT_CORE" and the generic name of all the
 //		 derivative NGEOMETRY structures.
 /*
 typedef struct NGEOMETRY		NGEOMETRY;
 typedef void (*NGEOMETRY_RENDERFCT)(const NGEOMETRY *pgeom, const NTRANSFORM_HNODE *ptransform_node);
-typedef struct 
+typedef struct
 {
 	NGEOMETRY_RENDERFCT	RenderFunction;	// "THE" Render function called by NEngine to Render the geometry
 	Nu16				StateSetID;		// store a NSTATESET_ID_ENUM on 16 bits
@@ -53,7 +52,7 @@ typedef struct
 // Description Structure to Create NGEOMETRY_BASE
 #define FLAG_NGEOMETRY_BASE_DESC_RENDER_BLEND				BIT_0
 #define FLAG_NGEOMETRY_BASE_DESC_RENDER_ADDITIVE			BIT_1
-typedef struct 
+typedef struct
 {
 	Nu32								Flags;
 	NGEOMETRY_RENDER_FUNCTION_ID_ENUM	RenderFunctionID;
@@ -109,7 +108,7 @@ inline void NSetupGeometryComponent_Base(NGEOMETRY_COMPONENT_CORE *pgeomcbase, c
 // Clear
 inline void NClearGeometryComponent_Base(NGEOMETRY_COMPONENT_CORE *pgeomcbase)
 {
-	//pgeomcbase->GeometryID	= 0;		// keep it for future structure identification ? 
+	//pgeomcbase->GeometryID	= 0;		// keep it for future structure identification ?
 	//pgeomcbase->NRender		= NULL;		// kepp it for future structure using ?
 	//pgeomcbase->StateSetID	= 0;		// kepp it for future structure using ?
 }
@@ -135,6 +134,5 @@ inline void NFillupGeometryComponent_BaseDesc(NGEOMETRY_COMPONENT_BASE_DESC *pde
 // ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 #ifdef __cplusplus
 }
-#endif	// __cpluplus
-#endif	// __NGEOMETRYCOMPONENT_BASE_H 
-
+#endif // __cpluplus
+#endif // __NGEOMETRYCOMPONENT_BASE_H

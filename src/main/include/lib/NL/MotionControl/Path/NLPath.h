@@ -4,10 +4,11 @@
 #include "lib/N/NMatrix.h"
 #include "lib/N/Core/NVersion.h"
 
-// #include "../../../N/Maths/NMatrix3x3.h"
-#include "../NLKinLimits.h"
-#include "../DriveTrain/NLDriveTrainSpecs.h"
-#include "./Geometry/NLPathGeometry.h"
+// #include "lib/N/Maths/NMatrix3x3.h"
+#include "lib/NL/MotionControl/NLKinLimits.h"
+
+#include "lib/NL/MotionControl/DriveTrain/NLDriveTrainSpecs.h"
+#include "lib/NL/MotionControl/Path/Geometry/NLPathGeometry.h"
 
 class NLPATH
 {

@@ -1,16 +1,16 @@
 #include "lib/N/NCStandard.h"
 #include "lib/N/GL/Ngl.h"
-#include "../Containers/NArray.h"
+#include "lib/N/Containers/NArray.h"
 #include "lib/N/Geometry/NGeometry.h"
-#include "../NViewport.h"
+#include "lib/N/NViewport.h"
 
-#include "../Utilities/NUT_UIDesk_Set.h"
-#include "../Utilities/NUT_UIDesk_Panel.h"
+#include "lib/N/Utilities/NUT_UIDesk_Set.h"
+#include "lib/N/Utilities/NUT_UIDesk_Panel.h"
 
-#include "../Utilities/NUT_UIPresets.h"
-#include "../Utilities/NUT_Core.h"
+#include "lib/N/Utilities/NUT_UIPresets.h"
+#include "lib/N/Utilities/NUT_Core.h"
 #include "lib/N/Utilities/Draw/NUT_Draw.h"
-// #include "../Utilities/Draw/NUT_DrawText.h"
+// #include "lib/N/Utilities/Draw/NUT_DrawText.h"
 
 // Globales
 Nu32 NUtilitiesCoreFlags = 0;

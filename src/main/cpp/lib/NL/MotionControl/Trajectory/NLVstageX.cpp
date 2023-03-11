@@ -1,8 +1,9 @@
-#include "../../../N/NErrorHandling.h"
-#include "../../../N/Core/NLimits.h"
-#include "../../../N/NMemory.h"
-#include "NLVstageX.h"
-#include "NLVstage.h"
+#include "lib/N/NErrorHandling.h"
+#include "lib/N/Core/NLimits.h"
+
+#include "lib/N/NMemory.h"
+#include "lib/NL/MotionControl/Trajectory/NLVstageX.h"#include "lib/NL/MotionControl/Trajectory/NLVstage.h"
+
 
 void NLVSTAGEX::compute_v(const Nf32 k, const Nf32 half_axle_track, const Nf32 turn_left_inertia_coef, const Nf32 turn_right_inertia_coef, const Nf32 max_cruise_velocity)
 {

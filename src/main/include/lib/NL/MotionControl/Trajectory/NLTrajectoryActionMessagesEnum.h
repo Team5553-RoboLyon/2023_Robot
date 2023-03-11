@@ -1,15 +1,15 @@
 #pragma once
-#include "../../../N/NCStandard.h"
+#include "lib/N/NCStandard.h"
 
-// Ce fichier est exclusivement utilisé par le code du Robot ( et simulateur robot ).
-// Il n'est pas utilisé par le logiciel d'édition des chemins ( exception faite du code de simulation contenu dans NLRobot.cpp )
-// La liste des messages utilisés par le logiciel d'édition des chemins est issue du fichier : data/_actionmessages.txt
-// Ce fichier (_actionmessages.txt) est chargé et interprété à chaque nouveau lancement du logiciel d'édition des chemins.
-// Le programmeur du robot veillera à conserver la cohérence entre l'enum ci-dessous et le contenu du fichier _actionmessages.txt
-// Les 2 décrivent le même ensemble de messages.
+// Ce fichier est exclusivement utilisï¿½ par le code du Robot ( et simulateur robot ).
+// Il n'est pas utilisï¿½ par le logiciel d'ï¿½dition des chemins ( exception faite du code de simulation contenu dans NLRobot.cpp )
+// La liste des messages utilisï¿½s par le logiciel d'ï¿½dition des chemins est issue du fichier : data/_actionmessages.txt
+// Ce fichier (_actionmessages.txt) est chargï¿½ et interprï¿½tï¿½ ï¿½ chaque nouveau lancement du logiciel d'ï¿½dition des chemins.
+// Le programmeur du robot veillera ï¿½ conserver la cohï¿½rence entre l'enum ci-dessous et le contenu du fichier _actionmessages.txt
+// Les 2 dï¿½crivent le mï¿½me ensemble de messages.
 
-// ! Le premier message doit est égal à 0 ! 
-// .. le suivant à 1, puis 2, etc ...
+// ! Le premier message doit est ï¿½gal ï¿½ 0 ! 
+// .. le suivant ï¿½ 1, puis 2, etc ...
 typedef enum
 {
 	OPEN_INTAKE = 0,

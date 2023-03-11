@@ -1,8 +1,8 @@
 #include "lib/N/NCStandard.h"
 #include "lib/N/GL/Ngl.h"
 
-#include "../Containers/NArray.h"
-#include "../NViewport.h"
+#include "lib/N/Containers/NArray.h"
+#include "lib/N/NViewport.h"
 #include "NUT_X.h"
 
 // ------------------------------------------------------------------------------------------

@@ -1,11 +1,11 @@
 #include "lib/N/NCStandard.h"
 #include "lib/N/NErrorHandling.h"
-#include "../NCoordinateSystemConversions.h"
-#include "../Event/NEventTouch.h"
+#include "lib/N/NCoordinateSystemConversions.h"
+#include "lib/N/Event/NEventTouch.h"
 #include "NUI.h"
 #include "NUIColorCircle.h"
 
-#include "../Utilities/NUT_Shape.h"
+#include "lib/N/Utilities/NUT_Shape.h"
 
 Nchar *NUIColorCircle_SetupDisplayableInfos_RGBAString(Nchar *pdest, const Nchar *pcaption, const Nu8 red, const Nu8 green, const Nu8 blue, const Nu8 alpha)
 {

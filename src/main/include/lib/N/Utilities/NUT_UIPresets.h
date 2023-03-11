@@ -8,13 +8,13 @@
 // **																					**
 // ***************************************************************************************
 // ***************************************************************************************
-#include "../UI/NUI.h"
-#include "../UI/NUIPushButton.h"
-#include "../UI/NUICheckBox.h"
-#include "../UI/NUIValUpdater.h"
-#include "../UI/NUISlide.h"
-#include "../UI/NUIColorCircle.h"
-#include "../UI/NUICustom.h"
+#include "lib/N/UI/NUI.h"
+#include "lib/N/UI/NUIPushButton.h"
+#include "lib/N/UI/NUICheckBox.h"
+#include "lib/N/UI/NUIValUpdater.h"
+#include "lib/N/UI/NUISlide.h"
+#include "lib/N/UI/NUIColorCircle.h"
+#include "lib/N/UI/NUICustom.h"
 
 #ifdef __cplusplus
 extern "C"

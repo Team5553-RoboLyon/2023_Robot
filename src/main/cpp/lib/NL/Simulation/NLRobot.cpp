@@ -1,15 +1,15 @@
-#include "../../N/NMemory.h"
-#include "../../N/NMath.h"
+#include "lib/N/NMemory.h"
+#include "lib/N/NMath.h"
 
-#include "../../N/Miscellaneous/NColor.h"
-#include "../../N/NErrorHandling.h"
-#include "../../N/Utilities/Draw/NUT_Draw.h"
-#include "../../N/Utilities/Draw/NUT_DrawPencil.h"
+#include "lib/N/Miscellaneous/NColor.h"
+#include "lib/N/NErrorHandling.h"
+#include "lib/N/Utilities/Draw/NUT_Draw.h"
+#include "lib/N/Utilities/Draw/NUT_DrawPencil.h"
 
-#include "../MotionControl/DriveTrain/NLOdometry.h"
+#include "lib/NL/MotionControl/DriveTrain/NLOdometry.h"
 
-#include "./VirtualRobot/NLVirtualRobot.h"
-#include "NLRobot.h"
+#include "lib/NL/Simulation/VirtualRobot/NLVirtualRobot.h"
+#include "lib/NL/Simulation/NLRobot.h"
 
 /*
 void NLROBOT::fromWorkbench(const NLPATH_WORKBENCH* pwb)

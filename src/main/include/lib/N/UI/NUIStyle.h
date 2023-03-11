@@ -8,14 +8,14 @@
 // **																					**
 // ***************************************************************************************
 // ***************************************************************************************
-#include "../NCStandard.h"
+#include "lib/N/NCStandard.h"
 #include "lib/N/NType.h"
-#include "../NFlags.h"
+#include "lib/N/NFlags.h"
 #include "lib/N/NMath.h"
-#include "../NFont.h"
-#include "../NQuaternion.h"
+#include "lib/N/NFont.h"
+#include "lib/N/NQuaternion.h"
 #include "lib/N/Containers/NNode.h"
-#include "../Miscellaneous/NEasing.h"
+#include "lib/N/Miscellaneous/NEasing.h"
 #include "NUIColorSet.h"
 
 #ifdef __cplusplus

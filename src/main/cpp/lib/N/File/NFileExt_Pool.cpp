@@ -1,13 +1,13 @@
 #include "lib/N/NCStandard.h"
 #include "lib/N/NType.h"
 #include "lib/N/NString.h"
-#include "../Containers/NArray.h"
+#include "lib/N/Containers/NArray.h"
 #include "lib/N/File/NFile.h"
-#include "../File/NFileExt.h"
+#include "lib/N/File/NFileExt.h"
 #include "lib/N/NErrorHandling.h"
-#include "../Render/Renderable/NRenderable.h"
-// #include "../Render/Renderable/NRenderable_UpdateAndExtract.h"
-#include "../Render/NFrustum_Culling.h"
+#include "lib/N/Render/Renderable/NRenderable.h"
+// #include "lib/N/Render/Renderable/NRenderable_UpdateAndExtract.h"
+#include "lib/N/Render/NFrustum_Culling.h"
 
 // ------------------------------------------------------------------------------------------
 // Nu32 NFileWritePoolTagList

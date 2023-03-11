@@ -1,7 +1,7 @@
-#include "../../../../N/File/NFile.h"
-#include "../../../../N/NString.h"
+#include "lib/N/File/NFile.h"
+#include "lib/N/NString.h"
 
-#include "NLMotorCharacterization.h"
+#include "lib/NL/MotionControl/DriveTrain/Characterization/NLMotorCharacterization.h"
 /*
 Nchar* NLMOTOR_CHARACTERIZATION::read(Nchar * pstr)
 {
@@ -18,12 +18,12 @@ Nchar* NLMOTOR_CHARACTERIZATION::read(Nchar * pstr)
 	return pstr;
 }
 */
-void NLMOTOR_CHARACTERIZATION::setFrom(const NLMOTOR_CHARACTERIZATION * psrc, const Nf32 scalefactor)
+void NLMOTOR_CHARACTERIZATION::setFrom(const NLMOTOR_CHARACTERIZATION *psrc, const Nf32 scalefactor)
 {
-	m_forwardKv				= psrc->m_forwardKv*scalefactor;
-	m_backwardKv			= psrc->m_backwardKv*scalefactor;
-	m_forwardKa				= psrc->m_forwardKa*scalefactor;
-	m_backwardKa			= psrc->m_backwardKa*scalefactor;
-	m_forwardIntercept		= psrc->m_forwardIntercept;
-	m_backwardIntercept		= psrc->m_backwardIntercept;
+	m_forwardKv = psrc->m_forwardKv * scalefactor;
+	m_backwardKv = psrc->m_backwardKv * scalefactor;
+	m_forwardKa = psrc->m_forwardKa * scalefactor;
+	m_backwardKa = psrc->m_backwardKa * scalefactor;
+	m_forwardIntercept = psrc->m_forwardIntercept;
+	m_backwardIntercept = psrc->m_backwardIntercept;
 }

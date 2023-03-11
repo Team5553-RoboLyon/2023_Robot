@@ -11,11 +11,11 @@
 #include "NCStandard.h"
 #include "NType.h"
 #include "NFlags.h"
-#include "./Containers/NNode.h"
-#include "./Containers/NXNode.h"
-#include "./Containers/NArray.h"
-#include "./Maths/NVec3f32.h"
-#include "./Core/NTime.h"
+#include "lib/N/Containers/NNode.h"
+#include "lib/N/Containers/NXNode.h"
+#include "lib/N/Containers/NArray.h"
+#include "lib/N/Maths/NVec3f32.h"
+#include "lib/N/Core/NTime.h"
 
 #ifdef __cplusplus
 extern "C"

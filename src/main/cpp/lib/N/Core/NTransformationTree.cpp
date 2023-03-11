@@ -1,9 +1,9 @@
 #include "lib/N/NCStandard.h"
 #include "lib/N/GL/Ngl.h"
 
-#include "../NTransformationTree.h"
+#include "lib/N/NTransformationTree.h"
 #include "lib/N/NErrorHandling.h"
-#include "../Timer/NThnAnimationPlayer.h"
+#include "lib/N/Timer/NThnAnimationPlayer.h"
 
 // Globales
 NTRANSFORM_HNODE *pTransformationRoot;

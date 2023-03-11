@@ -1,15 +1,15 @@
 /*
-#include "../../N/NMemory.h"
-#include "../../N/NMath.h"
-#include "../../N/Maths/NVec2f32.h"
-#include "../../N/Maths/NVecLimits.h"
+#include "lib/N/NMemory.h"
+#include "lib/N/NMath.h"
+#include "lib/N/Maths/NVec2f32.h"
+#include "lib/N/Maths/NVecLimits.h"
 
-#include "../../N/NErrorHandling.h"
-#include "NLPath.h"
+#include "lib/N/NErrorHandling.h"
+#include "lib/NL/MotionControl/Path/NLPath.h"
 
 #ifdef _NEDITOR
-#include "../../N/Utilities/Draw/NUT_Draw.h"
-#include "../../N/Utilities/NUT_X.h"
+#include "lib/N/Utilities/Draw/NUT_Draw.h"
+#include "lib/N/Utilities/NUT_X.h"
 #endif
 */
 
@@ -44,44 +44,44 @@ typedef struct
 typedef struct
 {
 	Nu16	Flags;
-	Nu16	type;	// Type de transition: en S ou en C ou en A ( Aligné ).
+	Nu16	type;	// Type de transition: en S ou en C ou en A ( Alignï¿½ ).
 
-	Nf32	alpha;  // Transition en C et S. Les "points de contact entre les cercles et les tangentes" sont situés à un angle alpha de la perpendicaulaire à Ui. (! alpha = 0 pour trans.C )
+	Nf32	alpha;  // Transition en C et S. Les "points de contact entre les cercles et les tangentes" sont situï¿½s ï¿½ un angle alpha de la perpendicaulaire ï¿½ Ui. (! alpha = 0 pour trans.C )
 	Nf32	beta0;	// Distance angulaire entre le point P0 et le point de sortie sur le cercle C0 et en respectant le sens du cercle. 
 	Nf32	beta1;  // Distance angulaire entre le point P0 et le point de sortie sur le cercle C0 et en respectant le sens du cercle. 
 
-	NVEC2	s;		// point de sortie situé sur le cercle 0
-	NVEC2	e;		// point d'entrée situé sur le cercle 1
-	NVEC2	se;		// vecteur 'sortie-entrée' ( dont la longueur avant normalisation est là longueur du segment "tangente" se)
-	Nf32	lse;	// longueur du vecteur 'sortie-entrée' calculé avant normalisation.
+	NVEC2	s;		// point de sortie situï¿½ sur le cercle 0
+	NVEC2	e;		// point d'entrï¿½e situï¿½ sur le cercle 1
+	NVEC2	se;		// vecteur 'sortie-entrï¿½e' ( dont la longueur avant normalisation est lï¿½ longueur du segment "tangente" se)
+	Nf32	lse;	// longueur du vecteur 'sortie-entrï¿½e' calculï¿½ avant normalisation.
 
-	NVEC2	f0;		// point d'intersection des tangentes utilisées pour le calcul des clothoides sur le cercle 0 -- Ref. [2.14] page 59 ( point F ) 
-	NVEC2	f1;		// point d'intersection des tangentes utilisées pour le calcul des clothoides sur le cercle 1 -- Ref. [2.14] page 59 ( point F ) 
+	NVEC2	f0;		// point d'intersection des tangentes utilisï¿½es pour le calcul des clothoides sur le cercle 0 -- Ref. [2.14] page 59 ( point F ) 
+	NVEC2	f1;		// point d'intersection des tangentes utilisï¿½es pour le calcul des clothoides sur le cercle 1 -- Ref. [2.14] page 59 ( point F ) 
 	
 	Nf32	l0;		// distance [p0,f0]
 	Nf32	l1;		// distance [p1,f1]
 	
-	Nf32	clothoid_alpha0; // angle formé par les deux tangentes à l'arc de cercle 0. Soit U0 et se
-	Nf32	clothoid_alpha1; // angle formé par les deux tangentes à l'arc de cercle 1. Soit U1 et se
+	Nf32	clothoid_alpha0; // angle formï¿½ par les deux tangentes ï¿½ l'arc de cercle 0. Soit U0 et se
+	Nf32	clothoid_alpha1; // angle formï¿½ par les deux tangentes ï¿½ l'arc de cercle 1. Soit U1 et se
 
-	Nf32	clothoid_sigma0; // Dérivée de la courbure de la clothoide au cercle 0 ( la deuxième clothoide au cercle 0 est symetrique à la première, sa dérivée de courbure est la même au signe près).
-	Nf32	clothoid_sigma1; // Dérivée de la courbure de la clothoide au cercle 1 ( la deuxième clothoide au cercle 1 est symetrique à la première, sa dérivée de courbure est la même au signe près).
+	Nf32	clothoid_sigma0; // Dï¿½rivï¿½e de la courbure de la clothoide au cercle 0 ( la deuxiï¿½me clothoide au cercle 0 est symetrique ï¿½ la premiï¿½re, sa dï¿½rivï¿½e de courbure est la mï¿½me au signe prï¿½s).
+	Nf32	clothoid_sigma1; // Dï¿½rivï¿½e de la courbure de la clothoide au cercle 1 ( la deuxiï¿½me clothoide au cercle 1 est symetrique ï¿½ la premiï¿½re, sa dï¿½rivï¿½e de courbure est la mï¿½me au signe prï¿½s).
 
-	Nf32	clothoid_k0;	// courbure  au point de raccordement de la clothoide au cercle 0(... avec la deuxième clothoide qui lui est symétrique ).
-	Nf32	clothoid_k1;	// courbure  au point de raccordement de la clothoide au cercle 1(... avec la deuxième clothoide qui lui est symétrique ).
+	Nf32	clothoid_k0;	// courbure  au point de raccordement de la clothoide au cercle 0(... avec la deuxiï¿½me clothoide qui lui est symï¿½trique ).
+	Nf32	clothoid_k1;	// courbure  au point de raccordement de la clothoide au cercle 1(... avec la deuxiï¿½me clothoide qui lui est symï¿½trique ).
 
-	// Avec cercle inséré entre les deux clothoides
+	// Avec cercle insï¿½rï¿½ entre les deux clothoides
 	Nf32	clothoid_tetha0;	// angle entre la tangente au point de racordement des 2 clothoides symetriques et l'axe u0 -- Ref. [2.17] page 63 
 	Nf32	clothoid_tetha1;	// angle entre la tangente au point de racordement des 2 clothoides symetriques et l'axe u1 -- Ref. [2.17] page 63 
 
-	Nf32	clothoid_r0;		// rayon de l'arc de cercle inséré entre les deux clothoides à sommets symetriques  créées pour remplacer l'arc de cercle 0
-	Nf32	clothoid_r1;		// rayon de l'arc de cercle inséré entre les deux clothoides à sommets symetriques  créées pour remplacer l'arc de cercle 1
+	Nf32	clothoid_r0;		// rayon de l'arc de cercle insï¿½rï¿½ entre les deux clothoides ï¿½ sommets symetriques  crï¿½ï¿½es pour remplacer l'arc de cercle 0
+	Nf32	clothoid_r1;		// rayon de l'arc de cercle insï¿½rï¿½ entre les deux clothoides ï¿½ sommets symetriques  crï¿½ï¿½es pour remplacer l'arc de cercle 1
 
-	NVEC2	clothoid_o0;		// centre de l'arc de cercle inséré entre les deux clothoides à sommets symetriques  créées pour remplacer l'arc de cercle 0
-	NVEC2	clothoid_o1;		// centre de l'arc de cercle inséré entre les deux clothoides à sommets symetriques  créées pour remplacer l'arc de cercle 1
+	NVEC2	clothoid_o0;		// centre de l'arc de cercle insï¿½rï¿½ entre les deux clothoides ï¿½ sommets symetriques  crï¿½ï¿½es pour remplacer l'arc de cercle 0
+	NVEC2	clothoid_o1;		// centre de l'arc de cercle insï¿½rï¿½ entre les deux clothoides ï¿½ sommets symetriques  crï¿½ï¿½es pour remplacer l'arc de cercle 1
 
-	Nf32	clothoid_sigma0i; // Dérivée de la courbure de la clothoide au cercle 0 avec cercle inséré de rayon 'clothoid_r0'
-	Nf32	clothoid_sigma1i; // Dérivée de la courbure de la clothoide au cercle 1 avec cercle inséré de rayon 'clothoid_r1'
+	Nf32	clothoid_sigma0i; // Dï¿½rivï¿½e de la courbure de la clothoide au cercle 0 avec cercle insï¿½rï¿½ de rayon 'clothoid_r0'
+	Nf32	clothoid_sigma1i; // Dï¿½rivï¿½e de la courbure de la clothoide au cercle 1 avec cercle insï¿½rï¿½ de rayon 'clothoid_r1'
 
 
 	NLPATH_BUILDCIRCLE *pc0;
@@ -109,7 +109,7 @@ void NLPATH_CirclePair(NLPATH_BUILDCIRCLE_PAIR *presult, const NLPATH_BUILDCIRCL
 	Nf32	lo0o1;//, lo0p0,lo0q0; les longueurs des vecteurs o0p0 et o0q0 valent toutes les deux 'r' ( rayon "des" cercles) 
 
 	NVEC2	 o1o0,  o1p1,  o1q1;
-	//Nf32	lo1o1, lo1p1, lo1qq; la longueur du vecteur o1o0 est la même que celle du vecteur o0o1, les longueurs des vecteurs o1p1 et o1q1 valent toutes les deux 'r' ( rayon "des" cercles) 
+	//Nf32	lo1o1, lo1p1, lo1qq; la longueur du vecteur o1o0 est la mï¿½me que celle du vecteur o0o1, les longueurs des vecteurs o1p1 et o1q1 valent toutes les deux 'r' ( rayon "des" cercles) 
 
 	NVEC2	p0s, p1e;
 
@@ -131,7 +131,7 @@ void NLPATH_CirclePair(NLPATH_BUILDCIRCLE_PAIR *presult, const NLPATH_BUILDCIRCL
 		presult->alpha = 0.0f;
 
 		// Ouvertures angulaires: beta0 et beta1
-		// beta0: angle parcouru depuis p0 jusqu'au point de sortie situé sur le cercle 0.
+		// beta0: angle parcouru depuis p0 jusqu'au point de sortie situï¿½ sur le cercle 0.
 
 		// o0o1
 		o0o1.x	= pc1->o.x - pc0->o.x;
@@ -148,7 +148,7 @@ void NLPATH_CirclePair(NLPATH_BUILDCIRCLE_PAIR *presult, const NLPATH_BUILDCIRCL
 			presult->s.y = pc0->o.y + o0q0.y;
 			//lo0q0 = NVec2Length(&o0q0) = r;
 
-			// entrée sur cercle 1
+			// entrï¿½e sur cercle 1
 			presult->e.x = pc1->o.x + o0q0.x; // o1q1 = o0q0 !!!
 			presult->e.y = pc1->o.y + o0q0.y; // o1q1 = o0q0 !!!
 			//lo1q1 = lo0q0 = NVec2Length(&o0q0) = r;
@@ -163,14 +163,14 @@ void NLPATH_CirclePair(NLPATH_BUILDCIRCLE_PAIR *presult, const NLPATH_BUILDCIRCL
 			presult->s.x = pc0->o.x + o0q0.x;
 			presult->s.y = pc0->o.y + o0q0.y;
 
-			// entrée sur cercle 1
+			// entrï¿½e sur cercle 1
 			presult->e.x = pc1->o.x + o0q0.x; // o1q1 = o0q0 !!!
 			presult->e.y = pc1->o.y + o0q0.y; // o1q1 = o0q0 !!!
 			//lo1q1 = lo0q0 = NVec2Length(&o0q0) = r;
 		}
 
 		// Ouvertures angulaires: beta0 et beta1
-		// beta0: angle parcouru depuis p0 jusqu'au point de sortie situé sur le cercle 0.
+		// beta0: angle parcouru depuis p0 jusqu'au point de sortie situï¿½ sur le cercle 0.
 		o0p0.x = pc0->p.x - pc0->o.x;
 		o0p0.y = pc0->p.y - pc0->o.y;
 		//lo0p0 = NVec2Length(&o0p0) = r;
@@ -188,7 +188,7 @@ void NLPATH_CirclePair(NLPATH_BUILDCIRCLE_PAIR *presult, const NLPATH_BUILDCIRCL
 		}
 
 
-		//beta1: angle parcouru depuis le point d'entrée situé sur le cercle 1 jusq'au point p1.
+		//beta1: angle parcouru depuis le point d'entrï¿½e situï¿½ sur le cercle 1 jusq'au point p1.
 		o1p1.x = pc1->p.x - pc1->o.x;
 		o1p1.y = pc1->p.y - pc1->o.y;
 		//lo1p1 = NVec2Length(&o1p1) = r;
@@ -217,7 +217,7 @@ void NLPATH_CirclePair(NLPATH_BUILDCIRCLE_PAIR *presult, const NLPATH_BUILDCIRCL
 		//-------------
 		// Soit "N" le point d'intersection des deux tangentes (M0,M1) et (M'0,M'1) ( Ref. page 54 )
 		// D'apres Thales: 
-		//					R0 / R1 = [o0,N]/[o1,N] = [M0,N]/[M1,N] Avec R0 et R1 les rayon des cercles considérés qui sont DIFFERENTS ! [ Dans Ref. Ils sont égaux ... :( ]
+		//					R0 / R1 = [o0,N]/[o1,N] = [M0,N]/[M1,N] Avec R0 et R1 les rayon des cercles considï¿½rï¿½s qui sont DIFFERENTS ! [ Dans Ref. Ils sont ï¿½gaux ... :( ]
 		//							
 		// De plus, 		lo0o1 = [o0,N] + [o1,N]
 		//
@@ -246,10 +246,10 @@ void NLPATH_CirclePair(NLPATH_BUILDCIRCLE_PAIR *presult, const NLPATH_BUILDCIRCL
 		//					
 		//					alpha = acos( p0p1 / (2o0o1) )
 		//
-		// Rien de plus facile à comprendre. Ce résultat se base sur le fait que:
+		// Rien de plus facile ï¿½ comprendre. Ce rï¿½sultat se base sur le fait que:
 		//
-		//					R = p0p1/4 ( regle arbitraire, mais logique, fixée par le programme )
-		//					o1n = o0n = o0o1/2 ( car les deux cercles ont même rayon R )				
+		//					R = p0p1/4 ( regle arbitraire, mais logique, fixï¿½e par le programme )
+		//					o1n = o0n = o0o1/2 ( car les deux cercles ont mï¿½me rayon R )				
 		//					
 		// ainsi, si on repart du triangle rectangle o0,M0,N, on a
 		//					
@@ -274,7 +274,7 @@ void NLPATH_CirclePair(NLPATH_BUILDCIRCLE_PAIR *presult, const NLPATH_BUILDCIRCL
 		// alpha
 		presult->alpha = acosf(lp0p1 / (2.0f*lo0o1));
 
-		// Calcul des coordonnées du "point de sortie" sur le cercle 0 et du "point d'entrée" sur le cercle 1.
+		// Calcul des coordonnï¿½es du "point de sortie" sur le cercle 0 et du "point d'entrï¿½e" sur le cercle 1.
 		NVEC2 i, j;
 		i = o0o1;
 		NVec2Normalize(&i);
@@ -290,7 +290,7 @@ void NLPATH_CirclePair(NLPATH_BUILDCIRCLE_PAIR *presult, const NLPATH_BUILDCIRCL
 			presult->s.x = pc0->o.x + i.x*cosalpha*pc0->r - j.x*sinalpha*pc0->r;
 			presult->s.y = pc0->o.y + i.y*cosalpha*pc0->r - j.y*sinalpha*pc0->r;
 
-			// entrée sur cercle 1
+			// entrï¿½e sur cercle 1
 			presult->e.x = pc1->o.x - i.x*cosalpha*pc1->r + j.x*sinalpha*pc1->r;
 			presult->e.y = pc1->o.y - i.y*cosalpha*pc1->r + j.y*sinalpha*pc1->r;
 
@@ -302,13 +302,13 @@ void NLPATH_CirclePair(NLPATH_BUILDCIRCLE_PAIR *presult, const NLPATH_BUILDCIRCL
 			presult->s.x = pc0->o.x + i.x*cosalpha*pc0->r + j.x*sinalpha*pc0->r;
 			presult->s.y = pc0->o.y + i.y*cosalpha*pc0->r + j.y*sinalpha*pc0->r;
 
-			// entrée sur cercle 1
+			// entrï¿½e sur cercle 1
 			presult->e.x = pc1->o.x - i.x*cosalpha*pc1->r - j.x*sinalpha*pc1->r;
 			presult->e.y = pc1->o.y - i.y*cosalpha*pc1->r - j.y*sinalpha*pc1->r;
 		}
 
 		// Ouvertures angulaires: beta0 et beta1
-		// beta0: angle parcouru depuis p0 jusqu'au point de sortie situé sur le cercle 0.
+		// beta0: angle parcouru depuis p0 jusqu'au point de sortie situï¿½ sur le cercle 0.
 		o0p0.x = pc0->p.x - pc0->o.x;
 		o0p0.y = pc0->p.y - pc0->o.y;
 
@@ -328,7 +328,7 @@ void NLPATH_CirclePair(NLPATH_BUILDCIRCLE_PAIR *presult, const NLPATH_BUILDCIRCL
 			presult->beta0 += NF32_2PI;
 		}
 
-//beta1: angle parcouru depuis le point d'entrée situé sur le cercle 1 jusq'au point p1.
+//beta1: angle parcouru depuis le point d'entrï¿½e situï¿½ sur le cercle 1 jusq'au point p1.
 		o1p1.x = pc1->p.x - pc1->o.x;
 		o1p1.y = pc1->p.y - pc1->o.y;
 		o1o0.x = -o0o1.x;
@@ -367,8 +367,8 @@ void NLPATH_CirclePair(NLPATH_BUILDCIRCLE_PAIR *presult, const NLPATH_BUILDCIRCL
 
 	NUT_2DLineXLine_VDir(&presult->pc0->p, &presult->pc0->u, &presult->s, &presult->se, &xres);
 	presult->f0	= xres.I;
-//	NErrorIf(xres.ParamCoordAB < 0.0f, NERROR_INCONSISTENT_VALUES); // F est censé se trouvé "devant" u0, c'est à dire dans la direction pointée par u0.
-	presult->l0		= NABS(xres.ParamCoordAB); // comme 'u0' est unitaire, 'xres.ParamCoordAB' represente ici la longueur algébrique du vecteur [p0,f0].
+//	NErrorIf(xres.ParamCoordAB < 0.0f, NERROR_INCONSISTENT_VALUES); // F est censï¿½ se trouvï¿½ "devant" u0, c'est ï¿½ dire dans la direction pointï¿½e par u0.
+	presult->l0		= NABS(xres.ParamCoordAB); // comme 'u0' est unitaire, 'xres.ParamCoordAB' represente ici la longueur algï¿½brique du vecteur [p0,f0].
 	presult->clothoid_alpha0 = acosf(NVec2DotProduct(&presult->pc0->u, &presult->se));
 	
 	NFresnelIntegralsf32( sqrt(1.0f - presult->clothoid_alpha0 / NF32_PI) , &cf, &sf);							// |	
@@ -382,8 +382,8 @@ void NLPATH_CirclePair(NLPATH_BUILDCIRCLE_PAIR *presult, const NLPATH_BUILDCIRCL
 	// cercle 1
 	NUT_2DLineXLine_VDir(&presult->pc1->p, &presult->pc1->u, &presult->e, &presult->se, &xres);
 	presult->f1	= xres.I;
-//	NErrorIf(xres.ParamCoordAB > 0.0f, NERROR_INCONSISTENT_VALUES); // F est censé se trouvé "derriere" u1, c'est à dire dans la direction opposée à celle pointée par u1.
-	presult->l1		= NABS(xres.ParamCoordAB); // comme 'u1' est unitaire, 'xres.ParamCoordAB' represente ici la longueur algébrique du vecteur [p1,f1].
+//	NErrorIf(xres.ParamCoordAB > 0.0f, NERROR_INCONSISTENT_VALUES); // F est censï¿½ se trouvï¿½ "derriere" u1, c'est ï¿½ dire dans la direction opposï¿½e ï¿½ celle pointï¿½e par u1.
+	presult->l1		= NABS(xres.ParamCoordAB); // comme 'u1' est unitaire, 'xres.ParamCoordAB' represente ici la longueur algï¿½brique du vecteur [p1,f1].
 	presult->clothoid_alpha1 = acosf(NVec2DotProduct(&presult->pc1->u, &presult->se));
 	
 	NFresnelIntegralsf32(sqrt(1.0f - presult->clothoid_alpha1 / NF32_PI), &cf, &sf);								// |	
@@ -398,7 +398,7 @@ void NLPATH_CirclePair(NLPATH_BUILDCIRCLE_PAIR *presult, const NLPATH_BUILDCIRCL
 	// +---	3/4:Insertion d'un arc de cercle entre les deux clothoides.						|
 	// |																					|
 	// +------------------------------------------------------------------------------------+
-	// Calcul du rayon du "cercle inséré"
+	// Calcul du rayon du "cercle insï¿½rï¿½"
 	//NErrorIf((presult->clothoid_alpha0 <= 0.0f) || (presult->clothoid_alpha0 >= NF32_PI_2), NERROR_INCONSISTENT_VALUES); // // Ref [2.2.5] page 63, "0 < alpha < PI/2"
 	presult->clothoid_tetha0 = ((NF32_PI - presult->clothoid_alpha0) / 2.0f) *0.25f; // Ref [2.2.5] page 63 AVEC " 0.0f < clothoid_insertcoef < 1.0f " permettant de faire evoluer tetha0 dans l'intervalle ]0, (PI-alpha0)/2 [
 	Nf32 rac1 = sqrt(2.0f*presult->clothoid_tetha0*NF32_PI);
@@ -457,15 +457,15 @@ void NLPATH_DrawCirclePair(NLPATH_BUILDCIRCLE_PAIR *ppair)
 
 	// tracage "smax0" ( pour verification )
 	
-	// sans cercle inséré
+	// sans cercle insï¿½rï¿½
 	//Nf32 smax	= sqrt((NF32_PI - ppair->clothoid_alpha0) / ppair->clothoid_sigma0);
 	//Nf32 t = sqrt(NF32_PI / ppair->clothoid_sigma0);
 	
-	// avec cercle inséré
+	// avec cercle insï¿½rï¿½
 	Nf32 smax	= 2.0f*ppair->clothoid_tetha0*ppair->clothoid_r0;
 	Nf32 t = sqrt(NF32_PI / ppair->clothoid_sigma0i);
 
-	// check de la courbure par deux moyens de calcul... ( peut-être songer à passer en 64 bits ??? )
+	// check de la courbure par deux moyens de calcul... ( peut-ï¿½tre songer ï¿½ passer en 64 bits ??? )
 	//Nf32 check_curva = smax * ppair->clothoid_sigma0i;
 	//Nf32 check_curvb = 1.0f/ ppair->clothoid_r0;
 
@@ -486,7 +486,7 @@ void NLPATH_DrawCirclePair(NLPATH_BUILDCIRCLE_PAIR *ppair)
 	Nf32 anglebase = (NF32_PI - ppair->clothoid_alpha0 - 2.0f*ppair->clothoid_tetha0);
 	Nf32 anglearc;
 	NCOLOR col2 = { NCOLOR_PRESET3F_ORANGE_GOLD,1.0f };
-	// Traçage arc de cercle inséré:
+	// Traï¿½age arc de cercle insï¿½rï¿½:
 	for (Nu32 ii = 0; ii <= 10; ii++)
 	{
 		anglearc = ( (anglebase * (Nf32)ii )/ 10.0f ) - NF32_PI_2 + ppair->clothoid_tetha0;
@@ -497,7 +497,7 @@ void NLPATH_DrawCirclePair(NLPATH_BUILDCIRCLE_PAIR *ppair)
 		NUT_Draw_Cross(&va, &xtd, &col2);
 	}
 
-	// Tracage cercle inséré
+	// Tracage cercle insï¿½rï¿½
 	Nmem0(&ellipse, NUT_DRAW_ELLIPSE);
 	NSetColorf(&ellipse.Color, NCOLOR_PRESET3F_RED, 1);
 	ellipse.Extents.x = ellipse.Extents.y = NABS(ppair->clothoid_r0);
@@ -609,7 +609,7 @@ void NLPATH_DrawCirclePair(NLPATH_BUILDCIRCLE_PAIR *ppair)
 	va.y = ppair->pc1->p.y;
 	NUT_Draw_Quad(&va, &xtd, &col);
 
-	// Tracage des points d'entrée et de sortie
+	// Tracage des points d'entrï¿½e et de sortie
 	va.z = 0.0f;
 	va.x = ppair->s.x;
 	va.y = ppair->s.y;
@@ -630,7 +630,7 @@ void NLPATH_DrawCirclePair(NLPATH_BUILDCIRCLE_PAIR *ppair)
 	ellipse.Center.y = ppair->pc0->o.y;
 	ellipse.Center.x = ppair->pc0->o.x;
 
-	// L'arc 0 commence en p0 ( le point de départ) ...
+	// L'arc 0 commence en p0 ( le point de dï¿½part) ...
 	op.x = ppair->pc0->p.x - ppair->pc0->o.x;
 	op.y = ppair->pc0->p.y - ppair->pc0->o.y;
 	NVec2Normalize(&op);
@@ -655,11 +655,11 @@ void NLPATH_DrawCirclePair(NLPATH_BUILDCIRCLE_PAIR *ppair)
 	ellipse.Center.y = ppair->pc1->o.y;
 	ellipse.Center.x = ppair->pc1->o.x;
 
-	// L'arc 1 commence en e ( l'entrée ) ...
+	// L'arc 1 commence en e ( l'entrï¿½e ) ...
 	oes.x = ppair->e.x - ppair->pc1->o.x;
 	oes.y = ppair->e.y - ppair->pc1->o.y;
 	NVec2Normalize(&oes);
-	// et se termine en p1 ( le point d'arrivée )
+	// et se termine en p1 ( le point d'arrivï¿½e )
 	op.x = ppair->pc1->p.x - ppair->pc1->o.x;
 	op.y = ppair->pc1->p.y - ppair->pc1->o.y;
 	NVec2Normalize(&op);

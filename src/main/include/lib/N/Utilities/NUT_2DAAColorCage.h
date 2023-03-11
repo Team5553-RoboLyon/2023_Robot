@@ -9,8 +9,8 @@
 // ***************************************************************************************
 // ***************************************************************************************
 #include "lib/N/NType.h"
-#include "../NUsualCoordinates.h"
-#include "../Render/Renderable/NRenderable.h"
+#include "lib/N/NUsualCoordinates.h"
+#include "lib/N/Render/Renderable/NRenderable.h"
 
 #ifdef __cplusplus
 extern "C"

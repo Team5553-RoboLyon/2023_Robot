@@ -11,7 +11,7 @@
 #include "lib/N/NString.h"
 
 #ifdef _NANDROID
-#include "../System/NAndroid.h"
+#include "lib/N/System/NAndroid.h"
 #endif
 
 #include "./NServiceSystem.h"

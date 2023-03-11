@@ -1,21 +1,23 @@
 #pragma once
-#include "../../../N/NType.h"
-#include "../../../N/NFlags.h"
-#include "../../../N/NMemory.h"
-#include "../../../N/Containers/NArray.h"
-#include "../NLKinLimits.h"
-#include "../NLKinTweak.h"
-#include "NLTrajectoryPack.h"
-#include "NLTrajectoryKey.h"
-#include "NLTrajectoryPointDesc.h"
-#include "NLVStageX.h"
+#include "lib/N/NType.h"
+#include "lib/N/NFlags.h"
+#include "lib/N/NMemory.h"
+#include "lib/N/Containers/NArray.h"
 
+#include "lib/NL/MotionControl/NLKinLimits.h"
+
+#include "lib/NL/MotionControl/NLKinTweak.h"
+#include "lib/NL/MotionControl/Trajectory/NLTrajectoryPack.h"
+#include "lib/NL/MotionControl/Trajectory/NLTrajectoryKey.h"
+
+#include "lib/NL/MotionControl/Trajectory/NLTrajectoryPointDesc.h"
+#include "lib/NL/MotionControl/Trajectory/NLVstageX.h"
 #ifdef _NEDITOR
-#include "../../NL2DOrthogonalCoordinateSystem.h"
+#include "lib/NL/MotionControl/NL2DOrthogonalCoordinateSystem.h"
 #endif
 
 #define CONSTANT_NLVSTAGEXSLICE_INITIAL_VSTAGEX_ARRAYCAPACITY		4
-//typedef struct NLVSTAGE NLVSTAGE;	// forward declaration ( NLTrim.h sera déclaré dans NLVstage.cpp)
+//typedef struct NLVSTAGE NLVSTAGE;	// forward declaration ( NLTrim.h sera dï¿½clarï¿½ dans NLVstage.cpp)
 typedef struct NLVSTAGEXSLICE NLVSTAGEXSLICE;
 struct NLVSTAGEXSLICE
 {

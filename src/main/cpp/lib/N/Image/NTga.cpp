@@ -9,9 +9,9 @@
 #include "lib/N/NType.h"
 #include "lib/N/GL/Ngl.h"
 #include "lib/N/File/NFile.h"
-#include "../Miscellaneous/NColor.h"
-#include "../Core/NLimits.h"
-#include "../Core/NSafeConversion.h"
+#include "lib/N/Miscellaneous/NColor.h"
+#include "lib/N/Core/NLimits.h"
+#include "lib/N/Core/NSafeConversion.h"
 #include "NImage.h"
 #include "NTga.h"
 

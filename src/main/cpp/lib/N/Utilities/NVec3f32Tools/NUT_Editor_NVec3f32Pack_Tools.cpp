@@ -1,18 +1,18 @@
 #ifdef _NEDITOR
 // -----------------------------------------------------------------------
-#include "../../NCStandard.h"
-#include "../../UI/NUI.h"
+#include "lib/N/NCStandard.h"
+#include "lib/N/UI/NUI.h"
 #include "../../NCamera.h"
-#include "../../Maths/NVec3f32.h"
+#include "lib/N/Maths/NVec3f32.h"
 #include "../../NCoordinateSystemConversions.h"
-#include "../../NEditor.h"
+#include "lib/N/NEditor.h"
 #include "../../Utilities/NUT_X.h"
 #include "../../Utilities/NUT_3DMouse.h"
 #include "../../Utilities/Maths/NUT_MathsMisc.h"
 #include "../../Utilities/NUT_Spline.h"
 
 #include "../../Event/NEventTouch.h"
-#include "../../Maths/NMatrix3x3.h"
+#include "lib/N/Maths/NMatrix3x3.h"
 #include "NUT_Editor_NVec3f32Pack_Tools.h"
 
 static inline void _lookfor_v3(const NARRAY *parrayofelement, const Nu32 offset_to_v3, const NVEC2s16 *ppointer, NEDITOR_SELECTION *pselect, NVEC3 *phitpoint)
@@ -115,7 +115,7 @@ NEDITOR_RESULT NUT_NVec3f32PackTool_Move(const NEVENT *pevent,NEDITOR_SELECTION 
 				if (NUT_LineXPLane(&mouseray_origin, &mouseray_dirvect, &hitpoint, &planenormal, &mouse_on_workplane))
 				{
 					// MOVE
-					// pdata->SetPosition_CallBack(ptr sur l'array où sont stockés les elements, index de l'élément , pointeur sur le NVEC3 inclu dans l'élément slectionné , pointeur sur la position 3D du curseur );
+					// pdata->SetPosition_CallBack(ptr sur l'array oï¿½ sont stockï¿½s les elements, index de l'ï¿½lï¿½ment , pointeur sur le NVEC3 inclu dans l'ï¿½lï¿½ment slectionnï¿½ , pointeur sur la position 3D du curseur );
 					if (pdata->SetPosition_CallBack)
 						pdata->SetPosition_CallBack(pdata->pArrayOfElements, pselect->SelectParam, pv3, &mouse_on_workplane);
 					else
@@ -268,7 +268,7 @@ NEDITOR_RESULT NUT_NVec3f32PackTool_Insert(const NEVENT *pevent, NEDITOR_SELECTI
 		{
 			pv3 = (NVEC3f32*)(pcreatedelement + pdata->OffsetToV3);
 
-			// pdata->SetPosition_CallBack(ptr sur l'array où sont stockés les elements, index de l'élément , pointeur sur le NVEC3 inclu dans l'élément slectionné , pointeur sur la position 3D du curseur );
+			// pdata->SetPosition_CallBack(ptr sur l'array oï¿½ sont stockï¿½s les elements, index de l'ï¿½lï¿½ment , pointeur sur le NVEC3 inclu dans l'ï¿½lï¿½ment slectionnï¿½ , pointeur sur la position 3D du curseur );
 			if (pdata->SetPosition_CallBack)
 				pdata->SetPosition_CallBack(pdata->pArrayOfElements, createdelementindex, pv3, &result);
 			else
@@ -300,7 +300,7 @@ NEDITOR_RESULT NUT_NVec3f32PackTool_Insert(const NEVENT *pevent, NEDITOR_SELECTI
 			if (NUT_LineXPLane(&mouseline_point, &mouseline_dir, &plane_point, &plane_dir, &result))
 			{
 					// MOVE
-					// pdata->SetPosition_CallBack(ptr sur l'array où sont stocké les elements, index de l'élément sélectionné, pointeur sur le NVEC3 inclu dans l'élément , pointeur sur la position 3D du curseur );
+					// pdata->SetPosition_CallBack(ptr sur l'array oï¿½ sont stockï¿½ les elements, index de l'ï¿½lï¿½ment sï¿½lectionnï¿½, pointeur sur le NVEC3 inclu dans l'ï¿½lï¿½ment , pointeur sur la position 3D du curseur );
 					if (pdata->SetPosition_CallBack)
 						pdata->SetPosition_CallBack(pdata->pArrayOfElements, pselect->SelectParam, pv3, &result);
 					else
