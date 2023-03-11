@@ -1,7 +1,7 @@
-﻿#include "../../N/NString.h"
-#include "../NLProject.h"
-#include "../../App/App_Init.h"
-#include "NLPathWorkbench.h"
+﻿#include "lib/N/NString.h"
+#include "lib/NL/NLProject.h"
+// #include "lib/App/App_Init.h"
+#include "lib/NL/MotionControl/NLPathWorkbench.h"
 
 extern HWND hwnd_Explorer;
 
