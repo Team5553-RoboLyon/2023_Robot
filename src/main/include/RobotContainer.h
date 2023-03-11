@@ -13,7 +13,7 @@
 
 #include "subsystem/Turret.h"
 // #include "subsystem/Arm.h"
-// #include "subsystem/Elevator.h"
+#include "subsystem/Elevator.h"
 // #include "subsystem/Gripper.h"
 #include "subsystem/Drivetrain.h"
 // #include "subsystem/Copiloter.h"

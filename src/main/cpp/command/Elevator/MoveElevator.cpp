@@ -15,7 +15,8 @@ void MoveElevator::Initialize() {}
 // Called repeatedly when this Command is scheduled to run
 void MoveElevator::Execute()
 {
-  double move = m_move() * 96;
+  double move = m_move() * 0.96;
+  std::cout << move << "move" << std::endl;
   m_pElevator->SetSetpoint(move);
 }
 

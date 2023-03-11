@@ -36,12 +36,13 @@ double Elevator::GetEncoder()
 
 void Elevator::Set(double speed)
 {
-    m_elevatorMotor.SetVoltage(units::volt_t(speed));
+    m_elevatorMotor.Set(speed);
 }
 
 void Elevator::Periodic()
 {
     double output = m_elevatorPid.Calculate(GetEncoder());
+    std::cout << output << "output" << std::endl;
     // if (m_elevatorHall.ShouldIStop(GetEncoder(), NSIGN(output)))
     // {
     //     m_elevatorMotor.Set(NCLAMP(-0.5, output, 0.5));
@@ -51,6 +52,6 @@ void Elevator::Periodic()
     //     m_elevatorMotor.Set(0.0);
     // }
 
-    std::cout << "gethallsensor" << m_elevatorHall.MagnetDetected() << std::endl;
-    m_elevatorMotor.Set((NCLAMP(-0.2, output + 0.08, 0.2))); // 0.08 coef de frottement // clamp 0.5
+    // std::cout << "gethallsensor" << m_elevatorHall.MagnetDetected() << std::endl;
+    m_elevatorMotor.Set((NCLAMP(-0.5, output + 0.08, 0.5))); // 0.08 coef de frottement // clamp 0.5
 }
