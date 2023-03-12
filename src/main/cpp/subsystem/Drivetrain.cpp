@@ -66,13 +66,13 @@ Drivetrain::Drivetrain() : m_GearboxLeftOutAveragedRpt(AVERAGE_SAMPLES_NUMBER),
     m_MotorRight2.EnableVoltageCompensation(true);
     m_MotorRight3.EnableVoltageCompensation(true);
 
-    m_MotorRight1.EnableVoltageCompensation(VOLTAGE_COMPENSATION); // init tension de référence
-    m_MotorRight2.EnableVoltageCompensation(VOLTAGE_COMPENSATION);
-    m_MotorRight3.EnableVoltageCompensation(VOLTAGE_COMPENSATION);
+    m_MotorRight1.EnableVoltageCompensation(DRIVETRAIN_VOLTAGE_COMPENSATION); // init tension de référence
+    m_MotorRight2.EnableVoltageCompensation(DRIVETRAIN_VOLTAGE_COMPENSATION);
+    m_MotorRight3.EnableVoltageCompensation(DRIVETRAIN_VOLTAGE_COMPENSATION);
 
-    m_MotorLeft1.EnableVoltageCompensation(VOLTAGE_COMPENSATION);
-    m_MotorLeft2.EnableVoltageCompensation(VOLTAGE_COMPENSATION);
-    m_MotorLeft3.EnableVoltageCompensation(VOLTAGE_COMPENSATION);
+    m_MotorLeft1.EnableVoltageCompensation(DRIVETRAIN_VOLTAGE_COMPENSATION);
+    m_MotorLeft2.EnableVoltageCompensation(DRIVETRAIN_VOLTAGE_COMPENSATION);
+    m_MotorLeft3.EnableVoltageCompensation(DRIVETRAIN_VOLTAGE_COMPENSATION);
 
     m_MotorLeft2.Follow(m_MotorLeft1); // init follower moteurs
     m_MotorLeft3.Follow(m_MotorLeft1);

@@ -10,14 +10,16 @@ MoveElevator::MoveElevator(std::function<double()> move, Elevator *pElevator) : 
 }
 
 // Called when the command is initially scheduled.
-void MoveElevator::Initialize() {}
+void MoveElevator::Initialize()
+{
+}
 
 // Called repeatedly when this Command is scheduled to run
 void MoveElevator::Execute()
 {
   double move = m_move() * 0.96;
   std::cout << move << "move" << std::endl;
-  m_pElevator->SetSetpoint(move);
+  m_pElevator->SetSetpoint(NABS(move));
 }
 
 // Called once the command ends or is interrupted.

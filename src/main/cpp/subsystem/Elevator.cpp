@@ -6,6 +6,8 @@
 
 Elevator::Elevator()
 {
+    m_ElevatorPidRate.Reset(0.0, 0.0, 0.25);
+
     m_elevatorEncoder.Reset();
     m_elevatorEncoder.SetDistancePerPulse(ELEVATOR_DISTANCE_PER_PULSE); //(1.0 / 2048.0) * 1.0 / 3.44 * 0.96 en m
     m_elevatorPid.SetSetpoint(0.0);
@@ -15,7 +17,7 @@ Elevator::Elevator()
     m_elevatorMotor.SetIdleMode(rev::CANSparkMax::IdleMode::kBrake);
     m_elevatorMotor.SetSmartCurrentLimit(ELEVATOR_CURRENT_LIMIT);
     m_elevatorMotor.EnableVoltageCompensation(ELEVATOR_VOLTAGE_COMPENSATION);
-    m_elevatorMotor.SetOpenLoopRampRate(0.8);
+    // m_elevatorMotor.SetOpenLoopRampRate(0.8);
 }
 
 void Elevator::SetSetpoint(double setpoint)
@@ -42,6 +44,7 @@ void Elevator::Set(double speed)
 void Elevator::Periodic()
 {
     double output = m_elevatorPid.Calculate(GetEncoder());
+    m_ElevatorPidRate.Update(output);
     std::cout << output << "output" << std::endl;
     // if (m_elevatorHall.ShouldIStop(GetEncoder(), NSIGN(output)))
     // {
@@ -53,5 +56,5 @@ void Elevator::Periodic()
     // }
 
     // std::cout << "gethallsensor" << m_elevatorHall.MagnetDetected() << std::endl;
-    m_elevatorMotor.Set((NCLAMP(-0.5, output + 0.08, 0.5))); // 0.08 coef de frottement // clamp 0.5
+    m_elevatorMotor.Set((NCLAMP(-0.9, m_ElevatorPidRate.m_current + 0.08, 0.9))); // 0.08 coef de frottement // clamp 0.5
 }

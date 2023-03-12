@@ -11,6 +11,7 @@
 #include "Constants.h"
 #include "lib/RblUtils.h"
 #include "lib/hallsecurity.h"
+#include "lib/rate_limiter.h"
 
 class Turret : public frc2::SubsystemBase
 {
@@ -21,6 +22,8 @@ public:
   void Periodic() override;
   void SetGains(double p, double i, double d);
   double GetEncoder();
+
+  RateLimiter m_TurretPidRate;
 
 private:
   rev::CANSparkMax m_turretMotor{ID_MOTOR_TURRET, rev::CANSparkMaxLowLevel::MotorType::kBrushless};
