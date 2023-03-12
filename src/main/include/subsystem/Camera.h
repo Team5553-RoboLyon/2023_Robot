@@ -23,6 +23,11 @@ public:
   double GetPitch();
   double GetHorizontalError();
   bool HasTarget();
+  void aprilTagMode();
+  void refletiveTapeMode();
+  int getAprilId();
+  bool isAprilTagMode();
+  bool isReflectiveMode();
 
 private:
   // Components (e.g. motor controllers and sensors) should generally be

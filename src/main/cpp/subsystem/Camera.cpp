@@ -11,10 +11,41 @@ void Camera::Periodic() {}
 
 void Camera::DisableLED()
 {
-    m_camera.SetLEDMode(photonlib::LEDMode::kOff);
+    m_camera.SetDriverMode(false);
 }
 
-void Camera::EnableLED() { m_camera.SetLEDMode(photonlib::LEDMode::kOn); }
+void Camera::EnableLED()
+{
+    m_camera.SetDriverMode(true);
+}
+
+void Camera::aprilTagMode()
+{
+    m_camera.SetPipelineIndex(0);
+}
+void Camera::refletiveTapeMode()
+{
+    m_camera.SetPipelineIndex(1);
+}
+int Camera::getAprilId()
+{
+    if (HasTarget())
+    {
+        return m_camera.GetLatestResult().GetBestTarget().GetFiducialId();
+    }
+    else
+    {
+        return 0;
+    }
+}
+bool Camera::isAprilTagMode()
+{
+    return !m_camera.GetDriverMode() && (m_camera.GetPipelineIndex() == 0);
+}
+bool Camera::isReflectiveMode()
+{
+    return !m_camera.GetDriverMode() && (m_camera.GetPipelineIndex() == 1);
+}
 
 double Camera::GetPitch()
 {
