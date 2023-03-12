@@ -3,8 +3,21 @@
 // the WPILib BSD license file in the root directory of this project.
 
 #include "Robot.h"
+
 // cc
-// cc
+void Robot::DisableLED()
+{
+  m_camera.SetLEDMode(photonlib::LEDMode::kOff);
+}
+
+void Robot::EnableLED() { m_camera.SetLEDMode(photonlib::LEDMode::kOn); }
+
+int Robot::IdAprilTag()
+{
+  double Id = m_camera.GetLatestResult().GetBestTarget().GetFiducialId();
+  return Id;
+}
+
 void Robot::RobotInit() {}
 void Robot::RobotPeriodic()
 {

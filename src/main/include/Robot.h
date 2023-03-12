@@ -6,7 +6,9 @@
 
 #include <frc/TimedRobot.h>
 #include <frc/smartdashboard/SmartDashboard.h>
-#include "RobotContainer.h"
+#include <frc/Joystick.h>
+#include <photonlib/PhotonCamera.h>
+#include <photonlib/PhotonUtils.h>
 
 class Robot : public frc::TimedRobot
 {
@@ -29,6 +31,11 @@ public:
   void SimulationInit() override;
   void SimulationPeriodic() override;
 
+  void DisableLED();
+  void EnableLED();
+  int IdAprilTag();
+
 private:
-  RobotContainer m_robotContainer;
+  frc::Joystick m_stick{0};
+  photonlib::PhotonCamera m_camera{"photonvision"};
 };
