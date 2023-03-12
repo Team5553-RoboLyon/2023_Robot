@@ -36,6 +36,11 @@ double Elevator::GetEncoder()
     return m_elevatorEncoder.GetDistance();
 }
 
+bool Elevator::GetEnabled()
+{
+    return m_enabled;
+}
+
 void Elevator::Set(double speed)
 {
     m_elevatorMotor.Set(speed);
