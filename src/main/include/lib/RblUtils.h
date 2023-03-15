@@ -34,3 +34,9 @@
 #define NCLAMP(mn, a, mx) (((a) < (mn)) ? (mn) : ((a) > (mx)) ? (mx) \
                                                               : (a))
 #define NLERP(a, b, t) (a + (b - a) * t)
+
+// ########################## table de  bites ##########################
+#define BITSET(val, bit_id) ((val) |= (1 << (bit_id)))
+#define BITCLEAR(val, bit_id) ((val) &= ~(1 << (bit_id)))
+// #define BITGET(val,bit_id)        ((val) &  (1 << (bit_id)))
+#define BITGET(val, bit_id) (((val) >> (bit_id)) & 1) // 0 or 1

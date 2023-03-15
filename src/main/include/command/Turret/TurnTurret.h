@@ -7,6 +7,7 @@
 #include <frc2/command/CommandBase.h>
 #include <frc2/command/CommandHelper.h>
 #include "subsystem/Turret.h"
+#include "subsystem/ChekMachine.h"
 
 /**
  * An example command.
@@ -32,4 +33,5 @@ public:
 private:
   std::function<double()> m_turn;
   Turret *m_pTurret;
+  ChekMachine m_ChekMachine;
 };

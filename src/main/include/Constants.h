@@ -24,12 +24,12 @@
 #define ID_MOTOR_INTAKE_FOLLOWER 11
 
 // #########################    ID Solenoid    #########################
-#define ID_SOLENOID_SHIFTER_A 0
-#define ID_SOLENOID_SHIFTER_B 1
+#define ID_SOLENOID_SHIFTER_A 4
+#define ID_SOLENOID_SHIFTER_B 5
 #define ID_SOLENOID_INTAKE_A 2
 #define ID_SOLENOID_INTAKE_B 3
-#define ID_SOLENOID_GRIPPER_A 4
-#define ID_SOLENOID_GRIPPER_B 5
+#define ID_SOLENOID_GRIPPER_A 0 // 5
+#define ID_SOLENOID_GRIPPER_B 1 // 4
 
 // #########################    ID Encoder    #########################
 
@@ -47,11 +47,10 @@
 // #########################    ID Hall    #########################
 
 // Turret
-#define ID_HALL_TURRET_LEFT 0
-#define ID_HALL_TURRET_RIGHT 1
+#define ID_HALL_TURRET_LEFT 10
 
 // Elevator
-#define ID_HALL_ELEVATOR_UP 10
+#define ID_HALL_ELEVATOR_UP 11
 
 // #########################    PID Value    #########################
 
@@ -107,6 +106,15 @@
 
 // #########################    SetDistancePerPulse    #########################
 
-#define TURRET_DISTANCE_PER_PULSE ((1.0 / 2048.0) * (14.0 / 54.0) * 360.0)
-#define ELEVATOR_DISTANCE_PER_PULSE ((1.0 / 7045.0) * 0.96) //(1.0 / 2048.0) * 1.0 / 3.44 * 0.96
-#define ARM_DISTANCE_PER_PULSE ((1.0 / 2048.0 * 2.0 * 3.14159265358979323846))
+#define TURRET_DISTANCE_PER_PULSE ((1.0 / 2048.0) * (14.0 / 54.0) * 360.0)     // en degré
+#define ELEVATOR_DISTANCE_PER_PULSE ((1.0 / 7045.0) * 0.96)                    // en mètre
+#define ARM_DISTANCE_PER_PULSE ((1.0 / 2048.0 * 2.0 * 3.14159265358979323846)) // en radian
+
+// #########################   ID SUBSYSTEM   #########################
+
+#define ID_SUBSYSTEM_DRIVE_TRAIN 1
+#define ID_SUBSYSTEM_TURRET 2
+#define ID_SUBSYSTEM_ELEVATOR 3
+#define ID_SUBSYSTEM_ARM 4
+#define ID_SUBSYSTEM_INTAKE 5
+
