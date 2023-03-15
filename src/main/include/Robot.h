@@ -7,10 +7,7 @@
 #include <frc2/command/Command.h>
 #include <frc/TimedRobot.h>
 #include <frc/smartdashboard/SmartDashboard.h>
-#include <frc/Joystick.h>
-#include <ctre/phoenix/motorcontrol/can/TalonSRX.h>
-#include <frc/DoubleSolenoid.h>
-#include <frc/Compressor.h>
+#include <AHRS.h>
 
 class Robot : public frc::TimedRobot
 {
@@ -34,7 +31,5 @@ public:
   void SimulationPeriodic() override;
 
 private:
-  frc::Joystick m_joystick{0};
-  ctre::phoenix::motorcontrol::can::TalonSRX m_motorRight{14};
-  double m_speed = 0.0;
+  AHRS m_NavX{frc::I2C::Port::kMXP};
 };
