@@ -8,6 +8,7 @@
 #include <frc/TimedRobot.h>
 #include <frc/smartdashboard/SmartDashboard.h>
 #include <AHRS.h>
+#include <frc/smartdashboard/SmartDashboard.h>
 
 class Robot : public frc::TimedRobot
 {
