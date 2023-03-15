@@ -8,7 +8,7 @@
 #include <frc/TimedRobot.h>
 #include <frc/smartdashboard/SmartDashboard.h>
 #include <frc/Joystick.h>
-#include <ctre/phoenix/motorcontrol/can/VictorSPX.h>
+#include <ctre/phoenix/motorcontrol/can/TalonSRX.h>
 #include <frc/DoubleSolenoid.h>
 #include <frc/Compressor.h>
 
@@ -35,9 +35,6 @@ public:
 
 private:
   frc::Joystick m_joystick{0};
-  ctre::phoenix::motorcontrol::can::VictorSPX m_motorRight{8};
-  ctre::phoenix::motorcontrol::can::VictorSPX m_motorLeft{2};
-  frc::DoubleSolenoid m_solenoid{frc::PneumaticsModuleType::REVPH, 12, 13};
-  frc::Compressor m_compressor{frc::PneumaticsModuleType::REVPH};
-  double m_speed;
+  ctre::phoenix::motorcontrol::can::TalonSRX m_motorRight{14};
+  double m_speed = 0.0;
 };

@@ -16,42 +16,19 @@ void Robot::AutonomousPeriodic() {}
 
 void Robot::TeleopInit()
 {
-  m_motorLeft.ConfigFactoryDefault();
   m_motorRight.ConfigFactoryDefault();
-  m_motorLeft.ConfigVoltageCompSaturation(12);
   m_motorRight.ConfigVoltageCompSaturation(12);
-  m_motorLeft.SetInverted(true);
   m_motorRight.SetInverted(false);
-  m_motorLeft.ConfigOpenloopRamp(0.3);
   m_motorRight.ConfigOpenloopRamp(0.3);
-  // m_motorRight.Follow(m_motorLeft);
   frc::SmartDashboard::PutNumber("speed", 0.0);
   frc::SmartDashboard::PutBoolean("oui", false);
 }
 void Robot::TeleopPeriodic()
 {
-  m_compressor.EnableDigital();
-  m_speed = 1.0;
 
-  if (m_joystick.GetRawButton(1))
-  {
-    m_motorLeft.Set(ctre::phoenix::motorcontrol::VictorSPXControlMode::PercentOutput, -m_speed);
-    m_motorRight.Set(ctre::phoenix::motorcontrol::VictorSPXControlMode::PercentOutput, m_speed);
-  }
-  else
-  {
-    m_motorLeft.Set(ctre::phoenix::motorcontrol::VictorSPXControlMode::PercentOutput, 0.0);
-    m_motorRight.Set(ctre::phoenix::motorcontrol::VictorSPXControlMode::PercentOutput, 0.0);
-  }
-  // frc::SmartDashboard::GetBoolean("oui", false) == false
-  if (m_joystick.GetRawButton(1))
-  {
-    m_solenoid.Set(frc::DoubleSolenoid::Value::kForward);
-  }
-  else
-  {
-    m_solenoid.Set(frc::DoubleSolenoid::Value::kReverse);
-  }
+  m_speed = frc::SmartDashboard::GetNumber("speed", 0.05) * m_joystick.GetY();
+
+  m_motorRight.Set(ctre::phoenix::motorcontrol::TalonSRXControlMode::PercentOutput, m_speed);
 }
 
 void Robot::DisabledInit() {}
