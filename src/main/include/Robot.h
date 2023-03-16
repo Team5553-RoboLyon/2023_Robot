@@ -33,9 +33,7 @@ class Robot : public frc::TimedRobot {
   void SimulationPeriodic() override;
 
   private:
-  frc::Encoder m_encoder{0, 1};
   frc::Joystick m_joystick{0};
-  frc::PIDController m_pidController{0, 0, 0};
-  rev::CANSparkMax m_motor{1, rev::CANSparkMax::MotorType::kBrushless};
+  rev::CANSparkMax m_motor{9, rev::CANSparkMax::MotorType::kBrushless};
   double m_clamp;
 };
