@@ -43,6 +43,16 @@ void Robot::TeleopPeriodic()
   {
     m_robotContainer.m_conveyor.SetSpeed(0.0);
   }
+
+  if (m_robotContainer.m_joystickRight.GetRawButton(2))
+  {
+    m_robotContainer.m_intake.SetSpeed(-1.0);
+  }
+
+  if (m_robotContainer.m_joystickLeft.GetRawButton(2))
+  {
+    m_robotContainer.m_conveyor.SetSpeed(-1.0);
+  }
   // frc::SmartDashboard::PutNumber("x", m_robotContainer.m_copiloter.m_x);
   // frc::SmartDashboard::PutNumber("h", m_robotContainer.m_copiloter.m_h);
   // frc::SmartDashboard::PutNumber("tetha", m_robotContainer.m_copiloter.m_theta);
