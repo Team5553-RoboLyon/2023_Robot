@@ -18,6 +18,7 @@
 #include "subsystem/Drivetrain.h"
 // #include "subsystem/Copiloter.h"
 #include "subsystem/Intake.h"
+#include "subsystem/Conveyor.h"
 
 // ################### COMMANDS ###################
 
@@ -38,6 +39,7 @@ public:
   // Copiloter m_copiloter;
   Turret m_turret;
   Drivetrain m_drivetrain;
+  Conveyor m_conveyor;
   // Gripper m_gripper;
   // Arm m_arm;
   Elevator m_elevator;

@@ -18,15 +18,15 @@
 #define MOTOR_WF_RPM 6380.0 // Free Speed théorique du moteur à la tension de reference (12V)
 #define MOTOR_TS_NM 4.69    // Stall Torque théorique du moteur à la tension de reference (12V)
 
-#define REDUC_V1 13.3
-#define REDUC_V2 8.8
+#define REDUC_V1 12.6
+#define REDUC_V2 8.0
 
 #define TRUST_GEARBOX_OUT_ENCODER 0.7
 #define TURNING_TOLERANCE 0.05
 
 #define UP_SHIFTING_POINT_JOYSTICK_V 0.8                              // Valeur minimum du joystick V pour passer en vitesse 2
 #define UP_SHIFTING_POINT_JOYSTICK_V_VARIATION 0.0                    // Valeur minimum de la variation (=delta) du joystick V pour passer en vitesse 2
-#define UP_SHIFTING_POINT_GEARBOXES_OUT_RPM (6380.0 * 0.5 / REDUC_V1) // Valeur minimum de la vitesse de sortie de boites pour passer en vitesse 2
+#define UP_SHIFTING_POINT_GEARBOXES_OUT_RPM (6380.0 * 0.2 / REDUC_V1) // Valeur minimum de la vitesse de sortie de boites pour passer en vitesse 2
 #define UP_SHIFTING_POINT_GEARBOXES_OUT_RPM2 0.0                      // Valeur minimum de l'accel.  de sortie de boites pour passer en vitesse 2
 
 #define KICKDOWN_SHIFTING_POINT_GEARBOXES_OUT_RPM (6380.0 * 0.5 / REDUC_V2) // Valeur max "haute" de la vitesse de sortie de boites pour retrograder en vitesse 1
@@ -121,8 +121,8 @@ private:
   ctre::phoenix::motorcontrol::can::TalonFX m_MotorLeft2{ID_MOTOR_DRIVE_TRAIN_LEFT_2};
   ctre::phoenix::motorcontrol::can::TalonFX m_MotorLeft3{ID_MOTOR_DRIVE_TRAIN_LEFT_3};
 
-  frc::Encoder m_EncoderRight{ID_ENCODER_DRIVE_TRAIN_RIGHT_A, ID_ENCODER_DRIVE_TRAIN_RIGHT_B, false};
-  frc::Encoder m_EncoderLeft{ID_ENCODER_DRIVE_TRAIN_LEFT_A, ID_ENCODER_DRIVE_TRAIN_LEFT_B, true};
+  frc::Encoder m_EncoderRight{ID_ENCODER_DRIVE_TRAIN_RIGHT_A, ID_ENCODER_DRIVE_TRAIN_RIGHT_B, true};
+  frc::Encoder m_EncoderLeft{ID_ENCODER_DRIVE_TRAIN_LEFT_A, ID_ENCODER_DRIVE_TRAIN_LEFT_B, false};
 
   frc::DoubleSolenoid m_BallShifterSolenoidLeft{frc::PneumaticsModuleType::REVPH, ID_SOLENOID_SHIFTER_A, ID_SOLENOID_SHIFTER_B};
   // frc::PowerDistribution::ModuleType m_PDP{0};

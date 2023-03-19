@@ -12,7 +12,7 @@ RobotContainer::RobotContainer()
     //                                             &m_copiloter));
 
     m_drivetrain.SetDefaultCommand(Drive([=]
-                                         { return m_joystickRight.GetY(); },
+                                         { return -m_joystickRight.GetY(); },
                                          [=]
                                          { return -m_joystickLeft.GetZ(); },
                                          &m_drivetrain));

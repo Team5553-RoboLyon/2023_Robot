@@ -394,7 +394,7 @@ void Drivetrain::Drive(double joystick_V, double joystick_W) //
     // frc::SmartDashboard::PutNumber("m_CurrentGearboxRatio", m_CurrentGearboxRatio);
 
     // frc::SmartDashboard::PutNumber("m_GearShiftingTimeLock", m_GearShiftingTimeLock);
-    // frc::SmartDashboard::PutNumber("m_GearboxesOutAdjustedRpm", m_GearboxesOutAdjustedRpm.m_current);
+    frc::SmartDashboard::PutNumber("m_GearboxesOutAdjustedRpm", m_GearboxesOutAdjustedRpm.m_current);
     // frc::SmartDashboard::PutNumber("m_GearboxesOutAccelerationRpm2", m_GearboxesOutAveragedAccelerationRpm2.get());
     // frc::SmartDashboard::PutNumber("m_JoystickRaw_V", m_JoystickRaw_V.m_current);
     // frc::SmartDashboard::PutNumber("m_JoystickRaw_V_Acceleration", m_JoystickRaw_V.m_delta);

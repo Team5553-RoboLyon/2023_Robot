@@ -7,7 +7,8 @@
 #include <frc2/command/SubsystemBase.h>
 #include <frc/DoubleSolenoid.h>
 #include <frc/PneumaticsModuleType.h>
-#include "ctre/phoenix/motorcontrol/can/VictorSPX.h"
+#include "ctre/phoenix/motorcontrol/can/TalonSRX.h"
+
 #include "Constants.h"
 
 class Intake : public frc2::SubsystemBase
@@ -21,7 +22,7 @@ public:
   void SetSpeed(double speed);
 
 private:
-  ctre::phoenix::motorcontrol::can::VictorSPX m_intakeMotor{ID_MOTOR_INTAKE};
-  ctre::phoenix::motorcontrol::can::VictorSPX m_intakeMotorFollower{ID_MOTOR_INTAKE_FOLLOWER};
+  ctre::phoenix::motorcontrol::can::TalonSRX m_intakeMotor{ID_MOTOR_INTAKE};
+  ctre::phoenix::motorcontrol::can::TalonSRX m_intakeMotorFollower{ID_MOTOR_INTAKE_FOLLOWER};
   frc::DoubleSolenoid m_intakeSolenoid{frc::PneumaticsModuleType::REVPH, ID_SOLENOID_INTAKE_A, ID_SOLENOID_INTAKE_B};
 };

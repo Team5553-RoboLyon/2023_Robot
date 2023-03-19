@@ -11,8 +11,8 @@ Intake::Intake()
     m_intakeMotor.ConfigFactoryDefault();
     m_intakeMotorFollower.ConfigFactoryDefault();
 
-    m_intakeMotor.SetInverted(true);
-    m_intakeMotorFollower.SetInverted(false);
+    m_intakeMotor.SetInverted(false);
+    m_intakeMotorFollower.SetInverted(true);
 
     m_intakeMotor.SetNeutralMode(ctre::phoenix::motorcontrol::NeutralMode::Brake);
     m_intakeMotorFollower.SetNeutralMode(ctre::phoenix::motorcontrol::NeutralMode::Brake);
@@ -25,8 +25,6 @@ Intake::Intake()
 
     m_intakeMotor.ConfigVoltageCompSaturation(INTAKE_VOLTAGE_COMPENSATION);
     m_intakeMotorFollower.ConfigVoltageCompSaturation(INTAKE_VOLTAGE_COMPENSATION);
-
-    m_intakeMotorFollower.Follow(m_intakeMotor);
 }
 
 void Intake::Open()
@@ -47,4 +45,5 @@ void Intake::ChangePosition()
 void Intake::SetSpeed(double speed)
 {
     m_intakeMotor.Set(ctre::phoenix::motorcontrol::ControlMode::PercentOutput, speed);
+    m_intakeMotorFollower.Set(ctre::phoenix::motorcontrol::ControlMode::PercentOutput, -speed);
 }

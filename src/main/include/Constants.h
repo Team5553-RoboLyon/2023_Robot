@@ -22,6 +22,7 @@
 #define ID_MOTOR_ARM 9
 #define ID_MOTOR_INTAKE 10
 #define ID_MOTOR_INTAKE_FOLLOWER 11
+#define ID_MOTOR_CONVEYOR 12
 
 // #########################    ID Solenoid    #########################
 #define ID_SOLENOID_SHIFTER_A 0
@@ -77,6 +78,7 @@
 #define ELEVATOR_VOLTAGE_COMPENSATION 8.0
 #define ARM_VOLTAGE_COMPENSATION 8.0
 #define INTAKE_VOLTAGE_COMPENSATION 12.0
+#define CONVEYOR_VOLTAGE_COMPENSATION 8.0
 
 // #########################    SmartCurrentLimit    #########################
 
@@ -93,6 +95,7 @@
 #define ELEVATOR_RAMP 0.0
 #define ARM_RAMP 0.0
 #define INTAKE_RAMP 0.8
+#define CONVEYOR_RAMP 0.5
 
 // #########################    SetInvertedMotor    #########################
 
@@ -103,6 +106,7 @@
 #define ARM_MOTOR_INVERTED false
 #define INTAKE_MOTOR_LEFT_INVERTED false
 #define INTAKE_MOTOR_RIGHT_INVERTED true
+#define CONVEYOR_MOTOR_INVERTED true
 
 // #########################    SetDistancePerPulse    #########################
 
