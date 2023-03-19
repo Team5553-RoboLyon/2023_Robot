@@ -14,7 +14,7 @@
 #include "subsystem/Turret.h"
 // #include "subsystem/Arm.h"
 #include "subsystem/Elevator.h"
-#include "subsystem/Gripper.h"
+// #include "subsystem/Gripper.h"
 #include "subsystem/Drivetrain.h"
 // #include "subsystem/Copiloter.h"
 
@@ -37,7 +37,7 @@ public:
   // Copiloter m_copiloter;
   Turret m_turret;
   Drivetrain m_drivetrain;
-  Gripper m_gripper;
+  // Gripper m_gripper;
   // Arm m_arm;
   Elevator m_elevator;
 

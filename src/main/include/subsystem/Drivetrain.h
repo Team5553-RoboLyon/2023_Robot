@@ -124,8 +124,8 @@ private:
   rev::CANSparkMax m_MotorLeft2{ID_MOTOR_DRIVE_TRAIN_LEFT_2, rev::CANSparkMax::MotorType::kBrushless};
   rev::CANSparkMax m_MotorLeft3{ID_MOTOR_DRIVE_TRAIN_LEFT_3, rev::CANSparkMax::MotorType::kBrushless};
 
-  frc::Encoder m_EncoderRight{1, 3, true};
-  frc::Encoder m_EncoderLeft{2, 4, false};
+  frc::Encoder m_EncoderRight{ID_ENCODER_DRIVE_TRAIN_RIGHT_A, ID_ENCODER_DRIVE_TRAIN_RIGHT_B, true};
+  frc::Encoder m_EncoderLeft{ID_ENCODER_DRIVE_TRAIN_LEFT_A, ID_ENCODER_DRIVE_TRAIN_LEFT_B, false};
 
   frc::DoubleSolenoid m_BallShifterSolenoidLeft{frc::PneumaticsModuleType::REVPH, ID_SOLENOID_SHIFTER_A, ID_SOLENOID_SHIFTER_B};
   // frc::PowerDistribution::ModuleType m_PDP{0};

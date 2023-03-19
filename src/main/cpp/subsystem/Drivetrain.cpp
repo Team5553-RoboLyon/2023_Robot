@@ -93,11 +93,11 @@ Drivetrain::Drivetrain() : m_GearboxLeftOutAveragedRpt(AVERAGE_SAMPLES_NUMBER),
     m_JoystickPrelimited_W.Reset(0.0, 0.0, 2.0);
     m_JoystickLimited_W.Reset(0.0, 0.0, 0.05);
 
-    m_logCSV.setItem(0, "joystick_V", 5, &m_JoystickRaw_V.m_current);
-    m_logCSV.setItem(1, "SpeedRobot", 5, &m_GearboxesOutAdjustedRpm.m_current);
-    m_logCSV.setItem(2, "état", 5, &m_CurrentGearboxRatio);
-    m_logCSV.setItem(3, "rate_limiter_Fast_V", 5, &m_JoystickLimited_V.m_current);
-    m_logCSV.setItem(4, "GearShifting", 5, &m_U);
+    // m_logCSV.setItem(0, "joystick_V", 5, &m_JoystickRaw_V.m_current);
+    // m_logCSV.setItem(1, "SpeedRobot", 5, &m_GearboxesOutAdjustedRpm.m_current);
+    // m_logCSV.setItem(2, "état", 5, &m_CurrentGearboxRatio);
+    // m_logCSV.setItem(3, "rate_limiter_Fast_V", 5, &m_JoystickLimited_V.m_current);
+    // m_logCSV.setItem(4, "GearShifting", 5, &m_U);
 
     // Règle le ball shifter, le State et la Reduction en V1 lors de l'initialisation du robot
     ActiveBallShifterV1();
@@ -380,7 +380,7 @@ void Drivetrain::Drive(double joystick_V, double joystick_W) //
     }
     }
 
-    m_logCSV.write();
+    // m_logCSV.write();
 
     m_MotorLeft1.Set(Calcul_De_Notre_Brave_JM(m_JoystickLimited_V.m_current, m_JoystickLimited_W.m_current, 0));
     m_MotorRight1.Set(Calcul_De_Notre_Brave_JM(m_JoystickLimited_V.m_current, m_JoystickLimited_W.m_current, 1));

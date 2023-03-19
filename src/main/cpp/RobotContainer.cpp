@@ -6,6 +6,7 @@
 
 RobotContainer::RobotContainer()
 {
+    std::cout << m_joystickRight.GetY() << std::endl;
     // m_copiloter.SetDefaultCommand(AutoCopiloter([=]
     //                                             { return m_joystickLeft.GetY(); },
     //                                             &m_copiloter));
@@ -16,9 +17,9 @@ RobotContainer::RobotContainer()
                                          { return -m_joystickLeft.GetZ(); },
                                          &m_drivetrain));
 
-    // m_turret.SetDefaultCommand(TurnTurret([=]
-    //                                       { return m_joystickCopilot.GetZ(); },
-    //                                       &m_turret, &m_Chekmachine));
+    m_turret.SetDefaultCommand(TurnTurret([=]
+                                          { return m_joystickCopilot.GetZ(); },
+                                          &m_turret));
 
     m_elevator.SetDefaultCommand(MoveElevator([=]
                                               { return m_joystickCopilot.GetY(); },

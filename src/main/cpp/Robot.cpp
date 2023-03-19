@@ -17,14 +17,14 @@ void Robot::AutonomousPeriodic() {}
 
 void Robot::TeleopInit()
 {
-  m_robotContainer.m_drivetrain.m_logCSV.open("/home/lvuser/", true); // ouverture du fichier de log
+  // m_robotContainer.m_drivetrain.m_logCSV.open("/home/lvuser/", true); // ouverture du fichier de log
 }
 void Robot::TeleopPeriodic()
 {
-  if (m_robotContainer.m_joystickCopilot.GetRawButtonPressed(1))
-  {
-    m_robotContainer.m_gripper.ChangePosition();
-  }
+  // if (m_robotContainer.m_joystickCopilot.GetRawButtonPressed(1))
+  // {
+  //   m_robotContainer.m_gripper.ChangePosition();
+  // }
   // frc::SmartDashboard::PutNumber("x", m_robotContainer.m_copiloter.m_x);
   // frc::SmartDashboard::PutNumber("h", m_robotContainer.m_copiloter.m_h);
   // frc::SmartDashboard::PutNumber("tetha", m_robotContainer.m_copiloter.m_theta);
@@ -54,7 +54,7 @@ void Robot::TeleopPeriodic()
 
 void Robot::DisabledInit()
 {
-  m_robotContainer.m_drivetrain.m_logCSV.close(); // fermeture du fichier de log
+  // m_robotContainer.m_drivetrain.m_logCSV.close(); // fermeture du fichier de log
 }
 void Robot::DisabledPeriodic() {}
 

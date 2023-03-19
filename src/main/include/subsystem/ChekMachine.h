@@ -5,12 +5,6 @@
 #pragma once
 #include <frc2/command/Command.h>
 
-#include "subsystem/Drivetrain.h"
-#include "subsystem/Turret.h"
-#include "subsystem/Elevator.h"
-#include "subsystem/Gripper.h"
-#include "subsystem/Arm.h"
-#include "subsystem/Copiloter.h"
 #include "lib/RblUtils.h"
 
 class ChekMachine

@@ -24,23 +24,23 @@
 #define ID_MOTOR_INTAKE_FOLLOWER 11
 
 // #########################    ID Solenoid    #########################
-#define ID_SOLENOID_SHIFTER_A 4
-#define ID_SOLENOID_SHIFTER_B 5
+#define ID_SOLENOID_SHIFTER_A 0
+#define ID_SOLENOID_SHIFTER_B 1
 #define ID_SOLENOID_INTAKE_A 2
 #define ID_SOLENOID_INTAKE_B 3
-#define ID_SOLENOID_GRIPPER_A 0 // 5
-#define ID_SOLENOID_GRIPPER_B 1 // 4
+#define ID_SOLENOID_GRIPPER_A 4 // 5
+#define ID_SOLENOID_GRIPPER_B 5 // 4
 
 // #########################    ID Encoder    #########################
 
-// #define ID_ENCODER_DRIVE_TRAIN_RIGHT_A 0
+#define ID_ENCODER_DRIVE_TRAIN_RIGHT_A 0
 #define ID_ENCODER_DRIVE_TRAIN_RIGHT_B 1
 #define ID_ENCODER_DRIVE_TRAIN_LEFT_A 2
 #define ID_ENCODER_DRIVE_TRAIN_LEFT_B 3
-#define ID_ENCODER_TURRET_A 0
-#define ID_ENCODER_TURRET_B 21
-#define ID_ENCODER_ELEVATOR_A 22
-#define ID_ENCODER_ELEVATOR_B 23
+#define ID_ENCODER_TURRET_A 4
+#define ID_ENCODER_TURRET_B 5
+#define ID_ENCODER_ELEVATOR_A 6
+#define ID_ENCODER_ELEVATOR_B 7
 #define ID_ENCODER_ARM_A 8
 #define ID_ENCODER_ARM_B 9
 
@@ -117,4 +117,3 @@
 #define ID_SUBSYSTEM_ELEVATOR 3
 #define ID_SUBSYSTEM_ARM 4
 #define ID_SUBSYSTEM_INTAKE 5
-
