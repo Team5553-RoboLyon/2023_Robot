@@ -21,10 +21,19 @@ void Robot::TeleopInit()
 }
 void Robot::TeleopPeriodic()
 {
-  // if (m_robotContainer.m_joystickCopilot.GetRawButtonPressed(1))
-  // {
-  //   m_robotContainer.m_gripper.ChangePosition();
-  // }
+  if (m_robotContainer.m_joystickCopilot.GetRawButtonPressed(1))
+  {
+    m_robotContainer.m_intake.ChangePosition();
+  }
+
+  if (m_robotContainer.m_joystickRight.GetRawButton(1))
+  {
+    m_robotContainer.m_intake.SetSpeed(1.0);
+  }
+  else
+  {
+    m_robotContainer.m_intake.SetSpeed(0.0);
+  }
   // frc::SmartDashboard::PutNumber("x", m_robotContainer.m_copiloter.m_x);
   // frc::SmartDashboard::PutNumber("h", m_robotContainer.m_copiloter.m_h);
   // frc::SmartDashboard::PutNumber("tetha", m_robotContainer.m_copiloter.m_theta);

@@ -26,21 +26,21 @@ Drivetrain::Drivetrain() : m_GearboxLeftOutAveragedRpt(AVERAGE_SAMPLES_NUMBER),
                            m_GearboxesOutAveragedAccelerationRpm2(AVERAGE_SAMPLES_NUMBER)
 
 {
-    m_MotorLeft1.RestoreFactoryDefaults(); // reset des paramètres du moteur
-    m_MotorLeft2.RestoreFactoryDefaults();
-    m_MotorLeft3.RestoreFactoryDefaults();
+    m_MotorLeft1.ConfigFactoryDefault(); // reset des paramètres du moteur
+    m_MotorLeft2.ConfigFactoryDefault();
+    m_MotorLeft3.ConfigFactoryDefault();
 
-    m_MotorRight1.RestoreFactoryDefaults();
-    m_MotorRight2.RestoreFactoryDefaults();
-    m_MotorRight3.RestoreFactoryDefaults();
+    m_MotorRight1.ConfigFactoryDefault();
+    m_MotorRight2.ConfigFactoryDefault();
+    m_MotorRight3.ConfigFactoryDefault();
 
-    m_MotorLeft1.SetSmartCurrentLimit(40); // limite de courant
-    m_MotorLeft2.SetSmartCurrentLimit(40);
-    m_MotorLeft3.SetSmartCurrentLimit(40);
+    m_MotorLeft1.ConfigSupplyCurrentLimit(ctre::phoenix::motorcontrol::SupplyCurrentLimitConfiguration(true, 40, 40, 0)); // limite de courant
+    m_MotorLeft2.ConfigSupplyCurrentLimit(ctre::phoenix::motorcontrol::SupplyCurrentLimitConfiguration(true, 40, 40, 0));
+    m_MotorLeft3.ConfigSupplyCurrentLimit(ctre::phoenix::motorcontrol::SupplyCurrentLimitConfiguration(true, 40, 40, 0));
 
-    m_MotorRight1.SetSmartCurrentLimit(40);
-    m_MotorRight2.SetSmartCurrentLimit(40);
-    m_MotorRight3.SetSmartCurrentLimit(40);
+    m_MotorRight1.ConfigSupplyCurrentLimit(ctre::phoenix::motorcontrol::SupplyCurrentLimitConfiguration(true, 40, 40, 0));
+    m_MotorRight2.ConfigSupplyCurrentLimit(ctre::phoenix::motorcontrol::SupplyCurrentLimitConfiguration(true, 40, 40, 0));
+    m_MotorRight3.ConfigSupplyCurrentLimit(ctre::phoenix::motorcontrol::SupplyCurrentLimitConfiguration(true, 40, 40, 0));
 
     m_MotorLeft1.SetInverted(true); // inversion des moteurs
     m_MotorLeft2.SetInverted(true);
@@ -50,13 +50,13 @@ Drivetrain::Drivetrain() : m_GearboxLeftOutAveragedRpt(AVERAGE_SAMPLES_NUMBER),
     m_MotorRight2.SetInverted(false);
     m_MotorRight3.SetInverted(false);
 
-    m_MotorLeft1.SetIdleMode(rev::CANSparkMax::IdleMode::kBrake); // init brake mode moteur
-    m_MotorLeft2.SetIdleMode(rev::CANSparkMax::IdleMode::kBrake);
-    m_MotorLeft3.SetIdleMode(rev::CANSparkMax::IdleMode::kBrake);
+    m_MotorLeft1.SetNeutralMode(ctre::phoenix::motorcontrol::NeutralMode::Brake); // init brake mode moteur
+    m_MotorLeft2.SetNeutralMode(ctre::phoenix::motorcontrol::NeutralMode::Brake);
+    m_MotorLeft3.SetNeutralMode(ctre::phoenix::motorcontrol::NeutralMode::Brake);
 
-    m_MotorRight1.SetIdleMode(rev::CANSparkMax::IdleMode::kBrake);
-    m_MotorRight2.SetIdleMode(rev::CANSparkMax::IdleMode::kBrake);
-    m_MotorRight3.SetIdleMode(rev::CANSparkMax::IdleMode::kBrake);
+    m_MotorRight1.SetNeutralMode(ctre::phoenix::motorcontrol::NeutralMode::Brake);
+    m_MotorRight2.SetNeutralMode(ctre::phoenix::motorcontrol::NeutralMode::Brake);
+    m_MotorRight3.SetNeutralMode(ctre::phoenix::motorcontrol::NeutralMode::Brake);
 
     m_MotorLeft1.EnableVoltageCompensation(true);
     m_MotorLeft2.EnableVoltageCompensation(true);
@@ -66,13 +66,13 @@ Drivetrain::Drivetrain() : m_GearboxLeftOutAveragedRpt(AVERAGE_SAMPLES_NUMBER),
     m_MotorRight2.EnableVoltageCompensation(true);
     m_MotorRight3.EnableVoltageCompensation(true);
 
-    m_MotorRight1.EnableVoltageCompensation(DRIVETRAIN_VOLTAGE_COMPENSATION); // init tension de référence
-    m_MotorRight2.EnableVoltageCompensation(DRIVETRAIN_VOLTAGE_COMPENSATION);
-    m_MotorRight3.EnableVoltageCompensation(DRIVETRAIN_VOLTAGE_COMPENSATION);
+    m_MotorRight1.ConfigVoltageCompSaturation(DRIVETRAIN_VOLTAGE_COMPENSATION); // init tension de référence
+    m_MotorRight2.ConfigVoltageCompSaturation(DRIVETRAIN_VOLTAGE_COMPENSATION);
+    m_MotorRight3.ConfigVoltageCompSaturation(DRIVETRAIN_VOLTAGE_COMPENSATION);
 
-    m_MotorLeft1.EnableVoltageCompensation(DRIVETRAIN_VOLTAGE_COMPENSATION);
-    m_MotorLeft2.EnableVoltageCompensation(DRIVETRAIN_VOLTAGE_COMPENSATION);
-    m_MotorLeft3.EnableVoltageCompensation(DRIVETRAIN_VOLTAGE_COMPENSATION);
+    m_MotorLeft1.ConfigVoltageCompSaturation(DRIVETRAIN_VOLTAGE_COMPENSATION);
+    m_MotorLeft2.ConfigVoltageCompSaturation(DRIVETRAIN_VOLTAGE_COMPENSATION);
+    m_MotorLeft3.ConfigVoltageCompSaturation(DRIVETRAIN_VOLTAGE_COMPENSATION);
 
     m_MotorLeft2.Follow(m_MotorLeft1); // init follower moteurs
     m_MotorLeft3.Follow(m_MotorLeft1);
@@ -107,8 +107,8 @@ Drivetrain::Drivetrain() : m_GearboxLeftOutAveragedRpt(AVERAGE_SAMPLES_NUMBER),
 
 void Drivetrain::Set(double v_motor) // set des moteurs
 {
-    m_MotorLeft1.Set(v_motor);
-    m_MotorRight1.Set(v_motor);
+    m_MotorLeft1.Set(ctre::phoenix::motorcontrol::ControlMode::PercentOutput, v_motor);
+    m_MotorRight1.Set(ctre::phoenix::motorcontrol::ControlMode::PercentOutput, v_motor);
 }
 
 void Drivetrain::ActiveBallShifterV1() // active ball shifter V1
@@ -125,10 +125,8 @@ void Drivetrain::ActiveBallShifterV2() // active ball shifter V2
 
 void Drivetrain::InvertBallShifter() // inverse ball shifter
 {
-    std::cout << m_BallShifterSolenoidLeft.Get() << std::endl;
-    if (m_BallShifterSolenoidLeft.Get() == frc::DoubleSolenoid::Value::kReverse)
+    if (m_BallShifterSolenoidLeft.Get() == frc::DoubleSolenoid::Value::kForward)
     {
-
         ActiveBallShifterV1();
     }
     else
@@ -148,23 +146,23 @@ void Drivetrain::EnableBrakeMode(bool change) // active/ désactive le breakMode
 {
     if (change)
     {
-        m_MotorLeft1.SetIdleMode(rev::CANSparkMax::IdleMode::kBrake);
-        m_MotorLeft2.SetIdleMode(rev::CANSparkMax::IdleMode::kBrake);
-        m_MotorLeft3.SetIdleMode(rev::CANSparkMax::IdleMode::kBrake);
+        m_MotorLeft1.SetNeutralMode(ctre::phoenix::motorcontrol::NeutralMode::Brake);
+        m_MotorLeft2.SetNeutralMode(ctre::phoenix::motorcontrol::NeutralMode::Brake);
+        m_MotorLeft3.SetNeutralMode(ctre::phoenix::motorcontrol::NeutralMode::Brake);
 
-        m_MotorRight1.SetIdleMode(rev::CANSparkMax::IdleMode::kBrake);
-        m_MotorRight2.SetIdleMode(rev::CANSparkMax::IdleMode::kBrake);
-        m_MotorRight3.SetIdleMode(rev::CANSparkMax::IdleMode::kBrake);
+        m_MotorRight1.SetNeutralMode(ctre::phoenix::motorcontrol::NeutralMode::Brake);
+        m_MotorRight2.SetNeutralMode(ctre::phoenix::motorcontrol::NeutralMode::Brake);
+        m_MotorRight3.SetNeutralMode(ctre::phoenix::motorcontrol::NeutralMode::Brake);
     }
     else
     {
-        m_MotorLeft1.SetIdleMode(rev::CANSparkMax::IdleMode::kCoast);
-        m_MotorLeft2.SetIdleMode(rev::CANSparkMax::IdleMode::kCoast);
-        m_MotorLeft3.SetIdleMode(rev::CANSparkMax::IdleMode::kCoast);
+        m_MotorLeft1.SetNeutralMode(ctre::phoenix::motorcontrol::NeutralMode::Coast);
+        m_MotorLeft2.SetNeutralMode(ctre::phoenix::motorcontrol::NeutralMode::Coast);
+        m_MotorLeft3.SetNeutralMode(ctre::phoenix::motorcontrol::NeutralMode::Coast);
 
-        m_MotorRight1.SetIdleMode(rev::CANSparkMax::IdleMode::kCoast);
-        m_MotorRight2.SetIdleMode(rev::CANSparkMax::IdleMode::kCoast);
-        m_MotorRight3.SetIdleMode(rev::CANSparkMax::IdleMode::kCoast);
+        m_MotorRight1.SetNeutralMode(ctre::phoenix::motorcontrol::NeutralMode::Coast);
+        m_MotorRight2.SetNeutralMode(ctre::phoenix::motorcontrol::NeutralMode::Coast);
+        m_MotorRight3.SetNeutralMode(ctre::phoenix::motorcontrol::NeutralMode::Coast);
     }
 }
 
@@ -208,7 +206,6 @@ double Drivetrain::Calcul_De_Notre_Brave_JM(double forward, double turn, bool wh
 
 bool Drivetrain::isUpshiftingAllowed() // mode up, détermine si on peut passer en V2
 {
-    // return false;
     // Le Gear shifting précédent est-il suffisamment "ancien" ?  (m_GearShiftingTimeLock doit être  null )
     // Le robot est-il en train de rouler tout droit, sans tourner ?  (m_GearboxLeftOutAdjustedRpm/m_GearboxRightOutAdjustedRpm doit être proche de 1 )
     // La vérification se fait pour un robot allant en marche avant (m_GearboxesOutAdjustedRpm.m_current > 0.0)
@@ -317,10 +314,10 @@ void Drivetrain::Drive(double joystick_V, double joystick_W) //
     // calcul de la vitesse moyenne des 3 moteurs de la boite gauche et droite avec les encodeurs des talon srx qui retourne des valeurs en ticks/100ms
     // les moyennes sont converties ( * 600 / 2048 ) et stockées en RPM
     // La valeur de m_SuperMotorLeftRawRpm est inversée
-    // m_SuperMotorLeftRawRpm = -(m_MotorLeft1.GetSensorCollection().GetIntegratedSensorVelocity() + m_MotorLeft2.GetSensorCollection().GetIntegratedSensorVelocity() + m_MotorLeft3.GetSensorCollection().GetIntegratedSensorVelocity()) * 600 / (3 * 2048);
-    // m_SuperMotorLeftAveragedRpm.add(m_SuperMotorLeftRawRpm);
-    // m_SuperMotorRightRawRpm = (m_MotorRight1.GetSensorCollection().GetIntegratedSensorVelocity() + m_MotorRight2.GetSensorCollection().GetIntegratedSensorVelocity() + m_MotorRight3.GetSensorCollection().GetIntegratedSensorVelocity()) * 600 / (3 * 2048);
-    // m_SuperMotorRightAveragedRpm.add(m_SuperMotorRightRawRpm);
+    m_SuperMotorLeftRawRpm = -(m_MotorLeft1.GetSensorCollection().GetIntegratedSensorVelocity() + m_MotorLeft2.GetSensorCollection().GetIntegratedSensorVelocity() + m_MotorLeft3.GetSensorCollection().GetIntegratedSensorVelocity()) * 600 / (3 * 2048);
+    m_SuperMotorLeftAveragedRpm.add(m_SuperMotorLeftRawRpm);
+    m_SuperMotorRightRawRpm = (m_MotorRight1.GetSensorCollection().GetIntegratedSensorVelocity() + m_MotorRight2.GetSensorCollection().GetIntegratedSensorVelocity() + m_MotorRight3.GetSensorCollection().GetIntegratedSensorVelocity()) * 600 / (3 * 2048);
+    m_SuperMotorRightAveragedRpm.add(m_SuperMotorRightRawRpm);
 
     // Vitesses des boites en RPM construitent en combinant les valeurs encodeurs moteurs et through bore
     // TRUST_GEARBOX_OUT_ENCODER représente le coeff de confiance qu'on a dans les encodeurs de sortie de boite et (1-TRUST_GEARBOX_OUT_ENCODER) représente la confiance des encodeurs moteurs
@@ -382,8 +379,8 @@ void Drivetrain::Drive(double joystick_V, double joystick_W) //
 
     // m_logCSV.write();
 
-    m_MotorLeft1.Set(Calcul_De_Notre_Brave_JM(m_JoystickLimited_V.m_current, m_JoystickLimited_W.m_current, 0));
-    m_MotorRight1.Set(Calcul_De_Notre_Brave_JM(m_JoystickLimited_V.m_current, m_JoystickLimited_W.m_current, 1));
+    m_MotorLeft1.Set(ctre::phoenix::motorcontrol::ControlMode::PercentOutput, Calcul_De_Notre_Brave_JM(m_JoystickLimited_V.m_current, m_JoystickLimited_W.m_current, 0));
+    m_MotorRight1.Set(ctre::phoenix::motorcontrol::ControlMode::PercentOutput, Calcul_De_Notre_Brave_JM(m_JoystickLimited_V.m_current, m_JoystickLimited_W.m_current, 1));
 
     // frc::SmartDashboard::PutNumber("m_JoystickPrelimited_V",    m_JoystickPrelimited_V.m_current);
     // frc::SmartDashboard::PutNumber("m_JoystickLimited_V",       m_JoystickLimited_V.m_current);

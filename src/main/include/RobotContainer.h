@@ -17,6 +17,7 @@
 // #include "subsystem/Gripper.h"
 #include "subsystem/Drivetrain.h"
 // #include "subsystem/Copiloter.h"
+#include "subsystem/Intake.h"
 
 // ################### COMMANDS ###################
 
@@ -40,6 +41,7 @@ public:
   // Gripper m_gripper;
   // Arm m_arm;
   Elevator m_elevator;
+  Intake m_intake;
 
   frc::Joystick m_joystickRight{0};
   frc::Joystick m_joystickLeft{1};

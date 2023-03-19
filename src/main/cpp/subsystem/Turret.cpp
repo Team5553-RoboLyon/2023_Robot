@@ -52,5 +52,5 @@ void Turret::Periodic()
     //     m_turretMotor.Set(0.0);
     // }
 
-    m_turretMotor.Set(NCLAMP(-0.2, m_TurretPidRate.m_current, 0.2)); // 0.5
+    m_turretMotor.Set(NCLAMP(-0.5, m_TurretPidRate.m_current, 0.5)); // 0.5
 }

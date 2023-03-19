@@ -92,7 +92,7 @@
 #define TURRET_RAMP 0.0
 #define ELEVATOR_RAMP 0.0
 #define ARM_RAMP 0.0
-#define INTAKE_RAMP 0.0
+#define INTAKE_RAMP 0.8
 
 // #########################    SetInvertedMotor    #########################
 
