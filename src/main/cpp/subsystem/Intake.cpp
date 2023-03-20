@@ -8,23 +8,23 @@ Intake::Intake()
 {
     m_intakeSolenoid.Set(frc::DoubleSolenoid::Value::kForward);
 
-    m_intakeMotor.ConfigFactoryDefault();
-    m_intakeMotorFollower.ConfigFactoryDefault();
+    m_intakeMotorRight.ConfigFactoryDefault();
+    m_intakeMotorLeft.ConfigFactoryDefault();
 
-    m_intakeMotor.SetInverted(false);
-    m_intakeMotorFollower.SetInverted(true);
+    m_intakeMotorRight.SetInverted(INTAKE_MOTOR_LEFT_INVERTED);
+    m_intakeMotorLeft.SetInverted(INTAKE_MOTOR_RIGHT_INVERTED);
 
-    m_intakeMotor.SetNeutralMode(ctre::phoenix::motorcontrol::NeutralMode::Brake);
-    m_intakeMotorFollower.SetNeutralMode(ctre::phoenix::motorcontrol::NeutralMode::Brake);
+    m_intakeMotorRight.SetNeutralMode(ctre::phoenix::motorcontrol::NeutralMode::Brake);
+    m_intakeMotorLeft.SetNeutralMode(ctre::phoenix::motorcontrol::NeutralMode::Brake);
 
-    m_intakeMotor.ConfigOpenloopRamp(INTAKE_RAMP);
-    m_intakeMotorFollower.ConfigOpenloopRamp(INTAKE_RAMP);
+    m_intakeMotorRight.ConfigOpenloopRamp(INTAKE_RAMP);
+    m_intakeMotorLeft.ConfigOpenloopRamp(INTAKE_RAMP);
 
-    m_intakeMotor.EnableVoltageCompensation(true);
-    m_intakeMotorFollower.EnableVoltageCompensation(true);
+    m_intakeMotorRight.EnableVoltageCompensation(true);
+    m_intakeMotorLeft.EnableVoltageCompensation(true);
 
-    m_intakeMotor.ConfigVoltageCompSaturation(INTAKE_VOLTAGE_COMPENSATION);
-    m_intakeMotorFollower.ConfigVoltageCompSaturation(INTAKE_VOLTAGE_COMPENSATION);
+    m_intakeMotorRight.ConfigVoltageCompSaturation(INTAKE_VOLTAGE_COMPENSATION);
+    m_intakeMotorLeft.ConfigVoltageCompSaturation(INTAKE_VOLTAGE_COMPENSATION);
 }
 
 void Intake::Open()
@@ -44,6 +44,6 @@ void Intake::ChangePosition()
 
 void Intake::SetSpeed(double speed)
 {
-    m_intakeMotor.Set(ctre::phoenix::motorcontrol::ControlMode::PercentOutput, speed);
-    m_intakeMotorFollower.Set(ctre::phoenix::motorcontrol::ControlMode::PercentOutput, -speed);
+    m_intakeMotorRight.Set(ctre::phoenix::motorcontrol::ControlMode::PercentOutput, speed);
+    m_intakeMotorLeft.Set(ctre::phoenix::motorcontrol::ControlMode::PercentOutput, speed);
 }

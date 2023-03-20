@@ -6,7 +6,6 @@
 
 RobotContainer::RobotContainer()
 {
-    std::cout << m_joystickRight.GetY() << std::endl;
     // m_copiloter.SetDefaultCommand(AutoCopiloter([=]
     //                                             { return m_joystickLeft.GetY(); },
     //                                             &m_copiloter));
@@ -24,15 +23,44 @@ RobotContainer::RobotContainer()
     m_elevator.SetDefaultCommand(MoveElevator([=]
                                               { return m_joystickCopilot.GetY(); },
                                               &m_elevator));
+
+    m_CameraPilote = frc::CameraServer::StartAutomaticCapture();
+    m_CameraPilote.SetResolution(320, 240);
+    m_CameraPilote.SetFPS(12);
+
+    m_compressor.EnableAnalog(MIN_PRESSURE_COMPRESSOR, MAX_PRESSURE_COMPRESSOR);
 };
 
 // ################### COMMANDS ###################
 
 void RobotContainer::ConfigureButtonBindings()
 {
-    // frc2::JoystickButton m_ButtonGripperCatch = frc2::JoystickButton(&m_joystickRight, 2);
-    // m_ButtonGripperCatch.WhenActive(Catch(&m_gripper));
+    // Intake
 
-    // frc2::JoystickButton m_ButtonDropHigh = frc2::JoystickButton(&m_joystickRight, 3);
-    // m_ButtonDropHigh.WhenActive(DropHigh(&m_gripper, &m_elevator, &m_arm));
+    frc2::JoystickButton m_ButtonIntakeActiveMotor = frc2::JoystickButton(&m_joystickRight, 1);
+    m_ButtonIntakeActiveMotor.WhileActiveContinous(ActiveIntakeMotor(&m_intake));
+
+    frc2::JoystickButton m_ButtonIntakeReverseMotor = frc2::JoystickButton(&m_joystickRight, 2);
+    m_ButtonIntakeReverseMotor.WhileActiveContinous(ReverseIntakeMotor(&m_intake));
+
+    frc2::JoystickButton m_ButtonIntakeChangePosition = frc2::JoystickButton(&m_joystickRight, 3);
+    m_ButtonIntakeChangePosition.WhenActive(ChangeIntakePosition(&m_intake));
+
+    // Conveyor
+
+    frc2::JoystickButton m_ButtonConveyorActiveMotor = frc2::JoystickButton(&m_joystickRight, 4);
+    m_ButtonConveyorActiveMotor.WhileActiveContinous(ActiveConveyorMotor(&m_conveyor));
+
+    frc2::JoystickButton m_ButtonConveyorReverseMotor = frc2::JoystickButton(&m_joystickRight, 5);
+    m_ButtonConveyorReverseMotor.WhileActiveContinous(ReverseConveyorMotor(&m_conveyor));
+
+    // Gripper
+
+    frc2::JoystickButton m_ButtonGripperChangePosition = frc2::JoystickButton(&m_joystickRight, 6);
+    m_ButtonGripperChangePosition.WhenActive(Catch(&m_gripper));
+}
+
+frc2::Command *RobotContainer::GetAutonomousCommand()
+{
+    return &m_autonomousGroupCommand;
 }

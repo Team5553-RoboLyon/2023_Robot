@@ -8,6 +8,17 @@
 #define Min_X 0.3                            // meters
 #define Max_X 1.1                            // meters
 
+// #########################    ID Joystick    #########################
+
+#define ID_JOYSTICK_RIGHT 0
+#define ID_JOYSTICK_LEFT 1
+#define ID_JOYSTICK_COPILOTER 2
+
+// #########################    COMPRESSOR    #########################
+
+#define MIN_PRESSURE_COMPRESSOR (units::pounds_per_square_inch_t(30))
+#define MAX_PRESSURE_COMPRESSOR (units::pounds_per_square_inch_t(60))
+
 // #########################    ID Motor    #########################
 
 #define ID_MOTOR_DRIVE_TRAIN_RIGHT 1
@@ -20,8 +31,8 @@
 #define ID_MOTOR_TURRET 7
 #define ID_MOTOR_ELEVATOR 8
 #define ID_MOTOR_ARM 9
-#define ID_MOTOR_INTAKE 10
-#define ID_MOTOR_INTAKE_FOLLOWER 11
+#define ID_MOTOR_INTAKE_RIGHT 10
+#define ID_MOTOR_INTAKE_LEFT 11
 #define ID_MOTOR_CONVEYOR 12
 
 // #########################    ID Solenoid    #########################
@@ -106,7 +117,7 @@
 #define ARM_MOTOR_INVERTED false
 #define INTAKE_MOTOR_LEFT_INVERTED false
 #define INTAKE_MOTOR_RIGHT_INVERTED true
-#define CONVEYOR_MOTOR_INVERTED true
+#define CONVEYOR_MOTOR_INVERTED false
 
 // #########################    SetDistancePerPulse    #########################
 

@@ -2,29 +2,30 @@
 // Open Source Software; you can modify and/or share it under the terms of
 // the WPILib BSD license file in the root directory of this project.
 
-#include "command/Drive.h"
+#include "command/Intake/ReverseIntakeMotor.h"
 
-Drive::Drive(std::function<double()> forward, std::function<double()> turn, Drivetrain *pDrivetrain) : m_Forward(forward), m_Turn(turn), m_pDrivetrain(pDrivetrain)
+ReverseIntakeMotor::ReverseIntakeMotor(Intake *pIntake) : m_pIntake(pIntake)
 {
-  AddRequirements(m_pDrivetrain);
+  AddRequirements(m_pIntake);
 }
 
 // Called when the command is initially scheduled.
-void Drive::Initialize() {}
+void ReverseIntakeMotor::Initialize() {}
 
 // Called repeatedly when this Command is scheduled to run
-void Drive::Execute()
+void ReverseIntakeMotor::Execute()
 {
-  double forward = m_Forward();
-  double turn = m_Turn();
-  m_pDrivetrain->Drive(forward, turn);
+  m_pIntake->SetSpeed(-1.0);
 }
 
 // Called once the command ends or is interrupted.
-void Drive::End(bool interrupted) {}
+void ReverseIntakeMotor::End(bool interrupted)
+{
+  m_pIntake->SetSpeed(0.0);
+}
 
 // Returns true when the command should end.
-bool Drive::IsFinished()
+bool ReverseIntakeMotor::IsFinished()
 {
   return false;
 }

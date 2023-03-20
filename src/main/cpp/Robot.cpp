@@ -12,7 +12,10 @@ void Robot::RobotPeriodic()
 }
 // on fait
 
-void Robot::AutonomousInit() {}
+void Robot::AutonomousInit()
+{
+  m_robotContainer.GetAutonomousCommand()->Schedule();
+}
 void Robot::AutonomousPeriodic() {}
 
 void Robot::TeleopInit()
@@ -21,38 +24,6 @@ void Robot::TeleopInit()
 }
 void Robot::TeleopPeriodic()
 {
-  if (m_robotContainer.m_joystickCopilot.GetRawButtonPressed(1))
-  {
-    m_robotContainer.m_intake.ChangePosition();
-  }
-
-  if (m_robotContainer.m_joystickRight.GetRawButton(1))
-  {
-    m_robotContainer.m_intake.SetSpeed(1.0);
-  }
-  else
-  {
-    m_robotContainer.m_intake.SetSpeed(0.0);
-  }
-
-  if (m_robotContainer.m_joystickLeft.GetRawButton(1))
-  {
-    m_robotContainer.m_conveyor.SetSpeed(1.0);
-  }
-  else
-  {
-    m_robotContainer.m_conveyor.SetSpeed(0.0);
-  }
-
-  if (m_robotContainer.m_joystickRight.GetRawButton(2))
-  {
-    m_robotContainer.m_intake.SetSpeed(-1.0);
-  }
-
-  if (m_robotContainer.m_joystickLeft.GetRawButton(2))
-  {
-    m_robotContainer.m_conveyor.SetSpeed(-1.0);
-  }
   // frc::SmartDashboard::PutNumber("x", m_robotContainer.m_copiloter.m_x);
   // frc::SmartDashboard::PutNumber("h", m_robotContainer.m_copiloter.m_h);
   // frc::SmartDashboard::PutNumber("tetha", m_robotContainer.m_copiloter.m_theta);
