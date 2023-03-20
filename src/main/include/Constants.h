@@ -31,9 +31,10 @@
 #define ID_MOTOR_TURRET 7
 #define ID_MOTOR_ELEVATOR 8
 #define ID_MOTOR_ARM 9
-#define ID_MOTOR_INTAKE_RIGHT 10
-#define ID_MOTOR_INTAKE_LEFT 11
-#define ID_MOTOR_CONVEYOR 12
+#define ID_MOTOR_POIGNET 10
+#define ID_MOTOR_INTAKE_RIGHT 11
+#define ID_MOTOR_INTAKE_LEFT 12
+#define ID_MOTOR_CONVEYOR 13
 
 // #########################    ID Solenoid    #########################
 #define ID_SOLENOID_SHIFTER_A 0
@@ -55,6 +56,8 @@
 #define ID_ENCODER_ELEVATOR_B 7
 #define ID_ENCODER_ARM_A 8
 #define ID_ENCODER_ARM_B 9
+#define ID_ENCODER_POIGNET_A 10
+#define ID_ENCODER_POIGNET_B 11
 
 // #########################    ID Hall    #########################
 
@@ -82,12 +85,18 @@
 #define I_ARM 0.0
 #define D_ARM 0.0
 
+// Poignet
+#define P_POIGNET 0.0
+#define I_POIGNET 0.0
+#define D_POIGNET 0.0
+
 // #########################    VoltageCompensation    #########################
 
 #define DRIVETRAIN_VOLTAGE_COMPENSATION 10.0
 #define TURRET_VOLTAGE_COMPENSATION 8.0
 #define ELEVATOR_VOLTAGE_COMPENSATION 8.0
 #define ARM_VOLTAGE_COMPENSATION 8.0
+#define POIGNET_VOLTAGE_COMPENSATION 8.0
 #define INTAKE_VOLTAGE_COMPENSATION 12.0
 #define CONVEYOR_VOLTAGE_COMPENSATION 8.0
 
@@ -97,7 +106,9 @@
 #define TURRET_CURRENT_LIMIT 40
 #define ELEVATOR_CURRENT_LIMIT 40
 #define ARM_CURRENT_LIMIT 40
+#define POIGNET_CURRENT_LIMIT 40
 #define INTAKE_CURRENT_LIMIT 40
+#define CONVEYOR_CURRENT_LIMIT 40
 
 // #########################    Ramp    #########################
 
@@ -105,6 +116,7 @@
 #define TURRET_RAMP 0.0
 #define ELEVATOR_RAMP 0.0
 #define ARM_RAMP 0.0
+#define POIGNET_RAMP 0.0
 #define INTAKE_RAMP 0.8
 #define CONVEYOR_RAMP 0.5
 
@@ -115,6 +127,7 @@
 #define TURRET_MOTOR_INVERTED true
 #define ELEVATOR_MOTOR_INVERTED false
 #define ARM_MOTOR_INVERTED false
+#define POIGNET_MOTOR_INVERTED false
 #define INTAKE_MOTOR_LEFT_INVERTED false
 #define INTAKE_MOTOR_RIGHT_INVERTED true
 #define CONVEYOR_MOTOR_INVERTED false
@@ -124,6 +137,7 @@
 #define TURRET_DISTANCE_PER_PULSE ((1.0 / 2048.0) * (14.0 / 54.0) * 360.0)     // en degré
 #define ELEVATOR_DISTANCE_PER_PULSE ((1.0 / 7045.0) * 0.96)                    // en mètre
 #define ARM_DISTANCE_PER_PULSE ((1.0 / 2048.0 * 2.0 * 3.14159265358979323846)) // en radian
+#define POIGNET_DISTANCE_PER_PULSE ((1.0 / 2048.0 * 360.0))                    // en degré
 
 // #########################   ID SUBSYSTEM   #########################
 
@@ -131,4 +145,5 @@
 #define ID_SUBSYSTEM_TURRET 2
 #define ID_SUBSYSTEM_ELEVATOR 3
 #define ID_SUBSYSTEM_ARM 4
-#define ID_SUBSYSTEM_INTAKE 5
+#define ID_SUBSYSTEM_POIGNET 5
+#define ID_SUBSYSTEM_INTAKE 6

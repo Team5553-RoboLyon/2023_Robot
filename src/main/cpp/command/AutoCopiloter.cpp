@@ -12,7 +12,6 @@ AutoCopiloter::AutoCopiloter(std::function<double()> forward, Copiloter *pCopilo
 // Called when the command is initially scheduled.
 void AutoCopiloter::Initialize()
 {
-  m_pCopiloter->m_elevator.m_enabled = false;
 }
 
 // Called repeatedly when this Command is scheduled to run
@@ -25,7 +24,6 @@ void AutoCopiloter::Execute()
 // Called once the command ends or is interrupted.
 void AutoCopiloter::End(bool interrupted)
 {
-  m_pCopiloter->m_elevator.m_enabled = true;
 }
 
 // Returns true when the command should end.

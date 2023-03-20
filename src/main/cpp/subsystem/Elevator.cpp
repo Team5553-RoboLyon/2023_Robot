@@ -17,7 +17,6 @@ Elevator::Elevator()
     m_elevatorMotor.SetIdleMode(rev::CANSparkMax::IdleMode::kBrake);
     m_elevatorMotor.SetSmartCurrentLimit(ELEVATOR_CURRENT_LIMIT);
     m_elevatorMotor.EnableVoltageCompensation(ELEVATOR_VOLTAGE_COMPENSATION);
-    // m_elevatorMotor.SetOpenLoopRampRate(0.8);
 }
 
 void Elevator::SetSetpoint(double setpoint)
@@ -33,16 +32,6 @@ void Elevator::SetGains(double p, double i, double d)
 double Elevator::GetEncoder()
 {
     return m_elevatorEncoder.GetDistance();
-}
-
-bool Elevator::GetEnabled()
-{
-    return m_enabled;
-}
-
-void Elevator::Set(double speed)
-{
-    m_elevatorMotor.Set(speed);
 }
 
 void Elevator::Periodic()
