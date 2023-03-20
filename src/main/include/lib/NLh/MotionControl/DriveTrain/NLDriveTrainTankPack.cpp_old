@@ -1,0 +1,259 @@
+#include "lib/N/NString.h"
+#include "lib/NL/MotionControl/NLKin.h"
+#include "lib/NL/MotionControl/NLPathWorkbench.h"
+#include "./Characterization/NLCharacterizationTable.h"
+#include "NLDriveTrainTankPack.h"
+
+
+NLDRIVETRAIN_TANK_PACK::NLDRIVETRAIN_TANK_PACK(const Nu8 motornbpergearbox)
+{
+	m_flags				= 0;
+	m_availableNu8		= 0;
+	m_motorNbPerGearBox = motornbpergearbox;
+	m_pCtrz				= (NLMOTOR_CHARACTERIZATION*)Nmalloc(sizeof(NLMOTOR_CHARACTERIZATION)* motornbpergearbox*GEARBOX::NB);
+	NErrorIf(!m_pCtrz, NERROR_NULL_MALLOC);
+	// m_driveTrainSpecifications;
+	// m_ramsete;
+}
+
+Nu32 NLDRIVETRAIN_TANK_PACK::read(NLPATH_WORKBENCH* pwb)
+{
+	if (!m_driveTrainSpecifications.read(pwb))
+		return 0;
+	return m_ramsete.read(pwb);
+}
+
+Nu32 NLDRIVETRAIN_TANK_PACK::read(FILE* pfile)
+{
+
+	// 1) lecture Version
+	Nu32	version_u32;
+	if (fread(&version_u32, sizeof(Nu32), 1, pfile) != 1)
+		return 0;
+	// 2) lecture Header
+	NLDRIVETRAIN_TANK_PACK_HEADER	header;
+
+	switch (NGETVERSION_MAIN(version_u32))
+	{
+		// all versions 0.0.x
+	case NGETVERSION_MAIN(VERSION_NLDRIVETRAIN_TANK_PACK_HEADER):
+		if (fread(&header, sizeof(NLDRIVETRAIN_TANK_PACK_HEADER), 1, pfile) != 1)
+			return 0;
+		if (header.m_gearBoxNumber != GEARBOX::NB)
+		{
+			NErrorIf(1, NERROR_INCONSISTENT_VALUES);
+			return 0;
+		}
+		NErrorIf(header.m_motorNbPerGearBox <= 0, NERROR_INCONSISTENT_VALUES);
+
+		// realloc ?
+		if (m_pCtrz)
+		{
+			if (header.m_motorNbPerGearBox != m_motorNbPerGearBox)
+			{
+				m_pCtrz = (NLMOTOR_CHARACTERIZATION*)Nrealloc(m_pCtrz, sizeof(NLMOTOR_CHARACTERIZATION) * header.m_motorNbPerGearBox * GEARBOX::NB);
+				NErrorIf(!m_pCtrz, NERROR_NULL_REALLOC);
+			}
+		}
+		else
+		{
+			m_pCtrz = (NLMOTOR_CHARACTERIZATION*)Nmalloc(sizeof(NLMOTOR_CHARACTERIZATION) * header.m_motorNbPerGearBox * GEARBOX::NB);
+			NErrorIf(!m_pCtrz, NERROR_NULL_MALLOC);
+		}
+
+		m_flags				= header.m_flags;
+		m_motorNbPerGearBox	= header.m_motorNbPerGearBox;
+
+
+		if (fread(m_pCtrz, sizeof(NLMOTOR_CHARACTERIZATION), GEARBOX::NB * header.m_motorNbPerGearBox, pfile) != GEARBOX::NB * header.m_motorNbPerGearBox)
+				return 0;
+
+		if (!m_driveTrainSpecifications.read(pfile))
+			return 0;
+
+		return m_ramsete.read(pfile);
+
+	default:
+		break;
+	}
+	return 0;
+}
+
+Nu32 NLDRIVETRAIN_TANK_PACK::write(FILE* pfile)
+{
+	// 1) �criture Version
+	Nu32	version_u32 = VERSION_NLDRIVETRAIN_TANK_PACK_HEADER;
+	if (fwrite(&version_u32, sizeof(Nu32), 1, pfile) != 1)
+		return 0;
+
+	// 2) �criture Header
+	NLDRIVETRAIN_TANK_PACK_HEADER	header;
+	header.m_gearBoxNumber		= GEARBOX::NB;
+	header.m_flags				= m_flags;
+	header.m_motorNbPerGearBox	= m_motorNbPerGearBox;
+	if (fwrite(&header, sizeof(NLDRIVETRAIN_TANK_PACK_HEADER), 1, pfile) != 1)
+		return 0;
+
+	// 3) �criture des charaterizations moteur � la main et en une fois
+	if (fwrite(m_pCtrz, sizeof(NLMOTOR_CHARACTERIZATION), header.m_gearBoxNumber * header.m_motorNbPerGearBox, pfile) != header.m_gearBoxNumber * header.m_motorNbPerGearBox)
+		return 0;
+	
+	if (!m_driveTrainSpecifications.write(pfile))
+		return 0;
+
+	return m_ramsete.write(pfile);
+}
+
+Nu32 NLDRIVETRAIN_TANK_PACK::save(const Nchar* pfilename)
+{
+	/* -----------------------------------------------------------------------------------------------------------------
+	 *
+	 *  Check extension
+	 *
+	 */
+	if (!NStrCheckEnd(pfilename, EXTENSION_NLDRIVETRAIN_TANK_PACK_BIN))
+		return 0;
+
+	// 0) Ouverture du fichier en ecriture
+	FILE* pfile = fopen(pfilename, "wb");
+	NErrorIf(!pfile, NERROR_FILE_OPENING_ERROR);
+	if (!pfile)
+		return 0;
+
+	// 1) Ecriture Signature
+	Nu32	_u32 = FILE_SIGNATURE_NLDRIVETRAIN_TANK_PACK;
+	if (fwrite(&_u32, sizeof(Nu32), 1, pfile) != 1)
+	{
+		fclose(pfile);
+		return 0;
+	}
+	// 2) Ecriture pack:
+	if (!write(pfile))
+	{
+		fclose(pfile);
+		NErrorIf(1, NERROR_FILE_WRITE_ERROR);
+		return 0;
+	}
+	fclose(pfile);
+	return 1;
+}
+
+Nu32 NLDRIVETRAIN_TANK_PACK::load(const Nchar* pfilename)
+{
+	/* -----------------------------------------------------------------------------------------------------------------
+	 *
+	 *  Check extension
+	 *
+	 */
+	if (!NStrCheckEnd(pfilename, EXTENSION_NLDRIVETRAIN_TANK_PACK_BIN))
+		return 0;
+
+	// 0) Ouverture du fichier en lecture
+	FILE* pfile = fopen(pfilename, "rb");
+	NErrorIf(!pfile, NERROR_FILE_OPENING_ERROR);
+	if (!pfile)
+		return 0;
+
+	// 1) Lecture Signature
+	Nu32	_u32;
+	if (fread(&_u32, sizeof(Nu32), 1, pfile) != 1)
+	{
+		fclose(pfile);
+		NErrorIf(1, NERROR_FILE_READ_ERROR);
+		return 0;
+	}
+	if (!NSIGNATURECMP(_u32, FILE_SIGNATURE_NLDRIVETRAIN_TANK_PACK))
+	{
+		fclose(pfile);
+		NErrorIf(1, NERROR_FILE_UNKNOWN_SIGNATURE);
+		return 0;
+	}
+	// 2) Lecture pack:
+	if(!read(pfile))
+	{
+		fclose(pfile);
+		NErrorIf(1, NERROR_FILE_READ_ERROR);
+		return 0;
+	}
+
+	fclose(pfile);
+	return 1;
+}
+
+Nu32 NLDRIVETRAIN_TANK_PACK::importTxt(const Nchar* ptxtfilename)
+{
+	NErrorIf(!ptxtfilename, NERROR_NULL_POINTER);
+	/* -----------------------------------------------------------------------------------------------------------------
+	*
+	*  Check extension
+	*
+	*/
+	if (!NStrCheckEnd(ptxtfilename, ".txt"))
+		return 0;
+
+	FILE* pfile;
+	Nchar								tempstring[1024];
+	Nchar								name[32];
+	Nchar* pstr;
+
+	pfile = fopen(ptxtfilename, "r");	// ouverture du fichier
+	fseek(pfile, 0, SEEK_SET);			// on se place au d�but du fichier
+
+	// recup�rer la siganture du fichier
+	pstr = fgets(tempstring, 1024, pfile);
+	pstr = NStrGet_String_AfterLabel(pstr, "signature= ", name);
+	if (!strcmp(name, SIGNATURE_NLRAMSETE))
+	{
+		fclose(pfile);
+		return m_ramsete.importTxt(ptxtfilename);
+	}
+	else if (!strcmp(name, SIGNATURE_NLDRIVETRAINSPECS))
+	{
+		fclose(pfile);
+		return m_driveTrainSpecifications.importTxt(ptxtfilename);
+	}
+	else if (!strcmp(name, TXT_SIGNATURE_NLCHARACTERIZATION_TABLE))
+	{
+		fclose(pfile);
+		NLCHARACTERIZATION_TABLE	characterization_table(4);
+		characterization_table.importTxt(ptxtfilename,NTRUE);
+		NErrorIf(characterization_table.m_gearBoxNb < GEARBOX::NB, NERROR_INCONSISTENT_VALUES); // au moins 2 Gearbox doivent �tre d�crite dans le fichier txt !
+
+		Nu32 gb1_motor_nb = characterization_table.getMotorNb(0);
+		Nu32 gb2_motor_nb = characterization_table.getMotorNb(1);
+
+		if (gb1_motor_nb != gb2_motor_nb)
+			return 0;
+
+		// realloc ?
+		if (m_pCtrz)
+		{
+			if (gb1_motor_nb != m_motorNbPerGearBox)
+			{
+				m_pCtrz = (NLMOTOR_CHARACTERIZATION*)Nrealloc(m_pCtrz, sizeof(NLMOTOR_CHARACTERIZATION) * gb1_motor_nb * GEARBOX::NB);
+				NErrorIf(!m_pCtrz, NERROR_NULL_REALLOC);
+				m_motorNbPerGearBox = gb1_motor_nb;
+			}
+		}
+		else
+		{
+			m_pCtrz = (NLMOTOR_CHARACTERIZATION*)Nmalloc(sizeof(NLMOTOR_CHARACTERIZATION) * gb1_motor_nb * GEARBOX::NB);
+			NErrorIf(!m_pCtrz, NERROR_NULL_MALLOC);
+		}
+		// Chargement des characterizations.
+		NLMOTOR_CHARACTERIZATION* pctrz = m_pCtrz;
+		Nu32 g, m;
+		for (g = 0; g < GEARBOX::NB; g++)
+		{
+			for (m = 0; m < m_motorNbPerGearBox; m++)
+			{
+				characterization_table.get(pctrz,g,m,NFALSE);
+				pctrz++;
+			}
+		}
+		m_flags = 0;
+	}
+
+	return 1;
+	// NLCHARACTERIZATION_TABLE	characterization_table(4) ... is going to be clear.
+}

@@ -1,0 +1,67 @@
+#pragma once
+#include "lib/N/NType.h"
+#include "lib/N/NMatrix.h"
+
+#include "lib/N/File/NFile.h"
+#include "lib/N/Core/NVersion.h"
+
+#include "lib/NL/MotionControl/Drivetrain/NLDriveTrainSpecs.h"
+#include "lib/NL/MotionControl/Drivetrain/NLRamsete.h"
+#include "./Characterization/NLMotorCharacterization.h"
+
+#ifdef _NEDITOR
+#include "lib/NL/MotionControl/NL2DOrthogonalCoordinateSystem.h"
+// forward declaration of NLPathWorkbench ( to include it into SPACK, which is also included into NLPathWorkbench )
+class NLPATH_WORKBENCH;
+#endif
+
+// On consid�re qu'il y a deux GearBox : LEFTGEARBOX et RIGHTGEARBOX !!
+class NLDRIVETRAIN_TANK_PACK 
+{
+public:
+	NLDRIVETRAIN_TANK_PACK():m_flags(0), m_availableNu8(0),m_motorNbPerGearBox(0),m_pCtrz(NULL) {};
+	NLDRIVETRAIN_TANK_PACK(const Nu8 motornbpergearbox);
+	~NLDRIVETRAIN_TANK_PACK() { if (m_pCtrz) { Nfree(m_pCtrz); m_pCtrz = NULL; } };
+	
+#ifdef _NEDITOR
+	Nu32	read(NLPATH_WORKBENCH* pwb); // fonction read "sp�ciale" qui copie les donn�es du path workbench pass� en param�tre plutot
+#endif									 // ... que de les lire dans un fichier. Cela permet au code du simulateur de rester tr�s proche du code "r�el" du robot	
+										 // ... tout en permettant de recup�rer directement les donn�es du path workbench. 	
+	Nu32	read(FILE *pfile);
+	Nu32	write(FILE *pfile);
+
+	Nu32 save(const Nchar* pfilename);
+	Nu32 load(const Nchar* pfilename);
+
+	Nu32 importTxt(const Nchar* ptxtfilename);
+
+	enum GEARBOX
+	{
+		LEFT	= 0,
+		RIGHT	= 1,
+		NB		= 2
+	};
+	Nu16						m_flags;
+	Nu8							m_availableNu8;
+	Nu8							m_motorNbPerGearBox;
+	NLMOTOR_CHARACTERIZATION*	m_pCtrz;
+
+	NLDRIVETRAINSPECS			m_driveTrainSpecifications;
+	NLRAMSETE					m_ramsete;
+};
+
+
+
+// ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+// + FILE
+// +
+#define EXTENSION_NLDRIVETRAIN_TANK_PACK_BIN				".dtk"
+#define EXTENSION_NLDRIVETRAIN_TANK_PACK_TXT				".txt"
+#define FILE_SIGNATURE_NLDRIVETRAIN_TANK_PACK		NMAKESIGNATURE('T','A','N','K')
+#define VERSION_NLDRIVETRAIN_TANK_PACK_HEADER		NMAKEVERSION(0,0,0)				// >>> 2022/05/22
+typedef struct
+{
+	Nu16					m_flags;
+	Nu8						m_gearBoxNumber;
+	Nu8						m_motorNbPerGearBox;
+}NLDRIVETRAIN_TANK_PACK_HEADER;
