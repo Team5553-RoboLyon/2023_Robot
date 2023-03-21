@@ -3,7 +3,7 @@
 // the WPILib BSD license file in the root directory of this project.
 
 #include "command/Intake/ActiveIntakeMotor.h"
-
+#include <iostream>
 ActiveIntakeMotor::ActiveIntakeMotor(Intake *pIntake) : m_pIntake(pIntake)
 {
   AddRequirements(m_pIntake);
@@ -16,6 +16,7 @@ void ActiveIntakeMotor::Initialize() {}
 void ActiveIntakeMotor::Execute()
 {
   m_pIntake->SetSpeed(1.0);
+  std::cout << "on" << std::endl;
 }
 
 // Called once the command ends or is interrupted.

@@ -38,6 +38,7 @@ void Elevator::Periodic()
 {
     double output = m_elevatorPid.Calculate(GetEncoder());
     m_ElevatorPidRate.Update(output);
+
     // if (m_elevatorHall.ShouldIStop(GetEncoder(), NSIGN(output)))
     // {
     //     m_elevatorMotor.Set(NCLAMP(-0.5, output, 0.5));

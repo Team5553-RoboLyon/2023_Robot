@@ -18,6 +18,7 @@ void MoveElevator::Initialize()
 void MoveElevator::Execute()
 {
   double move = m_move() * 0.96;
+
   m_pElevator->SetSetpoint(NABS(move));
 }
 

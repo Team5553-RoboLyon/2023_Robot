@@ -15,13 +15,14 @@
 // ################### SUBSYSTEMS ###################
 
 #include "subsystem/Turret.h"
-// #include "subsystem/Arm.h"
+#include "subsystem/Arm.h"
 #include "subsystem/Elevator.h"
 #include "subsystem/Gripper.h"
 #include "subsystem/Drivetrain.h"
 // #include "subsystem/Copiloter.h"
 #include "subsystem/Intake.h"
 #include "subsystem/Conveyor.h"
+#include "subsystem/Poignet.h"
 
 // ################### COMMANDS ###################
 // Intake
@@ -69,18 +70,19 @@ public:
   Drivetrain m_drivetrain;
   Conveyor m_conveyor;
   Gripper m_gripper;
-  // Arm m_arm;
+  Arm m_arm;
   Elevator m_elevator;
   Intake m_intake;
+  Poignet m_poignet;
+
+  frc::Joystick m_joystickRight{0};
+  frc::Joystick m_joystickLeft{1};
+  frc::Joystick m_joystickCopilot{2};
 
 private:
   cs::UsbCamera m_CameraPilote;
 
   frc::Compressor m_compressor{frc::PneumaticsModuleType::REVPH};
-
-  frc::Joystick m_joystickRight{0};
-  frc::Joystick m_joystickLeft{1};
-  frc::Joystick m_joystickCopilot{2};
 
   // autonome
 

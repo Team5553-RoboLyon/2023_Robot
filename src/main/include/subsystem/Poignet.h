@@ -23,6 +23,7 @@ public:
 
   RateLimiter m_PoignetPidRate;
   Pid m_poignetPid{0, P_POIGNET, I_POIGNET, D_POIGNET};
+  double m_speed;
 
 private:
   ctre::phoenix::motorcontrol::can::TalonSRX m_poignetMotor{ID_MOTOR_POIGNET};

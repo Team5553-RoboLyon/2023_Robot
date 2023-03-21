@@ -40,6 +40,6 @@ void Poignet::Periodic()
 
     double output = m_poignetPid.Calculate(GetEncoder());
     m_PoignetPidRate.Update(output);
-
-    m_poignetMotor.Set(ctre::phoenix::motorcontrol::ControlMode::PercentOutput, NCLAMP(-0.1, m_PoignetPidRate.m_current, 0.1));
+    m_poignetMotor.Set(ctre::phoenix::motorcontrol::ControlMode::PercentOutput, NCLAMP(-0.3, m_speed, 0.3));
+    // m_poignetMotor.Set(ctre::phoenix::motorcontrol::ControlMode::PercentOutput, NCLAMP(-0.1, m_PoignetPidRate.m_current, 0.1));
 }

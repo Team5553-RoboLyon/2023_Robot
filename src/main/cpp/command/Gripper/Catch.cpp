@@ -3,6 +3,7 @@
 // the WPILib BSD license file in the root directory of this project.
 
 #include "command/Gripper/Catch.h"
+#include <iostream>
 
 Catch::Catch(Gripper *pGripper) : m_pGripper(pGripper)
 {
@@ -10,12 +11,15 @@ Catch::Catch(Gripper *pGripper) : m_pGripper(pGripper)
 }
 
 // Called when the command is initially scheduled.
-void Catch::Initialize() {}
+void Catch::Initialize()
+{
+  std::cout << "on passe la" << std::endl;
+  m_pGripper->ChangePosition();
+}
 
 // Called repeatedly when this Command is scheduled to run
 void Catch::Execute()
 {
-  m_pGripper->ChangePosition();
 }
 
 // Called once the command ends or is interrupted.

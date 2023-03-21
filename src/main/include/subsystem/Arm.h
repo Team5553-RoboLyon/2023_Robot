@@ -18,7 +18,10 @@ public:
   void SetSetpoint(double setpoint);
   void Periodic() override;
   void SetGains(double p, double i, double d);
+  void SetMotorArm(double speed);
   double GetEncoder();
+
+  double m_speed;
 
 private:
   rev::CANSparkMax m_armMotor{ID_MOTOR_ARM, rev::CANSparkMaxLowLevel::MotorType::kBrushless};

@@ -24,6 +24,14 @@ void Robot::TeleopInit()
 }
 void Robot::TeleopPeriodic()
 {
+  m_robotContainer.m_arm.m_speed = m_robotContainer.m_joystickLeft.GetY();
+  m_robotContainer.m_poignet.m_speed = m_robotContainer.m_joystickLeft.GetX();
+  std::cout << m_robotContainer.m_poignet.m_speed << std::endl;
+
+  if (m_robotContainer.m_joystickLeft.GetRawButtonPressed(1))
+  {
+    m_robotContainer.m_gripper.ChangePosition();
+  }
   // frc::SmartDashboard::PutNumber("x", m_robotContainer.m_copiloter.m_x);
   // frc::SmartDashboard::PutNumber("h", m_robotContainer.m_copiloter.m_h);
   // frc::SmartDashboard::PutNumber("tetha", m_robotContainer.m_copiloter.m_theta);
