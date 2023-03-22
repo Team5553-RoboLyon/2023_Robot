@@ -26,18 +26,17 @@ void Robot::TeleopPeriodic()
 {
   m_robotContainer.m_arm.m_speed = m_robotContainer.m_joystickLeft.GetY();
   m_robotContainer.m_poignet.m_speed = m_robotContainer.m_joystickLeft.GetX();
-  std::cout << m_robotContainer.m_poignet.m_speed << std::endl;
 
-  if (m_robotContainer.m_joystickLeft.GetRawButtonPressed(1))
-  {
-    m_robotContainer.m_gripper.ChangePosition();
-  }
+  // if (m_robotContainer.m_joystickLeft.GetRawButtonPressed(1))
+  // {
+  //   m_robotContainer.m_gripper.ChangePosition();
+  // }
   // frc::SmartDashboard::PutNumber("x", m_robotContainer.m_copiloter.m_x);
   // frc::SmartDashboard::PutNumber("h", m_robotContainer.m_copiloter.m_h);
   // frc::SmartDashboard::PutNumber("tetha", m_robotContainer.m_copiloter.m_theta);
   // frc::SmartDashboard::PutNumber("encoderElevator", m_robotContainer.m_copiloter.m_elevator.GetEncoder());
   // frc::SmartDashboard::PutNumber("encoderArm", m_robotContainer.m_copiloter.m_arm.GetEncoder());
-  frc::SmartDashboard::PutNumber("encoderTurret", m_robotContainer.m_elevator.GetEncoder());
+  frc::SmartDashboard::PutNumber("encoderArm", m_robotContainer.m_arm.GetEncoder());
   // frc::SmartDashboard::PutNumber("outputelevateur", m_robotContainer.m_copiloter.m_elevator.m_elevatorPid.m_output);
   // frc::SmartDashboard::PutNumber("setpoint", m_robotContainer.m_copiloter.m_elevator.m_elevatorPid.m_setpoint);
   // m_robotContainer.m_copiloter.m_elevator.SetGains(frc::SmartDashboard::GetNumber("Pelevator", 0),

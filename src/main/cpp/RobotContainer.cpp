@@ -57,8 +57,8 @@ void RobotContainer::ConfigureButtonBindings()
 
     // Gripper
 
-    // frc2::JoystickButton m_ButtonGripperChangePosition = frc2::JoystickButton(&m_joystickRight, 1);
-    // m_ButtonGripperChangePosition.WhileActiveContinous(Catch(&m_gripper));
+    frc2::JoystickButton m_ButtonGripperChangePosition = frc2::JoystickButton(&m_joystickRight, 1);
+    m_ButtonGripperChangePosition.WhileActiveContinous(Catch(&m_gripper));
 }
 
 frc2::Command *RobotContainer::GetAutonomousCommand()

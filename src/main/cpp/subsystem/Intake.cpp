@@ -6,7 +6,7 @@
 
 Intake::Intake()
 {
-    m_intakeSolenoid.Set(frc::DoubleSolenoid::Value::kForward);
+    m_intakeSolenoid.Set(frc::DoubleSolenoid::Value::kReverse);
 
     m_intakeMotorRight.ConfigFactoryDefault();
     m_intakeMotorLeft.ConfigFactoryDefault();
