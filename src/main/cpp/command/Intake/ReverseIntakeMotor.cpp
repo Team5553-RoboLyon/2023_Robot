@@ -10,7 +10,10 @@ ReverseIntakeMotor::ReverseIntakeMotor(Intake *pIntake) : m_pIntake(pIntake)
 }
 
 // Called when the command is initially scheduled.
-void ReverseIntakeMotor::Initialize() {}
+void ReverseIntakeMotor::Initialize()
+{
+  m_pIntake->Open();
+}
 
 // Called repeatedly when this Command is scheduled to run
 void ReverseIntakeMotor::Execute()
@@ -21,6 +24,7 @@ void ReverseIntakeMotor::Execute()
 // Called once the command ends or is interrupted.
 void ReverseIntakeMotor::End(bool interrupted)
 {
+  m_pIntake->Close();
   m_pIntake->SetSpeed(0.0);
 }
 

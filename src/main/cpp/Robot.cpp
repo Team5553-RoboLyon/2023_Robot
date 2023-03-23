@@ -24,7 +24,7 @@ void Robot::TeleopInit()
 }
 void Robot::TeleopPeriodic()
 {
-  m_robotContainer.m_arm.m_speed = m_robotContainer.m_joystickLeft.GetY();
+  m_robotContainer.m_arm.m_speed = m_robotContainer.m_joystickRight.GetY();
   m_robotContainer.m_poignet.m_speed = m_robotContainer.m_joystickLeft.GetX();
 
   // if (m_robotContainer.m_joystickLeft.GetRawButtonPressed(1))

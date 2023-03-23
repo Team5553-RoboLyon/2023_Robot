@@ -10,7 +10,9 @@ ReverseConveyorMotor::ReverseConveyorMotor(Conveyor *pConveyor) : m_pConveyor(pC
 }
 
 // Called when the command is initially scheduled.
-void ReverseConveyorMotor::Initialize() {}
+void ReverseConveyorMotor::Initialize()
+{
+}
 
 // Called repeatedly when this Command is scheduled to run
 void ReverseConveyorMotor::Execute()

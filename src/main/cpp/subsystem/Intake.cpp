@@ -45,5 +45,5 @@ void Intake::ChangePosition()
 void Intake::SetSpeed(double speed)
 {
     m_intakeMotorRight.Set(ctre::phoenix::motorcontrol::ControlMode::PercentOutput, speed);
-    m_intakeMotorLeft.Set(ctre::phoenix::motorcontrol::ControlMode::PercentOutput, speed);
+    m_intakeMotorLeft.Set(ctre::phoenix::motorcontrol::ControlMode::PercentOutput, -speed);
 }

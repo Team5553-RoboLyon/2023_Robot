@@ -10,7 +10,10 @@ ActiveIntakeMotor::ActiveIntakeMotor(Intake *pIntake) : m_pIntake(pIntake)
 }
 
 // Called when the command is initially scheduled.
-void ActiveIntakeMotor::Initialize() {}
+void ActiveIntakeMotor::Initialize()
+{
+  m_pIntake->Open();
+}
 
 // Called repeatedly when this Command is scheduled to run
 void ActiveIntakeMotor::Execute()
@@ -23,6 +26,7 @@ void ActiveIntakeMotor::Execute()
 void ActiveIntakeMotor::End(bool interrupted)
 {
   m_pIntake->SetSpeed(0.0);
+  m_pIntake->Close();
 }
 
 // Returns true when the command should end.
