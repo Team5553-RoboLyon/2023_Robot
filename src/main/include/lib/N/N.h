@@ -1,3 +1,5 @@
+/*
+
 // NLCharacterizationTable.h
 #include "lib/N/NType.h"
 #include "lib/N/Core/NVersion.h"
@@ -56,4 +58,4 @@
 #include "lib/N/NErrorHandling.h"
 #include "lib/N/Core/NLimits.h"
 
-// NL
+*/

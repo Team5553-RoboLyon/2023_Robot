@@ -4,6 +4,11 @@
 
 #pragma once
 
+#include "lib/NL/MotionControl/DriveTrain/Characterization/NLMotorCharacterization.h"
+#include "lib/NL/MotionControl/Trajectory/NLFollowerTank.h"
+#include "lib/NL/MotionControl/Trajectory/NLTrajectoryPack.h"
+
+
 #include <frc/TimedRobot.h>
 #include <frc/smartdashboard/SmartDashboard.h>
 #include "RobotContainer.h"

@@ -7,9 +7,10 @@
 
 #include "lib/NL/MotionControl/DriveTrain/Characterization/NLMotorCharacterization.h"
 
+/*
 #ifdef _NEDITOR
 #endif
-
+*/
 #define FLAG_NLCHARACTERIZATION_TABLE_ROW_IS_INVERTED BIT_0
 typedef struct NLCHARACTERIZATION_TABLE_ROW NLCHARACTERIZATION_TABLE_ROW;
 struct NLCHARACTERIZATION_TABLE_ROW

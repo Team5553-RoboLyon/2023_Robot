@@ -1,0 +1,88 @@
+#include "../NCoordinateSystemConversions.h"
+#include "NUT_Slider.h"
+
+NUT_SLIDER* NUT_SetupSlider(NUT_SLIDER* pslider,const Nf32 valuemin, const Nf32 valuemax,const NVEC2* pdirection,const NVEC2* psize, const Nu16 intermediate_steps, const Nu8 snap_strength)
+{
+	Nmem0(pslider,NUT_SLIDER);
+	NUT_SetSliderLimits(pslider,valuemin,valuemax);
+	NUT_SetSliderSize(pslider,psize);
+	NUT_SetSliderDirection(pslider,pdirection);
+	pslider->InterSteps		= intermediate_steps;
+	pslider->SnapStrength	= snap_strength;
+	
+	// Default properties:
+	// Analyzing some values to decide properties default state (activate or not)
+	FLAG_ON(pslider->Flags,FLAG_NUT_SLIDER_SHOW_OUTPUTVALUE); // by default ON !
+	if(pslider->SnapStrength)
+		FLAG_ON(pslider->Flags,FLAG_NUT_SLIDER_SNAP);		  // ON only if Snap Strength may have an effect	
+	if(pslider->InterSteps)
+		FLAG_ON(pslider->Flags,FLAG_NUT_SLIDER_SHOW_TICKS);	  // ON only if there is something to draw ...	
+
+	return pslider;
+}
+
+NUT_SLIDER* NUT_CreateSlider(const Nf32 valuemin, const Nf32 valuemax,const NVEC2* pdirection,const NVEC2* psize, const Nu16 intermediate_steps, const Nu8 snap_strength)
+{
+	return NUT_SetupSlider(NEW(NUT_SLIDER),valuemin,valuemax,pdirection,psize,intermediate_steps,snap_strength);
+}
+
+void NUT_ClearSlider(NUT_SLIDER *pslider)
+{
+	Nmem0(pslider,NUT_SLIDER);
+}
+
+void NUT_DeleteSlider(NUT_SLIDER *pslider)
+{
+	NUT_ClearSlider(pslider);
+	Nfree(pslider);
+}
+
+void NUT_PlaceSlider(NUT_SLIDER *pslider, const Nf32 currentvalue, const NVEC2s16 *ppointer)
+{
+	// Get the current Slider value
+	Nf32 incoming_val = NCLAMP(pslider->Min,currentvalue,pslider->Max);
+	
+	// 'Build' the slider, that means compute the slider Origin from the data we have.
+	// That means from current value, pointer position and slider direction.
+	// Lets say that at activation, Slider's handle is right under the pointer, so ...
+	// 
+	//	(currentvalue - pslider->Min)	current value 'from' min 
+	//	pslider->Size.x					'magnitude' of the Slider itself (it's 'length' on screen)
+	//	(pslider->Max - pslider->Min)	'magnitude' of the slider value
+	//	f								in this calculus f represents the current value On the slider (from the slider Origin)
+	//									... and thats exactly what we are looking for... THE SLIDER ORIGIN !
+	pslider->Magnitude		= (incoming_val - pslider->Min)*pslider->Size.x/(pslider->Max - pslider->Min);
+	// So retrieve slider origin from pointer position
+	pslider->Origin.x		=  NCoord_PixToHRel_X(ppointer->x) - pslider->Magnitude*pslider->VDir.x;	
+	pslider->Origin.y		= /*-NCoord_PixToHRel_Y(ppointer->y)*/NCoord_PixToHRel_Y(ppointer->y) - pslider->Magnitude*pslider->VDir.y;
+
+	if (pslider->Origin.y < -1.0f)
+		pslider->Origin.y = -1.0f;
+
+	if (pslider->Origin.y + pslider->Size.x > 0.0f)
+		pslider->Origin.y = -pslider->Size.x;
+}
+
+Nf32 NUT_UpdateSlider(NUT_SLIDER *pslider,const NVEC2s16 *ppointer)
+{
+	NVEC2	v;
+	Nf32		f;
+
+	v.x =  NCoord_PixToHRel_X(ppointer->x) - pslider->Origin.x;
+	v.y = /*-NCoord_PixToHRel_Y(ppointer->y)*/NCoord_PixToHRel_Y(ppointer->y) - pslider->Origin.y;
+	f = NCLAMP(0.0f,NVec2DotProduct(&v,&pslider->VDir),pslider->Size.x);
+	
+	// Snap ?
+	// Take care of SnapStrength and InterSteps values to a good result.
+	if( ISFLAG_ON(pslider->Flags,FLAG_NUT_SLIDER_SNAP) )
+	{
+		Nf32 fstep	= pslider->Size.x/(Nf32)(pslider->InterSteps+1);
+		Nf32 fsnap	= fstep*(Nf32)pslider->SnapStrength/255.0f;
+		Nf32 f2		= floor( f/fstep + 0.5f )*fstep;
+		
+		if( NABS(f-f2)<=fsnap )
+			f = f2;
+	}
+	pslider->Magnitude = f;
+	return  pslider->Min + ( pslider->Max - pslider->Min )*f/pslider->Size.x;
+}
