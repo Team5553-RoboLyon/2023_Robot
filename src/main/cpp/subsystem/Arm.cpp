@@ -10,7 +10,7 @@ Arm::Arm()
 {
     m_armEncoder.Reset();
     m_armEncoder.SetDistancePerPulse(ARM_DISTANCE_PER_PULSE); // 1.0 / 2048.0 * 2.0 * 3.14159265358979323846 en radian
-    m_armPid.SetSetpoint(NF64_PI_2);
+    m_armPid.SetSetpoint((124.80 * NF64_PI / 180.0));
 
     m_armMotor.RestoreFactoryDefaults();
     m_armMotor.SetInverted(ARM_MOTOR_INVERTED);
@@ -21,7 +21,7 @@ Arm::Arm()
 
 double Arm::GetEncoder()
 {
-    return (m_armEncoder.GetDistance() + NF64_PI_2);
+    return (m_armEncoder.GetDistance() + (124.80 * NF64_PI / 180.0));
 }
 
 void Arm::SetSetpoint(double setpoint)

@@ -3,6 +3,7 @@
 // the WPILib BSD license file in the root directory of this project.
 
 #include "command/Autonomous/AdvanceAutonomous.h"
+#include <iostream>
 
 AdvanceAutonomous::AdvanceAutonomous(Drivetrain *pDrivetrain, int target) : m_pDrivetrain(pDrivetrain), m_target(target)
 {
@@ -14,6 +15,7 @@ void AdvanceAutonomous::Initialize()
 {
   m_current = 0;
   m_pDrivetrain->Drive(0.2, 0.2);
+  std::cout << "on passe" << std::endl;
 }
 
 // Called repeatedly when this Command is scheduled to run

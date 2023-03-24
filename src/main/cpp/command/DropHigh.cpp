@@ -14,13 +14,13 @@ DropHigh::DropHigh(Gripper *pGripper, Elevator *pElevator, Arm *pArm) : m_pGripp
 // Called when the command is initially scheduled.
 void DropHigh::Initialize()
 {
+  m_pElevator->SetSetpoint(90.0);
 }
 
 // Called repeatedly when this Command is scheduled to run
 void DropHigh::Execute()
 {
-  m_pElevator->SetSetpoint(0.0);
-  m_pArm->SetSetpoint(0.0);
+  m_pArm->SetSetpoint(1.0);
 }
 
 // Called once the command ends or is interrupted.

@@ -29,7 +29,7 @@ RobotContainer::RobotContainer()
     m_CameraPilote.SetResolution(320, 240);
     m_CameraPilote.SetFPS(12);
 
-    m_compressor.EnableAnalog(MIN_PRESSURE_COMPRESSOR, MAX_PRESSURE_COMPRESSOR);
+    m_compressor.EnableDigital();
 };
 
 // ################### COMMANDS ###################
@@ -43,16 +43,19 @@ void RobotContainer::ConfigureButtonBindings()
 
     // Conveyor
 
-    frc2::JoystickButton m_ButtonActiveMotorConveyorIntake = frc2::JoystickButton(&m_joystickRight, 1);
-    m_ButtonActiveMotorConveyorIntake.WhileActiveContinous(frc2::ParallelCommandGroup(ActiveConveyorMotor(&m_conveyor), ActiveIntakeMotor(&m_intake)));
+    // frc2::JoystickButton m_ButtonActiveMotorConveyorIntake = frc2::JoystickButton(&m_joystickRight, 1);
+    // m_ButtonActiveMotorConveyorIntake.WhileActiveContinous(frc2::ParallelCommandGroup(ActiveConveyorMotor(&m_conveyor), ActiveIntakeMotor(&m_intake)));
 
-    frc2::JoystickButton m_ButtonConveyorIntakeReverseMotor = frc2::JoystickButton(&m_joystickRight, 2);
-    m_ButtonConveyorIntakeReverseMotor.WhileActiveContinous(frc2::ParallelCommandGroup(ReverseConveyorMotor(&m_conveyor), ReverseIntakeMotor(&m_intake)));
+    // frc2::JoystickButton m_ButtonConveyorIntakeReverseMotor = frc2::JoystickButton(&m_joystickRight, 2);
+    // m_ButtonConveyorIntakeReverseMotor.WhileActiveContinous(frc2::ParallelCommandGroup(ReverseConveyorMotor(&m_conveyor), ReverseIntakeMotor(&m_intake)));
 
     // Gripper
 
-    frc2::JoystickButton m_ButtonGripperChangePosition = frc2::JoystickButton(&m_joystickRight, 3);
+    frc2::JoystickButton m_ButtonGripperChangePosition = frc2::JoystickButton(&m_joystickCopilot, 1);
     m_ButtonGripperChangePosition.WhileActiveContinous(Catch(&m_gripper));
+
+    frc2::JoystickButton m_ButtonDropHigh = frc2::JoystickButton(&m_joystickCopilot, 2);
+    m_ButtonDropHigh.WhileActiveContinous(DropHigh(&m_gripper, &m_elevator, &m_arm));
 }
 
 frc2::Command *RobotContainer::GetAutonomousCommand()

@@ -40,6 +40,7 @@
 
 // Gripper
 #include "command/Gripper/Catch.h"
+#include "command/DropHigh.h"
 
 // Copiloter
 // #include "command/AutoCopiloter.h"
@@ -89,6 +90,6 @@ private:
 
   frc2::SequentialCommandGroup m_autonomousGroupCommand = frc2::SequentialCommandGroup(
       AdvanceAutonomous(&m_drivetrain, 1), frc2::InstantCommand([this]
-                                                                { m_turret.SetSetpoint(45.0); },
+                                                                { m_turret.SetSetpoint(0.0); },
                                                                 {&m_turret}));
 };
