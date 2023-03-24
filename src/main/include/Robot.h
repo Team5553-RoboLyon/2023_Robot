@@ -31,4 +31,6 @@ public:
 
 private:
   RobotContainer m_robotContainer;
+
+  frc2::Command *m_autonomousCommand = nullptr;
 };
