@@ -17,11 +17,11 @@
  * directly; this is crucially important, or else the decorator functions in
  * Command will *not* work!
  */
-class DropHigh
-    : public frc2::CommandHelper<frc2::CommandBase, DropHigh>
+class DropMiddle
+    : public frc2::CommandHelper<frc2::CommandBase, DropMiddle>
 {
 public:
-  DropHigh(Gripper *pGripper, Elevator *pElevator, Arm *pArm);
+  DropMiddle(Gripper *pGripper, Elevator *pElevator, Arm *pArm);
 
   void Initialize() override;
 

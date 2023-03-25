@@ -6,7 +6,7 @@
 
 Gripper::Gripper()
 {
-    m_gripperSolenoid.Set(frc::DoubleSolenoid::Value::kForward);
+    m_gripperSolenoid.Set(frc::DoubleSolenoid::Value::kReverse);
 }
 
 void Gripper::Open()

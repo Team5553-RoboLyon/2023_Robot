@@ -6,7 +6,10 @@
 
 #include <frc2/command/CommandBase.h>
 #include <frc2/command/CommandHelper.h>
+#include "subsystem/Gripper.h"
+#include "subsystem/Elevator.h"
 #include "subsystem/Arm.h"
+#include "lib/RblUtils.h"
 
 /**
  * An example command.
@@ -15,11 +18,11 @@
  * directly; this is crucially important, or else the decorator functions in
  * Command will *not* work!
  */
-class ActiveArmMotor
-    : public frc2::CommandHelper<frc2::CommandBase, ActiveArmMotor>
+class TakeCones
+    : public frc2::CommandHelper<frc2::CommandBase, TakeCones>
 {
 public:
-  ActiveArmMotor(std::function<double()> move, Arm *pArm);
+  TakeCones(Gripper *pGripper, Elevator *pElevator, Arm *pArm);
 
   void Initialize() override;
 
@@ -30,6 +33,7 @@ public:
   bool IsFinished() override;
 
 private:
-  std::function<double()> m_Move;
+  Gripper *m_pGripper;
+  Elevator *m_pElevator;
   Arm *m_pArm;
 };

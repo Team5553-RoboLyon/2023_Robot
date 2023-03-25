@@ -2,29 +2,35 @@
 // Open Source Software; you can modify and/or share it under the terms of
 // the WPILib BSD license file in the root directory of this project.
 
-#include "command/Arm/ActiveArmMotor.h"
-#include "lib/RblUtils.h"
+#include "command/Drop/DropHigh.h"
 
-ActiveArmMotor::ActiveArmMotor(std::function<double()> move, Arm *pArm) : m_Move(move), m_pArm(pArm)
+DropHigh::DropHigh(Gripper *pGripper, Elevator *pElevator, Arm *pArm) : m_pGripper(pGripper), m_pElevator(pElevator), m_pArm(pArm)
 {
+  AddRequirements(m_pGripper);
+  AddRequirements(m_pElevator);
   AddRequirements(m_pArm);
 }
 
 // Called when the command is initially scheduled.
-void ActiveArmMotor::Initialize() {}
+void DropHigh::Initialize()
+{
+  m_pElevator->SetSetpoint(90.0);
+  m_pArm->SetSetpoint(NDEGtoRAD(120.0));
+}
 
 // Called repeatedly when this Command is scheduled to run
-void ActiveArmMotor::Execute()
+void DropHigh::Execute()
 {
-  double move = 123.0 - (m_Move() * 123.0);
-  m_pArm->SetSetpoint(NDEGtoRAD(move));
 }
 
 // Called once the command ends or is interrupted.
-void ActiveArmMotor::End(bool interrupted) {}
+void DropHigh::End(bool interrupted)
+{
+  m_pGripper->ChangePosition();
+}
 
 // Returns true when the command should end.
-bool ActiveArmMotor::IsFinished()
+bool DropHigh::IsFinished()
 {
   return false;
 }

@@ -40,7 +40,8 @@
 
 // Gripper
 #include "command/Gripper/Catch.h"
-#include "command/DropHigh.h"
+#include "command/Drop/DropHigh.h"
+#include "command/Drop/DropMiddle.h"
 
 // Copiloter
 // #include "command/AutoCopiloter.h"
@@ -53,6 +54,11 @@
 
 // Elevator
 #include "command/Elevator/MoveElevator.h"
+#include "command/LoadingStation/TakeCones.h"
+
+// Elevator
+
+#include "command/Arm/ActiveArmMotor.h"
 
 // ################### AUTONOMOUS ###################
 
