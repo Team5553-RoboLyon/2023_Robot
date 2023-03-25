@@ -204,7 +204,7 @@ Nu32 NLCHARACTERIZATION_TABLE::importTxt(const Nchar * pfilename, const Nbool bc
 		NEraseArray(&m_table, NULL);
 		m_gearBoxNb = 0;
 	}
-	pfile = fopen(pfilename, "r");		// ouverture du fichier
+	pfile = fopen(pfilename, "r, ccs=UTF-8");		// ouverture du fichier
 	fseek(pfile, 0, SEEK_SET);			// on se place au d�but du fichier
 
 	// recup�rer la siganture du fichier

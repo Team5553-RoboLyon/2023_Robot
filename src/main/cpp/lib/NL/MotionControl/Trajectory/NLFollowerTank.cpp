@@ -164,7 +164,7 @@ Nu32 NLFOLLOWER_TANK::importTxt(const Nchar* ptxtfilename)
 	Nchar	name[32];
 	Nchar	*pstr;
 
-	pfile = fopen(ptxtfilename, "r");	// ouverture du fichier
+	pfile = fopen(ptxtfilename, "r, ccs=UTF-8");	// ouverture du fichier
 	fseek(pfile, 0, SEEK_SET);			// on se place au début du fichier
 
 	// recupérer la siganture du fichier

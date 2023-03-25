@@ -146,7 +146,7 @@ Nu32 NLDRIVETRAINSPECS::importTxt(const Nchar* ptxtfilename)
 	Nchar								name[32];
 	Nchar* pstr;
 
-	pfile = fopen(ptxtfilename, "r");	// ouverture du fichier
+	pfile = fopen(ptxtfilename, "r, ccs=UTF-8");	// ouverture du fichier
 	fseek(pfile, 0, SEEK_SET);			// on se place au d�but du fichier
 
 	// recup�rer la siganture du fichier
