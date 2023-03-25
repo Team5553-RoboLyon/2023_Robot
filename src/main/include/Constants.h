@@ -39,10 +39,10 @@
 // #########################    ID Solenoid    #########################
 #define ID_SOLENOID_SHIFTER_A 0
 #define ID_SOLENOID_SHIFTER_B 1
-#define ID_SOLENOID_INTAKE_A 2
-#define ID_SOLENOID_INTAKE_B 3
-#define ID_SOLENOID_GRIPPER_A 4 // 5
-#define ID_SOLENOID_GRIPPER_B 5 // 4
+#define ID_SOLENOID_INTAKE_A 6
+#define ID_SOLENOID_INTAKE_B 7
+#define ID_SOLENOID_GRIPPER_A 2 // 5
+#define ID_SOLENOID_GRIPPER_B 3 // 4
 
 // #########################    ID Encoder    #########################
 
@@ -56,8 +56,8 @@
 #define ID_ENCODER_ELEVATOR_B 7
 #define ID_ENCODER_ARM_A 8
 #define ID_ENCODER_ARM_B 9
-#define ID_ENCODER_POIGNET_A 10
-#define ID_ENCODER_POIGNET_B 11
+#define ID_ENCODER_POIGNET_A 20
+#define ID_ENCODER_POIGNET_B 21
 
 // #########################    ID Hall    #########################
 

@@ -9,8 +9,6 @@
 #include "subsystem/Elevator.h"
 #include "subsystem/Arm.h"
 #include "subsystem/Gripper.h"
-#include "lib/RblUtils.h"
-
 /**
  * An example command.
  *
@@ -18,11 +16,11 @@
  * directly; this is crucially important, or else the decorator functions in
  * Command will *not* work!
  */
-class TakeCones
-    : public frc2::CommandHelper<frc2::CommandBase, TakeCones>
+class TakeCubeRobot
+    : public frc2::CommandHelper<frc2::CommandBase, TakeCubeRobot>
 {
 public:
-  TakeCones(Elevator *pElevator, Arm *pArm, Gripper *pGripper);
+  TakeCubeRobot(Elevator *pElevator, Arm *pArm, Gripper *pGripper);
 
   void Initialize() override;
 
@@ -33,8 +31,8 @@ public:
   bool IsFinished() override;
 
 private:
+  int m_count;
   Elevator *m_pElevator;
   Arm *m_pArm;
   Gripper *m_pGripper;
-  int m_count;
 };

@@ -49,5 +49,7 @@ void Elevator::Periodic()
     // }
 
     // std::cout << "gethallsensor" << m_elevatorHall.MagnetDetected() << std::endl;
+    std::cout << m_elevatorEncoder.GetDistance() << std::endl;
+    // std::cout << m_elevatorPid.m_setpoint << std::endl;
     m_elevatorMotor.Set((NCLAMP(-0.9, m_ElevatorPidRate.m_current + 0.08, 0.9))); // 0.08 coef de frottement // clamp 0.9
 }

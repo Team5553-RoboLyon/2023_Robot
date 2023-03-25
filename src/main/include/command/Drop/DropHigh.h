@@ -6,7 +6,6 @@
 
 #include <frc2/command/CommandBase.h>
 #include <frc2/command/CommandHelper.h>
-#include "subsystem/Gripper.h"
 #include "subsystem/Elevator.h"
 #include "subsystem/Arm.h"
 #include "lib/RblUtils.h"
@@ -22,7 +21,7 @@ class DropHigh
     : public frc2::CommandHelper<frc2::CommandBase, DropHigh>
 {
 public:
-  DropHigh(Gripper *pGripper, Elevator *pElevator, Arm *pArm);
+  DropHigh(Elevator *pElevator, Arm *pArm);
 
   void Initialize() override;
 
@@ -33,7 +32,6 @@ public:
   bool IsFinished() override;
 
 private:
-  Gripper *m_pGripper;
   Elevator *m_pElevator;
   Arm *m_pArm;
 };

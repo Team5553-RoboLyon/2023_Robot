@@ -6,10 +6,7 @@
 
 #include <frc2/command/CommandBase.h>
 #include <frc2/command/CommandHelper.h>
-#include "subsystem/Elevator.h"
-#include "subsystem/Arm.h"
-#include "subsystem/Gripper.h"
-#include "lib/RblUtils.h"
+#include "subsystem/Turret.h"
 
 /**
  * An example command.
@@ -18,11 +15,11 @@
  * directly; this is crucially important, or else the decorator functions in
  * Command will *not* work!
  */
-class TakeCones
-    : public frc2::CommandHelper<frc2::CommandBase, TakeCones>
+class TurnTurret90
+    : public frc2::CommandHelper<frc2::CommandBase, TurnTurret90>
 {
 public:
-  TakeCones(Elevator *pElevator, Arm *pArm, Gripper *pGripper);
+  TurnTurret90(Turret *pTurret);
 
   void Initialize() override;
 
@@ -33,8 +30,5 @@ public:
   bool IsFinished() override;
 
 private:
-  Elevator *m_pElevator;
-  Arm *m_pArm;
-  Gripper *m_pGripper;
-  int m_count;
+  Turret *m_pTurret;
 };

@@ -7,9 +7,9 @@
 RobotContainer::RobotContainer()
 {
     ConfigureButtonBindings();
-    // m_copiloter.SetDefaultCommand(AutoCopiloter([=]
-    //                                             { return m_joystickLeft.GetY(); },
-    //                                             &m_copiloter));
+    m_arm.SetDefaultCommand(ActiveArmMotor([=]
+                                           { return m_joystickRight.GetY(); },
+                                           &m_arm));
 
     m_drivetrain.SetDefaultCommand(Drive([=]
                                          { return -m_joystickLeft.GetY(); },
@@ -52,13 +52,22 @@ void RobotContainer::ConfigureButtonBindings()
     // Gripper
 
     frc2::JoystickButton m_ButtonGripperChangePosition = frc2::JoystickButton(&m_joystickCopilot, 1);
-    m_ButtonGripperChangePosition.WhileActiveContinous(Catch(&m_gripper));
+    m_ButtonGripperChangePosition.WhileActiveOnce(Catch(&m_gripper));
 
-    // frc2::JoystickButton m_ButtonDropHigh = frc2::JoystickButton(&m_joystickCopilot, 2);
-    // m_ButtonDropHigh.WhileActiveContinous(DropHigh(&m_gripper, &m_elevator, &m_arm));
+    frc2::JoystickButton m_ButtonTakeCones = frc2::JoystickButton(&m_joystickCopilot, 11);
+    m_ButtonTakeCones.WhileActiveContinous(TakeCones(&m_elevator, &m_arm, &m_gripper));
 
-    frc2::JoystickButton m_ButtonTakeCones = frc2::JoystickButton(&m_joystickCopilot, 2);
-    m_ButtonTakeCones.WhileActiveContinous(TakeCones(&m_gripper, &m_elevator, &m_arm));
+    frc2::JoystickButton m_ButtonDropHigh = frc2::JoystickButton(&m_joystickCopilot, 13);
+    m_ButtonDropHigh.WhileActiveContinous(DropHigh(&m_elevator, &m_arm));
+
+    frc2::JoystickButton m_ButtonDropMiddle = frc2::JoystickButton(&m_joystickCopilot, 12);
+    m_ButtonDropMiddle.WhileActiveContinous(DropMiddle(&m_elevator, &m_arm));
+
+    frc2::JoystickButton m_ButtonTurret90 = frc2::JoystickButton(&m_joystickCopilot, 5);
+    m_ButtonTurret90.WhileActiveContinous(TurnTurret90(&m_turret));
+
+    frc2::JoystickButton m_ButtonCubeRobot = frc2::JoystickButton(&m_joystickCopilot, 6);
+    m_ButtonCubeRobot.WhileActiveContinous(TakeCubeRobot(&m_elevator, &m_arm, &m_gripper));
 }
 
 frc2::Command *RobotContainer::GetAutonomousCommand()

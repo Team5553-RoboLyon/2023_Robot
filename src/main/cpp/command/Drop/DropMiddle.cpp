@@ -4,9 +4,8 @@
 
 #include "command/Drop/DropMiddle.h"
 
-DropMiddle::DropMiddle(Gripper *pGripper, Elevator *pElevator, Arm *pArm) : m_pGripper(pGripper), m_pElevator(pElevator), m_pArm(pArm)
+DropMiddle::DropMiddle(Elevator *pElevator, Arm *pArm) : m_pElevator(pElevator), m_pArm(pArm)
 {
-  AddRequirements(m_pGripper);
   AddRequirements(m_pElevator);
   AddRequirements(m_pArm);
 }
@@ -14,8 +13,8 @@ DropMiddle::DropMiddle(Gripper *pGripper, Elevator *pElevator, Arm *pArm) : m_pG
 // Called when the command is initially scheduled.
 void DropMiddle::Initialize()
 {
-  m_pElevator->SetSetpoint(90.0);
-  m_pArm->SetSetpoint(NDEGtoRAD(90.0));
+  m_pElevator->SetSetpoint(0.48);
+  m_pArm->SetSetpoint(NDEGtoRAD(136.0));
 }
 
 // Called repeatedly when this Command is scheduled to run
@@ -24,7 +23,6 @@ void DropMiddle::Execute() {}
 // Called once the command ends or is interrupted.
 void DropMiddle::End(bool interrupted)
 {
-  m_pGripper->ChangePosition();
 }
 
 // Returns true when the command should end.

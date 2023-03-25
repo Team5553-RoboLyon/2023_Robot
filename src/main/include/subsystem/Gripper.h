@@ -16,6 +16,7 @@ public:
   void Open();
   void Close();
   void ChangePosition();
+  bool GetState();
 
 private:
   frc::DoubleSolenoid m_gripperSolenoid{frc::PneumaticsModuleType::REVPH, ID_SOLENOID_GRIPPER_A, ID_SOLENOID_GRIPPER_B};

@@ -6,7 +6,6 @@
 
 #include <frc2/command/CommandBase.h>
 #include <frc2/command/CommandHelper.h>
-#include "subsystem/Gripper.h"
 #include "subsystem/Elevator.h"
 #include "subsystem/Arm.h"
 
@@ -21,7 +20,7 @@ class DropMiddle
     : public frc2::CommandHelper<frc2::CommandBase, DropMiddle>
 {
 public:
-  DropMiddle(Gripper *pGripper, Elevator *pElevator, Arm *pArm);
+  DropMiddle(Elevator *pElevator, Arm *pArm);
 
   void Initialize() override;
 
@@ -32,7 +31,6 @@ public:
   bool IsFinished() override;
 
 private:
-  Gripper *m_pGripper;
   Elevator *m_pElevator;
   Arm *m_pArm;
 };

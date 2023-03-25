@@ -11,12 +11,24 @@ ActiveArmMotor::ActiveArmMotor(std::function<double()> move, Arm *pArm) : m_Move
 }
 
 // Called when the command is initially scheduled.
-void ActiveArmMotor::Initialize() {}
+void ActiveArmMotor::Initialize()
+{
+}
 
 // Called repeatedly when this Command is scheduled to run
 void ActiveArmMotor::Execute()
 {
-  double move = 123.0 - (m_Move() * 123.0);
+  double move;
+
+  if (m_Move() > 0)
+  {
+    move = m_Move() * 43.0 + 90.0;
+  }
+  else
+  {
+    move = m_Move() * 123.0 + 90.0;
+  }
+
   m_pArm->SetSetpoint(NDEGtoRAD(move));
 }
 

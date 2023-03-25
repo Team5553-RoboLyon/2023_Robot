@@ -5,7 +5,7 @@
 #pragma once
 
 #include <frc2/command/SubsystemBase.h>
-#include "ctre/phoenix/motorcontrol/can/TalonSRX.h"
+#include "ctre/phoenix/motorcontrol/can/VictorSPX.h"
 #include "Constants.h"
 #include "lib/rate_limiter.h"
 #include "lib/Pid.h"
@@ -26,6 +26,6 @@ public:
   double m_speed;
 
 private:
-  ctre::phoenix::motorcontrol::can::TalonSRX m_poignetMotor{ID_MOTOR_POIGNET};
+  ctre::phoenix::motorcontrol::can::VictorSPX m_poignetMotor{ID_MOTOR_POIGNET};
   frc::Encoder m_poignetEncoder{ID_ENCODER_POIGNET_A, ID_ENCODER_POIGNET_B, true};
 };

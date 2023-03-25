@@ -21,7 +21,7 @@ Arm::Arm()
 
 double Arm::GetEncoder()
 {
-    return (m_armEncoder.GetDistance() + NDEGtoRAD(124.80));
+    return (m_armEncoder.GetDistance() + NDEGtoRAD(123.80));
 }
 
 void Arm::SetSetpoint(double setpoint)
@@ -38,5 +38,5 @@ void Arm::Periodic()
 {
     std::cout << GetEncoder() << std::endl;
     // m_armMotor.Set(NCLAMP(-0.4, m_speed + 0.025 * sin(GetEncoder()), 0.4));
-    m_armMotor.Set(NCLAMP(-0.1, m_armPid.Calculate(GetEncoder()), 0.1));
+    m_armMotor.Set(NCLAMP(-0.4, m_armPid.Calculate(GetEncoder()), 0.4));
 }
