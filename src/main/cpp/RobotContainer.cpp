@@ -6,6 +6,7 @@
 
 RobotContainer::RobotContainer()
 {
+    /*
     m_copiloter.SetDefaultCommand(AutoCopiloter([=]
                                                 { return m_joystickRight.GetY(); },
                                                 &m_copiloter));
@@ -15,4 +16,5 @@ RobotContainer::RobotContainer()
                                          [=]
                                          { return -m_joystickRight.GetZ(); },
                                          &m_drivetrain));
+    */
 };

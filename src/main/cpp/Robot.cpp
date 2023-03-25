@@ -2,7 +2,7 @@
 // Open Source Software; you can modify and/or share it under the terms of
 // the WPILib BSD license file in the root directory of this project.
 
-#include "lib/NL/DriveTrain/Characterization/NLCharacterizationTable.h"
+#include "lib/NL/MotionControl/DriveTrain/Characterization/NLCharacterizationTable.h"
 #include "Robot.h"
 
 // cc
@@ -26,7 +26,7 @@ void Robot::AutonomousInit()
   m_TrajectoryPack.load("trajectory1.pak");
   m_follower.load("scrumtrooper.ftk");
   m_follower.initialize(&m_TrajectoryPack);
-  m_state = NLROBOT::STATE::PATH_FOLLOWING;
+  m_state = Robot::STATE::PATH_FOLLOWING;
 }
 void Robot::AutonomousPeriodic() {}
 

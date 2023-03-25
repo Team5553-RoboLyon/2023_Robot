@@ -6,7 +6,7 @@
 
 #include	<math.h>
 #include	<cmath>
-#include	"NType.h"
+#include	"lib/N/NType.h"
 
 /*
 #ifdef __cplusplus

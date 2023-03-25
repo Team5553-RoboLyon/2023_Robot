@@ -5,7 +5,7 @@
 */
 #include "lib/N//NType.h"
 #include "lib/N/NErrorHandling.h"
-#include "lib/N/NLimits.h"
+#include "lib/N/Core/NLimits.h"
 
 /*
 #ifdef __cplusplus

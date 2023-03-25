@@ -25,6 +25,7 @@ extern "C"
 	#endif // _X64
 #endif // __int64
 */
+#define __int64		long long int
 
 // type redefinition
 typedef	int					Nint;

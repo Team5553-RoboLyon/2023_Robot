@@ -13,7 +13,6 @@
 #include "lib/N/NCStandard.h"
 #include "lib/N/NType.h"
 #include "lib/N/Maths/NMath.h"
-
 #include "lib/N/Maths/NVecLimits.h"
 
 /*

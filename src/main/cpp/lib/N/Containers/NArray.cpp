@@ -4,7 +4,7 @@
 #include "lib/N/NFlags.h"
 #include "lib/N/NErrorHandling.h"
 
-#include "NArray.h"
+#include "lib/N/Containers/NArray.h"
 // ------------------------------------------------------------------------------------------
 // NClearArray
 // ------------------------------------------------------------------------------------------
