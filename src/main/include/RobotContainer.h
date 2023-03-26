@@ -40,8 +40,12 @@
 
 // Gripper
 #include "command/Gripper/Catch.h"
+
+// Drop
 #include "command/Drop/DropHigh.h"
 #include "command/Drop/DropMiddle.h"
+#include "command/Drop/DropHighCube.h"
+#include "command/Drop/DropMiddleCube.h"
 
 // Copiloter
 // #include "command/AutoCopiloter.h"
