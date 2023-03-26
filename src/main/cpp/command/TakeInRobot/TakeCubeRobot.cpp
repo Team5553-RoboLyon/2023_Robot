@@ -3,6 +3,9 @@
 // the WPILib BSD license file in the root directory of this project.
 
 #include "command/TakeInRobot/TakeCubeRobot.h"
+#include "lib/RblUtils.h"
+
+// ###################### A TESTER ######################
 
 TakeCubeRobot::TakeCubeRobot(Elevator *pElevator, Arm *pArm, Gripper *pGripper) : m_pElevator(pElevator), m_pArm(pArm), m_pGripper(pGripper)
 {
@@ -15,10 +18,11 @@ TakeCubeRobot::TakeCubeRobot(Elevator *pElevator, Arm *pArm, Gripper *pGripper) 
 void TakeCubeRobot::Initialize()
 {
   m_count = 0;
-  m_pElevator->SetSetpoint(80.0);
+  m_pElevator->SetSetpoint(0.80);
   m_pGripper->Open();
-  m_pArm->SetSetpoint(0.0);
+  m_pArm->SetSetpoint(NDEGtoRAD(-30.0)); // valeur théorique à vérifier
   std::cout << "cube mes couilles" << std::endl;
+  m_State = State::High;
   // descend elevateur
 
   // ferme pince
@@ -30,12 +34,41 @@ void TakeCubeRobot::Initialize()
 void TakeCubeRobot::Execute()
 {
   m_count++;
-  if (m_count > 100)
+  switch (m_State)
   {
-    m_pGripper->Close();
-    m_pElevator->SetSetpoint(50.0);
-    m_pArm->SetSetpoint(90.0);
-  }
+  case State::High:
+    if (m_count > 100) // temps à réduire
+    {
+      m_pElevator->SetSetpoint(0.50); // valeur théorique à vérifier
+      m_count = 0;
+      m_State = State::Lowered;
+    }
+    break;
+  case State::Lowered:
+    if (m_count > 100) // temps à réduire
+    {
+      m_pGripper->Close();
+      m_count = 0;
+      m_State = State::Taken;
+    }
+    break;
+  case State::Taken:
+    if (m_count > 100) // temps à réduire
+    {
+      m_pElevator->SetSetpoint(0.90);
+      m_count = 0;
+      m_State = State::Finish;
+    }
+    break;
+  case State::Finish:
+    if (m_count > 100) // temps à réduire
+    {
+      m_pArm->SetSetpoint(NDEGtoRAD(90.0));
+    }
+    break;
+  default:
+    break;
+  };
 }
 
 // Called once the command ends or is interrupted.
