@@ -40,14 +40,6 @@ void Turret::Periodic()
 {
     double output = m_turretPid.Calculate(GetEncoder());
     m_TurretPidRate.Update(output);
-    // if (m_turretHall.ShouldIStop(GetEncoder(), NSIGN(output)))
-    // {
-    //     m_turretMotor.Set(NCLAMP(-0.4, output, 0.4));
-    // }
-    // else
-    // {
-    //     m_turretMotor.Set(0.0);
-    // }
 
     m_turretMotor.Set(NCLAMP(-0.5, m_TurretPidRate.m_current, 0.5)); // 0.5
 }

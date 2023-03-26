@@ -10,7 +10,6 @@
 #include "lib/Pid.h"
 #include "lib/RblUtils.h"
 #include "Constants.h"
-#include "lib/HallSecurity.h"
 #include "lib/rate_limiter.h"
 
 class Elevator : public frc2::SubsystemBase
@@ -29,5 +28,4 @@ public:
 private:
   rev::CANSparkMax m_elevatorMotor{ID_MOTOR_ELEVATOR, rev::CANSparkMaxLowLevel::MotorType::kBrushless};
   frc::Encoder m_elevatorEncoder{ID_ENCODER_ELEVATOR_A, ID_ENCODER_ELEVATOR_B, true};
-  // HallSecurity m_elevatorHall{ID_HALL_ELEVATOR_UP};
 };

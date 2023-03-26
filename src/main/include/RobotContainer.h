@@ -20,10 +20,8 @@
 #include "subsystem/Elevator.h"
 #include "subsystem/Gripper.h"
 #include "subsystem/Drivetrain.h"
-// #include "subsystem/Copiloter.h"
 #include "subsystem/Intake.h"
 #include "subsystem/Conveyor.h"
-#include "subsystem/Poignet.h"
 
 // ################### COMMANDS ###################
 // Intake
@@ -34,9 +32,6 @@
 // Conveyor
 #include "command/Conveyor/ReverseConveyorMotor.h"
 #include "command/Conveyor/ActiveConveyorMotor.h"
-
-// Arm
-// #include "command/Arm/ActiveArmMotor.h"
 
 // Gripper
 #include "command/Gripper/Catch.h"
@@ -87,11 +82,10 @@ public:
   Arm m_arm;
   Elevator m_elevator;
   Intake m_intake;
-  Poignet m_poignet;
 
-  frc::Joystick m_joystickRight{0};
-  frc::Joystick m_joystickLeft{1};
-  frc::Joystick m_joystickCopilot{2};
+  frc::Joystick m_joystickRight{ID_JOYSTICK_RIGHT};
+  frc::Joystick m_joystickLeft{ID_JOYSTICK_LEFT};
+  frc::Joystick m_joystickCopilot{ID_JOYSTICK_COPILOTER};
 
 private:
   cs::UsbCamera m_CameraPilote;
@@ -101,7 +95,5 @@ private:
   // autonome
 
   frc2::SequentialCommandGroup m_autonomousGroupCommand = frc2::SequentialCommandGroup(
-      AdvanceAutonomous(&m_drivetrain, 100), frc2::InstantCommand([this]
-                                                                  { m_turret.SetSetpoint(0.0); },
-                                                                  {&m_turret}));
+      AdvanceAutonomous(&m_drivetrain, 100), DropHigh(&m_elevator, &m_arm));
 };

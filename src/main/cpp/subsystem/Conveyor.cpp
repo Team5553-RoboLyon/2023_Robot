@@ -7,15 +7,10 @@
 Conveyor::Conveyor()
 {
     m_conveyorMotor.ConfigFactoryDefault();
-
     m_conveyorMotor.SetInverted(CONVEYOR_MOTOR_INVERTED);
-
     m_conveyorMotor.SetNeutralMode(ctre::phoenix::motorcontrol::NeutralMode::Brake);
-
     m_conveyorMotor.ConfigOpenloopRamp(CONVEYOR_RAMP);
-
     m_conveyorMotor.EnableVoltageCompensation(true);
-
     m_conveyorMotor.ConfigVoltageCompSaturation(CONVEYOR_VOLTAGE_COMPENSATION);
 };
 

@@ -10,7 +10,6 @@
 #include "lib/Pid.h"
 #include "Constants.h"
 #include "lib/RblUtils.h"
-#include "lib/hallsecurity.h"
 #include "lib/rate_limiter.h"
 
 class Turret : public frc2::SubsystemBase
@@ -29,5 +28,4 @@ public:
 private:
   rev::CANSparkMax m_turretMotor{ID_MOTOR_TURRET, rev::CANSparkMaxLowLevel::MotorType::kBrushless};
   frc::Encoder m_turretEncoder{ID_ENCODER_TURRET_A, ID_ENCODER_TURRET_B, true};
-  // HallSecurity m_turretHall{ID_HALL_TURRET_LEFT, ID_HALL_TURRET_RIGHT};
 };

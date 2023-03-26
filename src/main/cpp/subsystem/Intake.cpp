@@ -29,7 +29,7 @@ Intake::Intake()
 
 void Intake::Open()
 {
-    m_intakeSolenoid.Set(frc::DoubleSolenoid::Value::kForward);
+    Close();
 }
 
 void Intake::Close()

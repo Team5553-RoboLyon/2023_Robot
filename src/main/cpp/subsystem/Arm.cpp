@@ -36,7 +36,5 @@ void Arm::SetGains(double p, double i, double d)
 
 void Arm::Periodic()
 {
-    std::cout << GetEncoder() << std::endl;
-    // m_armMotor.Set(NCLAMP(-0.4, m_speed + 0.025 * sin(GetEncoder()), 0.4));
-    m_armMotor.Set(NCLAMP(-0.4, m_armPid.Calculate(GetEncoder()), 0.4));
+    m_armMotor.Set(NCLAMP(-0.5, m_armPid.Calculate(GetEncoder()), 0.5));
 }
