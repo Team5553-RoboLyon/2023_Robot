@@ -6,10 +6,8 @@
 
 #include <frc2/command/CommandBase.h>
 #include <frc2/command/CommandHelper.h>
-#include "subsystem/Turret.h"
-#include "subsystem/Intake.h"
-#include "subsystem/ChekMachine.h"
-
+#include "subsystem/Elevator.h"
+#include "subsystem/Arm.h"
 /**
  * An example command.
  *
@@ -17,11 +15,11 @@
  * directly; this is crucially important, or else the decorator functions in
  * Command will *not* work!
  */
-class TurnTurret
-    : public frc2::CommandHelper<frc2::CommandBase, TurnTurret>
+class DropHighCube
+    : public frc2::CommandHelper<frc2::CommandBase, DropHighCube>
 {
 public:
-  TurnTurret(std::function<double()> turn, Turret *pTurret);
+  DropHighCube(Elevator *pElevator, Arm *pArm);
 
   void Initialize() override;
 
@@ -32,6 +30,6 @@ public:
   bool IsFinished() override;
 
 private:
-  std::function<double()> m_turn;
-  Turret *m_pTurret;
+  Elevator *m_pElevator;
+  Arm *m_pArm;
 };

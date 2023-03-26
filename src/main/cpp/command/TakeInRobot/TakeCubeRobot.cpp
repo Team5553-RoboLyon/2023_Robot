@@ -16,7 +16,7 @@ void TakeCubeRobot::Initialize()
 {
   m_pElevator->SetSetpoint(80.0);
   m_pGripper->Open();
-  m_pArm->SetSetpoint(-30);
+  m_pArm->SetSetpoint(0.0);
   std::cout << "cube mes couilles" << std::endl;
   // descend elevateur
 
@@ -29,7 +29,7 @@ void TakeCubeRobot::Initialize()
 void TakeCubeRobot::Execute()
 {
   m_count++;
-  if (m_count)
+  if (m_count > 10)
   {
     m_pGripper->Close();
   }

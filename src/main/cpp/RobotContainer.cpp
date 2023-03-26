@@ -24,6 +24,10 @@ RobotContainer::RobotContainer()
     m_elevator.SetDefaultCommand(MoveElevator([=]
                                               { return m_joystickCopilot.GetY(); },
                                               &m_elevator));
+    if (NABS(m_turret.m_turretPid.m_setpoint) > 10.0)
+    {
+        m_intake.Close();
+    }
 
     m_CameraPilote = frc::CameraServer::StartAutomaticCapture();
     m_CameraPilote.SetResolution(320, 240);

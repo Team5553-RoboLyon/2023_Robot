@@ -59,6 +59,7 @@ public:
   void EnableBrakeMode(bool Change); // ok
   void Drive(double joystickLeft, double joystickRight);
 
+  void DriveAuto(double speed, double rotation);
   double Calcul_De_Notre_Brave_JM(double forward, double turn, bool wheelSide); // Si wheelSide 0: roue droite / Si wheelSide 1: roue gauche
 
   bool isUpshiftingAllowed();

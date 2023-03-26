@@ -97,7 +97,7 @@ private:
   // autonome
 
   frc2::SequentialCommandGroup m_autonomousGroupCommand = frc2::SequentialCommandGroup(
-      AdvanceAutonomous(&m_drivetrain, 1), frc2::InstantCommand([this]
-                                                                { m_turret.SetSetpoint(0.0); },
-                                                                {&m_turret}));
+      AdvanceAutonomous(&m_drivetrain, 100), frc2::InstantCommand([this]
+                                                                  { m_turret.SetSetpoint(0.0); },
+                                                                  {&m_turret}));
 };

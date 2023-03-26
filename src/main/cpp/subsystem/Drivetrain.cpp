@@ -414,3 +414,9 @@ void Drivetrain::Drive(double joystick_V, double joystick_W) //
     // frc::SmartDashboard::PutNumber("m_GearboxesOutAdjustedRpm.m_delta", m_GearboxesOutAdjustedRpm.m_delta);
     // frc::SmartDashBoard::PutNumber("Total_current", m_PDP.GetTotalCurrent());
 }
+
+void Drivetrain::DriveAuto(double speed, double rotation)
+{
+    m_MotorLeft1.Set(ctre::phoenix::motorcontrol::ControlMode::PercentOutput, speed + rotation);
+    m_MotorRight1.Set(ctre::phoenix::motorcontrol::ControlMode::PercentOutput, speed - rotation);
+}

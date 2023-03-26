@@ -14,13 +14,15 @@ AdvanceAutonomous::AdvanceAutonomous(Drivetrain *pDrivetrain, int target) : m_pD
 void AdvanceAutonomous::Initialize()
 {
   m_current = 0;
-  m_pDrivetrain->Drive(0.2, 0.2);
+  m_pDrivetrain->Drive(0.2, 0.0);
   std::cout << "on passe" << std::endl;
 }
 
 // Called repeatedly when this Command is scheduled to run
 void AdvanceAutonomous::Execute()
 {
+  m_current += 1;
+  std::cout << m_current << std::endl;
 }
 
 // Called once the command ends or is interrupted.
@@ -32,13 +34,12 @@ void AdvanceAutonomous::End(bool interrupted)
 // Returns true when the command should end.
 bool AdvanceAutonomous::IsFinished()
 {
-  if (m_current == m_target)
+  if (m_current > m_target)
   {
     return true;
   }
   else
   {
-    m_current += m_current * 0.020;
     return false;
   }
 }
