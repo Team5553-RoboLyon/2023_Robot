@@ -32,6 +32,15 @@ public:
 
 private:
   int m_count;
+  enum class State
+  {
+    Init,
+    High,
+    Lowered,
+    Taken,
+    Finish
+  };
+  State m_State;
   Elevator *m_pElevator;
   Arm *m_pArm;
   Gripper *m_pGripper;

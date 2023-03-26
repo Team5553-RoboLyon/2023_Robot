@@ -26,9 +26,9 @@
 #define ID_MOTOR_TURRET 7
 #define ID_MOTOR_ELEVATOR 8
 #define ID_MOTOR_ARM 9
-#define ID_MOTOR_INTAKE_RIGHT 10
-#define ID_MOTOR_INTAKE_LEFT 11
-#define ID_MOTOR_CONVEYOR 12
+#define ID_MOTOR_INTAKE_RIGHT 11
+#define ID_MOTOR_INTAKE_LEFT 12
+#define ID_MOTOR_CONVEYOR 13
 
 // #########################    ID Solenoid    #########################
 #define ID_SOLENOID_SHIFTER_A 0
