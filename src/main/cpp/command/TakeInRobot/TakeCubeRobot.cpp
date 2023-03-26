@@ -14,6 +14,7 @@ TakeCubeRobot::TakeCubeRobot(Elevator *pElevator, Arm *pArm, Gripper *pGripper) 
 // Called when the command is initially scheduled.
 void TakeCubeRobot::Initialize()
 {
+  m_count = 0;
   m_pElevator->SetSetpoint(80.0);
   m_pGripper->Open();
   m_pArm->SetSetpoint(0.0);
@@ -29,12 +30,12 @@ void TakeCubeRobot::Initialize()
 void TakeCubeRobot::Execute()
 {
   m_count++;
-  if (m_count > 10)
+  if (m_count > 100)
   {
     m_pGripper->Close();
+    m_pElevator->SetSetpoint(50.0);
+    m_pArm->SetSetpoint(90.0);
   }
-  m_pElevator->SetSetpoint(50.0);
-  m_pArm->SetSetpoint(90.0);
 }
 
 // Called once the command ends or is interrupted.
