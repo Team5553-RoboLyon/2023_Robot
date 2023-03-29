@@ -9,13 +9,13 @@ struct NLPATH_POINT
 	void null() { Nmem0(this, NLPATH_POINT); };
 	// friend class NLTRAJECTORY;
 	// --------------------------------------------------------------------
-	// Membres définis à la création du Path par la méthode NLPATH::Build() 
+	// Membres definis a la creation du Path par la methode NLPATH::Build() 
 	NVEC2f32		p;	// Position 
 	Nf32			k;	// Courbure en ce point
-	NVEC2f32		u;	// Direction ( tangente en p orientée dans le sens du chemin, du début vers la fin )
+	NVEC2f32		u;	// Direction ( tangente en p orientee dans le sens du chemin, du debut vers la fin )
 	Nf32			s;	// Abscisse curviligne
 	// --------------------------------------------------------------------
-	// Membre(s) mis à jour/utilisés lors de la construction d'une "Trajectory" à partir du "Path" possèdant ce KeyPoint ( mise à jour par la méthode NLTRAJECTORY::Build(...) 
+	// Membre(s) mis a jour/utilises lors de la construction d'une "Trajectory" a partir du "Path" possedant ce KeyPoint ( mise a jour par la methode NLTRAJECTORY::Build(...) 
 //private:
 //	Nf32			m_localVelocityLimit;
 };
@@ -28,8 +28,8 @@ struct NLPATH_POINT
 
 
 /*
-// Version simplifiée et minimaliste d'un point de path.
-// Utilisée exclusivement comme structure de résultat en retour de fonction de calcul/estimation de path point
+// Version simplifiee et minimaliste d'un point de path.
+// Utilisee exclusivement comme structure de resultat en retour de fonction de calcul/estimation de path point
 // 	
 typedef struct
 {

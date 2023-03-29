@@ -1,4 +1,4 @@
-﻿#include "lib/N/Miscellaneous/NString.h"
+#include "lib/N/Miscellaneous/NString.h"
 //#include "../../../N/Utilities/NUT_Logging.h"
 //#include "../../../N/Utilities/Draw/NUT_Draw.h"
 //#include "../../../N/Utilities/Draw/NUT_DrawPencil.h"
@@ -52,12 +52,12 @@ Nu32 NLFOLLOWER_TANK::read(FILE* pfile)
 
 Nu32 NLFOLLOWER_TANK::write(FILE* pfile)
 {
-	// 1) écriture Version
+	// 1) ecriture Version
 	Nu32	version_u32 = VERSION_NLFOLLOWER_TANK_HEADER;
 	if (fwrite(&version_u32, sizeof(Nu32), 1, pfile) != 1)
 		return 0;
 
-	// 2) écriture Header
+	// 2) ecriture Header
 	/*
 	NLFOLLOWER_TANK_HEADER	header;
 	header.? = ?;
@@ -165,9 +165,9 @@ Nu32 NLFOLLOWER_TANK::importTxt(const Nchar* ptxtfilename)
 	Nchar	*pstr;
 
 	pfile = fopen(ptxtfilename, "r, ccs=UTF-8");	// ouverture du fichier
-	fseek(pfile, 0, SEEK_SET);			// on se place au début du fichier
+	fseek(pfile, 0, SEEK_SET);			// on se place au debut du fichier
 
-	// recupérer la siganture du fichier
+	// recuperer la siganture du fichier
 	pstr = fgets(tempstring, 1024, pfile);
 	pstr = NStrGet_String_AfterLabel(pstr, "signature= ", name);
 	if (!strcmp(name, SIGNATURE_NLRAMSETE))
@@ -218,7 +218,7 @@ void NLFOLLOWER_TANK::estimate(const Nf32 left_encoder_rev_count, const Nf32 rig
 
 	Nf32 leftmove		= l - m_leftDistance;
 	Nf32 rightmove		= r - m_rightDistance;
-	// mise à jour de la position et de l'angle "estimés" du robot.
+	// mise a jour de la position et de l'angle "estimes" du robot.
 	Nf32 v = IS_NLTRJPOINT_DESC_SET_DTMODE_REVERSE(m_persistent.m_pTrjPointDsc->m_flags) ? NLODOMETRY_DRIVETRAIN_V_FROM_WHEELS(rightmove, leftmove) : NLODOMETRY_DRIVETRAIN_V_FROM_WHEELS(leftmove, rightmove);
 
 	#ifdef _NEDITOR
@@ -235,7 +235,7 @@ void NLFOLLOWER_TANK::estimate(const Nf32 left_encoder_rev_count, const Nf32 rig
 	m_leftDistance	= l;
 	m_rightDistance	= r;
 
-	// méthode simplifiée pour de petites valeurs de w où on considère que le déplacement du robot est un petit segment de droite
+	// methode simplifiee pour de petites valeurs de w ou on considere que le deplacement du robot est un petit segment de droite
 	// m_angle = _pipi(external_angle); //modulo2PI(m_estimatedAngle);
 	//Nf32 deca = IS_NLTRJPOINT_DESC_SET_DTMODE_REVERSE(m_persistent.m_pTrjPointDsc->m_flags) ? NF32_PI : 0.0f;
 	m_estimatedPose.m_angle			 = NModulo2PIf32(gyro_angle /* + deca*/);
@@ -251,7 +251,7 @@ void NLFOLLOWER_TANK::updateTarget(NLTRAJECTORY_PACK *ppack, const Nf32 dt)
 	ppack->getPoint( &m_persistent, NMIN(m_currentTime, ppack->m_dt) );
 
 #ifdef _NUT_LOGGING
-	if (m_currentTime < 10.0f) // On s'en tient à 10 sec de logs max.
+	if (m_currentTime < 10.0f) // On s'en tient a 10 sec de logs max.
 	{
 		Nchar buff[128];
 		NUT_EnableLoggingChannel(LOGS_CHANNEL_SIMUL, TRUE);
@@ -259,7 +259,7 @@ void NLFOLLOWER_TANK::updateTarget(NLTRAJECTORY_PACK *ppack, const Nf32 dt)
 	}
 #endif
 
-	// Mise à jour de la liste des posted messages 
+	// Mise a jour de la liste des posted messages 
 	while (m_pToMessage->m_timeStamp <= m_currentTime) { m_pToMessage++; }
 	NErrorIf(m_pToMessage > (NLTRJ_POSTED_MESSAGE*)NGetLastArrayPtr(&ppack->m_postedMessagesArray), NERROR_SYSTEM_CHECK);
 }
@@ -269,8 +269,8 @@ const NLFOLLOWER_TANK_OUTPUT* NLFOLLOWER_TANK::compute()
 	// ------------------------------------------------------------------------------------------------------------------------------
 	// 
 	// La matrice du robot:
-	// Calculée à partir de la pose estimée du Robot. PAr estimée on veut dire, calculée à partir des différentes mesures à notre disposition,
-	// à savoir; Encodeurs et Gyroscope.
+	// Calculee a partir de la pose estimee du Robot. PAr estimee on veut dire, calculee a partir des differentes mesures a notre disposition,
+	// a savoir; Encodeurs et Gyroscope.
 	//
 	// 
 	// Pour rappel: ( cf NLDriveTrainSpecs.h )
@@ -311,14 +311,14 @@ const NLFOLLOWER_TANK_OUTPUT* NLFOLLOWER_TANK::compute()
 
 	// ------------------------------------------------------------------------------------------------------------------------------
 	// 
-	// Le point à suivre ( target point ) est ici: 
+	// Le point a suivre ( target point ) est ici: 
 	//														m_persistent.m_result
 	//
 	
 	// ------------------------------------------------------------------------------------------------------------------------------
 	// 
-	// Cordonnées de la position cible dans la 'base du robot'
-	// Ces 'coordonnées' représentent l'erreur en position du robot, existant entre sa position courante estimée et la position cible.
+	// Cordonnees de la position cible dans la 'base du robot'
+	// Ces 'coordonnees' representent l'erreur en position du robot, existant entre sa position courante estimee et la position cible.
 	// 
 	NVEC2f32	p, errp;
 	p.x = m_persistent.m_result.m_p.x - m_estimatedPose.m_position.x;
@@ -330,7 +330,7 @@ const NLFOLLOWER_TANK_OUTPUT* NLFOLLOWER_TANK::compute()
 	// ------------------------------------------------------------------------------------------------------------------------------
 	// 
 	// Recherche de l'erreur angulaire. 
-	// Part 1/2 : Angle existant entre la direction courante estimée et la tangente à la trajectoire au point considéré.
+	// Part 1/2 : Angle existant entre la direction courante estimee et la tangente a la trajectoire au point considere.
 	//
 	Nf32 erra, cos_erra;
 	Nf32 vref;
@@ -346,12 +346,12 @@ const NLFOLLOWER_TANK_OUTPUT* NLFOLLOWER_TANK::compute()
 			// Recherche de l'erreur angulaire. 
 			// Part 2/2:
 			// La courbure est infinie ( k = Nf32_max ), cela signifie que nous sommes en mode SPIN, en train de tourner autour d'un point fixe.
-			// Dans ce cas particulier, les distances parcourues par les roues droite et gauche correspondent aux longueurs d'arc mesurées depuis le début du SPIN.
-			// 1/ première approche:
+			// Dans ce cas particulier, les distances parcourues par les roues droite et gauche correspondent aux longueurs d'arc mesurees depuis le debut du SPIN.
+			// 1/ premiere approche:
 			//	Comme nous savons être en mode SPIN, nus savons que le robot tourne sur lui-même:
 			//  on a donc A = Sr / ( e/2 ) 
 			//			  A = 2*Sr/e
-			// 2/ deuxième approche:
+			// 2/ deuxieme approche:
 			// ... En partant des formules de base d'odometrie on a:
 			//			Sr = ( R + e/2 ) * A
 			//			Sl = ( R - e/2 ) * A
@@ -365,7 +365,7 @@ const NLFOLLOWER_TANK_OUTPUT* NLFOLLOWER_TANK::compute()
 			//			Sr - Sl = e/2 * A + e/2 * A
 			//			Sr - Sl = e*A
 			//
-			// Dans notre cas particulier de SPIN Sr = -Sl ( les roues droite et gauche tournent à la même vitesse mais en sens opposé )
+			// Dans notre cas particulier de SPIN Sr = -Sl ( les roues droite et gauche tournent a la même vitesse mais en sens oppose )
 			//			
 			//			on a donc 2*Sr = e*A
 			//			
@@ -421,7 +421,7 @@ const NLFOLLOWER_TANK_OUTPUT* NLFOLLOWER_TANK::compute()
 				erra = -erra;
 			// ------------------------------------------------------------------------------------------------------------------------------
 			// 
-			// Vérification de "l'erreur"( errp.x, errp.y, erra ) par rapport à la "tolérance"( tol.x, tol.y, tola ) fixée.
+			// Verification de "l'erreur"( errp.x, errp.y, erra ) par rapport a la "tolerance"( tol.x, tol.y, tola ) fixee.
 			//
 			// TODO.
 
@@ -482,8 +482,8 @@ const NLFOLLOWER_TANK_OUTPUT* NLFOLLOWER_TANK::compute()
 	// ------------------------------------------------------------------------------------------------------------------------------
 	// 
 	// RAMSETE
-	// Et c'est pa'ti pou' la fo'mu'e incomp'éhensib' mais que tou' l' monde dit quelle est supey'
-	// ... !!! en fêt' a y est jé tou' comp'i :) !!!!!!
+	// Et c'est pa'ti pou' la fo'mu'e incomp'ehensib' mais que tou' l' monde dit quelle est supey'
+	// ... !!! en fêt' a y est je tou' comp'i :) !!!!!!
 	//
 	Nf32 _k = 2.0f * m_ramsete.m_zeta * sqrt(NPOW2(wref) + m_ramsete.m_b * NPOW2(vref));
 	Nf32 _v = vref * cos_erra + _k * (errp.x);
@@ -588,7 +588,7 @@ void NLFOLLOWER_TANK::drawDashBoard(NL2DOCS* p2docs, const NCOLORPICKPACK pickpa
 
 		for (Nu32 prm = 0; prm < 15; prm++) // 15, not 16 because the 16th element ( idx 15 ) is time
 		{
-			if (ISFLAG_ON(p2docs->m_userFlags, 1 << (NLFTDD_PARAM_BIT_ID_SHIFTING + prm))) // 8 + prm car les BITs 8 à 31 de "p2docs->m_Flags" sont disponibles et que prm E [0,15[
+			if (ISFLAG_ON(p2docs->m_userFlags, 1 << (NLFTDD_PARAM_BIT_ID_SHIFTING + prm))) // 8 + prm car les BITs 8 a 31 de "p2docs->m_Flags" sont disponibles et que prm E [0,15[
 			{
 				p2docs->getModulatedColor(&p.Color0_4f, colredir[prm], pickpack);
 				perr = (NLFOLLOWER_TANK_DRAWDATA*)NGetRingBufferHeadRelativeIndexPtr(&m_errorBuffer, 0);
