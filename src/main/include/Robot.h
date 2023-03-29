@@ -8,6 +8,10 @@
 #include <frc/smartdashboard/SmartDashboard.h>
 #include "RobotContainer.h"
 
+#include "lib/NL/MotionControl/DriveTrain/Characterization/NLMotorCharacterization.h"
+#include "lib/NL/MotionControl/Trajectory/NLFollowerTank.h"
+#include "lib/NL/MotionControl/Trajectory/NLTrajectoryPack.h"
+
 class Robot : public frc::TimedRobot
 {
 public:
@@ -28,6 +32,21 @@ public:
 
   void SimulationInit() override;
   void SimulationPeriodic() override;
+
+  enum STATE
+  {
+    PATH_ERROR = 0, ///< L'initialisation du path following a rencontr� un probl�me ( erreur au chargement tr�s probablement ). Le Robot ne peut-�tre en �tat PATH_FOLLOWING.
+    PATH_FOLLOWING, ///< Le robot est en �tat de suivit de chemin.
+    PATH_END        ///< La Vitesse  est en d�passement.
+  };
+
+  STATE m_state;
+
+  NLMOTOR_CHARACTERIZATION m_CrtzL;
+  NLMOTOR_CHARACTERIZATION m_CrtzR;
+
+  NLTRAJECTORY_PACK m_TrajectoryPack;
+  NLFOLLOWER_TANK m_follower;
 
 private:
   RobotContainer m_robotContainer;

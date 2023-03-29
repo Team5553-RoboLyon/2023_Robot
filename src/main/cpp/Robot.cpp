@@ -1,7 +1,7 @@
 // Copyright (c) FIRST and other WPILib contributors.
 // Open Source Software; you can modify and/or share it under the terms of
 // the WPILib BSD license file in the root directory of this project.
-
+#include "lib/NL/MotionControl/DriveTrain/Characterization/NLCharacterizationTable.h"
 #include "Robot.h"
 // cc
 // cc
@@ -15,6 +15,17 @@ void Robot::RobotPeriodic()
 void Robot::AutonomousInit()
 {
   m_robotContainer.GetAutonomousCommand()->Schedule();
+
+  // ######## NLMOTOR_CHARACTERIZATION ########
+  NLCHARACTERIZATION_TABLE characterization_table(4);
+  // characterization_table.importTxt("D:/_PROJETS/FIRST/C++/Simulateur/Simulateur/data/characterization_MultiVarLinearRegression.txt");
+  characterization_table.get(&m_CrtzL, "L1", NFALSE);
+  characterization_table.get(&m_CrtzR, "R1", NFALSE);
+
+  m_TrajectoryPack.load("trajectory1.pak");
+  m_follower.load("scrumtrooper.ftk");
+  m_follower.initialize(&m_TrajectoryPack);
+  m_state = Robot::STATE::PATH_FOLLOWING;
 }
 void Robot::AutonomousPeriodic() {}
 
