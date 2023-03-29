@@ -7,6 +7,15 @@
 
 // cc
 // cc
+void Robot::SetMotor(double speed)
+{
+  m_L1.Set(ctre::phoenix::motorcontrol::ControlMode::PercentOutput, speed);
+  m_L2.Set(ctre::phoenix::motorcontrol::ControlMode::PercentOutput, speed);
+  m_L3.Set(ctre::phoenix::motorcontrol::ControlMode::PercentOutput, speed);
+  m_R1.Set(ctre::phoenix::motorcontrol::ControlMode::PercentOutput, speed);
+  m_R2.Set(ctre::phoenix::motorcontrol::ControlMode::PercentOutput, speed);
+  m_R3.Set(ctre::phoenix::motorcontrol::ControlMode::PercentOutput, speed);
+}
 void Robot::RobotInit() {}
 void Robot::RobotPeriodic()
 {
@@ -16,7 +25,32 @@ void Robot::RobotPeriodic()
 
 void Robot::AutonomousInit()
 {
- 
+  // ######## Motor ########
+
+  m_L1.ConfigFactoryDefault();
+  m_L2.ConfigFactoryDefault();
+  m_L3.ConfigFactoryDefault();
+  m_R1.ConfigFactoryDefault();
+  m_R2.ConfigFactoryDefault();
+  m_R3.ConfigFactoryDefault();
+
+  m_L1.SetInverted(true);
+  m_L2.SetInverted(true);
+  m_L3.SetInverted(true);
+
+  m_R1.SetInverted(false);
+  m_R2.SetInverted(false);
+  m_R3.SetInverted(false);
+
+  m_L1.SetNeutralMode(ctre::phoenix::motorcontrol::NeutralMode::Brake);
+  m_L2.SetNeutralMode(ctre::phoenix::motorcontrol::NeutralMode::Brake);
+  m_L3.SetNeutralMode(ctre::phoenix::motorcontrol::NeutralMode::Brake);
+
+  m_R1.SetNeutralMode(ctre::phoenix::motorcontrol::NeutralMode::Brake);
+  m_R2.SetNeutralMode(ctre::phoenix::motorcontrol::NeutralMode::Brake);
+  m_R3.SetNeutralMode(ctre::phoenix::motorcontrol::NeutralMode::Brake);
+
+  // ######## NLMOTOR_CHARACTERIZATION ########
   NLCHARACTERIZATION_TABLE characterization_table(4);
   //characterization_table.importTxt("D:/_PROJETS/FIRST/C++/Simulateur/Simulateur/data/characterization_MultiVarLinearRegression.txt");
   characterization_table.get(&m_CrtzL1, "L1", NFALSE);

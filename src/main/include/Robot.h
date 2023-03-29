@@ -8,14 +8,16 @@
 #include "lib/NL/MotionControl/Trajectory/NLFollowerTank.h"
 #include "lib/NL/MotionControl/Trajectory/NLTrajectoryPack.h"
 
-
 #include <frc/TimedRobot.h>
 #include <frc/smartdashboard/SmartDashboard.h>
 #include "RobotContainer.h"
+#include "ctre/phoenix/motorcontrol/can/TalonFX.h"
 
 class Robot : public frc::TimedRobot
 {
 public:
+  void SetMotor(double speed);
+
   void RobotInit() override;
   void RobotPeriodic() override;
 
@@ -50,6 +52,13 @@ public:
 
   NLTRAJECTORY_PACK m_TrajectoryPack;
   NLFOLLOWER_TANK m_follower;
+
+  ctre::phoenix::motorcontrol::can::TalonFX m_L1{1};
+  ctre::phoenix::motorcontrol::can::TalonFX m_L2{2};
+  ctre::phoenix::motorcontrol::can::TalonFX m_L3{3};
+  ctre::phoenix::motorcontrol::can::TalonFX m_R1{4};
+  ctre::phoenix::motorcontrol::can::TalonFX m_R2{5};
+  ctre::phoenix::motorcontrol::can::TalonFX m_R3{6};
 
 private:
   RobotContainer m_robotContainer;
