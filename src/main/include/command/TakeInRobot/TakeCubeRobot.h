@@ -38,6 +38,7 @@ private:
     High,
     Lowered,
     Taken,
+    GoDown,
     Finish
   };
   State m_State;

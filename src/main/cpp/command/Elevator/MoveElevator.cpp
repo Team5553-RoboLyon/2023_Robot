@@ -17,9 +17,10 @@ void MoveElevator::Initialize()
 // Called repeatedly when this Command is scheduled to run
 void MoveElevator::Execute()
 {
-  double move = m_move() * 0.96;
+  // double move = m_move() * 0.96;
 
-  m_pElevator->SetSetpoint(NABS(move));
+  // m_pElevator->SetSetpoint(NABS(move));
+  m_pElevator->SetSetpoint(NABS(0.0));
 }
 
 // Called once the command ends or is interrupted.

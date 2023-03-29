@@ -20,7 +20,7 @@ void TakeCubeRobot::Initialize()
   m_count = 0;
   m_pElevator->SetSetpoint(0.80);
   m_pGripper->Open();
-  m_pArm->SetSetpoint(NDEGtoRAD(-30.0)); // valeur théorique à vérifier
+  m_pArm->SetSetpoint(NDEGtoRAD(-35.0)); // valeur théorique à vérifier
   std::cout << "cube mes couilles" << std::endl;
   m_State = State::High;
   // descend elevateur
@@ -37,15 +37,15 @@ void TakeCubeRobot::Execute()
   switch (m_State)
   {
   case State::High:
-    if (m_count > 100) // temps à réduire
+    if (m_count > 80) // temps à réduire
     {
-      m_pElevator->SetSetpoint(0.50); // valeur théorique à vérifier
+      m_pElevator->SetSetpoint(0.35); // valeur théorique à vérifier
       m_count = 0;
       m_State = State::Lowered;
     }
     break;
   case State::Lowered:
-    if (m_count > 100) // temps à réduire
+    if (m_count > 45) // temps à réduire
     {
       m_pGripper->Close();
       m_count = 0;
@@ -53,17 +53,25 @@ void TakeCubeRobot::Execute()
     }
     break;
   case State::Taken:
-    if (m_count > 100) // temps à réduire
+    if (m_count > 60) // temps à réduire
     {
-      m_pElevator->SetSetpoint(0.90);
+      m_pElevator->SetSetpoint(0.95);
+      m_count = 0;
+      m_State = State::GoDown;
+    }
+    break;
+  case State::GoDown:
+    if (m_count > 50) // temps à réduire
+    {
+      m_pArm->SetSetpoint(NDEGtoRAD(90.0));
       m_count = 0;
       m_State = State::Finish;
     }
     break;
   case State::Finish:
-    if (m_count > 100) // temps à réduire
+    if (m_count > 90) // temps à réduire
     {
-      m_pArm->SetSetpoint(NDEGtoRAD(90.0));
+      m_pElevator->SetSetpoint(0.0);
     }
     break;
   default:

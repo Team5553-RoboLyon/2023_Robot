@@ -14,7 +14,7 @@ DropMiddle::DropMiddle(Elevator *pElevator, Arm *pArm) : m_pElevator(pElevator),
 void DropMiddle::Initialize()
 {
   m_pElevator->SetSetpoint(0.48);
-  m_pArm->SetSetpoint(NDEGtoRAD(136.0));
+  m_pArm->SetSetpoint(NDEGtoRAD(125.0));
 }
 
 // Called repeatedly when this Command is scheduled to run

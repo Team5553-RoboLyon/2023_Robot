@@ -58,25 +58,25 @@ void RobotContainer::ConfigureButtonBindings()
     frc2::JoystickButton m_ButtonGripperChangePosition = frc2::JoystickButton(&m_joystickCopilot, 1);
     m_ButtonGripperChangePosition.WhileActiveOnce(Catch(&m_gripper));
 
-    frc2::JoystickButton m_ButtonTakeCones = frc2::JoystickButton(&m_joystickCopilot, 11);
+    frc2::JoystickButton m_ButtonTakeCones = frc2::JoystickButton(&m_joystickCopilot, 5);
     m_ButtonTakeCones.WhileActiveContinous(TakeCones(&m_elevator, &m_arm, &m_gripper));
 
-    frc2::JoystickButton m_ButtonDropHigh = frc2::JoystickButton(&m_joystickCopilot, 13);
+    frc2::JoystickButton m_ButtonDropHigh = frc2::JoystickButton(&m_joystickCopilot, 7);
     m_ButtonDropHigh.WhileActiveContinous(DropHigh(&m_elevator, &m_arm));
 
-    frc2::JoystickButton m_ButtonDropMiddle = frc2::JoystickButton(&m_joystickCopilot, 12);
+    frc2::JoystickButton m_ButtonDropMiddle = frc2::JoystickButton(&m_joystickCopilot, 6);
     m_ButtonDropMiddle.WhileActiveContinous(DropMiddle(&m_elevator, &m_arm));
 
-    frc2::JoystickButton m_ButtonCubeDropHigh = frc2::JoystickButton(&m_joystickCopilot, 10);
+    frc2::JoystickButton m_ButtonCubeDropHigh = frc2::JoystickButton(&m_joystickCopilot, 8);
     m_ButtonCubeDropHigh.WhileActiveContinous(DropHighCube(&m_elevator, &m_arm));
 
     frc2::JoystickButton m_ButtonCubeDropMiddle = frc2::JoystickButton(&m_joystickCopilot, 9);
     m_ButtonCubeDropMiddle.WhileActiveContinous(DropMiddleCube(&m_elevator, &m_arm));
 
-    frc2::JoystickButton m_ButtonTurret90 = frc2::JoystickButton(&m_joystickCopilot, 5);
-    m_ButtonTurret90.WhileActiveContinous(TurnTurret90(&m_turret));
+    // frc2::JoystickButton m_ButtonTurret90 = frc2::JoystickButton(&m_joystickCopilot, 5);
+    // m_ButtonTurret90.WhileActiveContinous(TurnTurret90(&m_turret));
 
-    frc2::JoystickButton m_ButtonCubeRobot = frc2::JoystickButton(&m_joystickCopilot, 6);
+    frc2::JoystickButton m_ButtonCubeRobot = frc2::JoystickButton(&m_joystickCopilot, 10);
     m_ButtonCubeRobot.WhileActiveContinous(TakeCubeRobot(&m_elevator, &m_arm, &m_gripper));
 }
 

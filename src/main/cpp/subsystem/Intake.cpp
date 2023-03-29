@@ -6,8 +6,7 @@
 
 Intake::Intake()
 {
-    m_intakeSolenoid.Set(frc::DoubleSolenoid::Value::kReverse);
-
+    Close();
     m_intakeMotorRight.ConfigFactoryDefault();
     m_intakeMotorLeft.ConfigFactoryDefault();
 
@@ -29,7 +28,7 @@ Intake::Intake()
 
 void Intake::Open()
 {
-    Close();
+    m_intakeSolenoid.Set(frc::DoubleSolenoid::Value::kForward);
 }
 
 void Intake::Close()

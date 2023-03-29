@@ -26,7 +26,7 @@ double Arm::GetEncoder()
 
 void Arm::SetSetpoint(double setpoint)
 {
-    m_armPid.SetSetpoint(setpoint);
+    m_armPid.SetSetpoint(NCLAMP(-33.0, setpoint, 129.0));
 }
 
 void Arm::SetGains(double p, double i, double d)
@@ -37,5 +37,5 @@ void Arm::SetGains(double p, double i, double d)
 void Arm::Periodic()
 {
     std::cout << GetEncoder() << std::endl;
-    m_armMotor.Set(NCLAMP(-0.5, m_armPid.Calculate(GetEncoder()), 0.5));
+    m_armMotor.Set(NCLAMP(-0.6, m_armPid.Calculate(GetEncoder()), 0.6));
 }

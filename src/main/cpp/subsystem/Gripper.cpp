@@ -11,20 +11,20 @@ Gripper::Gripper()
 
 void Gripper::Open()
 {
-    m_gripperSolenoid.Set(frc::DoubleSolenoid::Value::kReverse);
+    m_gripperSolenoid.Set(frc::DoubleSolenoid::Value::kForward);
 }
 
 void Gripper::Close()
 {
-    m_gripperSolenoid.Set(frc::DoubleSolenoid::Value::kForward);
+    m_gripperSolenoid.Set(frc::DoubleSolenoid::Value::kReverse);
 }
 
 void Gripper::ChangePosition()
 {
-    (m_gripperSolenoid.Get() == frc::DoubleSolenoid::Value::kForward) ? Open() : Close();
+    (m_gripperSolenoid.Get() == frc::DoubleSolenoid::Value::kForward) ? Close() : Open();
 }
 
 bool Gripper::GetState()
 {
-    return m_gripperSolenoid.Get() == frc::DoubleSolenoid::Value::kForward;
+    return m_gripperSolenoid.Get() == frc::DoubleSolenoid::Value::kReverse;
 }

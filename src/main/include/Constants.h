@@ -26,17 +26,17 @@
 #define ID_MOTOR_TURRET 7
 #define ID_MOTOR_ELEVATOR 8
 #define ID_MOTOR_ARM 9
-#define ID_MOTOR_INTAKE_RIGHT 11
-#define ID_MOTOR_INTAKE_LEFT 12
-#define ID_MOTOR_CONVEYOR 13
+#define ID_MOTOR_INTAKE_RIGHT 10
+#define ID_MOTOR_INTAKE_LEFT 11
+#define ID_MOTOR_CONVEYOR 12
 
 // #########################    ID Solenoid    #########################
 #define ID_SOLENOID_SHIFTER_A 0
 #define ID_SOLENOID_SHIFTER_B 1
-#define ID_SOLENOID_INTAKE_A 6
-#define ID_SOLENOID_INTAKE_B 7
-#define ID_SOLENOID_GRIPPER_A 2 // 5
-#define ID_SOLENOID_GRIPPER_B 3 // 4
+#define ID_SOLENOID_INTAKE_A 2
+#define ID_SOLENOID_INTAKE_B 3
+#define ID_SOLENOID_GRIPPER_A 4 // 5
+#define ID_SOLENOID_GRIPPER_B 5 // 4
 
 // #########################    ID Encoder    #########################
 
@@ -65,7 +65,7 @@
 #define D_ELEVATOR 0.0
 
 // Arm
-#define P_ARM 0.4
+#define P_ARM 0.8 // 0.4
 #define I_ARM 0.0
 #define D_ARM 0.0
 

@@ -22,9 +22,9 @@ public:
   double GetEncoder();
 
   double m_speed;
+  Pid m_armPid{0, P_ARM, I_ARM, D_ARM};
 
 private:
   rev::CANSparkMax m_armMotor{ID_MOTOR_ARM, rev::CANSparkMaxLowLevel::MotorType::kBrushless};
   frc::Encoder m_armEncoder{ID_ENCODER_ARM_A, ID_ENCODER_ARM_B, true};
-  Pid m_armPid{0, P_ARM, I_ARM, D_ARM};
 };
