@@ -72,13 +72,13 @@
  * |_______________________________________________||________________________________|__|_____|_____|
  */
 typedef Nu32	NLTRJPOINT_DESC_CFG;
-//#define CONSTANT_MAX_PUSHED_KIN_INDEX			65535	// car valeur codée sur 16 bits dans NLTRJPOINT_DESC_CFG ( cette constante est utilisée dans les tests de débordement )
+//#define CONSTANT_MAX_PUSHED_KIN_INDEX			65535	// car valeur codÃ©e sur 16 bits dans NLTRJPOINT_DESC_CFG ( cette constante est utilisÃ©e dans les tests de dÃ©bordement )
 
 // MAKE_NLTRJPOINT_DESC_CFG(kidx,iskin,cfg)
 // ------------------------------------------------------------------------------------------
 /**
  *	@brief	MAKE_NLTRJPOINT_DESC_CFG construit la valeur 32 bits de retour des fonctions "promoteAction" et "NLTRJKEY::promote"
- *			Cette valeur 32 bits permet au processus de promotion de passer des informations entre les différents "étages" en jeu:
+ *			Cette valeur 32 bits permet au processus de promotion de passer des informations entre les diffÃ©rents "Ã©tages" en jeu:
  *
  *									TRAJECTORY / PACK
  *										 |
@@ -86,11 +86,11 @@ typedef Nu32	NLTRJPOINT_DESC_CFG;
  *												|
  *												|___ACTION(s)
  *
- *  @param	kidx	[Kin Index]........	est l'index du premier KIN créé par la promotion et "pushé" dans l'array de construction des kins.
- *	@param	iskin	[Is Kin Left]......	est un boleen indiquant si la valeur kidx est à prendre en compte.
- *										TRUE signifie que kidx est valide. FALSE signifie qu'il n'y a pas de KIN à traiter.
+ *  @param	kidx	[Kin Index]........	est l'index du premier KIN crÃ©Ã© par la promotion et "pushÃ©" dans l'array de construction des kins.
+ *	@param	iskin	[Is Kin Left]......	est un boleen indiquant si la valeur kidx est Ã  prendre en compte.
+ *										TRUE signifie que kidx est valide. FALSE signifie qu'il n'y a pas de KIN Ã  traiter.
  *	@param	actioncfg [Action Config]..	est une valeur dont seuls les 4 premiers BITS seront pris en compte. (BIT_0 to BIT_3 inclus)
- *										Sur ces 4 BITS sont codés le KTYPE (BIT_0 et BIT_1) et le DT_MODE ( BIT_2 et BIT_3)
+ *										Sur ces 4 BITS sont codÃ©s le KTYPE (BIT_0 et BIT_1) et le DT_MODE ( BIT_2 et BIT_3)
  */
 
 #define MAKE_NLTRJPOINT_DESC_CFG(kidx,iskin,cfg)		((((kidx)&0xFFFF)<<16)|(((iskin)&0x1)<<4)|((cfg)&0xF))	
@@ -107,10 +107,10 @@ struct NLTRJPOINT_DESC
 #ifdef _NEDITOR
 	void draw(NL2DOCS* p2docs,  const NCOLORPICKPACK pickpack, const NLTRJPOINT_DESC* p0);
 #endif
-	NLKIN				m_kin;			// kin représentant le robot ( son centre d'inertie )
+	NLKIN				m_kin;			// kin reprÃ©sentant le robot ( son centre d'inertie )
 	
 	Nu32				m_flags;
-	NLPATH_POINT	   *m_pPathPoint1;	// |_ portion du path où se trouve ce "Trajectory Point Desc"
+	NLPATH_POINT	   *m_pPathPoint1;	// |_ portion du path oÃ¹ se trouve ce "Trajectory Point Desc"
 	NLPATH_PRIMITIVE   *m_pPrimitive;	// |
 };
 

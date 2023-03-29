@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 #include "../../../../N/NType.h"
 #include "../../../../N/Maths/NMatrix.h"
 //#include "../../../../N/File/NFile.h"

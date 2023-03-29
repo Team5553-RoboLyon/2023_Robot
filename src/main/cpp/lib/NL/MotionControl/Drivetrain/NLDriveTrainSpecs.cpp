@@ -129,15 +129,11 @@ Nu32 NLDRIVETRAINSPECS::write(FILE* pfile)
 #endif	
 	return 1;
 }
-/*
+
 Nu32 NLDRIVETRAINSPECS::importTxt(const Nchar* ptxtfilename)
 {
 	NErrorIf(!ptxtfilename, NERROR_NULL_POINTER);
-	/ * -----------------------------------------------------------------------------------------------------------------
-	*
-	*  Check extension
-	*
-	* /
+	// Check extension
 	if (!NStrCheckEnd(ptxtfilename, EXTENSION_NLDRIVETRAINSPECS_TXT))
 		return 0;
 
@@ -206,7 +202,7 @@ Nu32 NLDRIVETRAINSPECS::importTxt(const Nchar* ptxtfilename)
 	fclose(pfile);
 	return 1;
 }
-*/
+
 
 Nu32 NLDRIVETRAINSPECS::read(FILE* pfile)
 {

@@ -89,7 +89,7 @@ Nbool			NEraseArrayElement(NARRAY *parray,const Nu32 index,const NARRAY_ELEMENT_
 Nbool			NEraseArrayRange(NARRAY *parray,const Nu32 index,const Nu32 rangesize,const NARRAY_ELEMENT_DESTRUCTOR_CALLBACK destructor_callback);
 
 void			NEraseArrayElementPtr(NARRAY *parray,const NBYTE* ptr, const NARRAY_ELEMENT_DESTRUCTOR_CALLBACK destructor_callback);
-void			NEraseArrayRangePtr(NARRAY *parray,const NBYTE *ptr ,const Nu32 rangesize,const NARRAY_ELEMENT_DESTRUCTOR_CALLBACK destructor_callback);
+//void			NEraseArrayRangePtr(NARRAY *parray,const NBYTE *ptr ,const Nu32 rangesize,const NARRAY_ELEMENT_DESTRUCTOR_CALLBACK destructor_callback);
 
 void			NQuickEraseArrayElement(NARRAY *parray,const Nu32 index, const NARRAY_ELEMENT_DESTRUCTOR_CALLBACK destructor_callback);
 void			NQuickEraseArrayElementPtr(NARRAY *parray,const NBYTE* ptr, const NARRAY_ELEMENT_DESTRUCTOR_CALLBACK destructor_callback);

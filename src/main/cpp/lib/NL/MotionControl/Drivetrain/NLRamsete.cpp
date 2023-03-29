@@ -56,15 +56,11 @@ Nu32 NLRAMSETE::write(FILE* pfile)
 		return 0;
 	return 1;
 }
-/*
+
 Nu32  NLRAMSETE::importTxt(const Nchar* ptxtfilename)
 {
 	NErrorIf(!ptxtfilename, NERROR_NULL_POINTER);
-	/ * -----------------------------------------------------------------------------------------------------------------
-	*
-	*  Check extension
-	*
-	* /
+	// Check extension
 	if (!NStrCheckEnd(ptxtfilename, EXTENSION_NLRAMSETE_TXT))
 		return 0;
 
@@ -91,4 +87,3 @@ Nu32  NLRAMSETE::importTxt(const Nchar* ptxtfilename)
 	fclose(pfile);
 	return 1;
 }
-*/
