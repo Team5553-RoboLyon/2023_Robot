@@ -8,7 +8,6 @@
 #include <frc2/command/CommandHelper.h>
 #include "subsystem/Turret.h"
 #include "subsystem/Intake.h"
-#include "subsystem/ChekMachine.h"
 
 /**
  * An example command.

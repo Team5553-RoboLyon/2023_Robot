@@ -22,14 +22,35 @@ void TakeCones::Initialize()
 // Called repeatedly when this Command is scheduled to run
 void TakeCones::Execute()
 {
-  if (m_pGripper->GetState())
+  switch (m_State)
   {
+  case State::open:
+    if (m_pGripper->GetState())
+    {
+      m_State = State::close;
+    }
+    break;
+  case State::close:
     m_count++;
-  }
-  if (m_pGripper->GetState() and m_count > 10)
-  {
+    if (m_count > 10)
+    {
+      m_State = State::high;
+      m_count = 0;
+    }
+    break;
+  case State::high:
     m_pArm->SetSetpoint(NDEGtoRAD(130.0));
+    break;
   }
+
+  // if (m_pGripper->GetState())
+  // {
+  //   m_count++;
+  // }
+  // if (m_pGripper->GetState() and m_count > 10)
+  // {
+  //   m_pArm->SetSetpoint(NDEGtoRAD(130.0));
+  // }
 }
 
 // Called once the command ends or is interrupted.

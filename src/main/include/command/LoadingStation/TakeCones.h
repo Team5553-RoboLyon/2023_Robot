@@ -33,8 +33,15 @@ public:
   bool IsFinished() override;
 
 private:
+  enum class State
+  {
+    open,
+    close,
+    high
+  };
+  int m_count;
+  State m_State;
   Elevator *m_pElevator;
   Arm *m_pArm;
   Gripper *m_pGripper;
-  int m_count;
 };
