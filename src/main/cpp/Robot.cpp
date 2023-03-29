@@ -23,11 +23,12 @@ void Robot::AutonomousInit()
   characterization_table.get(&m_CrtzR, "R1", NFALSE);
 
   m_TrajectoryPack.load("trajectory1.pak");
-  m_follower.load("scrumtrooper.ftk");
   m_follower.initialize(&m_TrajectoryPack);
   m_state = Robot::STATE::PATH_FOLLOWING;
 }
-void Robot::AutonomousPeriodic() {}
+void Robot::AutonomousPeriodic()
+{
+}
 
 void Robot::TeleopInit()
 {
