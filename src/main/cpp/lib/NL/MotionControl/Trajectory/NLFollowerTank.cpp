@@ -78,8 +78,8 @@ Nu32 NLFOLLOWER_TANK::save(const Nchar* pfilename)
 	 *  Check extension
 	 *
 	 */
-	if (!NStrCheckEnd(pfilename, EXTENSION_NLFOLLOWER_TANK_BIN))
-		return 0;
+	// if (!NStrCheckEnd(pfilename, EXTENSION_NLFOLLOWER_TANK_BIN))
+	// 	return 0;
 
 	// 0) Ouverture du fichier en ecriture
 	FILE* pfile = fopen(pfilename, "wb");
@@ -112,8 +112,8 @@ Nu32 NLFOLLOWER_TANK::load(const Nchar* pfilename)
 	 *  Check extension
 	 *
 	 */
-	if (!NStrCheckEnd(pfilename, EXTENSION_NLFOLLOWER_TANK_BIN))
-		return 0;
+	// if (!NStrCheckEnd(pfilename, EXTENSION_NLFOLLOWER_TANK_BIN))
+	// 	return 0;
 
 	// 0) Ouverture du fichier en lecture
 	FILE* pfile = fopen(pfilename, "rb");
@@ -146,25 +146,25 @@ Nu32 NLFOLLOWER_TANK::load(const Nchar* pfilename)
 	fclose(pfile);
 	return 1;
 }
-
+/*
 Nu32 NLFOLLOWER_TANK::importTxt(const Nchar* ptxtfilename)
 {
 
 	NErrorIf(!ptxtfilename, NERROR_NULL_POINTER);
-	/* -----------------------------------------------------------------------------------------------------------------
+	/ * -----------------------------------------------------------------------------------------------------------------
 	*
 	*  Check extension
 	*
-	*/
-	if (!NStrCheckEnd(ptxtfilename, ".txt"))
-		return 0;
+	* /
+	// if (!NStrCheckEnd(ptxtfilename, ".txt"))
+	// 	return 0;
 
 	FILE	*pfile;
 	Nchar	tempstring[1024];
 	Nchar	name[32];
 	Nchar	*pstr;
 
-	pfile = fopen(ptxtfilename, "r, ccs=UTF-8");	// ouverture du fichier
+	pfile = fopen(ptxtfilename, "rb");	// ouverture du fichier
 	fseek(pfile, 0, SEEK_SET);			// on se place au debut du fichier
 
 	// recuperer la siganture du fichier
@@ -190,7 +190,7 @@ Nu32 NLFOLLOWER_TANK::importTxt(const Nchar* ptxtfilename)
 	return 1;
 	// NLCHARACTERIZATION_TABLE	characterization_table(4) ... is going to be clear.
 }
-
+*/
 
 void NLFOLLOWER_TANK::initialize(const NLTRAJECTORY_PACK* ppack)
 {

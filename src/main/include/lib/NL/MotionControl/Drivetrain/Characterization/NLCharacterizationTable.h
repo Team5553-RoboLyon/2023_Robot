@@ -47,7 +47,7 @@ struct NLCHARACTERIZATION_TABLE
 	Nu32 load(const Nchar *pfilename);
 	Nu32 save(const Nchar* pfilename);
 
-	Nu32 importTxt(const Nchar *pfilename, const Nbool bclear_table_before_loading=NFALSE);
+//	Nu32 importTxt(const Nchar *pfilename, const Nbool bclear_table_before_loading=NFALSE);
 	NLMOTOR_CHARACTERIZATION*	get(NLMOTOR_CHARACTERIZATION *pdst, const Nu8 table_index, const Nbool angular_velocity_scaled_coef);
 	NLMOTOR_CHARACTERIZATION*	get(NLMOTOR_CHARACTERIZATION *pdst, const Nu8 gearboxid,const Nu8 motorid, const Nbool angular_velocity_scaled_coef);
 	NLMOTOR_CHARACTERIZATION*	get(NLMOTOR_CHARACTERIZATION *pdst, const Nchar *pmotorname, const Nbool angular_velocity_scaled_coef);

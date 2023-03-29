@@ -16,13 +16,14 @@ void Robot::RobotPeriodic()
 
 void Robot::AutonomousInit()
 {
+ 
   NLCHARACTERIZATION_TABLE characterization_table(4);
-  characterization_table.importTxt("D:/_PROJETS/FIRST/C++/Simulateur/Simulateur/data/characterization_MultiVarLinearRegression.txt");
+  //characterization_table.importTxt("D:/_PROJETS/FIRST/C++/Simulateur/Simulateur/data/characterization_MultiVarLinearRegression.txt");
   characterization_table.get(&m_CrtzL1, "L1", NFALSE);
   characterization_table.get(&m_CrtzL2, "L2", NFALSE);
   characterization_table.get(&m_CrtzR1, "R1", NFALSE);
   characterization_table.get(&m_CrtzR2, "R2", NFALSE);
-
+  
   m_TrajectoryPack.load("trajectory1.pak");
   m_follower.load("scrumtrooper.ftk");
   m_follower.initialize(&m_TrajectoryPack);

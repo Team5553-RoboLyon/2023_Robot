@@ -97,3 +97,10 @@ model {
         }
     }
 }
+allprojects
+{
+    tasks.withType(JavaCompile) 
+    {
+        options.compilerArgs << "--scan" << "--info" << "--stacktrace"
+    }
+}

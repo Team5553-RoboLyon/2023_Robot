@@ -54,13 +54,13 @@ public:
 	NLRAMSETE(const Nf32 b, const Nf32 zeta) :	m_b(b), m_zeta(zeta){}
 	NLRAMSETEOUTPUT* compute(NLRAMSETEOUTPUT* pout, const Nf32 vref, const Nf32 wref, const Nf32 erra, const Nf32 cos_erra, const Nf32 errx, const Nf32 erry);
 #ifdef _NEDITOR
-	Nu32	read(NLPATH_WORKBENCH* pwb); // fonction read "spéciale" qui copie les données du path workbench passé en paramètre plutot
-#endif									 // ... que de les lire dans un fichier. Cela permet au code du simulateur de rester très proche du code "réel" du robot	
-										 // ... tout en permettant de recupérer directement les données du path workbench. 	
+	Nu32	read(NLPATH_WORKBENCH* pwb); // fonction read "spï¿½ciale" qui copie les donnï¿½es du path workbench passï¿½ en paramï¿½tre plutot
+#endif									 // ... que de les lire dans un fichier. Cela permet au code du simulateur de rester trï¿½s proche du code "rï¿½el" du robot	
+										 // ... tout en permettant de recupï¿½rer directement les donnï¿½es du path workbench. 	
 	Nu32	read(FILE* pfile);
 	Nu32	write(FILE* pfile);
 
-	Nu32 	importTxt(const Nchar* ptxtfilename);
+//	Nu32 	importTxt(const Nchar* ptxtfilename);
 	union
 	{
 		struct
@@ -68,6 +68,7 @@ public:
 			Nf32	m_b;
 			Nf32	m_zeta;
 		};
+		
 		Nf32 m_param[2];	 ///< an another way to access Ramsete Params values with \b NLRAMSETEPARAM_ID @see NLRAMSETEPARAM_ID			
 	};
 };

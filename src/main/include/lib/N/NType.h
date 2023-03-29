@@ -31,6 +31,8 @@ extern "C"
 typedef	int					Nint;
 
 typedef	char				Nchar;
+//typedef	wchar_t				Nchar;
+
 typedef	unsigned char		Nbool;
 typedef unsigned char		NBYTE;
 

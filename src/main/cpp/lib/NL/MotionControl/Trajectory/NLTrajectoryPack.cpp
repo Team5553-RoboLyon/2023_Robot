@@ -354,8 +354,8 @@ Nu32 NLTRAJECTORY_PACK::load(const Nchar* pfilename)
 	*  Check extension
 	*
 	*/
-	if (!NStrCheckEnd(pfilename, EXTENSION_NLTRAJECTORY_PACK_BIN))
-		return 0;
+	// if (!NStrCheckEnd(pfilename, EXTENSION_NLTRAJECTORY_PACK_BIN))
+	// 	return 0;
 
 	// 0) Ouverture du fichier en lecture
 	FILE* pfile = fopen(pfilename, "rb");
@@ -395,8 +395,8 @@ Nu32 NLTRAJECTORY_PACK::save(const Nchar* pfilename)
 	 *  Check extension
 	 *
 	 */
-	if (!NStrCheckEnd(pfilename, EXTENSION_NLTRAJECTORY_PACK_BIN))
-		return 0;
+	// if (!NStrCheckEnd(pfilename, EXTENSION_NLTRAJECTORY_PACK_BIN))
+	// 	return 0;
 
 	// 0) Ouverture du fichier en ecriture
 	FILE* pfile = fopen(pfilename, "wb");

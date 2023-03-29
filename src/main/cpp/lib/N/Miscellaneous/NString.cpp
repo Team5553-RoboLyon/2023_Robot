@@ -5,6 +5,7 @@
 #include "lib/N/Miscellaneous/NString.h"
 #include "lib/N/Maths/NMath.h"
 
+/*
 Nchar* NStrGet_Ns16_AfterLabel (Nchar *string, const Nchar* tag, Ns16 *pinteger)
 {
 	NErrorIf(!string, NERROR_STRING_NULL);
@@ -165,6 +166,7 @@ Nchar *NStrGet_Nf32(Nchar *psource,Nf32 *pfloat)
 	
 	return ( psource + numberlength );
 }
+
 Nchar *NStrGet_Nf64_AfterLabel(Nchar *string, const Nchar* tag, Nf64 *pf)
 {
 	NErrorIf(!string, NERROR_STRING_NULL);
@@ -224,7 +226,6 @@ Nchar *NStrGet_Nf64(Nchar *psource, Nf64 *pdouble)
 
 	return (psource + numberlength);
 }
-
 
 // ------------------------------------------------------------------------------------------
 // Nchar* NStrGet_String_BetweenLabels
@@ -512,7 +513,7 @@ Nu32 NStrGetLineCount(const Nchar *pstring)
 	}
 	return line;
 }
-
+*/
 
 // ------------------------------------------------------------------------------------------
 /**
@@ -525,6 +526,7 @@ Nu32 NStrGetLineCount(const Nchar *pstring)
  *					NFALSE		if not.
  */
  // ------------------------------------------------------------------------------------------
+/*
 Nbool NStrCheckEnd(const Nchar* pstr, const Nchar* pend)
 {
 	NErrorIf(!pstr || !pend, NERROR_NULL_POINTER);
@@ -534,3 +536,4 @@ Nbool NStrCheckEnd(const Nchar* pstr, const Nchar* pend)
 
 	return NTRUE;
 }
+*/

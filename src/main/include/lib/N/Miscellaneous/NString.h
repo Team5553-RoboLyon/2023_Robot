@@ -24,7 +24,7 @@ extern "C"
 // ***************************************************************************************
 // **								 Functions											**
 // ***************************************************************************************
-
+/*
 Nchar*			NStrCopy(Nchar *destination, const Nchar *source, const Nu32 sizemax_terminating_null_character_included );
 Nchar*			NStrCat(Nchar *destination, const Nchar *source, const Nu32 sizemax_terminating_null_character_included );
 Nchar*			NStrDuplicate(const Nchar *psource);
@@ -51,7 +51,7 @@ Nchar*			NStrGet_String_BetweenLabels(const Nchar *psource,const Nchar *plabel0,
 
 Nu32			NStrGetLineCount(const Nchar *pstring);
 Nbool			NStrCheckEnd(const Nchar* pstr, const Nchar* pend);
-
+*/
 /*
 // ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 #ifdef __cplusplus

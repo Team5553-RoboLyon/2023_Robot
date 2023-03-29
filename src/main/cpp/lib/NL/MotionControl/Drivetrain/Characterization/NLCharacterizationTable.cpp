@@ -101,11 +101,14 @@ Nu32 NLCHARACTERIZATION_TABLE::load(const Nchar* pfilename)
  *  Check extension
  *
  */
+/*
 	if (!NStrCheckEnd(pfilename, EXTENSION_NLCHARACTERIZATION_TABLE_BIN))
 	{
 		NErrorIf(1, NERROR_FILE_OPENING_ERROR);
 		return 0;
 	}
+	*/
+
 	// 0) Ouverture du fichier en lecture
 	FILE* pfile = fopen(pfilename, "rb");
 	NErrorIf(!pfile, NERROR_FILE_OPENING_ERROR);
@@ -145,8 +148,8 @@ Nu32 NLCHARACTERIZATION_TABLE::save(const Nchar* pfilename)
 	 *  Check extension
 	 *
 	 */
-	if (!NStrCheckEnd(pfilename, EXTENSION_NLCHARACTERIZATION_TABLE_BIN))
-		return 0;
+	// if (!NStrCheckEnd(pfilename, EXTENSION_NLCHARACTERIZATION_TABLE_BIN))
+	// 	return 0;
 
 	// 0) Ouverture du fichier en ecriture
 	FILE* pfile = fopen(pfilename, "wb");
@@ -171,15 +174,15 @@ Nu32 NLCHARACTERIZATION_TABLE::save(const Nchar* pfilename)
 	fclose(pfile);
 	return 1;
 }
-
+/*
 Nu32 NLCHARACTERIZATION_TABLE::importTxt(const Nchar * pfilename, const Nbool bclear_table_before_loading)
 {
 	NErrorIf(!pfilename, NERROR_NULL_POINTER);
-	/* -----------------------------------------------------------------------------------------------------------------
+	/ * -----------------------------------------------------------------------------------------------------------------
 	* 
 	*  Check extension
 	* 
-	*/
+	* /
 	if (!NStrCheckEnd(pfilename, EXTENSION_NLCHARACTERIZATION_TABLE_TXT))
 	{
 		NErrorIf(1, NERROR_FILE_OPENING_ERROR);
@@ -204,7 +207,7 @@ Nu32 NLCHARACTERIZATION_TABLE::importTxt(const Nchar * pfilename, const Nbool bc
 		NEraseArray(&m_table, NULL);
 		m_gearBoxNb = 0;
 	}
-	pfile = fopen(pfilename, "r, ccs=UTF-8");		// ouverture du fichier
+	pfile = fopen(pfilename, "r");		// ouverture du fichier
 	fseek(pfile, 0, SEEK_SET);			// on se place au d�but du fichier
 
 	// recup�rer la siganture du fichier
@@ -270,6 +273,7 @@ Nu32 NLCHARACTERIZATION_TABLE::importTxt(const Nchar * pfilename, const Nbool bc
 	fclose(pfile);
 	return 1;
 }
+*/
 // ------------------------------------------------------------------------------------------
 /**
  *	@brief	Extrait une characterization specifique de la table des characterizations. La characterization extraite peut �tre modul�e

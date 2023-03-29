@@ -99,7 +99,7 @@ Nu32 NLDRIVETRAINSPECS::write(FILE* pfile)
 		return 0;
 
 	NLDTSPECS_HEADER header;
-	NStrCopy(header.m_name,"Robot ", CONSTANT_NLDTSPECS_HEADER_NAME_SIZE);
+	//NStrCopy(header.m_name,"Robot ", CONSTANT_NLDTSPECS_HEADER_NAME_SIZE);
 	header.m_limits_v			= m_limits.m_v;
 	header.m_limits_a			= m_limits.m_a;
 	header.m_limits_j			= m_limits.m_j;
@@ -129,15 +129,15 @@ Nu32 NLDRIVETRAINSPECS::write(FILE* pfile)
 #endif	
 	return 1;
 }
-
+/*
 Nu32 NLDRIVETRAINSPECS::importTxt(const Nchar* ptxtfilename)
 {
 	NErrorIf(!ptxtfilename, NERROR_NULL_POINTER);
-	/* -----------------------------------------------------------------------------------------------------------------
+	/ * -----------------------------------------------------------------------------------------------------------------
 	*
 	*  Check extension
 	*
-	*/
+	* /
 	if (!NStrCheckEnd(ptxtfilename, EXTENSION_NLDRIVETRAINSPECS_TXT))
 		return 0;
 
@@ -146,7 +146,7 @@ Nu32 NLDRIVETRAINSPECS::importTxt(const Nchar* ptxtfilename)
 	Nchar								name[32];
 	Nchar* pstr;
 
-	pfile = fopen(ptxtfilename, "r, ccs=UTF-8");	// ouverture du fichier
+	pfile = fopen(ptxtfilename, "rb");	// ouverture du fichier
 	fseek(pfile, 0, SEEK_SET);			// on se place au d�but du fichier
 
 	// recup�rer la siganture du fichier
@@ -206,7 +206,7 @@ Nu32 NLDRIVETRAINSPECS::importTxt(const Nchar* ptxtfilename)
 	fclose(pfile);
 	return 1;
 }
-
+*/
 
 Nu32 NLDRIVETRAINSPECS::read(FILE* pfile)
 {
