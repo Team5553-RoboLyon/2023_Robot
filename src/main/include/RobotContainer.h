@@ -7,6 +7,7 @@
 #include <frc/Joystick.h>
 #include <frc2/command/Command.h>
 #include <frc2/command/InstantCommand.h>
+<<<<<<< HEAD
 #include <frc2/command/button/JoystickButton.h>
 #include <frc2/command/SequentialCommandGroup.h>
 #include <frc2/command/ParallelCommandGroup.h>
@@ -64,11 +65,14 @@
 // ################### AUTONOMOUS ###################
 
 #include "command/autonomous/AdvanceAutonomous.h"
+=======
+>>>>>>> auto_periodic
 
 class RobotContainer
 {
 public:
   RobotContainer();
+<<<<<<< HEAD
 
   void ConfigureButtonBindings();
 
@@ -86,6 +90,8 @@ public:
   frc::Joystick m_joystickRight{ID_JOYSTICK_RIGHT};
   frc::Joystick m_joystickLeft{ID_JOYSTICK_LEFT};
   frc::Joystick m_joystickCopilot{ID_JOYSTICK_COPILOTER};
+=======
+>>>>>>> auto_periodic
 
 private:
   cs::UsbCamera m_CameraPilote;

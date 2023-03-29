@@ -2,9 +2,20 @@
 // Open Source Software; you can modify and/or share it under the terms of
 // the WPILib BSD license file in the root directory of this project.
 
+#include "lib/NL/MotionControl/DriveTrain/Characterization/NLCharacterizationTable.h"
 #include "Robot.h"
+
 // cc
 // cc
+void Robot::SetMotor(double speed)
+{
+  m_L1.Set(ctre::phoenix::motorcontrol::ControlMode::PercentOutput, speed);
+  m_L2.Set(ctre::phoenix::motorcontrol::ControlMode::PercentOutput, speed);
+  m_L3.Set(ctre::phoenix::motorcontrol::ControlMode::PercentOutput, speed);
+  m_R1.Set(ctre::phoenix::motorcontrol::ControlMode::PercentOutput, speed);
+  m_R2.Set(ctre::phoenix::motorcontrol::ControlMode::PercentOutput, speed);
+  m_R3.Set(ctre::phoenix::motorcontrol::ControlMode::PercentOutput, speed);
+}
 void Robot::RobotInit() {}
 void Robot::RobotPeriodic()
 {
@@ -15,7 +26,20 @@ void Robot::RobotPeriodic()
 void Robot::AutonomousInit()
 {
   m_robotContainer.GetAutonomousCommand()->Schedule();
+  // #####NLMOTOR_CHARACTERIZATION########
+  NLCHARACTERIZATION_TABLE characterization_table(4);
+  // characterization_table.importTxt("D:/_PROJETS/FIRST/C++/Simulateur/Simulateur/data/characterization_MultiVarLinearRegression.txt");
+  characterization_table.get(&m_CrtzL1, "L1", NFALSE);
+  characterization_table.get(&m_CrtzL2, "L2", NFALSE);
+  characterization_table.get(&m_CrtzR1, "R1", NFALSE);
+  characterization_table.get(&m_CrtzR2, "R2", NFALSE);
+
+  m_TrajectoryPack.load("trajectory1.pak");
+  m_follower.load("scrumtrooper.ftk");
+  m_follower.initialize(&m_TrajectoryPack);
+  m_state = Robot::STATE::PATH_FOLLOWING;
 }
+
 void Robot::AutonomousPeriodic() {}
 
 void Robot::TeleopInit()
@@ -59,10 +83,19 @@ void Robot::TeleopPeriodic()
   // m_robotContainer.m_copiloter.m_elevator.Set(frc::SmartDashboard::GetNumber("voltage", 0.0));
 }
 
-void Robot::DisabledInit()
-{
-  // m_robotContainer.m_drivetrain.m_logCSV.close(); // fermeture du fichier de log
+void Robot::DisabledInit(){
+    // m_robotContainer.m_drivetrain.m_logCSV.close(); // fermeture du fichier de log
 }
+
+    /
+    void Robot::AutonomousPeriodic()
+{
+}
+
+void Robot::TeleopInit() {}
+void Robot::TeleopPeriodic() {}
+
+void Robot::DisabledInit() {}
 void Robot::DisabledPeriodic() {}
 
 void Robot::TestInit() {}

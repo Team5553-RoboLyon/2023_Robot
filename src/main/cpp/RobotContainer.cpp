@@ -6,16 +6,24 @@
 
 RobotContainer::RobotContainer()
 {
+<<<<<<< HEAD
     ConfigureButtonBindings();
     m_arm.SetDefaultCommand(ActiveArmMotor([=]
                                            { return m_joystickRight.GetY(); },
                                            &m_arm));
+=======
+    /*
+    m_copiloter.SetDefaultCommand(AutoCopiloter([=]
+                                                { return m_joystickRight.GetY(); },
+                                                &m_copiloter));
+>>>>>>> auto_periodic
 
     m_drivetrain.SetDefaultCommand(Drive([=]
                                          { return -m_joystickLeft.GetY(); },
                                          [=]
                                          { return -m_joystickRight.GetZ(); },
                                          &m_drivetrain));
+<<<<<<< HEAD
 
     m_turret.SetDefaultCommand(TurnTurret([=]
                                           { return m_joystickCopilot.GetZ(); },
@@ -34,6 +42,9 @@ RobotContainer::RobotContainer()
     m_CameraPilote.SetFPS(12);
 
     m_compressor.EnableDigital();
+=======
+    */
+>>>>>>> auto_periodic
 };
 
 // ################### COMMANDS ###################
