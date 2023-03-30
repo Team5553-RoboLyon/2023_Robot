@@ -15,7 +15,7 @@ struct NLTRAJECTORY_PACK_GETPOINT_PERSISTENT_RESULT
 
 	void	initialize(const NLTRAJECTORY_PACK* ppack);
 	NLTRAJECTORY_POINT			m_result;		// Doit rester le premier membre de la structure ! car ...
-												//	NLTRAJECTORY_PACK_GETPOINT_PERSISTENT_RESULT peut-être casté en ...
+												//	NLTRAJECTORY_PACK_GETPOINT_PERSISTENT_RESULT peut-Ãªtre castÃ© en ...
 												//	NLTRAJECTORY_POINT et/ou en 
 												//	NLPATH_POINT !!!		
 	NLTRJPOINT_DESC*	m_pTrjPointDsc;	// Persistent pointer
@@ -31,7 +31,7 @@ struct NLTRAJECTORY_PACK_GETPOINT_PERSISTENT_RESULT
 	~NLTRAJECTORY_PACK_GETPOINT_PERSISTENT_RESULT() {};
 	void	initialize(const NLTRAJECTORY_PACK* ppack);
 	NLTRAJECTORY_POINT			m_result;	// Doit rester le premier membre de la structure !
-											// car NLTRAJECTORY_PACK_GETPOINT_PERSISTENT_RESULT peut-être casté en
+											// car NLTRAJECTORY_PACK_GETPOINT_PERSISTENT_RESULT peut-Ãªtre castÃ© en
 											// NLTRAJECTORY_POINT et/ou en NLPATH_POINT !!!		
 	// Persistent pointers
 	NLTRAJECTORY_CHUNK*			m_pChunk;

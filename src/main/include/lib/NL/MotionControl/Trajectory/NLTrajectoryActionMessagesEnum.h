@@ -8,7 +8,7 @@
 // Le programmeur du robot veillera � conserver la coh�rence entre l'enum ci-dessous et le contenu du fichier _actionmessages.txt
 // Les 2 d�crivent le m�me ensemble de messages.
 
-// ! Le premier message doit est �gal � 0 !
+// ! Le premier message doit est �gal � 0 ! 
 // .. le suivant � 1, puis 2, etc ...
 typedef enum
 {
@@ -22,4 +22,4 @@ typedef enum
 	DEACTIVATE_AIM,
 	ACTIVATE_SHOOTER,
 	DEACTIVATE_SHOOTER
-} NLACTIONMESSAGES_ENUM;
+}NLACTIONMESSAGES_ENUM;

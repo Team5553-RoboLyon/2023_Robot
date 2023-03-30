@@ -60,7 +60,7 @@ public:
 	Nu32	read(FILE* pfile);
 	Nu32	write(FILE* pfile);
 
-//	Nu32 	importTxt(const Nchar* ptxtfilename);
+	Nu32 	importTxt(const Nchar* ptxtfilename);
 	union
 	{
 		struct

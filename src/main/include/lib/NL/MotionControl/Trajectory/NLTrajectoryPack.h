@@ -34,10 +34,10 @@ public:
 
 #ifdef _NEDITOR
 	void	erase();
-	void	setup(const NLPATH* ppath, const NLDRIVETRAINSPECS* pdtspecs, const NARRAY* pusedkeysarray);
-	Nu32	read(NLPATH_WORKBENCH* pwb);						// Fonction read "sp�ciale" qui copie les donn�es du path workbench pass� en param�tre plutot
-	Nu32	load(NLPATH_WORKBENCH* pwb) { return read(pwb); };	// que de les lire dans un fichier. Cela permet au code du simulateur de rester tr�s proche 
-#endif															// du code "r�el" du robot	tout en permettant de recup�rer directement les donn�es du path workbench. 		
+	void	setup(const NLPATH* ppath, const NLDRIVETRAINSPECS* pdtspecs, const NLRAMSETE *pramsete, const NARRAY* pusedkeysarray);
+	Nu32	read(NLPATH_WORKBENCH* pwb);						// Fonction read "spéciale" qui copie les données du path workbench passé en paramètre plutot
+	Nu32	load(NLPATH_WORKBENCH* pwb) { return read(pwb); };	// que de les lire dans un fichier. Cela permet au code du simulateur de rester très proche 
+#endif															// du code "réel" du robot	tout en permettant de recupérer directement les données du path workbench. 		
 
 	Nu32	read(FILE* pfile);
 	Nu32	write(FILE *pfile);
@@ -70,7 +70,7 @@ public:
 									// m_ds ne repr�sente pas la(les) distances parcourue(s) par les roues droites et o� gauche, qui sont d�pendantes de la courbure
 									// du chemin suivi et des potentielles rotation sur place ( d�crites dans les chunkR du pack ).
 	NLDRIVETRAINSPECS		m_driveTrainSpecifications;
-
+	NLRAMSETE				m_ramsete;
 };
 
 

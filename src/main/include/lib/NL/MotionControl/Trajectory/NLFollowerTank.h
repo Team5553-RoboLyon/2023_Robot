@@ -113,7 +113,7 @@ public:
 	Nu32	save(const Nchar* pfilename);
 	Nu32	load(const Nchar* pfilename);
 
-	//Nu32	importTxt(const Nchar* pfilename);
+	Nu32	importTxt(const Nchar* pfilename);
 
 	void							initialize(const NLTRAJECTORY_PACK* ppack);
 	void							estimate(const Nf32 left_encoder_rev_count, const Nf32 right_encoder_rev_count, const Nf32 gyro_angle);

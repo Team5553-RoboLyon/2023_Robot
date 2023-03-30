@@ -11,7 +11,7 @@ struct NLMOTOR_CHARACTERIZATION
 {
 	NLMOTOR_CHARACTERIZATION() { Nmem0(this, NLMOTOR_CHARACTERIZATION); }
 
-	// Nchar*		read(Nchar *pstr);
+	Nchar*		read(Nchar *pstr);
 	inline void	setFrom(const NLMOTOR_CHARACTERIZATION *psrc) { *this = *psrc; };
 	void		setFrom(const NLMOTOR_CHARACTERIZATION *psrc, const Nf32 scalefactor);
 	inline void setForwardConst(const Nf32 kv, const Nf32 ka, const Nf32 intercept){m_forwardKv = kv; m_forwardKa = ka; m_forwardIntercept = intercept;}
