@@ -7,9 +7,6 @@
 RobotContainer::RobotContainer()
 {
     ConfigureButtonBindings();
-    m_arm.SetDefaultCommand(ActiveArmMotor([=]
-                                           { return m_joystickRight.GetY(); },
-                                           &m_arm));
 
     m_drivetrain.SetDefaultCommand(Drive([=]
                                          { return -m_joystickLeft.GetY(); },
@@ -19,15 +16,7 @@ RobotContainer::RobotContainer()
 
     m_turret.SetDefaultCommand(TurnTurret([=]
                                           { return m_joystickCopilot.GetZ(); },
-                                          &m_turret));
-
-    m_elevator.SetDefaultCommand(MoveElevator([=]
-                                              { return m_joystickCopilot.GetY(); },
-                                              &m_elevator));
-    if (NABS(m_turret.m_turretPid.m_setpoint) > 10.0)
-    {
-        m_intake.Close();
-    }
+                                          &m_turret, &m_intake));
 
     m_CameraPilote = frc::CameraServer::StartAutomaticCapture();
     m_CameraPilote.SetResolution(320, 240);
@@ -40,10 +29,6 @@ RobotContainer::RobotContainer()
 
 void RobotContainer::ConfigureButtonBindings()
 {
-    // Intake
-
-    frc2::JoystickButton m_ButtonIntakeChangePosition = frc2::JoystickButton(&m_joystickRight, 7);
-    m_ButtonIntakeChangePosition.WhileActiveContinous(ChangeIntakePosition(&m_intake));
 
     // Conveyor
 
@@ -72,9 +57,6 @@ void RobotContainer::ConfigureButtonBindings()
 
     frc2::JoystickButton m_ButtonCubeDropMiddle = frc2::JoystickButton(&m_joystickCopilot, 9);
     m_ButtonCubeDropMiddle.WhileActiveContinous(DropMiddleCube(&m_elevator, &m_arm));
-
-    // frc2::JoystickButton m_ButtonTurret90 = frc2::JoystickButton(&m_joystickCopilot, 5);
-    // m_ButtonTurret90.WhileActiveContinous(TurnTurret90(&m_turret));
 
     frc2::JoystickButton m_ButtonCubeRobot = frc2::JoystickButton(&m_joystickCopilot, 10);
     m_ButtonCubeRobot.WhileActiveContinous(TakeCubeRobot(&m_elevator, &m_arm, &m_gripper));

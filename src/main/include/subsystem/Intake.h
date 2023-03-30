@@ -20,6 +20,9 @@ public:
   void Close();
   void ChangePosition();
   void SetSpeed(double speed);
+  void Reset();
+
+  bool m_IntakeOpen = false;
 
 private:
   ctre::phoenix::motorcontrol::can::TalonSRX m_intakeMotorRight{ID_MOTOR_INTAKE_RIGHT};

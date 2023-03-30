@@ -20,6 +20,7 @@ public:
   void SetGains(double p, double i, double d);
   void SetMotorArm(double speed);
   double GetEncoder();
+  void Reset();
 
   double m_speed;
   Pid m_armPid{0, P_ARM, I_ARM, D_ARM};

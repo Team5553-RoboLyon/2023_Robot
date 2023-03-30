@@ -13,6 +13,7 @@ class Conveyor : public frc2::SubsystemBase
 public:
   Conveyor();
   void SetSpeed(double speed);
+  void Reset();
 
 private:
   ctre::phoenix::motorcontrol::can::VictorSPX m_conveyorMotor{ID_MOTOR_CONVEYOR};

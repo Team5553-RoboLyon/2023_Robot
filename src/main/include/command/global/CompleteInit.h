@@ -6,6 +6,12 @@
 
 #include <frc2/command/CommandBase.h>
 #include <frc2/command/CommandHelper.h>
+#include "subsystem/DriveTrain.h"
+#include "subsystem/Intake.h"
+#include "subsystem/Gripper.h"
+#include "subsystem/Arm.h"
+#include "subsystem/Conveyor.h"
+#include "subsystem/Elevator.h"
 #include "subsystem/Turret.h"
 
 /**
@@ -15,11 +21,11 @@
  * directly; this is crucially important, or else the decorator functions in
  * Command will *not* work!
  */
-class TurnTurret90
-    : public frc2::CommandHelper<frc2::CommandBase, TurnTurret90>
+class CompleteInit
+    : public frc2::CommandHelper<frc2::CommandBase, CompleteInit>
 {
 public:
-  TurnTurret90(Turret *pTurret);
+  CompleteInit(Drivetrain *drivetrain, Intake *intake, Gripper *gripper, Arm *arm, Conveyor *conveyor, Elevator *elevator, Turret *turret);
 
   void Initialize() override;
 
@@ -30,5 +36,11 @@ public:
   bool IsFinished() override;
 
 private:
-  Turret *m_pTurret;
+  Drivetrain *m_drivetrain;
+  Intake *m_intake;
+  Gripper *m_gripper;
+  Arm *m_arm;
+  Conveyor *m_conveyor;
+  Elevator *m_elevator;
+  Turret *m_turret;
 };
