@@ -194,6 +194,7 @@ Nu32 NLFOLLOWER_TANK::importTxt(const Nchar* ptxtfilename)
 
 void NLFOLLOWER_TANK::initialize(const NLTRAJECTORY_PACK* ppack)
 {
+
 	m_currentTime	= 0.0f;
 	m_leftDistance	= 0.0f;
 	m_rightDistance = 0.0f;
@@ -205,9 +206,14 @@ void NLFOLLOWER_TANK::initialize(const NLTRAJECTORY_PACK* ppack)
 	m_pToMessage	= (NLTRJ_POSTED_MESSAGE*)ppack->m_postedMessagesArray.pFirst; // On positionne le To sur le premier message ( le message d'amorce, donc un Fake )
 	m_pFromMessage	= m_pToMessage + 1; // On positionne le From ( donc la "tete de lecture" ) sur le premier VRAI message ( donc APRES m_pToMessage )
 
+	m_driveTrainSpecifications	= ppack->m_driveTrainSpecifications;
+	m_ramsete					= ppack->m_ramsete;
+
+
 #ifdef _NEDITOR
 	NEraseRingBuffer(&m_errorBuffer);
 #endif
+
 
 }
 
@@ -258,6 +264,7 @@ void NLFOLLOWER_TANK::updateTarget(NLTRAJECTORY_PACK *ppack, const Nf32 dt)
 		NUT_Logging(LOGS_CHANNEL_SIMUL, "+ NLFOLLOWER_TANK::estimate(...) currentTime = %.4f\tp.x = %.4f\tp.y = %.4f\t%s +\n", m_currentTime, m_persistent.m_result.m_p.x, m_persistent.m_result.m_p.y, m_persistent.m_result.m_kin.print(buff));
 	}
 #endif
+
 
 	// Mise a jour de la liste des posted messages 
 	while (m_pToMessage->m_timeStamp <= m_currentTime) { m_pToMessage++; }
