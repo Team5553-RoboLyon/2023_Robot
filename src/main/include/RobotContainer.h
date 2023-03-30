@@ -27,7 +27,6 @@
 // Intake
 #include "command/Intake/ActiveIntakeMotor.h"
 #include "command/Intake/ReverseIntakeMotor.h"
-#include "command/Intake/ChangeIntakePosition.h"
 
 // Conveyor
 #include "command/Conveyor/ReverseConveyorMotor.h"
@@ -42,15 +41,11 @@
 #include "command/Drop/DropHighCube.h"
 #include "command/Drop/DropMiddleCube.h"
 
-// Copiloter
-// #include "command/AutoCopiloter.h"
-
 // Drivetrain
 #include "command/Drivetrain/Drive.h"
 
 // Turret
 #include "command/Turret/TurnTurret.h"
-#include "command/Turret/TurnTurret90.h"
 
 // Elevator
 #include "command/Elevator/MoveElevator.h"
@@ -60,6 +55,9 @@
 // Arm
 
 #include "command/Arm/ActiveArmMotor.h"
+
+// ################### GLOBAL ###################
+#include "command/global/CompleteInit.h"
 
 // ################### AUTONOMOUS ###################
 
@@ -74,7 +72,6 @@ public:
 
   frc2::Command *GetAutonomousCommand();
 
-  // Copiloter m_copiloter;
   Turret m_turret;
   Drivetrain m_drivetrain;
   Conveyor m_conveyor;
@@ -94,6 +91,6 @@ private:
 
   // autonome
 
-  frc2::SequentialCommandGroup m_autonomousGroupCommand = frc2::SequentialCommandGroup(
-      AdvanceAutonomous(&m_drivetrain, 100), DropHigh(&m_elevator, &m_arm));
+  frc2::SequentialCommandGroup m_autonomousGroupCommand = frc2::SequentialCommandGroup(CompleteInit(&m_drivetrain, &m_intake, &m_gripper, &m_arm, &m_conveyor, &m_elevator, &m_turret),
+                                                                                       AdvanceAutonomous(&m_drivetrain, 100), DropHigh(&m_elevator, &m_arm));
 };

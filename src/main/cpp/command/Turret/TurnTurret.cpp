@@ -5,9 +5,9 @@
 #include "command/Turret/TurnTurret.h"
 #include "lib/utils.h"
 
-TurnTurret::TurnTurret(std::function<double()> turn, Turret *pTurret) : m_turn(turn), m_pTurret(pTurret)
+TurnTurret::TurnTurret(std::function<double()> turn, Turret *pTurret, Intake *pIntake) : m_turn(turn), m_pTurret(pTurret), m_pIntake(pIntake)
 {
-  AddRequirements(m_pTurret);
+  AddRequirements({m_pTurret, m_pIntake});
 }
 
 // Called when the command is initially scheduled.
@@ -18,8 +18,15 @@ void TurnTurret::Initialize()
 // Called repeatedly when this Command is scheduled to run
 void TurnTurret::Execute()
 {
-  double turn = m_turn() * 90;
-  m_pTurret->SetSetpoint(turn);
+  if (m_pIntake->m_IntakeOpen)
+  {
+    m_pTurret->SetSetpoint(0.0);
+  }
+  else
+  {
+    double turn = m_turn() * 90;
+    m_pTurret->SetSetpoint(turn);
+  }
 
   // if (!m_ChekMachine.AuthorisationToRun(ID_SUBSYSTEM_TURRET))
   // {

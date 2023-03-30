@@ -20,3 +20,7 @@ void Conveyor::SetSpeed(double speed)
 {
     m_conveyorMotor.Set(ctre::phoenix::motorcontrol::ControlMode::PercentOutput, speed);
 }
+
+void Conveyor::Reset()
+{
+}

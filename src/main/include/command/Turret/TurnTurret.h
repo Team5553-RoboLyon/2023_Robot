@@ -20,7 +20,7 @@ class TurnTurret
     : public frc2::CommandHelper<frc2::CommandBase, TurnTurret>
 {
 public:
-  TurnTurret(std::function<double()> turn, Turret *pTurret);
+  TurnTurret(std::function<double()> turn, Turret *pTurret, Intake *pIntake);
 
   void Initialize() override;
 
@@ -33,4 +33,5 @@ public:
 private:
   std::function<double()> m_turn;
   Turret *m_pTurret;
+  Intake *m_pIntake;
 };

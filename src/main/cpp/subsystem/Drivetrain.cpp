@@ -420,3 +420,19 @@ void Drivetrain::DriveAuto(double speed, double rotation)
     m_MotorLeft1.Set(ctre::phoenix::motorcontrol::ControlMode::PercentOutput, speed + rotation);
     m_MotorRight1.Set(ctre::phoenix::motorcontrol::ControlMode::PercentOutput, speed - rotation);
 }
+
+void Drivetrain::Reset()
+{
+    m_EncoderLeft.Reset();
+    m_EncoderRight.Reset();
+
+    m_JoystickPrelimited_V.Reset(0.0, 0.0, 2.0); // reset des rate limiters
+    m_JoystickLimited_V.Reset(0.0, 0.0, 0.05);
+
+    m_JoystickPrelimited_W.Reset(0.0, 0.0, 2.0);
+    m_JoystickLimited_W.Reset(0.0, 0.0, 0.05);
+
+    ActiveBallShifterV1();
+    m_State = State::lowGear;
+    m_CurrentGearboxRatio = REDUC_V1;
+}

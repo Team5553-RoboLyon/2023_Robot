@@ -42,3 +42,10 @@ void Elevator::Periodic()
 
     m_elevatorMotor.Set((NCLAMP(-0.9, m_ElevatorPidRate.m_current + 0.08, 0.9))); // 0.08 coef de frottement // clamp 0.9
 }
+
+void Elevator::Reset()
+{
+    m_elevatorEncoder.Reset();
+    m_elevatorPid.SetSetpoint(0.0);
+    m_ElevatorPidRate.Reset(0.0, 0.0, 0.25);
+}

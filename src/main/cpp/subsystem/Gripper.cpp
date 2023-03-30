@@ -28,3 +28,8 @@ bool Gripper::GetState()
 {
     return m_gripperSolenoid.Get() == frc::DoubleSolenoid::Value::kReverse;
 }
+
+void Gripper::Reset()
+{
+    Close();
+}

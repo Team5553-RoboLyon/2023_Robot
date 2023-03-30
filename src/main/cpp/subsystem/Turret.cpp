@@ -43,3 +43,10 @@ void Turret::Periodic()
 
     m_turretMotor.Set(NCLAMP(-0.5, m_TurretPidRate.m_current, 0.5)); // 0.5
 }
+
+void Turret::Reset()
+{
+    m_turretEncoder.Reset();
+    m_turretPid.SetSetpoint(0.0);
+    m_TurretPidRate.Reset(0.0, 0.0, 0.2);
+}

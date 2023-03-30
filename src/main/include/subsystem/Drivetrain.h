@@ -70,6 +70,7 @@ public:
   void SetVoltageTarget(double voltageTarget, double state);
   void ShiftGearUp();
   void ShiftGearDown();
+  void Reset();
 
   // Côté gauche
   Dynamic m_GearboxLeftOutRawRpt;                    // Vitesse instantanée de sortie de boite ( mesurée par le TroughBore Encoder )

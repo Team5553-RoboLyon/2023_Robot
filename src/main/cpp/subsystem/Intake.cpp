@@ -28,21 +28,28 @@ Intake::Intake()
 
 void Intake::Open()
 {
+    m_IntakeOpen = true;
     m_intakeSolenoid.Set(frc::DoubleSolenoid::Value::kForward);
 }
 
 void Intake::Close()
 {
+    m_IntakeOpen = false;
     m_intakeSolenoid.Set(frc::DoubleSolenoid::Value::kReverse);
 }
 
 void Intake::ChangePosition()
 {
-    (m_intakeSolenoid.Get() == frc::DoubleSolenoid::Value::kForward) ? Close() : Open();
+    (m_IntakeOpen) ? Close() : Open();
 }
 
 void Intake::SetSpeed(double speed)
 {
     m_intakeMotorRight.Set(ctre::phoenix::motorcontrol::ControlMode::PercentOutput, speed);
     m_intakeMotorLeft.Set(ctre::phoenix::motorcontrol::ControlMode::PercentOutput, -speed);
+}
+
+void Intake::Reset()
+{
+    Close();
 }
