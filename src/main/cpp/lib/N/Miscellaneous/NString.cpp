@@ -5,7 +5,6 @@
 #include "lib/N/Miscellaneous/NString.h"
 #include "lib/N/Maths/NMath.h"
 
-/*
 Nchar* NStrGet_Ns16_AfterLabel (Nchar *string, const Nchar* tag, Ns16 *pinteger)
 {
 	NErrorIf(!string, NERROR_STRING_NULL);
@@ -513,7 +512,7 @@ Nu32 NStrGetLineCount(const Nchar *pstring)
 	}
 	return line;
 }
-*/
+
 
 // ------------------------------------------------------------------------------------------
 /**
@@ -526,7 +525,7 @@ Nu32 NStrGetLineCount(const Nchar *pstring)
  *					NFALSE		if not.
  */
  // ------------------------------------------------------------------------------------------
-/*
+
 Nbool NStrCheckEnd(const Nchar* pstr, const Nchar* pend)
 {
 	NErrorIf(!pstr || !pend, NERROR_NULL_POINTER);
@@ -536,4 +535,3 @@ Nbool NStrCheckEnd(const Nchar* pstr, const Nchar* pend)
 
 	return NTRUE;
 }
-*/

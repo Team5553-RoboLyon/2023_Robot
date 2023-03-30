@@ -1,7 +1,7 @@
 //#include "../../../../N/File/NFile.h"
 #include "lib/N/Miscellaneous/NString.h"
 #include "lib/NL/MotionControl/Drivetrain/Characterization/NLMotorCharacterization.h"
-/*
+
 Nchar* NLMOTOR_CHARACTERIZATION::read(Nchar * pstr)
 {
 	// Forward Kv, Ka, et intercept
@@ -16,7 +16,7 @@ Nchar* NLMOTOR_CHARACTERIZATION::read(Nchar * pstr)
 
 	return pstr;
 }
-*/
+
 void NLMOTOR_CHARACTERIZATION::setFrom(const NLMOTOR_CHARACTERIZATION * psrc, const Nf32 scalefactor)
 {
 	m_forwardKv				= psrc->m_forwardKv*scalefactor;

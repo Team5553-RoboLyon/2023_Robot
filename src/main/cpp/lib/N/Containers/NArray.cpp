@@ -361,6 +361,7 @@ Nbool NEraseArrayRange(NARRAY *parray,const Nu32 index,const Nu32 rangesize,cons
 	parray->Size -= rangesize;
 	return NTRUE;
 }
+/*
 void NEraseArrayRangePtr(NARRAY *parray,const NBYTE *ptr ,const Nu32 rangesize,const NARRAY_ELEMENT_DESTRUCTOR_CALLBACK destructor_callback)
 {
 	NErrorIf(ptr >= parray->pFirst + parray->Size*parray->ElementSize ,NERROR_ARRAY_INDEX_BEYOND_LIMITS);
@@ -383,11 +384,12 @@ void NEraseArrayRangePtr(NARRAY *parray,const NBYTE *ptr ,const Nu32 rangesize,c
 	NBYTE *ptr_right = (NBYTE*)ptr + rangesize*parray->ElementSize;
 	if(ptr_right < parray->pFirst + parray->Size*parray->ElementSize)// if not, the element is the last one of the array. there is no shifting to do.
 	{
-		memcpy((void*)ptr,ptr_right,(NBYTE*)(parray->Size*parray->ElementSize) - ptr_right);
+		memcpy((NBYTE*)ptr,ptr_right,((NBYTE*)(parray->Size*parray->ElementSize)) - ptr_right); !!!!! ERROR
+		//memcpy((NBYTE*)ptr,ptr_right,((NBYTE*)(parray->Size*parray->ElementSize)) - ptr_right);
 	}
 	parray->Size -= rangesize;
 }
-
+*/
 void NEraseArrayElementsBatch(NARRAY *parray,const Nu32 *pNu32_bitfield,const NARRAY_ELEMENT_DESTRUCTOR_CALLBACK destructor_callback)
 {
 	NBYTE	*pel		= parray->pFirst;

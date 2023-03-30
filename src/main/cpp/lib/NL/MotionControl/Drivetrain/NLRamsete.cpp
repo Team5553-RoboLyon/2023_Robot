@@ -56,15 +56,11 @@ Nu32 NLRAMSETE::write(FILE* pfile)
 		return 0;
 	return 1;
 }
-/*
+
 Nu32  NLRAMSETE::importTxt(const Nchar* ptxtfilename)
 {
 	NErrorIf(!ptxtfilename, NERROR_NULL_POINTER);
-	/ * -----------------------------------------------------------------------------------------------------------------
-	*
-	*  Check extension
-	*
-	* /
+	// Check extension
 	if (!NStrCheckEnd(ptxtfilename, EXTENSION_NLRAMSETE_TXT))
 		return 0;
 
@@ -73,7 +69,7 @@ Nu32  NLRAMSETE::importTxt(const Nchar* ptxtfilename)
 	Nchar								name[32];
 	Nchar* pstr;
 
-	pfile = fopen(ptxtfilename, "rb");	// ouverture du fichier
+	pfile = fopen(ptxtfilename, "r");	// ouverture du fichier
 	fseek(pfile, 0, SEEK_SET);			// on se place au d�but du fichier
 
 	// recup�rer la siganture du fichier
@@ -91,4 +87,3 @@ Nu32  NLRAMSETE::importTxt(const Nchar* ptxtfilename)
 	fclose(pfile);
 	return 1;
 }
-*/

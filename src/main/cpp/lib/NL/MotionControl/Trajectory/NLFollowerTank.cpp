@@ -78,8 +78,8 @@ Nu32 NLFOLLOWER_TANK::save(const Nchar* pfilename)
 	 *  Check extension
 	 *
 	 */
-	// if (!NStrCheckEnd(pfilename, EXTENSION_NLFOLLOWER_TANK_BIN))
-	// 	return 0;
+	 if (!NStrCheckEnd(pfilename, EXTENSION_NLFOLLOWER_TANK_BIN))
+	 	return 0;
 
 	// 0) Ouverture du fichier en ecriture
 	FILE* pfile = fopen(pfilename, "wb");
@@ -112,8 +112,8 @@ Nu32 NLFOLLOWER_TANK::load(const Nchar* pfilename)
 	 *  Check extension
 	 *
 	 */
-	// if (!NStrCheckEnd(pfilename, EXTENSION_NLFOLLOWER_TANK_BIN))
-	// 	return 0;
+	 if (!NStrCheckEnd(pfilename, EXTENSION_NLFOLLOWER_TANK_BIN))
+	 	return 0;
 
 	// 0) Ouverture du fichier en lecture
 	FILE* pfile = fopen(pfilename, "rb");
@@ -146,25 +146,25 @@ Nu32 NLFOLLOWER_TANK::load(const Nchar* pfilename)
 	fclose(pfile);
 	return 1;
 }
-/*
+
 Nu32 NLFOLLOWER_TANK::importTxt(const Nchar* ptxtfilename)
 {
 
 	NErrorIf(!ptxtfilename, NERROR_NULL_POINTER);
-	/ * -----------------------------------------------------------------------------------------------------------------
+	/* -----------------------------------------------------------------------------------------------------------------
 	*
 	*  Check extension
 	*
-	* /
-	// if (!NStrCheckEnd(ptxtfilename, ".txt"))
-	// 	return 0;
+	*/
+	if (!NStrCheckEnd(ptxtfilename, ".txt"))
+		return 0;
 
 	FILE	*pfile;
 	Nchar	tempstring[1024];
 	Nchar	name[32];
 	Nchar	*pstr;
 
-	pfile = fopen(ptxtfilename, "rb");	// ouverture du fichier
+	pfile = fopen(ptxtfilename, "r");	// ouverture du fichier
 	fseek(pfile, 0, SEEK_SET);			// on se place au debut du fichier
 
 	// recuperer la siganture du fichier
@@ -190,10 +190,11 @@ Nu32 NLFOLLOWER_TANK::importTxt(const Nchar* ptxtfilename)
 	return 1;
 	// NLCHARACTERIZATION_TABLE	characterization_table(4) ... is going to be clear.
 }
-*/
+
 
 void NLFOLLOWER_TANK::initialize(const NLTRAJECTORY_PACK* ppack)
 {
+
 	m_currentTime	= 0.0f;
 	m_leftDistance	= 0.0f;
 	m_rightDistance = 0.0f;
@@ -205,9 +206,14 @@ void NLFOLLOWER_TANK::initialize(const NLTRAJECTORY_PACK* ppack)
 	m_pToMessage	= (NLTRJ_POSTED_MESSAGE*)ppack->m_postedMessagesArray.pFirst; // On positionne le To sur le premier message ( le message d'amorce, donc un Fake )
 	m_pFromMessage	= m_pToMessage + 1; // On positionne le From ( donc la "tete de lecture" ) sur le premier VRAI message ( donc APRES m_pToMessage )
 
+	m_driveTrainSpecifications	= ppack->m_driveTrainSpecifications;
+	m_ramsete					= ppack->m_ramsete;
+
+
 #ifdef _NEDITOR
 	NEraseRingBuffer(&m_errorBuffer);
 #endif
+
 
 }
 
@@ -258,6 +264,7 @@ void NLFOLLOWER_TANK::updateTarget(NLTRAJECTORY_PACK *ppack, const Nf32 dt)
 		NUT_Logging(LOGS_CHANNEL_SIMUL, "+ NLFOLLOWER_TANK::estimate(...) currentTime = %.4f\tp.x = %.4f\tp.y = %.4f\t%s +\n", m_currentTime, m_persistent.m_result.m_p.x, m_persistent.m_result.m_p.y, m_persistent.m_result.m_kin.print(buff));
 	}
 #endif
+
 
 	// Mise a jour de la liste des posted messages 
 	while (m_pToMessage->m_timeStamp <= m_currentTime) { m_pToMessage++; }

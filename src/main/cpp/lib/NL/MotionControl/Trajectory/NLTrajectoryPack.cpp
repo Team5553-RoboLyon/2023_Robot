@@ -55,7 +55,7 @@ void NLTRAJECTORY_PACK::erase()
 	//m_pChunk	= NULL;
 }
 
-void NLTRAJECTORY_PACK::setup(const NLPATH* ppath, const NLDRIVETRAINSPECS* pdtspecs, const NARRAY* pusedpkeysarray)
+void NLTRAJECTORY_PACK::setup(const NLPATH* ppath, const NLDRIVETRAINSPECS* pdtspecs, const NLRAMSETE* pramsete, const NARRAY* pusedpkeysarray)
 {
 	// Le pack "int�gre toutes les donn�es n�c�ssaires" au bon fonctionnement et � la coh�rence du suivi de trajectoire.
 	// Il y a donc copie d'un certains nombre de donn�es
@@ -74,6 +74,7 @@ void NLTRAJECTORY_PACK::setup(const NLPATH* ppath, const NLDRIVETRAINSPECS* pdts
 		NIncreaseArrayCapacity(&m_spotsArray, requiredspotsarraysize - m_spotsArray.Capacity );
 
 	m_driveTrainSpecifications	= *pdtspecs;
+	m_ramsete					= *pramsete;
 
 	// Au cas o� erase ne fasse plus son travail ...
 	NErrorIf(m_dt, NERROR_INCONSISTENT_VALUES);
@@ -99,7 +100,10 @@ Nu32 NLTRAJECTORY_PACK::read( FILE* pfile)
 			return 0;
 		m_dt					= header.m_dt;
 		m_matrix				= header.m_matrix;
-		
+
+		if (!m_ramsete.read(pfile))
+			return 0;
+
 		if (!m_driveTrainSpecifications.read(pfile))
 			return 0;
 		
@@ -180,6 +184,8 @@ Nu32 NLTRAJECTORY_PACK::read(NLPATH_WORKBENCH* pwb)
 		m_matrix		= ppack->m_matrix;
 		m_dt			= ppack->m_dt;
 
+
+		m_ramsete					= ppack->m_ramsete;
 		m_driveTrainSpecifications	= ppack->m_driveTrainSpecifications;
 		m_pathGeometry				= ppack->m_pathGeometry;
 		
@@ -302,6 +308,9 @@ Nu32 NLTRAJECTORY_PACK::write(FILE* pfile)
 	if (fwrite(&header, sizeof(NLTRAJECTORY_PACK_HEADER), 1, pfile) != 1)
 		return 0;
 
+	if (m_ramsete.write(pfile) != 1)
+		return 0;
+
 	if (m_driveTrainSpecifications.write(pfile) != 1)
 		return 0;
 
@@ -354,8 +363,8 @@ Nu32 NLTRAJECTORY_PACK::load(const Nchar* pfilename)
 	*  Check extension
 	*
 	*/
-	// if (!NStrCheckEnd(pfilename, EXTENSION_NLTRAJECTORY_PACK_BIN))
-	// 	return 0;
+	if (!NStrCheckEnd(pfilename, EXTENSION_NLTRAJECTORY_PACK_BIN))
+		return 0;
 
 	// 0) Ouverture du fichier en lecture
 	FILE* pfile = fopen(pfilename, "rb");
@@ -395,8 +404,8 @@ Nu32 NLTRAJECTORY_PACK::save(const Nchar* pfilename)
 	 *  Check extension
 	 *
 	 */
-	// if (!NStrCheckEnd(pfilename, EXTENSION_NLTRAJECTORY_PACK_BIN))
-	// 	return 0;
+	if (!NStrCheckEnd(pfilename, EXTENSION_NLTRAJECTORY_PACK_BIN))
+		return 0;
 
 	// 0) Ouverture du fichier en ecriture
 	FILE* pfile = fopen(pfilename, "wb");
