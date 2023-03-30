@@ -16,7 +16,7 @@ public:
   void Open();
   void Close();
   void ChangePosition();
-  bool GetState();
+  bool GetClose();
   void Reset();
 
 private:

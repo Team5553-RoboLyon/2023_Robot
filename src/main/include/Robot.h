@@ -34,7 +34,7 @@ public:
 
 private:
   RobotContainer m_robotContainer;
-  AHRS m_ahrs{frc::I2C::Port::kMXP};
+  AHRS m_ahrs{frc::I2C::Port::kOnboard};
 
   frc2::Command *m_autonomousCommand = nullptr;
 };

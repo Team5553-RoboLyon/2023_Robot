@@ -33,10 +33,10 @@
 // #########################    ID Solenoid    #########################
 #define ID_SOLENOID_SHIFTER_A 0
 #define ID_SOLENOID_SHIFTER_B 1
-#define ID_SOLENOID_INTAKE_A 2
-#define ID_SOLENOID_INTAKE_B 3
-#define ID_SOLENOID_GRIPPER_A 4 // 5
-#define ID_SOLENOID_GRIPPER_B 5 // 4
+#define ID_SOLENOID_INTAKE_A 3
+#define ID_SOLENOID_INTAKE_B 2
+#define ID_SOLENOID_GRIPPER_A 5 // 5
+#define ID_SOLENOID_GRIPPER_B 4 // 4
 
 // #########################    ID Encoder    #########################
 

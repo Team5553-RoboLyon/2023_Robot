@@ -21,12 +21,12 @@ Arm::Arm()
 
 double Arm::GetEncoder()
 {
-    return (m_armEncoder.GetDistance() + NDEGtoRAD(123.80));
+    return (m_armEncoder.GetDistance() + NDEGtoRAD(118.0));
 }
 
 void Arm::SetSetpoint(double setpoint)
 {
-    m_armPid.SetSetpoint(NCLAMP(-33.0, setpoint, 129.0));
+    m_armPid.SetSetpoint(NCLAMP(-33.0, setpoint, 118.0));
 }
 
 void Arm::SetGains(double p, double i, double d)

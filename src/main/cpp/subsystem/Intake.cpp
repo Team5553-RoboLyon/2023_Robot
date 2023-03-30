@@ -29,13 +29,13 @@ Intake::Intake()
 void Intake::Open()
 {
     m_IntakeOpen = true;
-    m_intakeSolenoid.Set(frc::DoubleSolenoid::Value::kForward);
+    m_intakeSolenoid.Set(frc::DoubleSolenoid::Value::kReverse);
 }
 
 void Intake::Close()
 {
     m_IntakeOpen = false;
-    m_intakeSolenoid.Set(frc::DoubleSolenoid::Value::kReverse);
+    m_intakeSolenoid.Set(frc::DoubleSolenoid::Value::kForward);
 }
 
 void Intake::ChangePosition()

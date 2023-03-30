@@ -5,7 +5,11 @@
 #include "Robot.h"
 // cc
 // cc
-void Robot::RobotInit() {}
+void Robot::RobotInit()
+{
+  m_ahrs.Calibrate();
+}
+
 void Robot::RobotPeriodic()
 {
   frc2::CommandScheduler::GetInstance().Run();
@@ -24,6 +28,7 @@ void Robot::TeleopInit()
 }
 void Robot::TeleopPeriodic()
 {
+  std::cout << "navX" << m_ahrs.GetAngle() << std::endl;
   frc::SmartDashboard::PutNumber("navX", m_ahrs.GetAngle());
   // m_robotContainer.m_arm.m_speed = m_robotContainer.m_joystickRight.GetY();
 
