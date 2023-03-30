@@ -22,6 +22,7 @@ public:
   void SetGains(double p, double i, double d);
   double GetEncoder();
   void Reset();
+  bool IsWaiting;
 
   Pid m_elevatorPid{0, P_ELEVATOR, I_ELEVATOR, D_ELEVATOR};
   RateLimiter m_ElevatorPidRate;

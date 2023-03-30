@@ -29,6 +29,8 @@ public:
 
   bool IsFinished() override;
 
+  int m_count;
+
 private:
   std::function<double()> m_move;
   Elevator *m_pElevator;

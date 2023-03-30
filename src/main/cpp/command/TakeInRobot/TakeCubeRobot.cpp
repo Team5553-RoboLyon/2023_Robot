@@ -1,7 +1,7 @@
 // Copyright (c) FIRST and other WPILib contributors.
 // Open Source Software; you can modify and/or share it under the terms of
 // the WPILib BSD license file in the root directory of this project.
-
+#
 #include "command/TakeInRobot/TakeCubeRobot.h"
 #include "lib/RblUtils.h"
 
@@ -79,10 +79,77 @@ void TakeCubeRobot::Execute()
 }
 
 // Called once the command ends or is interrupted.
-void TakeCubeRobot::End(bool interrupted) {}
+void TakeCubeRobot::End(bool interrupted)
+{
+  switch (m_State)
+  {
+  case State::High:
+    m_pElevator->SetSetpoint(0.80);
+    m_pArm->SetSetpoint(NDEGtoRAD(90.0));
+    m_pElevator->IsWaiting = true;
+    break;
+  case State::Lowered:
+    m_pElevator->SetSetpoint(0.80);
+    m_pArm->SetSetpoint(NDEGtoRAD(90.0));
+    m_pElevator->IsWaiting = true;
+    break;
+  case State::Taken:
+    m_pElevator->SetSetpoint(0.80);
+    m_pArm->SetSetpoint(NDEGtoRAD(90.0));
+    m_pElevator->IsWaiting = true;
+    break;
+  case State::GoDown:
+    // retour défaut
+    break;
+  case State::Finish:
+    // retour défaut
+    break;
+  default:
+    break;
+  }
+}
 
 // Returns true when the command should end.
 bool TakeCubeRobot::IsFinished()
 {
+  // m_count = 0;
+  // m_count++;
+  // switch (m_State)
+  // {
+  // case (State::High):
+  //   m_pElevator->SetSetpoint(0.80);
+  //   if (m_count > 80)
+  //   {
+  //     m_pArm->SetSetpoint(NDEGtoRAD(90.0));
+  //     return true;
+  //   }
+  //   break;
+  // case (State::Lowered):
+  //   m_pElevator->SetSetpoint(0.80);
+  //   if (m_count > 80)
+  //   {
+  //     m_pArm->SetSetpoint(NDEGtoRAD(90.0));
+  //     return true;
+  //   }
+  //   break;
+  // case (State::Taken):
+  //   m_pElevator->SetSetpoint(0.80);
+  //   if (m_count > 80)
+  //   {
+  //     m_pArm->SetSetpoint(NDEGtoRAD(90.0));
+  //     return true;
+  //   }
+  //   break;
+  // case (State::GoDown):
+  //   m_pArm->SetSetpoint(NDEGtoRAD(90.0));
+  //   if (m_count > 80)
+  //   {
+  //     return true;
+  //   }
+  //   break;
+
+  // default:
+  //   break;
+  // }
   return false;
 }
