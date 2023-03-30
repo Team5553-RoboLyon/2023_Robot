@@ -147,8 +147,8 @@ Nu32 NLCHARACTERIZATION_TABLE::save(const Nchar* pfilename)
 	 *  Check extension
 	 *
 	 */
-	// if (!NStrCheckEnd(pfilename, EXTENSION_NLCHARACTERIZATION_TABLE_BIN))
-	// 	return 0;
+	if (!NStrCheckEnd(pfilename, EXTENSION_NLCHARACTERIZATION_TABLE_BIN))
+		return 0;
 
 	// 0) Ouverture du fichier en ecriture
 	FILE* pfile = fopen(pfilename, "wb");
