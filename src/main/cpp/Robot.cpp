@@ -44,7 +44,15 @@ void Robot::AutonomousPeriodic()
     m_robotContainer.m_intake.Close();
     m_robotContainer.m_intake.SetSpeed(0.0);
     m_robotContainer.m_conveyor.SetSpeed(0.0);
-    m_robotContainer.m_drivetrain.DriveAuto(-0.5, 0.0);
+  }
+
+  if (m_count > 100 and m_count < 500)
+  {
+    m_robotContainer.m_drivetrain.DriveAuto(-0.2, 0.0);
+  }
+  else
+  {
+    m_robotContainer.m_drivetrain.DriveAuto(0.0, 0.0);
   }
 }
 
