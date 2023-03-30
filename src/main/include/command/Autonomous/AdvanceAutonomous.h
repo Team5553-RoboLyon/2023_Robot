@@ -19,7 +19,7 @@ class AdvanceAutonomous
     : public frc2::CommandHelper<frc2::CommandBase, AdvanceAutonomous>
 {
 public:
-  AdvanceAutonomous(Drivetrain *pDrivetrain, int target);
+  AdvanceAutonomous(Drivetrain *pDrivetrain);
 
   void Initialize() override;
 
@@ -31,6 +31,5 @@ public:
 
 private:
   Drivetrain *m_pDrivetrain;
-  int m_target;
   int m_current;
 };

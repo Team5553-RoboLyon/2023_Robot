@@ -18,7 +18,7 @@ void ActiveIntakeMotor::Initialize()
 // Called repeatedly when this Command is scheduled to run
 void ActiveIntakeMotor::Execute()
 {
-  m_pIntake->SetSpeed(0.75);
+  m_pIntake->SetSpeed(0.6);
 }
 
 // Called once the command ends or is interrupted.

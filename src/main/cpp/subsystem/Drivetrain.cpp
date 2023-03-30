@@ -88,10 +88,10 @@ Drivetrain::Drivetrain() : m_GearboxLeftOutAveragedRpt(AVERAGE_SAMPLES_NUMBER),
     m_EncoderRight.Reset();
 
     m_JoystickPrelimited_V.Reset(0.0, 0.0, 2.0); // reset des rate limiters
-    m_JoystickLimited_V.Reset(0.0, 0.0, 0.05);
+    m_JoystickLimited_V.Reset(0.0, 0.0, 0.04);   // 5
 
     m_JoystickPrelimited_W.Reset(0.0, 0.0, 2.0);
-    m_JoystickLimited_W.Reset(0.0, 0.0, 0.05);
+    m_JoystickLimited_W.Reset(0.0, 0.0, 0.04); // 5
 
     // m_logCSV.setItem(0, "joystick_V", 5, &m_JoystickRaw_V.m_current);
     // m_logCSV.setItem(1, "SpeedRobot", 5, &m_GearboxesOutAdjustedRpm.m_current);
@@ -293,7 +293,8 @@ void Drivetrain::ShiftGearUp() // passage de la vitesse en V2
 
 void Drivetrain::ShiftGearDown() // passage de la vitesse en V1
 {
-    // double u = GetGearShiftingVoltage();
+    // double u =
+    GetGearShiftingVoltage();
     // m_JoystickPrelimited_V.m_current = u - ((m_JoystickLimited_V.m_current - u)/m_JoystickLimited_V.m_speed )*m_JoystickPrelimited_V.m_speed;
     m_JoystickLimited_V.Update(m_JoystickPrelimited_V.m_current);
     ActiveBallShifterV1();
@@ -378,7 +379,6 @@ void Drivetrain::Drive(double joystick_V, double joystick_W) //
     }
 
     // m_logCSV.write();
-
     m_MotorLeft1.Set(ctre::phoenix::motorcontrol::ControlMode::PercentOutput, Calcul_De_Notre_Brave_JM(m_JoystickLimited_V.m_current, m_JoystickLimited_W.m_current, 0));
     m_MotorRight1.Set(ctre::phoenix::motorcontrol::ControlMode::PercentOutput, Calcul_De_Notre_Brave_JM(m_JoystickLimited_V.m_current, m_JoystickLimited_W.m_current, 1));
 
@@ -417,6 +417,7 @@ void Drivetrain::Drive(double joystick_V, double joystick_W) //
 
 void Drivetrain::DriveAuto(double speed, double rotation)
 {
+    std::cout << "on passe en frive auto" << std::endl;
     m_MotorLeft1.Set(ctre::phoenix::motorcontrol::ControlMode::PercentOutput, speed + rotation);
     m_MotorRight1.Set(ctre::phoenix::motorcontrol::ControlMode::PercentOutput, speed - rotation);
 }

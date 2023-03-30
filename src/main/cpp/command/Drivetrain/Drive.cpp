@@ -3,6 +3,7 @@
 // the WPILib BSD license file in the root directory of this project.
 
 #include "command/Drivetrain/Drive.h"
+#include "frc/RobotBase.h"
 
 Drive::Drive(std::function<double()> forward, std::function<double()> turn, Drivetrain *pDrivetrain) : m_Forward(forward), m_Turn(turn), m_pDrivetrain(pDrivetrain)
 {
@@ -17,7 +18,10 @@ void Drive::Execute()
 {
   double forward = m_Forward();
   double turn = m_Turn();
-  m_pDrivetrain->Drive(forward, turn);
+  if (!m_pDrivetrain->IsAuto)
+  {
+    m_pDrivetrain->Drive(forward, turn);
+  }
 }
 
 // Called once the command ends or is interrupted.

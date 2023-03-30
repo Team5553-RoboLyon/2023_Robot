@@ -7,7 +7,6 @@
 RobotContainer::RobotContainer()
 {
     ConfigureButtonBindings();
-
     m_drivetrain.SetDefaultCommand(Drive([=]
                                          { return -m_joystickLeft.GetY(); },
                                          [=]
@@ -82,7 +81,8 @@ void RobotContainer::ConfigureButtonBindings()
         } }));
 }
 
-frc2::Command *RobotContainer::GetAutonomousCommand()
-{
-    return &m_autonomousGroupCommand;
-}
+// frc2::Command *RobotContainer::GetAutonomousCommand()
+// {
+
+//     return &m_autonomousGroupCommand;
+// }

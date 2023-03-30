@@ -18,16 +18,46 @@ void Robot::RobotPeriodic()
 
 void Robot::AutonomousInit()
 {
-  m_robotContainer.GetAutonomousCommand()->Schedule();
+  m_robotContainer.m_drivetrain.IsAuto = true;
+  m_robotContainer.m_drivetrain.Reset();
+  m_robotContainer.m_intake.Reset();
+  m_robotContainer.m_gripper.Reset();
+  m_robotContainer.m_arm.Reset();
+  m_robotContainer.m_conveyor.Reset();
+  m_robotContainer.m_elevator.Reset();
+  m_robotContainer.m_turret.Reset();
+  // m_robotContainer.GetAutonomousCommand()->Schedule();
+  m_count = 0;
+  // std::cout << "on passe en auito" << std::endl;
 }
-void Robot::AutonomousPeriodic() {}
+void Robot::AutonomousPeriodic()
+{
+  m_count++;
+  if (m_count < 100)
+  {
+    m_robotContainer.m_intake.Open();
+    m_robotContainer.m_intake.SetSpeed(-0.7);
+    m_robotContainer.m_conveyor.SetSpeed(-0.7);
+  }
+  else
+  {
+    m_robotContainer.m_intake.Close();
+    m_robotContainer.m_intake.SetSpeed(0.0);
+    m_robotContainer.m_conveyor.SetSpeed(0.0);
+    m_robotContainer.m_drivetrain.DriveAuto(-0.5, 0.0);
+  }
+}
 
 void Robot::TeleopInit()
 {
+  m_robotContainer.m_drivetrain.IsAuto = false;
+  // InAutonomous = false;
+
   // m_robotContainer.m_drivetrain.m_logCSV.open("/home/lvuser/", true); // ouverture du fichier de log
 }
 void Robot::TeleopPeriodic()
 {
+
   // std::cout << "navX" << m_ahrs.GetAngle() << std::endl;
   frc::SmartDashboard::PutNumber("navX", m_ahrs.GetAngle());
   // m_robotContainer.m_arm.m_speed = m_robotContainer.m_joystickRight.GetY();
