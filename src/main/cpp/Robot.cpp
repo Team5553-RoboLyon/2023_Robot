@@ -24,6 +24,7 @@ void Robot::TeleopInit()
 }
 void Robot::TeleopPeriodic()
 {
+  frc::SmartDashboard::PutNumber("navX", m_ahrs.GetAngle());
   // m_robotContainer.m_arm.m_speed = m_robotContainer.m_joystickRight.GetY();
 
   // if (m_robotContainer.m_joystickLeft.GetRawButtonPressed(1))

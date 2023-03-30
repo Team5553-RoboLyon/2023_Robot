@@ -7,6 +7,9 @@
 #include <frc/TimedRobot.h>
 #include <frc/smartdashboard/SmartDashboard.h>
 #include "RobotContainer.h"
+#include <AHRS.h>
+#include "frc/SerialPort.h"
+#include "frc/I2C.h"
 
 class Robot : public frc::TimedRobot
 {
@@ -31,6 +34,7 @@ public:
 
 private:
   RobotContainer m_robotContainer;
+  AHRS m_ahrs{frc::I2C::Port::kMXP};
 
   frc2::Command *m_autonomousCommand = nullptr;
 };
