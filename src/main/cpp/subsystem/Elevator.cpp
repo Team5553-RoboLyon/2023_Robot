@@ -36,7 +36,6 @@ double Elevator::GetEncoder()
 
 void Elevator::Periodic()
 {
-    std::cout << GetEncoder() << std::endl;
     double output = m_elevatorPid.Calculate(GetEncoder());
     m_ElevatorPidRate.Update(output);
 
