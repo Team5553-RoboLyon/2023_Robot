@@ -62,7 +62,6 @@ void TakeCones::Execute()
 // Called once the command ends or is interrupted.
 void TakeCones::End(bool interrupted)
 {
-  m_State = State::open;
 }
 
 // Returns true when the command should end.

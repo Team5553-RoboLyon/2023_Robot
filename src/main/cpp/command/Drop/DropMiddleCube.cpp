@@ -21,7 +21,9 @@ void DropMiddleCube::Initialize()
 void DropMiddleCube::Execute() {}
 
 // Called once the command ends or is interrupted.
-void DropMiddleCube::End(bool interrupted) {}
+void DropMiddleCube::End(bool interrupted)
+{
+}
 
 // Returns true when the command should end.
 bool DropMiddleCube::IsFinished()

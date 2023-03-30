@@ -21,7 +21,9 @@ void DropHighCube::Initialize()
 void DropHighCube::Execute() {}
 
 // Called once the command ends or is interrupted.
-void DropHighCube::End(bool interrupted) {}
+void DropHighCube::End(bool interrupted)
+{
+}
 
 // Returns true when the command should end.
 bool DropHighCube::IsFinished()
