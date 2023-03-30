@@ -92,5 +92,5 @@ private:
   // autonome
 
   frc2::SequentialCommandGroup m_autonomousGroupCommand = frc2::SequentialCommandGroup(CompleteInit(&m_drivetrain, &m_intake, &m_gripper, &m_arm, &m_conveyor, &m_elevator, &m_turret),
-                                                                                       AdvanceAutonomous(&m_drivetrain, 100), DropHigh(&m_elevator, &m_arm));
+                                                                                       AdvanceAutonomous(&m_drivetrain, 100));
 };

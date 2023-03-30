@@ -25,6 +25,8 @@ void DropHigh::Execute()
 // Called once the command ends or is interrupted.
 void DropHigh::End(bool interrupted)
 {
+  m_pElevator->SetSetpoint(0.0);
+  m_pArm->SetSetpoint(NDEGtoRAD(90.0));
 }
 
 // Returns true when the command should end.

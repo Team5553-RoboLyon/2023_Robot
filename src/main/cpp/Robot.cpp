@@ -28,7 +28,7 @@ void Robot::TeleopInit()
 }
 void Robot::TeleopPeriodic()
 {
-  std::cout << "navX" << m_ahrs.GetAngle() << std::endl;
+  // std::cout << "navX" << m_ahrs.GetAngle() << std::endl;
   frc::SmartDashboard::PutNumber("navX", m_ahrs.GetAngle());
   // m_robotContainer.m_arm.m_speed = m_robotContainer.m_joystickRight.GetY();
 

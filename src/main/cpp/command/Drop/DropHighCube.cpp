@@ -13,8 +13,8 @@ DropHighCube::DropHighCube(Elevator *pElevator, Arm *pArm) : m_pElevator(pElevat
 // Called when the command is initially scheduled.
 void DropHighCube::Initialize()
 {
-  m_pElevator->SetSetpoint(0.90);
-  m_pArm->SetSetpoint(NDEGtoRAD(110.0));
+  m_pElevator->SetSetpoint(0.98);
+  m_pArm->SetSetpoint(NDEGtoRAD(105.0));
 }
 
 // Called repeatedly when this Command is scheduled to run
@@ -23,6 +23,8 @@ void DropHighCube::Execute() {}
 // Called once the command ends or is interrupted.
 void DropHighCube::End(bool interrupted)
 {
+  m_pElevator->SetSetpoint(0.0);
+  m_pArm->SetSetpoint(NDEGtoRAD(90.0));
 }
 
 // Returns true when the command should end.

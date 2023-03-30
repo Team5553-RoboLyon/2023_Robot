@@ -7,7 +7,6 @@
 #include <frc2/command/CommandBase.h>
 #include <frc2/command/CommandHelper.h>
 #include "subsystem/Turret.h"
-#include "subsystem/Intake.h"
 
 /**
  * An example command.
@@ -20,7 +19,7 @@ class TurnTurret
     : public frc2::CommandHelper<frc2::CommandBase, TurnTurret>
 {
 public:
-  TurnTurret(std::function<double()> turn, Turret *pTurret, Intake *pIntake);
+  TurnTurret(std::function<double()> turn, Turret *pTurret);
 
   void Initialize() override;
 
@@ -33,5 +32,4 @@ public:
 private:
   std::function<double()> m_turn;
   Turret *m_pTurret;
-  Intake *m_pIntake;
 };

@@ -3,6 +3,7 @@
 // the WPILib BSD license file in the root directory of this project.
 
 #include "subsystem/Intake.h"
+#include <iostream>
 
 Intake::Intake()
 {
@@ -28,6 +29,7 @@ Intake::Intake()
 
 void Intake::Open()
 {
+    std::cout << "open" << std::endl;
     m_IntakeOpen = true;
     m_intakeSolenoid.Set(frc::DoubleSolenoid::Value::kReverse);
 }

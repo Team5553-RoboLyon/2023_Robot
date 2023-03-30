@@ -13,8 +13,8 @@ DropMiddleCube::DropMiddleCube(Elevator *pElevator, Arm *pArm) : m_pElevator(pEl
 // Called when the command is initially scheduled.
 void DropMiddleCube::Initialize()
 {
-  m_pElevator->SetSetpoint(0.42);
-  m_pArm->SetSetpoint(NDEGtoRAD(100.0));
+  m_pElevator->SetSetpoint(0.47);
+  m_pArm->SetSetpoint(NDEGtoRAD(95.0));
 }
 
 // Called repeatedly when this Command is scheduled to run
@@ -23,6 +23,8 @@ void DropMiddleCube::Execute() {}
 // Called once the command ends or is interrupted.
 void DropMiddleCube::End(bool interrupted)
 {
+  m_pElevator->SetSetpoint(0.0);
+  m_pArm->SetSetpoint(NDEGtoRAD(90.0));
 }
 
 // Returns true when the command should end.

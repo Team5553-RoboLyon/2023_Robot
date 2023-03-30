@@ -26,7 +26,7 @@ double Arm::GetEncoder()
 
 void Arm::SetSetpoint(double setpoint)
 {
-    m_armPid.SetSetpoint(NCLAMP(-33.0, setpoint, 118.0));
+    m_armPid.SetSetpoint(NCLAMP(-33.0, setpoint, 133.0));
 }
 
 void Arm::SetGains(double p, double i, double d)

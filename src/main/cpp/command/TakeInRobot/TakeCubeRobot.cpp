@@ -52,7 +52,7 @@ void TakeCubeRobot::Execute()
     }
     break;
   case State::Taken:
-    if (m_count > 60) // temps à réduire
+    if (m_count > 50) // temps à réduire
     {
       m_pElevator->SetSetpoint(0.95);
       m_count = 0;

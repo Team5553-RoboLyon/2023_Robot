@@ -16,7 +16,15 @@ RobotContainer::RobotContainer()
 
     m_turret.SetDefaultCommand(TurnTurret([=]
                                           { return m_joystickCopilot.GetZ(); },
-                                          &m_turret, &m_intake));
+                                          &m_turret));
+
+    m_elevator.SetDefaultCommand(MoveElevator([=]
+                                              { return m_joystickCopilot.GetY(); },
+                                              &m_elevator));
+
+    // m_arm.SetDefaultCommand(MoveArm([=]
+    //                                 { return m_joystickCopilot.GetX(); },
+    //                                 &m_arm));
 
     m_CameraPilote = frc::CameraServer::StartAutomaticCapture();
     m_CameraPilote.SetResolution(320, 240);
@@ -60,6 +68,18 @@ void RobotContainer::ConfigureButtonBindings()
 
     frc2::JoystickButton m_ButtonCubeRobot = frc2::JoystickButton(&m_joystickCopilot, 10);
     m_ButtonCubeRobot.WhileActiveContinous(TakeCubeRobot(&m_elevator, &m_arm, &m_gripper));
+
+    frc2::JoystickButton m_ButtonActiveCompressor = frc2::JoystickButton(&m_joystickCopilot, 11);
+    m_ButtonActiveCompressor.WhenActive(frc2::InstantCommand([this]
+                                                             {
+        if (m_compressor.Enabled())
+        {
+            m_compressor.Disable();
+        }
+        else
+        {
+            m_compressor.EnableDigital();
+        } }));
 }
 
 frc2::Command *RobotContainer::GetAutonomousCommand()
