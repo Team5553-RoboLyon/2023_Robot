@@ -21,23 +21,23 @@ void Robot::RobotPeriodic()
 void Robot::AutonomousInit()
 {
   m_robotContainer.m_drivetrain.IsAuto = true;
-  m_robotContainer.GetAutonomousCommand()->Schedule();
+  // m_robotContainer.GetAutonomousCommand()->Schedule();
 
   // ######## NLMOTOR_CHARACTERIZATION ########
   // NLCHARACTERIZATION_TABLE characterization_table(4);
   // characterization_table.importTxt("/home/lvuser/auto/characterization_MultiVarLinearRegression.txt");
 
   m_CrtzL.m_forwardKv = 2.7768955535857174;
-  m_CrtzL.m_backwardKv = 2.812021660337195;         // = m_kv[1]
+  m_CrtzL.m_backwardKv = -2.812021660337195;        // = m_kv[1]
   m_CrtzL.m_forwardKa = 0.43399905394521276;        // = m_ka[0]
-  m_CrtzL.m_backwardKa = 0.3692375083754934;        // = m_ka[1]
+  m_CrtzL.m_backwardKa = -0.3692375083754934;       // = m_ka[1]
   m_CrtzL.m_forwardIntercept = 0.17348065329638107; // = m_intercept[0]
   m_CrtzL.m_backwardIntercept = -0.1536673881482158;
 
   m_CrtzR.m_forwardKv = 2.779743232558036;
-  m_CrtzR.m_backwardKv = 2.775883010820141;         // = m_kv[1]
+  m_CrtzR.m_backwardKv = -2.775883010820141;        // = m_kv[1]
   m_CrtzR.m_forwardKa = 0.4248692255119551;         // = m_ka[0]
-  m_CrtzR.m_backwardKa = 0.39095781941614804;       // = m_ka[1]
+  m_CrtzR.m_backwardKa = -0.39095781941614804;      // = m_ka[1]
   m_CrtzR.m_forwardIntercept = 0.18380021592124685; // = m_intercept[0]
   m_CrtzR.m_backwardIntercept = -0.1990197738348809;
 

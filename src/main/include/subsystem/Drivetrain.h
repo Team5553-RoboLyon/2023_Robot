@@ -74,8 +74,6 @@ public:
 
   void SetVoltage(double voltageR, double voltageL);
 
-  bool IsAuto;
-
   // Côté gauche
   Dynamic m_GearboxLeftOutRawRpt;                    // Vitesse instantanée de sortie de boite ( mesurée par le TroughBore Encoder )
   NdoubleRollingAverage m_GearboxLeftOutAveragedRpt; // Vitesse moyenne de sortie de boite (Moyenne glissante)
