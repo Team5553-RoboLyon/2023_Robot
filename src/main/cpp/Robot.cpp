@@ -21,7 +21,7 @@ void Robot::TeleopInit()
 }
 void Robot::TeleopPeriodic()
 {
-  frc::SmartDashboard::PutNumber("NavX Angle", m_NavX.GetAngle());
+  frc::SmartDashboard::PutNumber("NavX Angle", m_NavX.GetPitch());
 }
 
 void Robot::DisabledInit() {}
