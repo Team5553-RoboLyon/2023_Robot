@@ -43,6 +43,7 @@ private:
   enum class StateAutoCube1
   {
     open,
+    speed,
     close,
     forward,
     finish
@@ -51,6 +52,7 @@ private:
   enum class StateAutoCube2
   {
     open,
+    speed,
     close,
     forward,
     open2,
@@ -68,6 +70,7 @@ private:
   enum class StateAutobalance2
   {
     open,
+    speed,
     close,
     tour,
     forward,

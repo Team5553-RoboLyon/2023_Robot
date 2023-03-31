@@ -11,7 +11,7 @@ void Robot::AutoBalance1()
   switch (m_StateAutobalance1)
   {
   case StateAutobalance1::forward:
-    m_robotContainer.m_drivetrain.DriveAuto(-0.2, 0.0);
+    m_robotContainer.m_drivetrain.DriveAuto(0.2, 0.0);
     if (m_count > 350)
     {
       m_count = 0;
@@ -32,6 +32,10 @@ void Robot::AutoBalance2()
   {
   case StateAutobalance2::open:
     m_robotContainer.m_intake.Open();
+    m_count = 0;
+    m_StateAutobalance2 = StateAutobalance2::speed;
+    break;
+  case StateAutobalance2::speed:
     m_robotContainer.m_intake.SetSpeed(-0.7);
     m_robotContainer.m_conveyor.SetSpeed(-0.7);
     if (m_count > 100)
@@ -40,6 +44,7 @@ void Robot::AutoBalance2()
       m_count = 0;
     }
     break;
+
   case StateAutobalance2::close:
     m_robotContainer.m_intake.Close();
     m_robotContainer.m_intake.SetSpeed(0.0);
@@ -51,7 +56,7 @@ void Robot::AutoBalance2()
     m_pidGyro.SetSetpoint(180.0);
     m_output = m_pidGyro.Calculate(m_ahrs.GetAngle());
     m_robotContainer.m_drivetrain.DriveAuto(m_output, -m_output);
-    if (m_count > 100)
+    if (m_count > 100 or NABS(m_pidGyro.m_error) < 1.0)
     {
       m_count = 0;
       m_StateAutobalance2 = StateAutobalance2::forward;
@@ -73,12 +78,16 @@ void Robot::AutoBalance2()
   }
 }
 
-void Robot::AutoCube1()
+void Robot::AutoCube2()
 {
   switch (m_StateAutoCube2)
   {
   case StateAutoCube2::open:
     m_robotContainer.m_intake.Open();
+    m_StateAutoCube2 = StateAutoCube2::speed;
+    m_count = 0;
+    break;
+  case StateAutoCube2::speed:
     m_robotContainer.m_intake.SetSpeed(-0.7);
     m_robotContainer.m_conveyor.SetSpeed(-0.7);
     if (m_count > 100)
@@ -133,12 +142,17 @@ void Robot::AutoCube1()
   }
 }
 
-void Robot::AutoCube2()
+void Robot::AutoCube1()
 {
   switch (m_StateAutoCube1)
   {
   case StateAutoCube1::open:
     m_robotContainer.m_intake.Open();
+    m_StateAutoCube1 = StateAutoCube1::speed;
+    m_count = 0;
+    break;
+
+  case StateAutoCube1::speed:
     m_robotContainer.m_intake.SetSpeed(-0.7);
     m_robotContainer.m_conveyor.SetSpeed(-0.7);
     if (m_count > 100)
@@ -172,12 +186,14 @@ void Robot::AutoCube2()
 
 void Robot::RobotInit()
 {
+  m_ahrs.Reset();
   m_ahrs.Calibrate();
 }
 
 void Robot::RobotPeriodic()
 {
   frc2::CommandScheduler::GetInstance().Run();
+  frc::SmartDashboard::PutNumber("angleGyro", m_ahrs.GetAngle());
 }
 // on fait
 
