@@ -12,7 +12,7 @@ void Robot::AutoBalance1()
   {
   case StateAutobalance1::forward:
     m_robotContainer.m_drivetrain.DriveAuto(0.4, 0.0);
-    if (m_count > 75)
+    if (m_count > 300 and m_ahrs.GetPitch()) // 75
     {
       m_count = 0;
       m_StateAutobalance1 = StateAutobalance1::finish;
@@ -199,8 +199,8 @@ void Robot::RobotPeriodic()
 
 void Robot::AutonomousInit()
 {
-  // m_StateAutobalance1 = StateAutobalance1::forward;
-  m_StateAutoCube1 = StateAutoCube1::open;
+  m_StateAutobalance1 = StateAutobalance1::forward;
+  // m_StateAutoCube1 = StateAutoCube1::open;
   m_robotContainer.m_drivetrain.IsAuto = true;
   m_robotContainer.m_drivetrain.Reset();
   m_robotContainer.m_intake.Reset();
@@ -238,8 +238,8 @@ void Robot::AutonomousPeriodic()
   //   m_robotContainer.m_drivetrain.DriveAuto(0.0, 0.0);
   // }
 
-  // AutoBalance1();
-  AutoCube1();
+  AutoBalance1();
+  // AutoCube1();
 }
 
 void Robot::TeleopInit()
