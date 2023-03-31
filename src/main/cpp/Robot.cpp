@@ -20,6 +20,13 @@ void Robot::RobotPeriodic()
 
 void Robot::AutonomousInit()
 {
+  m_csv.open("/home/lvuser/", true); // ouverture du fichier de log
+
+  m_csv.setItem(0, "encoderLeft", 5, &m_encoderLeft);
+  m_csv.setItem(0, "encoderRight", 5, &m_encoderRight);
+  m_csv.setItem(0, "gyro", 5, &m_gyroAngle);
+  m_csv.setItem(0, "voltageLeft", 5, &m_VoltageLeft);
+  m_csv.setItem(0, "voltageRight", 5, &m_VoltageRight);
 
   m_robotContainer.m_drivetrain.Reset();
   m_robotContainer.m_elevator.Reset();
@@ -58,6 +65,7 @@ void Robot::AutonomousInit()
 }
 void Robot::AutonomousPeriodic()
 {
+
   // std::cout << "encoderL" << m_robotContainer.m_drivetrain.m_EncoderLeft.GetDistance() << std::endl;
   // std::cout << "encoderR" << m_robotContainer.m_drivetrain.m_EncoderRight.GetDistance() << std::endl;
   std::cout << "gyro" << m_ahrs.GetAngle() << std::endl;
@@ -134,13 +142,19 @@ void Robot::AutonomousPeriodic()
     NErrorIf(1, NERROR_UNAUTHORIZED_CASE);
     break;
   }
+
+  m_encoderLeft = m_robotContainer.m_drivetrain.m_EncoderLeft.GetDistance();
+  m_encoderRight = m_robotContainer.m_drivetrain.m_EncoderRight.GetDistance();
+  m_gyroAngle = m_ahrs.GetAngle();
+  m_VoltageLeft = m_CrtzR.getVoltage(pout->m_rightVelocity, pout->m_rightAcceleration);
+  m_VoltageRight = m_CrtzL.getVoltage(pout->m_leftVelocity, pout->m_leftAcceleration);
+
+  m_csv.write();
 }
 
 void Robot::TeleopInit()
 {
   m_robotContainer.m_drivetrain.IsAuto = false;
-
-  // m_robotContainer.m_drivetrain.m_logCSV.open("/home/lvuser/", true); // ouverture du fichier de log
 }
 void Robot::TeleopPeriodic()
 {
@@ -184,7 +198,7 @@ void Robot::TeleopPeriodic()
 
 void Robot::DisabledInit()
 {
-  // m_robotContainer.m_drivetrain.m_logCSV.close(); // fermeture du fichier de log
+  m_robotContainer.m_drivetrain.m_logCSV.close(); // fermeture du fichier de log
 }
 void Robot::DisabledPeriodic() {}
 

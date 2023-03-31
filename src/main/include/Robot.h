@@ -17,6 +17,7 @@
 #include <AHRS.h>
 #include "frc/I2C.h"
 #include "frc/SerialPort.h"
+#include "lib/NLCsv.h"
 
 class Robot : public frc::TimedRobot
 {
@@ -62,4 +63,12 @@ private:
 
   int m_count;
   bool InAutonomous;
+
+  NLCSV m_csv{5};
+
+  double m_encoderLeft;
+  double m_encoderRight;
+  double m_gyroAngle;
+  double m_VoltageLeft;
+  double m_VoltageRight;
 };
