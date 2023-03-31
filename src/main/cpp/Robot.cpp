@@ -59,7 +59,7 @@ void Robot::AutonomousInit()
   // characterization_table.get(&m_CrtzL, "L1", NFALSE);
   // characterization_table.get(&m_CrtzR, "R1", NFALSE);
 
-  m_TrajectoryPack.load("/home/lvuser/auto/packtest1.trk");
+  m_TrajectoryPack.load("/home/lvuser/auto/auto4.trk");
   m_follower.initialize(&m_TrajectoryPack);
   m_state = Robot::STATE::PATH_FOLLOWING;
 }
