@@ -21,7 +21,7 @@ void TakeCubeRobot::Initialize()
   m_pElevator->SetSetpoint(0.80);
   m_pGripper->Open();
   m_pArm->SetSetpoint(NDEGtoRAD(-35.0)); // valeur théorique à vérifier
-  std::cout << "cube mes couilles" << std::endl;
+  // std::cout << "cube mes couilles" << std::endl;
   m_State = State::High;
   // descend elevateur
 

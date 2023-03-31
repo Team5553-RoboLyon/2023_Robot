@@ -13,7 +13,7 @@ Catch::Catch(Gripper *pGripper) : m_pGripper(pGripper)
 // Called when the command is initially scheduled.
 void Catch::Initialize()
 {
-  std::cout << "on passe la" << std::endl;
+  // std::cout << "on passe la" << std::endl;
   m_pGripper->ChangePosition();
 }
 

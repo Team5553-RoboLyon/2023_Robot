@@ -19,7 +19,7 @@ void ActiveIntakeMotor::Initialize()
 void ActiveIntakeMotor::Execute()
 {
   m_pIntake->SetSpeed(1.0);
-  std::cout << "on" << std::endl;
+  // std::cout << "on" << std::endl;
 }
 
 // Called once the command ends or is interrupted.

@@ -11,6 +11,9 @@
 #include "lib/NL/MotionControl/DriveTrain/Characterization/NLMotorCharacterization.h"
 #include "lib/NL/MotionControl/Trajectory/NLFollowerTank.h"
 #include "lib/NL/MotionControl/Trajectory/NLTrajectoryPack.h"
+#include <AHRS.h>
+#include "frc/I2C.h"
+#include "frc/SerialPort.h"
 
 class Robot : public frc::TimedRobot
 {
@@ -49,6 +52,7 @@ public:
   NLFOLLOWER_TANK m_follower;
 
 private:
+  AHRS m_ahrs{frc::I2C::Port::kOnboard};
   RobotContainer m_robotContainer;
 
   frc2::Command *m_autonomousCommand = nullptr;

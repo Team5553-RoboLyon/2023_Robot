@@ -16,20 +16,40 @@ void Robot::RobotPeriodic()
 
 void Robot::AutonomousInit()
 {
+  m_robotContainer.m_drivetrain.IsAuto = true;
   m_robotContainer.GetAutonomousCommand()->Schedule();
 
   // ######## NLMOTOR_CHARACTERIZATION ########
-  NLCHARACTERIZATION_TABLE characterization_table(4);
-  // characterization_table.importTxt("D:/_PROJETS/FIRST/C++/Simulateur/Simulateur/data/characterization_MultiVarLinearRegression.txt");
-  characterization_table.get(&m_CrtzL, "L1", NFALSE);
-  characterization_table.get(&m_CrtzR, "R1", NFALSE);
+  // NLCHARACTERIZATION_TABLE characterization_table(4);
+  // characterization_table.importTxt("/home/lvuser/auto/characterization_MultiVarLinearRegression.txt");
 
-  m_TrajectoryPack.load("trajectory1.pak");
+  m_CrtzL.m_forwardKv = 2.7768955535857174;
+  m_CrtzL.m_backwardKv = 2.812021660337195;         // = m_kv[1]
+  m_CrtzL.m_forwardKa = 0.43399905394521276;        // = m_ka[0]
+  m_CrtzL.m_backwardKa = 0.3692375083754934;        // = m_ka[1]
+  m_CrtzL.m_forwardIntercept = 0.17348065329638107; // = m_intercept[0]
+  m_CrtzL.m_backwardIntercept = -0.1536673881482158;
+
+  m_CrtzR.m_forwardKv = 2.779743232558036;
+  m_CrtzR.m_backwardKv = 2.775883010820141;         // = m_kv[1]
+  m_CrtzR.m_forwardKa = 0.4248692255119551;         // = m_ka[0]
+  m_CrtzR.m_backwardKa = 0.39095781941614804;       // = m_ka[1]
+  m_CrtzR.m_forwardIntercept = 0.18380021592124685; // = m_intercept[0]
+  m_CrtzR.m_backwardIntercept = -0.1990197738348809;
+
+  // characterization_table.get(&m_CrtzL, "L1", NFALSE);
+  // characterization_table.get(&m_CrtzR, "R1", NFALSE);
+
+  m_TrajectoryPack.load("/home/lvuser/auto/packtest1.trk");
   m_follower.initialize(&m_TrajectoryPack);
   m_state = Robot::STATE::PATH_FOLLOWING;
 }
 void Robot::AutonomousPeriodic()
 {
+  std::cout << "encoderL" << m_robotContainer.m_drivetrain.m_EncoderLeft.GetDistance() << std::endl;
+  std::cout << "encoderR" << m_robotContainer.m_drivetrain.m_EncoderRight.GetDistance() << std::endl;
+  std::cout << "gyro" << m_ahrs.GetAngle() << std::endl;
+
   NLRAMSETEOUTPUT output;
   NLFOLLOWER_TANK_OUTPUT *pout = nullptr;
 
@@ -51,27 +71,23 @@ void Robot::AutonomousPeriodic()
     //			(note dl/dt = vitesse roue gauche et dr/dt = vitesse roue droite  )
     //
 
-    m_follower.estimate(m_leftGearboxEncoder.getRaw() / 8192.0f, m_rightGearboxEncoder.getRaw() / 8192.0f, m_gyro.get());
+    m_follower.estimate(m_robotContainer.m_drivetrain.m_EncoderLeft.GetDistance(), m_robotContainer.m_drivetrain.m_EncoderRight.GetDistance(), NDEGtoRAD(m_ahrs.GetAngle()));
     m_follower.updateTarget(&m_TrajectoryPack, 0.02f);
     pout = m_follower.compute();
+    m_robotContainer.m_drivetrain.SetVoltage(m_CrtzR.getVoltage(pout->m_rightVelocity, pout->m_rightAcceleration), m_CrtzL.getVoltage(pout->m_leftVelocity, pout->m_leftAcceleration));
+    std::cout << m_CrtzR.m_forwardKv << "m_CrtzR.m_forwardKv " << std::endl;
 
-    // m_moteurL1.SetVoltage(m_CrtzL1.getVoltage(pout->m_leftVelocity,		pout->m_leftAcceleration));
-    // m_moteurL2.SetVoltage(m_CrtzL2.getVoltage(pout->m_leftVelocity,		pout->m_leftAcceleration));
-    // m_moteurR1.SetVoltage(m_CrtzR1.getVoltage(pout->m_rightVelocity,	pout->m_rightAcceleration));
-    // m_moteurR2.SetVoltage(m_CrtzR2.getVoltage(pout->m_rightVelocity,	pout->m_rightAcceleration));
-
-    /*
     while (m_follower.getMessage(&message))
     {
       switch (message.m_id)
       {
-        case OPEN_INTAKE:
-          m_allMechanisms.Command("open intake");
-          break;
-        case CLOSE_INTAKE:
-          m_allMechanisms.Command("close intake");
-          break;
-        case ACTIVATE_INTAKE_WHEELS:
+      case OPEN_INTAKE:
+        m_robotContainer.m_intake.Open();
+        break;
+      case CLOSE_INTAKE:
+        m_robotContainer.m_intake.Close();
+        break;
+        /*case ACTIVATE_INTAKE_WHEELS:
           m_allMechanisms.Command("activate intake wheels");
           break;
         case DEACTIVATE_INTAKE_WHEELS:
@@ -91,13 +107,13 @@ void Robot::AutonomousPeriodic()
         case ACTIVATE_SHOOTER:
           break;
         case DEACTIVATE_SHOOTER:
-          break;
+          break;*/
 
-        default:
-          break;
+      default:
+        break;
       }
     }
-    */
+
     break;
 
   case Robot::STATE::PATH_END:
@@ -110,6 +126,8 @@ void Robot::AutonomousPeriodic()
 
 void Robot::TeleopInit()
 {
+  m_robotContainer.m_drivetrain.IsAuto = false;
+
   // m_robotContainer.m_drivetrain.m_logCSV.open("/home/lvuser/", true); // ouverture du fichier de log
 }
 void Robot::TeleopPeriodic()

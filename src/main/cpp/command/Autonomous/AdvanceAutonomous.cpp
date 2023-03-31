@@ -15,14 +15,14 @@ void AdvanceAutonomous::Initialize()
 {
   m_current = 0;
   m_pDrivetrain->Drive(0.2, 0.0);
-  std::cout << "on passe" << std::endl;
+  // std::cout << "on passe" << std::endl;
 }
 
 // Called repeatedly when this Command is scheduled to run
 void AdvanceAutonomous::Execute()
 {
   m_current += 1;
-  std::cout << m_current << std::endl;
+  // std::cout << m_current << std::endl;
 }
 
 // Called once the command ends or is interrupted.

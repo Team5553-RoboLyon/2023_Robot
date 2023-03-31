@@ -8,18 +8,22 @@
 // Le programmeur du robot veillera � conserver la coh�rence entre l'enum ci-dessous et le contenu du fichier _actionmessages.txt
 // Les 2 d�crivent le m�me ensemble de messages.
 
-// ! Le premier message doit est �gal � 0 ! 
+// ! Le premier message doit est �gal � 0 !
 // .. le suivant � 1, puis 2, etc ...
 typedef enum
 {
 	OPEN_INTAKE = 0,
 	CLOSE_INTAKE,
-	ACTIVATE_INTAKE_WHEELS,
+	ACTIVATE_INTAKE_WHEELS_FORWARD,
+	ACTIVATE_INTAKE_WHEELS_BACKWARD,
 	DEACTIVATE_INTAKE_WHEELS,
-	ACTIVATE_CONVEYOR,
+	ACTIVATE_CONVEYOR_FORWARD,
+	ACTIVATE_CONVEYOR_BACKWARD,
 	DEACTIVATE_CONVEYOR,
-	ACTIVATE_AIM,
-	DEACTIVATE_AIM,
-	ACTIVATE_SHOOTER,
-	DEACTIVATE_SHOOTER
-}NLACTIONMESSAGES_ENUM;
+	GRIPPER_OPEN,
+	GRIPPER_CLOSE,
+	TURRET_0,
+	TURRET_L90,
+	TURRET_R90,
+	TURRET_HOME
+} NLACTIONMESSAGES_ENUM;
