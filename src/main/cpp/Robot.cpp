@@ -16,6 +16,8 @@ void Robot::RobotPeriodic()
 
 void Robot::AutonomousInit()
 {
+  m_ahrs.Reset();
+  m_ahrs.Calibrate();
   m_robotContainer.m_drivetrain.IsAuto = true;
   m_robotContainer.GetAutonomousCommand()->Schedule();
 
@@ -40,7 +42,7 @@ void Robot::AutonomousInit()
   // characterization_table.get(&m_CrtzL, "L1", NFALSE);
   // characterization_table.get(&m_CrtzR, "R1", NFALSE);
 
-  m_TrajectoryPack.load("/home/lvuser/auto/packtest1.trk");
+  m_TrajectoryPack.load("/home/lvuser/auto/autotst.trk");
   m_follower.initialize(&m_TrajectoryPack);
   m_state = Robot::STATE::PATH_FOLLOWING;
 }

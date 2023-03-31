@@ -7,9 +7,9 @@
 RobotContainer::RobotContainer()
 {
     ConfigureButtonBindings();
-    m_arm.SetDefaultCommand(ActiveArmMotor([=]
-                                           { return m_joystickRight.GetY(); },
-                                           &m_arm));
+    // m_arm.SetDefaultCommand(ActiveArmMotor([=]
+    //                                        { return m_joystickRight.GetY(); },
+    //                                        &m_arm));
 
     m_drivetrain.SetDefaultCommand(Drive([=]
                                          { return -m_joystickLeft.GetY(); },
@@ -21,13 +21,13 @@ RobotContainer::RobotContainer()
                                           { return m_joystickCopilot.GetZ(); },
                                           &m_turret));
 
-    m_elevator.SetDefaultCommand(MoveElevator([=]
-                                              { return m_joystickCopilot.GetY(); },
-                                              &m_elevator));
-    if (NABS(m_turret.m_turretPid.m_setpoint) > 10.0)
-    {
-        m_intake.Close();
-    }
+    // m_elevator.SetDefaultCommand(MoveElevator([=]
+    //                                           { return m_joystickCopilot.GetY(); },
+    //                                           &m_elevator));
+    // if (NABS(m_turret.m_turretPid.m_setpoint) > 10.0)
+    // {
+    //     m_intake.Close();
+    // }
 
     m_CameraPilote = frc::CameraServer::StartAutomaticCapture();
     m_CameraPilote.SetResolution(320, 240);
