@@ -10,6 +10,7 @@
 #include <AHRS.h>
 #include "frc/SerialPort.h"
 #include "frc/I2C.h"
+#include "lib/Pid.h"
 
 class Robot : public frc::TimedRobot
 {
@@ -32,7 +33,55 @@ public:
   void SimulationInit() override;
   void SimulationPeriodic() override;
 
+  void AutoCube1();
+  void AutoCube2();
+
+  void AutoBalance1();
+  void AutoBalance2();
+
 private:
+  enum class StateAutoCube1
+  {
+    open,
+    close,
+    forward,
+    finish
+  };
+
+  enum class StateAutoCube2
+  {
+    open,
+    close,
+    forward,
+    open2,
+    close2,
+    backward,
+    finish
+  };
+
+  enum class StateAutobalance1
+  {
+    forward,
+    finish
+  };
+
+  enum class StateAutobalance2
+  {
+    open,
+    close,
+    tour,
+    forward,
+    finish
+  };
+
+  StateAutoCube1 m_StateAutoCube1;
+  StateAutoCube2 m_StateAutoCube2;
+  StateAutobalance1 m_StateAutobalance1;
+  StateAutobalance2 m_StateAutobalance2;
+
+  Pid m_pidGyro{
+      0.0, 0.0011, 0.0, 0.0};
+
   RobotContainer m_robotContainer;
   AHRS m_ahrs{frc::I2C::Port::kOnboard};
 
@@ -40,4 +89,5 @@ private:
 
   int m_count;
   bool InAutonomous;
+  double m_output;
 };

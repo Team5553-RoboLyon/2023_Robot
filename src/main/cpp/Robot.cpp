@@ -5,6 +5,171 @@
 #include "Robot.h"
 // cc
 // cc
+
+void Robot::AutoBalance1()
+{
+  switch (m_StateAutobalance1)
+  {
+  case StateAutobalance1::forward:
+    m_robotContainer.m_drivetrain.DriveAuto(-0.2, 0.0);
+    if (m_count > 350)
+    {
+      m_count = 0;
+      m_StateAutobalance1 = StateAutobalance1::finish;
+    }
+    break;
+  case StateAutobalance1::finish:
+    m_robotContainer.m_drivetrain.DriveAuto(0.0, 0.0);
+    break;
+  default:
+    break;
+  }
+}
+
+void Robot::AutoBalance2()
+{
+  switch (m_StateAutobalance2)
+  {
+  case StateAutobalance2::open:
+    m_robotContainer.m_intake.Open();
+    m_robotContainer.m_intake.SetSpeed(-0.7);
+    m_robotContainer.m_conveyor.SetSpeed(-0.7);
+    if (m_count > 100)
+    {
+      m_StateAutobalance2 = StateAutobalance2::close;
+      m_count = 0;
+    }
+    break;
+  case StateAutobalance2::close:
+    m_robotContainer.m_intake.Close();
+    m_robotContainer.m_intake.SetSpeed(0.0);
+    m_robotContainer.m_conveyor.SetSpeed(0.0);
+    m_count = 0;
+    m_StateAutobalance2 = StateAutobalance2::tour;
+    break;
+  case StateAutobalance2::tour:
+    m_pidGyro.SetSetpoint(180.0);
+    m_output = m_pidGyro.Calculate(m_ahrs.GetAngle());
+    m_robotContainer.m_drivetrain.DriveAuto(m_output, -m_output);
+    if (m_count > 100)
+    {
+      m_count = 0;
+      m_StateAutobalance2 = StateAutobalance2::forward;
+    }
+    break;
+  case StateAutobalance2::forward:
+    m_robotContainer.m_drivetrain.DriveAuto(-0.2, 0.0);
+    if (m_count > 350)
+    {
+      m_count = 0;
+      m_StateAutobalance2 = StateAutobalance2::finish;
+    }
+    break;
+  case StateAutobalance2::finish:
+    m_robotContainer.m_drivetrain.DriveAuto(0.0, 0.0);
+    break;
+  default:
+    break;
+  }
+}
+
+void Robot::AutoCube1()
+{
+  switch (m_StateAutoCube2)
+  {
+  case StateAutoCube2::open:
+    m_robotContainer.m_intake.Open();
+    m_robotContainer.m_intake.SetSpeed(-0.7);
+    m_robotContainer.m_conveyor.SetSpeed(-0.7);
+    if (m_count > 100)
+    {
+      m_StateAutoCube2 = StateAutoCube2::close;
+      m_count = 0;
+    }
+    break;
+  case StateAutoCube2::close:
+    m_robotContainer.m_intake.Close();
+    m_robotContainer.m_intake.SetSpeed(0.0);
+    m_robotContainer.m_conveyor.SetSpeed(0.0);
+    m_count = 0;
+    m_StateAutoCube2 = StateAutoCube2::forward;
+    break;
+  case StateAutoCube2::forward:
+    m_robotContainer.m_drivetrain.DriveAuto(-0.2, 0.0);
+    if (m_count > 400)
+    {
+      m_count = 0;
+      m_StateAutoCube2 = StateAutoCube2::open2;
+    }
+    break;
+  case StateAutoCube2::open2:
+    m_robotContainer.m_intake.Open();
+    m_robotContainer.m_intake.SetSpeed(0.7);
+    m_robotContainer.m_conveyor.SetSpeed(0.7);
+    if (m_count > 100)
+    {
+      m_StateAutoCube2 = StateAutoCube2::close2;
+      m_count = 0;
+    }
+    break;
+  case StateAutoCube2::close2:
+    m_robotContainer.m_intake.Close();
+    m_robotContainer.m_intake.SetSpeed(0.0);
+    m_robotContainer.m_conveyor.SetSpeed(0.0);
+    m_count = 0;
+    m_StateAutoCube2 = StateAutoCube2::backward;
+    break;
+  case StateAutoCube2::backward:
+    m_robotContainer.m_drivetrain.DriveAuto(0.2, 0.0);
+    if (m_count > 50)
+    {
+      m_count = 0;
+      m_StateAutoCube2 = StateAutoCube2::finish;
+    }
+    break;
+  case StateAutoCube2::finish:
+    m_robotContainer.m_drivetrain.DriveAuto(0.0, 0.0);
+    break;
+  }
+}
+
+void Robot::AutoCube2()
+{
+  switch (m_StateAutoCube1)
+  {
+  case StateAutoCube1::open:
+    m_robotContainer.m_intake.Open();
+    m_robotContainer.m_intake.SetSpeed(-0.7);
+    m_robotContainer.m_conveyor.SetSpeed(-0.7);
+    if (m_count > 100)
+    {
+      m_StateAutoCube1 = StateAutoCube1::close;
+      m_count = 0;
+    }
+    break;
+  case StateAutoCube1::close:
+    m_robotContainer.m_intake.Close();
+    m_robotContainer.m_intake.SetSpeed(0.0);
+    m_robotContainer.m_conveyor.SetSpeed(0.0);
+    m_count = 0;
+    m_StateAutoCube1 = StateAutoCube1::forward;
+    break;
+  case StateAutoCube1::forward:
+    m_robotContainer.m_drivetrain.DriveAuto(-0.2, 0.0);
+    if (m_count > 350)
+    {
+      m_count = 0;
+      m_StateAutoCube1 = StateAutoCube1::finish;
+    }
+    break;
+  case StateAutoCube1::finish:
+    m_robotContainer.m_drivetrain.DriveAuto(0.0, 0.0);
+    break;
+  default:
+    break;
+  }
+}
+
 void Robot::RobotInit()
 {
   m_ahrs.Calibrate();
@@ -33,27 +198,27 @@ void Robot::AutonomousInit()
 void Robot::AutonomousPeriodic()
 {
   m_count++;
-  if (m_count < 100)
-  {
-    m_robotContainer.m_intake.Open();
-    m_robotContainer.m_intake.SetSpeed(-0.7);
-    m_robotContainer.m_conveyor.SetSpeed(-0.7);
-  }
-  else
-  {
-    m_robotContainer.m_intake.Close();
-    m_robotContainer.m_intake.SetSpeed(0.0);
-    m_robotContainer.m_conveyor.SetSpeed(0.0);
-  }
+  // if (m_count < 100)
+  // {
+  //   m_robotContainer.m_intake.Open();
+  //   m_robotContainer.m_intake.SetSpeed(-0.7);
+  //   m_robotContainer.m_conveyor.SetSpeed(-0.7);
+  // }
+  // else
+  // {
+  //   m_robotContainer.m_intake.Close();
+  //   m_robotContainer.m_intake.SetSpeed(0.0);
+  //   m_robotContainer.m_conveyor.SetSpeed(0.0);
+  // }
 
-  if (m_count > 100 and m_count < 500)
-  {
-    m_robotContainer.m_drivetrain.DriveAuto(-0.2, 0.0);
-  }
-  else
-  {
-    m_robotContainer.m_drivetrain.DriveAuto(0.0, 0.0);
-  }
+  // if (m_count > 100 and m_count < 500)
+  // {
+  //   m_robotContainer.m_drivetrain.DriveAuto(-0.2, 0.0);
+  // }
+  // else
+  // {
+  //   m_robotContainer.m_drivetrain.DriveAuto(0.0, 0.0);
+  // }
 }
 
 void Robot::TeleopInit()
