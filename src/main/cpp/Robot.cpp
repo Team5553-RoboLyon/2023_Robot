@@ -12,7 +12,8 @@ void Robot::AutoBalance1()
   {
   case StateAutobalance1::forward:
     m_robotContainer.m_drivetrain.DriveAuto(0.4, 0.0);
-    if (m_count > 300 and m_ahrs.GetPitch()) // 75
+    // if (m_count > 300 or (m_ahrs.GetPitch() >= -1.0 and m_count > 50)) // 75
+    if (m_count > 77)
     {
       m_count = 0;
       m_StateAutobalance1 = StateAutobalance1::finish;
@@ -56,7 +57,7 @@ void Robot::AutoBalance2()
     m_pidGyro.SetSetpoint(180.0);
     m_output = m_pidGyro.Calculate(m_ahrs.GetAngle());
     m_robotContainer.m_drivetrain.DriveAuto(m_output, -m_output);
-    if (m_count > 100 or NABS(m_pidGyro.m_error) < 1.0)
+    if (NABS(m_pidGyro.m_error) < 1.0)
     {
       m_count = 0;
       m_StateAutobalance2 = StateAutobalance2::forward;
@@ -200,6 +201,8 @@ void Robot::RobotPeriodic()
 void Robot::AutonomousInit()
 {
   m_StateAutobalance1 = StateAutobalance1::forward;
+  // m_StateAutobalance2 = StateAutobalance2::open;
+
   // m_StateAutoCube1 = StateAutoCube1::open;
   m_robotContainer.m_drivetrain.IsAuto = true;
   m_robotContainer.m_drivetrain.Reset();
@@ -239,6 +242,8 @@ void Robot::AutonomousPeriodic()
   // }
 
   AutoBalance1();
+  // AutoBalance2();
+
   // AutoCube1();
 }
 

@@ -66,7 +66,7 @@ void RobotContainer::ConfigureButtonBindings()
     m_ButtonCubeDropMiddle.WhileActiveContinous(DropMiddleCube(&m_elevator, &m_arm));
 
     frc2::JoystickButton m_ButtonCubeRobot = frc2::JoystickButton(&m_joystickCopilot, 10);
-    m_ButtonCubeRobot.WhileActiveContinous(TakeCubeRobot(&m_elevator, &m_arm, &m_gripper));
+    m_ButtonCubeRobot.WhenPressed(TakeCubeRobot(&m_elevator, &m_arm, &m_gripper));
 
     frc2::JoystickButton m_ButtonActiveCompressor = frc2::JoystickButton(&m_joystickCopilot, 11);
     m_ButtonActiveCompressor.WhenActive(frc2::InstantCommand([this]
