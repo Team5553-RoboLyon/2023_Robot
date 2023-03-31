@@ -198,7 +198,7 @@ void Robot::TeleopPeriodic()
 
 void Robot::DisabledInit()
 {
-  m_robotContainer.m_drivetrain.m_logCSV.close(); // fermeture du fichier de log
+  m_csv.close(); // fermeture du fichier de log
 }
 void Robot::DisabledPeriodic() {}
 
