@@ -23,7 +23,7 @@ void Robot::AutoBalance1()
   break;
   case StateAutobalance1::stop:
   {
-    if (NABS(m_ahrs.GetPitch()) > 3 and m_count > 50)
+    if (NABS(NRADtoDEG(m_ahrs.GetPitch())) > 5 and m_count > 250)
       m_robotContainer.m_drivetrain.DriveAuto(0.0, 0.0);
     else
     {
@@ -232,12 +232,12 @@ void Robot::RobotInit()
 void Robot::RobotPeriodic()
 {
   frc2::CommandScheduler::GetInstance().Run();
-  frc::SmartDashboard::PutNumber("angleGyro", m_ahrs.GetAngle());
 }
 // on fait
 
 void Robot::AutonomousInit()
 {
+
   m_StateAutobalance1 = StateAutobalance1::forward;
   // m_StateAutobalance2 = StateAutobalance2::open;
 
@@ -288,13 +288,15 @@ void Robot::AutonomousPeriodic()
 void Robot::TeleopInit()
 {
   m_robotContainer.m_drivetrain.IsAuto = false;
+
   // InAutonomous = false;
 
   // m_robotContainer.m_drivetrain.m_logCSV.open("/home/lvuser/", true); // ouverture du fichier de log
 }
 void Robot::TeleopPeriodic()
 {
-
+  frc::SmartDashboard::PutNumber("angleGyro", NRADtoDEG(m_ahrs.GetPitch()));
+  std::cout << m_ahrs.GetPitch() << std::endl;
   // std::cout << "navX" << m_ahrs.GetAngle() << std::endl;
   frc::SmartDashboard::PutNumber("navX", m_ahrs.GetAngle());
   // m_robotContainer.m_arm.m_speed = m_robotContainer.m_joystickRight.GetY();
