@@ -64,6 +64,9 @@ private:
   enum class StateAutobalance1
   {
     forward,
+    stop,
+    recule,
+    forwardV2,
     finish
   };
 

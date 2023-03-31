@@ -11,17 +11,55 @@ void Robot::AutoBalance1()
   switch (m_StateAutobalance1)
   {
   case StateAutobalance1::forward:
+  {
     m_robotContainer.m_drivetrain.DriveAuto(0.4, 0.0);
     // if (m_count > 300 or (m_ahrs.GetPitch() >= -1.0 and m_count > 50)) // 75
-    if (m_count > 77)
+    if (m_count > 75)
+    {
+      m_count = 0;
+      m_StateAutobalance1 = StateAutobalance1::stop;
+    }
+  }
+  break;
+  case StateAutobalance1::stop:
+  {
+    if (NABS(m_ahrs.GetPitch()) > 3 and m_count > 50)
+      m_robotContainer.m_drivetrain.DriveAuto(0.0, 0.0);
+    else
+    {
+      m_count = 0;
+      m_StateAutobalance1 = StateAutobalance1::recule;
+    }
+  }
+  break;
+  case StateAutobalance1::recule:
+  {
+    m_robotContainer.m_drivetrain.DriveAuto(-0.4, 0.0);
+    if (m_count > 25)
+    {
+      m_robotContainer.m_drivetrain.DriveAuto(0.0, 0.0);
+      m_count = 0;
+      m_StateAutobalance1 = StateAutobalance1::forwardV2;
+    }
+  }
+  break;
+
+  case StateAutobalance1::forwardV2:
+  {
+    m_robotContainer.m_drivetrain.DriveAuto(0.7, 0.0);
+    if (m_count > 35)
     {
       m_count = 0;
       m_StateAutobalance1 = StateAutobalance1::finish;
     }
-    break;
+  }
+  break;
+
   case StateAutobalance1::finish:
+  {
     m_robotContainer.m_drivetrain.DriveAuto(0.0, 0.0);
-    break;
+  }
+  break;
   default:
     break;
   }
