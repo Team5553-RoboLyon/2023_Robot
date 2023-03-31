@@ -32,5 +32,5 @@ public:
   void SimulationPeriodic() override;
 
 private:
-  AHRS m_NavX{frc::I2C::Port::kMXP};
+  AHRS m_NavX{frc::I2C::Port::kOnboard};
 };
