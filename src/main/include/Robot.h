@@ -18,6 +18,8 @@
 #include "frc/I2C.h"
 #include "frc/SerialPort.h"
 #include "lib/NLCsv.h"
+#include "frc/ADXRS450_Gyro.h"
+#include "frc/SPI.h"
 
 class Robot : public frc::TimedRobot
 {
@@ -56,8 +58,9 @@ public:
   NLFOLLOWER_TANK m_follower;
 
 private:
-  AHRS m_ahrs{frc::I2C::Port::kOnboard};
+  // frc::ADXRS450_Gyro m_ahrs{frc::SPI::Port::kOnboardCS0};
   RobotContainer m_robotContainer;
+  AHRS m_ahrs{frc::I2C::Port::kOnboard};
 
   frc2::Command *m_autonomousCommand = nullptr;
 

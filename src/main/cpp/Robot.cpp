@@ -9,6 +9,7 @@
 // cc
 void Robot::RobotInit()
 {
+  m_ahrs.Reset();
   m_ahrs.Calibrate();
 }
 
@@ -20,13 +21,14 @@ void Robot::RobotPeriodic()
 
 void Robot::AutonomousInit()
 {
+
   m_csv.open("/home/lvuser/", true); // ouverture du fichier de log
 
   m_csv.setItem(0, "encoderLeft", 5, &m_encoderLeft);
-  m_csv.setItem(0, "encoderRight", 5, &m_encoderRight);
-  m_csv.setItem(0, "gyro", 5, &m_gyroAngle);
-  m_csv.setItem(0, "voltageLeft", 5, &m_VoltageLeft);
-  m_csv.setItem(0, "voltageRight", 5, &m_VoltageRight);
+  m_csv.setItem(1, "encoderRight", 5, &m_encoderRight);
+  m_csv.setItem(2, "gyro", 5, &m_gyroAngle);
+  m_csv.setItem(3, "voltageLeft", 5, &m_VoltageLeft);
+  m_csv.setItem(4, "voltageRight", 5, &m_VoltageRight);
 
   m_robotContainer.m_drivetrain.Reset();
   m_robotContainer.m_elevator.Reset();
@@ -59,7 +61,7 @@ void Robot::AutonomousInit()
   // characterization_table.get(&m_CrtzL, "L1", NFALSE);
   // characterization_table.get(&m_CrtzR, "R1", NFALSE);
 
-  m_TrajectoryPack.load("/home/lvuser/auto/auto4.trk");
+  m_TrajectoryPack.load("/home/lvuser/auto/auto5.trk");
   m_follower.initialize(&m_TrajectoryPack);
   m_state = Robot::STATE::PATH_FOLLOWING;
 }
@@ -154,12 +156,13 @@ void Robot::AutonomousPeriodic()
 
 void Robot::TeleopInit()
 {
+
   m_robotContainer.m_drivetrain.IsAuto = false;
 }
 void Robot::TeleopPeriodic()
 {
 
-  // std::cout << "navX" << m_ahrs.GetAngle() << std::endl;
+  std::cout << "navX" << m_ahrs.GetAngle() << std::endl;
   frc::SmartDashboard::PutNumber("navX", m_ahrs.GetAngle());
   // m_robotContainer.m_arm.m_speed = m_robotContainer.m_joystickRight.GetY();
 
