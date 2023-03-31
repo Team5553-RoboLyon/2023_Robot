@@ -379,8 +379,11 @@ void Drivetrain::Drive(double joystick_V, double joystick_W) //
     }
 
     // m_logCSV.write();
-    m_MotorLeft1.Set(ctre::phoenix::motorcontrol::ControlMode::PercentOutput, Calcul_De_Notre_Brave_JM(m_JoystickLimited_V.m_current, m_JoystickLimited_W.m_current, 0));
-    m_MotorRight1.Set(ctre::phoenix::motorcontrol::ControlMode::PercentOutput, Calcul_De_Notre_Brave_JM(m_JoystickLimited_V.m_current, m_JoystickLimited_W.m_current, 1));
+    if (!IsAuto)
+    {
+        m_MotorLeft1.Set(ctre::phoenix::motorcontrol::ControlMode::PercentOutput, Calcul_De_Notre_Brave_JM(m_JoystickLimited_V.m_current, m_JoystickLimited_W.m_current, 0));
+        m_MotorRight1.Set(ctre::phoenix::motorcontrol::ControlMode::PercentOutput, Calcul_De_Notre_Brave_JM(m_JoystickLimited_V.m_current, m_JoystickLimited_W.m_current, 1));
+    }
 
     // frc::SmartDashboard::PutNumber("m_JoystickPrelimited_V",    m_JoystickPrelimited_V.m_current);
     // frc::SmartDashboard::PutNumber("m_JoystickLimited_V",       m_JoystickLimited_V.m_current);
@@ -436,4 +439,13 @@ void Drivetrain::Reset()
     ActiveBallShifterV1();
     m_State = State::lowGear;
     m_CurrentGearboxRatio = REDUC_V1;
+}
+void Drivetrain::SetVoltage(double voltageR, double voltageL)
+{
+    voltageR = voltageR / 12.0;
+    voltageL = voltageL / 12.0;
+    std::cout << "voltageL" << voltageL << std::endl;
+    std::cout << "voltageR" << voltageR << std::endl;
+    m_MotorLeft1.Set(ctre::phoenix::motorcontrol::ControlMode::PercentOutput, voltageL);
+    m_MotorRight1.Set(ctre::phoenix::motorcontrol::ControlMode::PercentOutput, voltageR);
 }

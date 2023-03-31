@@ -72,6 +72,10 @@ public:
   void ShiftGearDown();
   void Reset();
 
+  void SetVoltage(double voltageR, double voltageL);
+
+  bool IsAuto;
+
   // Côté gauche
   Dynamic m_GearboxLeftOutRawRpt;                    // Vitesse instantanée de sortie de boite ( mesurée par le TroughBore Encoder )
   NdoubleRollingAverage m_GearboxLeftOutAveragedRpt; // Vitesse moyenne de sortie de boite (Moyenne glissante)
@@ -115,6 +119,8 @@ public:
   NLCSV m_logCSV{5}; // log csv
   bool IsAuto;
 
+  frc::Encoder m_EncoderRight{ID_ENCODER_DRIVE_TRAIN_RIGHT_A, ID_ENCODER_DRIVE_TRAIN_RIGHT_B, true};
+  frc::Encoder m_EncoderLeft{ID_ENCODER_DRIVE_TRAIN_LEFT_A, ID_ENCODER_DRIVE_TRAIN_LEFT_B, false};
 
 private:
   ctre::phoenix::motorcontrol::can::TalonFX m_MotorRight1{ID_MOTOR_DRIVE_TRAIN_RIGHT};
@@ -124,9 +130,6 @@ private:
   ctre::phoenix::motorcontrol::can::TalonFX m_MotorLeft1{ID_MOTOR_DRIVE_TRAIN_LEFT};
   ctre::phoenix::motorcontrol::can::TalonFX m_MotorLeft2{ID_MOTOR_DRIVE_TRAIN_LEFT_2};
   ctre::phoenix::motorcontrol::can::TalonFX m_MotorLeft3{ID_MOTOR_DRIVE_TRAIN_LEFT_3};
-
-  frc::Encoder m_EncoderRight{ID_ENCODER_DRIVE_TRAIN_RIGHT_A, ID_ENCODER_DRIVE_TRAIN_RIGHT_B, true};
-  frc::Encoder m_EncoderLeft{ID_ENCODER_DRIVE_TRAIN_LEFT_A, ID_ENCODER_DRIVE_TRAIN_LEFT_B, false};
 
   frc::DoubleSolenoid m_BallShifterSolenoidLeft{frc::PneumaticsModuleType::REVPH, ID_SOLENOID_SHIFTER_A, ID_SOLENOID_SHIFTER_B};
   // frc::PowerDistribution::ModuleType m_PDP{0};
