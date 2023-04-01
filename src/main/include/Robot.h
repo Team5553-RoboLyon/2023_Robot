@@ -35,6 +35,7 @@ public:
 
   void AutoCube1();
   void AutoCube2();
+  void AutoCubeHaut();
 
   void AutoBalance1();
   void AutoBalance2();
@@ -80,10 +81,24 @@ private:
     finish
   };
 
+  enum class StateAutoCubeHaut
+  {
+    Init,
+    High,
+    Lowered,
+    Taken,
+    GoDown,
+    Forward,
+    Open,
+    Recule,
+    Finish
+  };
+
   StateAutoCube1 m_StateAutoCube1;
   StateAutoCube2 m_StateAutoCube2;
   StateAutobalance1 m_StateAutobalance1;
   StateAutobalance2 m_StateAutobalance2;
+  StateAutoCubeHaut m_StateAutoCubeHaut;
 
   Pid m_pidGyro{
       0.0, 0.0011, 0.0, 0.0};

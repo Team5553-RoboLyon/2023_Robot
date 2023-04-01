@@ -223,10 +223,100 @@ void Robot::AutoCube1()
   }
 }
 
+void Robot::AutoCubeHaut()
+{
+  switch (m_StateAutoCubeHaut)
+  {
+  case StateAutoCubeHaut::Init:
+    m_robotContainer.m_elevator.SetSetpoint(0.80);
+    m_robotContainer.m_gripper.Open();
+    m_count = 0;
+    if (m_count > 100)
+    {
+      m_robotContainer.m_arm.SetSetpoint(NDEGtoRAD(-35.0)); // valeur théorique à vérifier
+      m_StateAutoCubeHaut = StateAutoCubeHaut::High;
+    }
+    break;
+  case StateAutoCubeHaut::High:
+    if (m_count > 80) // temps à réduire
+    {
+      m_robotContainer.m_elevator.SetSetpoint(0.30);
+      m_count = 0;
+      m_StateAutoCubeHaut = StateAutoCubeHaut::Lowered;
+    }
+    break;
+  case StateAutoCubeHaut::Lowered:
+    if (m_count > 45) // temps à réduire
+    {
+      m_robotContainer.m_gripper.Close();
+      m_count = 0;
+      m_StateAutoCubeHaut = StateAutoCubeHaut::Taken;
+    }
+    break;
+  case StateAutoCubeHaut::Taken:
+    if (m_count > 50) // temps à réduire
+    {
+      m_robotContainer.m_elevator.SetSetpoint(0.98);
+      m_count = 0;
+      m_StateAutoCubeHaut = StateAutoCubeHaut::GoDown;
+    }
+    break;
+  case StateAutoCubeHaut::GoDown:
+    if (m_count > 50) // temps à réduire
+    {
+      m_robotContainer.m_arm.SetSetpoint(NDEGtoRAD(105.0));
+      m_count = 0;
+      m_StateAutoCubeHaut = StateAutoCubeHaut::Forward;
+    }
+    break;
+  case StateAutoCubeHaut::Forward:
+  {
+    m_robotContainer.m_drivetrain.DriveAuto(0.2, 0.0);
+    if (m_count > 100)
+    {
+      m_count = 0;
+      m_robotContainer.m_drivetrain.DriveAuto(0.0, 0.0);
+      m_StateAutoCubeHaut = StateAutoCubeHaut::Open;
+    }
+  }
+  break;
+
+  case StateAutoCubeHaut::Open:
+  {
+    m_robotContainer.m_gripper.Open();
+    if (m_count > 50)
+    {
+      m_count = 0;
+      m_StateAutoCubeHaut = StateAutoCubeHaut::Recule;
+    }
+  }
+  break;
+  case StateAutoCubeHaut::Recule:
+  {
+    m_robotContainer.m_drivetrain.DriveAuto(-0.3, 0.0);
+    if (m_count > 100)
+    {
+      m_count = 0;
+      m_robotContainer.m_drivetrain.DriveAuto(0.0, 0.0);
+      m_StateAutoCubeHaut = StateAutoCubeHaut::Finish;
+    }
+  }
+  case StateAutoCubeHaut::Finish:
+  {
+    m_robotContainer.m_arm.SetSetpoint(NDEGtoRAD(90.0));
+    m_robotContainer.m_elevator.SetSetpoint(0.0);
+  }
+
+  break;
+  default:
+    break;
+  };
+}
+
 void Robot::RobotInit()
 {
-  m_ahrs.Reset();
-  m_ahrs.Calibrate();
+  // m_ahrs.Reset();
+  // m_ahrs.Calibrate();
 }
 
 void Robot::RobotPeriodic()
@@ -238,11 +328,14 @@ void Robot::RobotPeriodic()
 void Robot::AutonomousInit()
 {
 
-  m_StateAutobalance1 = StateAutobalance1::forward;
+  // m_StateAutobalance1 = StateAutobalance1::forward;
   // m_StateAutobalance2 = StateAutobalance2::open;
+  // m_StateAutoCubeHaut = StateAutoCubeHaut::Init;
 
-  // m_StateAutoCube1 = StateAutoCube1::open;
+  m_StateAutoCube1 = StateAutoCube1::open;
   m_robotContainer.m_drivetrain.IsAuto = true;
+  m_robotContainer.m_elevator.IsAuto = true;
+
   m_robotContainer.m_drivetrain.Reset();
   m_robotContainer.m_intake.Reset();
   m_robotContainer.m_gripper.Reset();
@@ -279,15 +372,17 @@ void Robot::AutonomousPeriodic()
   //   m_robotContainer.m_drivetrain.DriveAuto(0.0, 0.0);
   // }
 
-  AutoBalance1();
+  // AutoBalance1();
   // AutoBalance2();
 
-  // AutoCube1();
+  AutoCube1();
+  // AutoCubeHaut();
 }
 
 void Robot::TeleopInit()
 {
   m_robotContainer.m_drivetrain.IsAuto = false;
+  m_robotContainer.m_elevator.IsAuto = false;
 
   // InAutonomous = false;
 
@@ -308,8 +403,8 @@ void Robot::TeleopPeriodic()
   // frc::SmartDashboard::PutNumber("x", m_robotContainer.m_copiloter.m_x);
   // frc::SmartDashboard::PutNumber("h", m_robotContainer.m_copiloter.m_h);
   // frc::SmartDashboard::PutNumber("tetha", m_robotContainer.m_copiloter.m_theta);
-  // frc::SmartDashboard::PutNumber("encoderElevator", m_robotContainer.m_copiloter.m_elevator.GetEncoder());
-  // frc::SmartDashboard::PutNumber("encoderArm", m_robotContainer.m_copiloter.m_arm.GetEncoder());
+  frc::SmartDashboard::PutNumber("encoderElevator", m_robotContainer.m_elevator.GetEncoder());
+  frc::SmartDashboard::PutNumber("encoderArm", m_robotContainer.m_arm.GetEncoder());
   frc::SmartDashboard::PutNumber("encoderArm", m_robotContainer.m_arm.GetEncoder());
   frc::SmartDashboard::PutNumber("outputArm", m_robotContainer.m_arm.m_armPid.m_output);
 
