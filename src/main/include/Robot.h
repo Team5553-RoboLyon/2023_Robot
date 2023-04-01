@@ -39,6 +39,7 @@ public:
 
   void AutoBalance1();
   void AutoBalance2();
+  void AutoBalanceTout();
 
 private:
   enum class StateAutoCube1
@@ -48,6 +49,12 @@ private:
     close,
     forward,
     finish
+  };
+
+  enum class StateAutoBalanceTout
+  {
+    forward,
+    stop
   };
 
   enum class StateAutoCube2
@@ -99,6 +106,7 @@ private:
   StateAutobalance1 m_StateAutobalance1;
   StateAutobalance2 m_StateAutobalance2;
   StateAutoCubeHaut m_StateAutoCubeHaut;
+  StateAutoBalanceTout m_StateAutobalanceTout;
 
   Pid m_pidGyro{
       0.0, 0.0011, 0.0, 0.0};

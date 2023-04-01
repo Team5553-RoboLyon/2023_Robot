@@ -5,16 +5,40 @@
 #include "Robot.h"
 // cc
 // cc
-
+void Robot::AutoBalanceTout()
+{
+  switch (m_StateAutobalance1)
+  {
+  case StateAutobalance1::forward:
+  {
+    m_output = NLERP(0.6, 0.4, ((double)m_count / 50.0));
+    m_robotContainer.m_drivetrain.DriveAuto(m_output, 0.0);
+    // if (m_count > 300p or (m_ahrs.GetPitch() >= -1.0 and m_count > 50)) // 75
+    if (m_count > 70)
+    {
+      m_count = 0;
+      m_StateAutobalance1 = StateAutobalance1::stop;
+    }
+  }
+  break;
+  case StateAutobalance1::stop:
+  {
+    m_robotContainer.m_drivetrain.DriveAuto(0.0, 0.0);
+  }
+  break;
+  default:
+    break;
+  }
+}
 void Robot::AutoBalance1()
 {
   switch (m_StateAutobalance1)
   {
   case StateAutobalance1::forward:
   {
-    m_robotContainer.m_drivetrain.DriveAuto(0.75, 0.0);
+    m_robotContainer.m_drivetrain.DriveAuto(0.4, 0.0);
     // if (m_count > 300p or (m_ahrs.GetPitch() >= -1.0 and m_count > 50)) // 75
-    if (m_count > 49)
+    if (m_count > 75)
     {
       m_count = 0;
       m_StateAutobalance1 = StateAutobalance1::finish;
@@ -225,14 +249,15 @@ void Robot::AutoCube1()
 
 void Robot::AutoCubeHaut()
 {
+
   switch (m_StateAutoCubeHaut)
   {
   case StateAutoCubeHaut::Init:
     m_robotContainer.m_elevator.SetSetpoint(0.80);
     m_robotContainer.m_gripper.Open();
-    m_count = 0;
-    if (m_count > 100)
+    if (m_count > 50)
     {
+      m_count = 0;
       m_robotContainer.m_arm.SetSetpoint(NDEGtoRAD(-35.0)); // valeur théorique à vérifier
       m_StateAutoCubeHaut = StateAutoCubeHaut::High;
     }
@@ -272,7 +297,7 @@ void Robot::AutoCubeHaut()
   case StateAutoCubeHaut::Forward:
   {
     m_robotContainer.m_drivetrain.DriveAuto(0.2, 0.0);
-    if (m_count > 100)
+    if (m_count > 50)
     {
       m_count = 0;
       m_robotContainer.m_drivetrain.DriveAuto(0.0, 0.0);
@@ -293,7 +318,7 @@ void Robot::AutoCubeHaut()
   break;
   case StateAutoCubeHaut::Recule:
   {
-    m_robotContainer.m_drivetrain.DriveAuto(-0.3, 0.0);
+    m_robotContainer.m_drivetrain.DriveAuto(-0.4, 0.0);
     if (m_count > 100)
     {
       m_count = 0;
@@ -330,9 +355,11 @@ void Robot::AutonomousInit()
 
   // m_StateAutobalance1 = StateAutobalance1::forward;
   // m_StateAutobalance2 = StateAutobalance2::open;
-  m_StateAutoCubeHaut = StateAutoCubeHaut::Init;
+  // m_StateAutoCubeHaut = StateAutoCubeHaut::Init;
+  m_StateAutobalanceTout = StateAutoBalanceTout::forward;
 
   // m_StateAutoCube1 = StateAutoCube1::open;
+  // m_StateAutobalanceTout=StateAutoBalanceTout
   m_robotContainer.m_drivetrain.IsAuto = true;
   m_robotContainer.m_elevator.IsAuto = true;
 
@@ -376,7 +403,8 @@ void Robot::AutonomousPeriodic()
   // AutoBalance2();
 
   // AutoCube1();
-  AutoCubeHaut();
+  // AutoCubeHaut();
+  AutoBalanceTout();
 }
 
 void Robot::TeleopInit()
