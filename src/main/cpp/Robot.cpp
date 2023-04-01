@@ -330,9 +330,9 @@ void Robot::AutonomousInit()
 
   // m_StateAutobalance1 = StateAutobalance1::forward;
   // m_StateAutobalance2 = StateAutobalance2::open;
-  // m_StateAutoCubeHaut = StateAutoCubeHaut::Init;
+  m_StateAutoCubeHaut = StateAutoCubeHaut::Init;
 
-  m_StateAutoCube1 = StateAutoCube1::open;
+  // m_StateAutoCube1 = StateAutoCube1::open;
   m_robotContainer.m_drivetrain.IsAuto = true;
   m_robotContainer.m_elevator.IsAuto = true;
 
@@ -375,8 +375,8 @@ void Robot::AutonomousPeriodic()
   // AutoBalance1();
   // AutoBalance2();
 
-  AutoCube1();
-  // AutoCubeHaut();
+  // AutoCube1();
+  AutoCubeHaut();
 }
 
 void Robot::TeleopInit()
