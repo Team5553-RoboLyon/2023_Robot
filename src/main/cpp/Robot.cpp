@@ -9,8 +9,8 @@
 // cc
 void Robot::RobotInit()
 {
-  m_ahrs.Reset();
-  m_ahrs.Calibrate();
+  m_gyro.Reset();
+  m_gyro.Calibrate();
 }
 
 void Robot::RobotPeriodic()
@@ -70,7 +70,7 @@ void Robot::AutonomousPeriodic()
 
   // std::cout << "encoderL" << m_robotContainer.m_drivetrain.m_EncoderLeft.GetDistance() << std::endl;
   // std::cout << "encoderR" << m_robotContainer.m_drivetrain.m_EncoderRight.GetDistance() << std::endl;
-  std::cout << "gyro" << m_ahrs.GetAngle() << std::endl;
+  std::cout << "gyro" << m_gyro.GetAngle() << std::endl;
 
   NLRAMSETEOUTPUT output;
   NLFOLLOWER_TANK_OUTPUT *pout = nullptr;
@@ -93,7 +93,7 @@ void Robot::AutonomousPeriodic()
     //			(note dl/dt = vitesse roue gauche et dr/dt = vitesse roue droite  )
     //
 
-    m_follower.estimate(m_robotContainer.m_drivetrain.m_EncoderLeft.GetDistance(), m_robotContainer.m_drivetrain.m_EncoderRight.GetDistance(), NDEGtoRAD(m_ahrs.GetAngle()));
+    m_follower.estimate(m_robotContainer.m_drivetrain.m_EncoderLeft.GetDistance(), m_robotContainer.m_drivetrain.m_EncoderRight.GetDistance(), NDEGtoRAD(m_gyro.GetAngle()));
     m_follower.updateTarget(&m_TrajectoryPack, 0.02f);
     pout = m_follower.compute();
     m_robotContainer.m_drivetrain.SetVoltage(m_CrtzR.getVoltage(pout->m_rightVelocity, pout->m_rightAcceleration), m_CrtzL.getVoltage(pout->m_leftVelocity, pout->m_leftAcceleration));
@@ -147,7 +147,7 @@ void Robot::AutonomousPeriodic()
 
   m_encoderLeft = m_robotContainer.m_drivetrain.m_EncoderLeft.GetDistance();
   m_encoderRight = m_robotContainer.m_drivetrain.m_EncoderRight.GetDistance();
-  m_gyroAngle = m_ahrs.GetAngle();
+  m_gyroAngle = m_gyro.GetAngle();
   m_VoltageLeft = m_CrtzR.getVoltage(pout->m_rightVelocity, pout->m_rightAcceleration);
   m_VoltageRight = m_CrtzL.getVoltage(pout->m_leftVelocity, pout->m_leftAcceleration);
 
@@ -162,8 +162,8 @@ void Robot::TeleopInit()
 void Robot::TeleopPeriodic()
 {
 
-  std::cout << "navX" << m_ahrs.GetAngle() << std::endl;
-  frc::SmartDashboard::PutNumber("navX", m_ahrs.GetAngle());
+  std::cout << "navX" << m_gyro.GetAngle() << std::endl;
+  frc::SmartDashboard::PutNumber("navX", m_gyro.GetAngle());
   // m_robotContainer.m_arm.m_speed = m_robotContainer.m_joystickRight.GetY();
 
   // if (m_robotContainer.m_joystickLeft.GetRawButtonPressed(1))
