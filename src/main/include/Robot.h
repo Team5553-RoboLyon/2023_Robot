@@ -9,6 +9,7 @@
 #include <frc/smartdashboard/SmartDashboard.h>
 #include <AHRS.h>
 #include <frc/smartdashboard/SmartDashboard.h>
+#include <frc/ADXRS450_Gyro.h>
 
 class Robot : public frc::TimedRobot
 {
@@ -32,5 +33,5 @@ public:
   void SimulationPeriodic() override;
 
 private:
-  AHRS m_NavX{frc::I2C::Port::kOnboard};
+  frc::ADXRS450_Gyro m_ahrs{frc::SPI::Port::kOnboardCS0};
 };

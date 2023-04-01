@@ -3,6 +3,7 @@
 // the WPILib BSD license file in the root directory of this project.
 
 #include "Robot.h"
+#include <iostream>
 // cc
 
 void Robot::RobotInit() {}
@@ -16,12 +17,13 @@ void Robot::AutonomousPeriodic() {}
 
 void Robot::TeleopInit()
 {
-  m_NavX.Reset();
-  m_NavX.Calibrate();
+  m_ahrs.Reset();
+  m_ahrs.Calibrate();
 }
 void Robot::TeleopPeriodic()
 {
-  frc::SmartDashboard::PutNumber("NavX Angle", m_NavX.GetPitch());
+  frc::SmartDashboard::PutNumber("NavX Angle", m_ahrs.GetAngle());
+  std::cout << m_ahrs.GetAngle() << std::endl;
 }
 
 void Robot::DisabledInit() {}
