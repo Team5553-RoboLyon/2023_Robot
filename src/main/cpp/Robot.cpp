@@ -12,12 +12,12 @@ void Robot::AutoBalance1()
   {
   case StateAutobalance1::forward:
   {
-    m_robotContainer.m_drivetrain.DriveAuto(0.4, 0.0);
-    // if (m_count > 300 or (m_ahrs.GetPitch() >= -1.0 and m_count > 50)) // 75
-    if (m_count > 75)
+    m_robotContainer.m_drivetrain.DriveAuto(0.75, 0.0);
+    // if (m_count > 300p or (m_ahrs.GetPitch() >= -1.0 and m_count > 50)) // 75
+    if (m_count > 49)
     {
       m_count = 0;
-      m_StateAutobalance1 = StateAutobalance1::stop;
+      m_StateAutobalance1 = StateAutobalance1::finish;
     }
   }
   break;
