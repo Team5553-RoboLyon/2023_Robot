@@ -16,6 +16,7 @@
 // ################### SUBSYSTEMS ###################
 
 #include "subsystem/Turret.h"
+#include "subsystem/Camera.h"
 #include "subsystem/Arm.h"
 #include "subsystem/Elevator.h"
 #include "subsystem/Gripper.h"
@@ -46,6 +47,7 @@
 
 // Turret
 #include "command/Turret/TurnTurret.h"
+#include "command/Turret/AutoTurnTurret.h"
 
 // Elevator
 #include "command/Elevator/MoveElevator.h"
@@ -73,6 +75,7 @@ public:
   frc2::Command *GetAutonomousCommand();
 
   Turret m_turret;
+  Camera m_camera;
   Drivetrain m_drivetrain;
   Conveyor m_conveyor;
   Gripper m_gripper;

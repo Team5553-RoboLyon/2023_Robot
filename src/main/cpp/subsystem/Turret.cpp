@@ -36,6 +36,10 @@ double Turret::GetEncoder()
     return m_turretEncoder.GetDistance();
 }
 
+double Turret::GetSetPoint()
+{
+    return m_turretPid.m_setpoint;
+}
 void Turret::Periodic()
 {
     double output = m_turretPid.Calculate(GetEncoder());
