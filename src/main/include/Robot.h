@@ -34,4 +34,5 @@ public:
 
 private:
   frc::ADXRS450_Gyro m_ahrs{frc::SPI::Port::kOnboardCS0};
+  AHRS m_ahrs2{frc::SPI::Port::kOnboardCS0};
 };
