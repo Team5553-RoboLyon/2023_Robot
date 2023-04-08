@@ -11,6 +11,7 @@
 #include <ctre/phoenix/motorcontrol/can/TalonSRX.h>
 #include <frc/DoubleSolenoid.h>
 #include <frc/Compressor.h>
+#include <rev/CANSparkMax.h>
 
 class Robot : public frc::TimedRobot
 {
@@ -35,6 +36,6 @@ public:
 
 private:
   frc::Joystick m_joystick{0};
-  ctre::phoenix::motorcontrol::can::TalonSRX m_motorRight{14};
+  rev::CANSparkMax m_motorRight{ 14,rev::CANSparkMaxLowLevel::MotorType::kBrushless};
   double m_speed = 0.0;
 };
