@@ -52,7 +52,7 @@ public:
   NLFOLLOWER_TANK m_follower;
 
 private:
-  AHRS m_ahrs{frc::I2C::Port::kOnboard};
+  AHRS m_ahrs{frc::SerialPort::Port::kUSB};
   RobotContainer m_robotContainer;
 
   frc2::Command *m_autonomousCommand = nullptr;

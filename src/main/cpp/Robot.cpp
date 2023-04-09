@@ -7,7 +7,11 @@
 #include "Robot.h"
 // cc
 // cc
-void Robot::RobotInit() {}
+void Robot::RobotInit()
+{
+  m_ahrs.Reset();
+  m_ahrs.Calibrate();
+}
 void Robot::RobotPeriodic()
 {
   frc2::CommandScheduler::GetInstance().Run();
@@ -16,10 +20,9 @@ void Robot::RobotPeriodic()
 
 void Robot::AutonomousInit()
 {
-  m_ahrs.Reset();
-  m_ahrs.Calibrate();
+  //
   m_robotContainer.m_drivetrain.IsAuto = true;
-  m_robotContainer.GetAutonomousCommand()->Schedule();
+  // m_robotContainer.GetAutonomousCommand()->Schedule();
 
   // ######## NLMOTOR_CHARACTERIZATION ########
   // NLCHARACTERIZATION_TABLE characterization_table(4);
@@ -44,7 +47,7 @@ void Robot::AutonomousInit()
 
   m_TrajectoryPack.load("/home/lvuser/auto/auto1.trk");
   m_follower.initialize(&m_TrajectoryPack);
-  m_state = Robot::STATE::PATH_FOLLOWING;
+  m_state = Robot::STATE::PATH_END;
 }
 void Robot::AutonomousPeriodic()
 {
