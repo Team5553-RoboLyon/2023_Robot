@@ -60,7 +60,7 @@ public:
 private:
   // frc::ADXRS450_Gyro m_ahrs{frc::SPI::Port::kOnboardCS0};
   RobotContainer m_robotContainer;
-  frc::ADXRS450_Gyro m_gyro{frc::SPI::Port::kOnboardCS0};
+  AHRS m_gyro{frc::SerialPort::Port::kUSB};
 
   frc2::Command *m_autonomousCommand = nullptr;
 

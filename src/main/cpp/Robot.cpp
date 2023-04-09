@@ -9,8 +9,6 @@
 // cc
 void Robot::RobotInit()
 {
-  m_gyro.Reset();
-  m_gyro.Calibrate();
 }
 
 void Robot::RobotPeriodic()
@@ -21,7 +19,8 @@ void Robot::RobotPeriodic()
 
 void Robot::AutonomousInit()
 {
-
+  m_gyro.Reset();
+  m_gyro.Calibrate();
   m_csv.open("/home/lvuser/", true); // ouverture du fichier de log
 
   m_csv.setItem(0, "encoderLeft", 5, &m_encoderLeft);
@@ -61,7 +60,7 @@ void Robot::AutonomousInit()
   // characterization_table.get(&m_CrtzL, "L1", NFALSE);
   // characterization_table.get(&m_CrtzR, "R1", NFALSE);
 
-  m_TrajectoryPack.load("/home/lvuser/auto/auto5.trk");
+  m_TrajectoryPack.load("/home/lvuser/auto/packtest111.trk");
   m_follower.initialize(&m_TrajectoryPack);
   m_state = Robot::STATE::PATH_FOLLOWING;
 }
@@ -109,13 +108,16 @@ void Robot::AutonomousPeriodic()
       case CLOSE_INTAKE:
         m_robotContainer.m_intake.Close();
         break;
-        /*case ACTIVATE_INTAKE_WHEELS:
-          m_allMechanisms.Command("activate intake wheels");
-          break;
-        case DEACTIVATE_INTAKE_WHEELS:
-          m_allMechanisms.Command("deactivate intake wheels");
-          break;
-        case ACTIVATE_CONVEYOR:
+      case ACTIVATE_INTAKE_WHEELS_FORWARD:
+        m_robotContainer.m_intake.SetSpeed(0.6);
+        break;
+      case ACTIVATE_INTAKE_WHEELS_BACKWARD:
+        m_robotContainer.m_intake.SetSpeed(-0.6);
+        break;
+      case DEACTIVATE_INTAKE_WHEELS:
+        m_robotContainer.m_intake.SetSpeed(0.0);
+        break;
+        /*case ACTIVATE_CONVEYOR:
           m_allMechanisms.Command("activate conveyor");
           break;
         case DEACTIVATE_CONVEYOR:
