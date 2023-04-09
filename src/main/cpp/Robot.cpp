@@ -109,10 +109,10 @@ void Robot::AutonomousPeriodic()
         m_robotContainer.m_intake.Close();
         break;
       case ACTIVATE_INTAKE_WHEELS_FORWARD:
-        m_robotContainer.m_intake.SetSpeed(0.6);
+        m_robotContainer.m_intake.SetSpeed(-0.6);
         break;
       case ACTIVATE_INTAKE_WHEELS_BACKWARD:
-        m_robotContainer.m_intake.SetSpeed(-0.6);
+        m_robotContainer.m_intake.SetSpeed(0.6);
         break;
       case DEACTIVATE_INTAKE_WHEELS:
         m_robotContainer.m_intake.SetSpeed(0.0);
