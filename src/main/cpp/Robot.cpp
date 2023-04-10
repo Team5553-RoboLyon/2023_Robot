@@ -108,30 +108,52 @@ void Robot::AutonomousPeriodic()
       case CLOSE_INTAKE:
         m_robotContainer.m_intake.Close();
         break;
-      case ACTIVATE_INTAKE_WHEELS_FORWARD:
-        m_robotContainer.m_intake.SetSpeed(-0.6);
-        break;
-      case ACTIVATE_INTAKE_WHEELS_BACKWARD:
+      case ACTIVATE_INTAKE_WHEELS_TAKE:
         m_robotContainer.m_intake.SetSpeed(0.6);
+        break;
+      case ACTIVATE_INTAKE_WHEELS_DROPOFF:
+        m_robotContainer.m_intake.SetSpeed(-0.6);
         break;
       case DEACTIVATE_INTAKE_WHEELS:
         m_robotContainer.m_intake.SetSpeed(0.0);
         break;
-        /*case ACTIVATE_CONVEYOR:
-          m_allMechanisms.Command("activate conveyor");
-          break;
-        case DEACTIVATE_CONVEYOR:
-          m_allMechanisms.Command("deactivate intake wheels");
-          break;
+      case ACTIVATE_CONVEYOR_TAKE:
+        m_robotContainer.m_conveyor.SetSpeed(0.6);
+        break;
+      case ACTIVATE_CONVEYOR_DROPOFF:
+        m_robotContainer.m_conveyor.SetSpeed(-0.6);
+        break;
+      case DEACTIVATE_CONVEYOR:
+        m_robotContainer.m_conveyor.SetSpeed(0.0);
+        break;
+      case TURRET_0:
+        m_robotContainer.m_turret.SetSetpoint(0.0);
+        break;
+      case TURRET_L90:
+        m_robotContainer.m_turret.SetSetpoint(90.0);
+        break;
+      case TURRET_R90:
+        m_robotContainer.m_turret.SetSetpoint(-90.0);
+        break;
+      case TURRET_HOME:
+        m_robotContainer.m_turret.SetSetpoint(0.0);
+        break;
+        /*case CONE_HIGH_BACK_DROPOFF:
+          case ACTIVATE_CONVEYOR:
+            m_allMechanisms.Command("activate conveyor");
+            break;
+          case DEACTIVATE_CONVEYOR:
+            m_allMechanisms.Command("deactivate intake wheels");
+            break;
 
-        case ACTIVATE_AIM:
-          break;
-        case DEACTIVATE_AIM:
-          break;
-        case ACTIVATE_SHOOTER:
-          break;
-        case DEACTIVATE_SHOOTER:
-          break;*/
+          case ACTIVATE_AIM:
+            break;
+          case DEACTIVATE_AIM:
+            break;
+          case ACTIVATE_SHOOTER:
+            break;
+          case DEACTIVATE_SHOOTER:
+            break;*/
 
       default:
         break;
