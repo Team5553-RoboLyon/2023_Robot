@@ -6,20 +6,14 @@
 
 #include <frc/TimedRobot.h>
 #include <frc/smartdashboard/SmartDashboard.h>
-#include "RobotContainer.h"
-#include <AHRS.h>
-#include "frc/SerialPort.h"
-#include "frc/I2C.h"
+#include <frc/Joystick.h>
 
-#include "lib/NL/MotionControl/DriveTrain/Characterization/NLMotorCharacterization.h"
-#include "lib/NL/MotionControl/Trajectory/NLFollowerTank.h"
-#include "lib/NL/MotionControl/Trajectory/NLTrajectoryPack.h"
 #include <AHRS.h>
 #include "frc/I2C.h"
 #include "frc/SerialPort.h"
-#include "lib/NLCsv.h"
 #include "frc/ADXRS450_Gyro.h"
 #include "frc/SPI.h"
+#include <ctre/phoenix/motorcontrol/can/TalonFX.h>
 
 class Robot : public frc::TimedRobot
 {
@@ -42,36 +36,21 @@ public:
   void SimulationInit() override;
   void SimulationPeriodic() override;
 
-  enum STATE
-  {
-    PATH_ERROR = 0, ///< L'initialisation du path following a rencontr� un probl�me ( erreur au chargement tr�s probablement ). Le Robot ne peut-�tre en �tat PATH_FOLLOWING.
-    PATH_FOLLOWING, ///< Le robot est en �tat de suivit de chemin.
-    PATH_END        ///< La Vitesse  est en d�passement.
-  };
-
-  STATE m_state;
-
-  NLMOTOR_CHARACTERIZATION m_CrtzL;
-  NLMOTOR_CHARACTERIZATION m_CrtzR;
-
-  NLTRAJECTORY_PACK m_TrajectoryPack;
-  NLFOLLOWER_TANK m_follower;
+  void Drive(double forward, double turn);
 
 private:
-  // frc::ADXRS450_Gyro m_ahrs{frc::SPI::Port::kOnboardCS0};
-  RobotContainer m_robotContainer;
+  ctre::phoenix::motorcontrol::can::TalonFX m_leftMotor{4};
+  ctre::phoenix::motorcontrol::can::TalonFX m_rightMotor{1};
+  ctre::phoenix::motorcontrol::can::TalonFX m_leftMotor2{5};
+  ctre::phoenix::motorcontrol::can::TalonFX m_rightMotor2{2};
+  ctre::phoenix::motorcontrol::can::TalonFX m_leftMotor3{6};
+  ctre::phoenix::motorcontrol::can::TalonFX m_rightMotor3{3};
+
   AHRS m_gyro{frc::SerialPort::Port::kUSB};
-
-  frc2::Command *m_autonomousCommand = nullptr;
-
-  int m_count;
-  bool InAutonomous;
-
-  NLCSV m_csv{5};
-
-  double m_encoderLeft;
-  double m_encoderRight;
-  double m_gyroAngle;
-  double m_VoltageLeft;
-  double m_VoltageRight;
+  bool autoBalanceXMode = false;
+  bool autoBalanceYMode = false;
+  double forward = 0.0;
+  double turn = 0.0;
+  frc::Joystick m_stickLeft{0};
+  frc::Joystick m_stickRight{1};
 };
