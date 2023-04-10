@@ -42,6 +42,27 @@ void Robot::TeleopInit()
 {
   m_gyro.Reset();
   m_gyro.Calibrate();
+
+  m_leftMotor.ConfigFactoryDefault();
+  m_rightMotor.ConfigFactoryDefault();
+  m_leftMotor2.ConfigFactoryDefault();
+  m_rightMotor2.ConfigFactoryDefault();
+  m_leftMotor3.ConfigFactoryDefault();
+  m_rightMotor3.ConfigFactoryDefault();
+
+  m_leftMotor.SetInverted(true);
+  m_leftMotor2.SetInverted(true);
+  m_leftMotor3.SetInverted(true);
+  m_rightMotor.SetInverted(false);
+  m_rightMotor2.SetInverted(false);
+  m_rightMotor3.SetInverted(false);
+
+  m_leftMotor.SetNeutralMode(ctre::phoenix::motorcontrol::NeutralMode::Brake);
+  m_rightMotor.SetNeutralMode(ctre::phoenix::motorcontrol::NeutralMode::Brake);
+  m_leftMotor2.SetNeutralMode(ctre::phoenix::motorcontrol::NeutralMode::Brake);
+  m_rightMotor2.SetNeutralMode(ctre::phoenix::motorcontrol::NeutralMode::Brake);
+  m_leftMotor3.SetNeutralMode(ctre::phoenix::motorcontrol::NeutralMode::Brake);
+  m_rightMotor3.SetNeutralMode(ctre::phoenix::motorcontrol::NeutralMode::Brake);
 }
 void Robot::TeleopPeriodic()
 {
