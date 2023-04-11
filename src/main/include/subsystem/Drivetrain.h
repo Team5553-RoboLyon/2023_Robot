@@ -114,6 +114,7 @@ public:
 
   NLCSV m_logCSV{5}; // log csv
   bool IsAuto;
+  double m_sigma;
 
 private:
   ctre::phoenix::motorcontrol::can::TalonFX m_MotorRight1{ID_MOTOR_DRIVE_TRAIN_RIGHT};

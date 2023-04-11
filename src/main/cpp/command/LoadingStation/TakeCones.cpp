@@ -28,7 +28,7 @@ void TakeCones::Execute()
   case State::open:
     m_pArm->SetSetpoint(NDEGtoRAD(98.0));
 
-    if (m_pGripper->GetClose())
+    if (!m_pGripper->m_gripperTake)
     {
       m_State = State::close;
     }
@@ -44,7 +44,7 @@ void TakeCones::Execute()
     break;
   case State::high:
     m_pArm->SetSetpoint(NDEGtoRAD(129.0));
-    if (!m_pGripper->GetClose())
+    if (m_pGripper->m_gripperTake)
     {
       m_State = State::open;
     }

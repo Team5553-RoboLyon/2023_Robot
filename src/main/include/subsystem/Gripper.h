@@ -5,20 +5,22 @@
 #pragma once
 
 #include <frc2/command/SubsystemBase.h>
-#include <frc/DoubleSolenoid.h>
-#include <frc/PneumaticsModuleType.h>
+#include "rev/CANSparkMax.h"
 #include "Constants.h"
 class Gripper : public frc2::SubsystemBase
 {
 public:
   Gripper();
 
-  void Open();
-  void Close();
+  void Take(double speed);
+  void Spit(double speed);
   void ChangePosition();
-  bool GetClose();
+  void Old(double speed);
+  void Stop();
   void Reset();
+  void Periodic() override;
+  bool m_gripperTake = false;
 
 private:
-  frc::DoubleSolenoid m_gripperSolenoid{frc::PneumaticsModuleType::REVPH, ID_SOLENOID_GRIPPER_A, ID_SOLENOID_GRIPPER_B};
+  rev::CANSparkMax m_gripperMotor{ID_MOTOR_GRIPPER, rev::CANSparkMaxLowLevel::MotorType::kBrushless};
 };

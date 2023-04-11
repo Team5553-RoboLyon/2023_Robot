@@ -26,17 +26,16 @@
 #define ID_MOTOR_TURRET 7
 #define ID_MOTOR_ELEVATOR 8
 #define ID_MOTOR_ARM 9
-#define ID_MOTOR_INTAKE_RIGHT 10
-#define ID_MOTOR_INTAKE_LEFT 11
-#define ID_MOTOR_CONVEYOR 12
+#define ID_MOTOR_GRIPPER 10
+#define ID_MOTOR_INTAKE_RIGHT 11
+#define ID_MOTOR_INTAKE_LEFT 12
+#define ID_MOTOR_CONVEYOR 13
 
 // #########################    ID Solenoid    #########################
 #define ID_SOLENOID_SHIFTER_A 0
 #define ID_SOLENOID_SHIFTER_B 1
 #define ID_SOLENOID_INTAKE_A 3
 #define ID_SOLENOID_INTAKE_B 2
-#define ID_SOLENOID_GRIPPER_A 5 // 5
-#define ID_SOLENOID_GRIPPER_B 4 // 4
 
 // #########################    ID Encoder    #########################
 
@@ -75,6 +74,7 @@
 #define TURRET_VOLTAGE_COMPENSATION 8.0
 #define ELEVATOR_VOLTAGE_COMPENSATION 8.0
 #define ARM_VOLTAGE_COMPENSATION 8.0
+#define GRIPPER_VOLTAGE_COMPENSATION 8.0
 #define INTAKE_VOLTAGE_COMPENSATION 12.0
 #define CONVEYOR_VOLTAGE_COMPENSATION 8.0
 
@@ -84,6 +84,7 @@
 #define TURRET_CURRENT_LIMIT 40
 #define ELEVATOR_CURRENT_LIMIT 40
 #define ARM_CURRENT_LIMIT 40
+#define GRIPPER_CURRENT_LIMIT 40
 #define INTAKE_CURRENT_LIMIT 40
 #define CONVEYOR_CURRENT_LIMIT 40
 
@@ -93,8 +94,9 @@
 #define TURRET_RAMP 0.0
 #define ELEVATOR_RAMP 0.0
 #define ARM_RAMP 0.0
-#define INTAKE_RAMP 0.8
-#define CONVEYOR_RAMP 0.5
+#define GRIPPER_RAMP 0.0
+#define INTAKE_RAMP 0.0
+#define CONVEYOR_RAMP 0.0
 
 // #########################    SetInvertedMotor    #########################
 
@@ -102,6 +104,7 @@
 #define DRIVETRAIN_MOTOR_RIGHT_INVERTED false
 #define TURRET_MOTOR_INVERTED true
 #define ELEVATOR_MOTOR_INVERTED false
+#define GRIPPER_MOTOR_INVERTED false
 #define ARM_MOTOR_INVERTED false
 #define INTAKE_MOTOR_LEFT_INVERTED false
 #define INTAKE_MOTOR_RIGHT_INVERTED true

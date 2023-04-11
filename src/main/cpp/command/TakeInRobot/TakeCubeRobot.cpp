@@ -19,7 +19,6 @@ void TakeCubeRobot::Initialize()
 {
   m_count = 0;
   m_pElevator->SetSetpoint(0.80);
-  m_pGripper->Open();
   m_pArm->SetSetpoint(NDEGtoRAD(-35.0)); // valeur théorique à vérifier
   m_State = State::High;
   // descend elevateur
@@ -46,7 +45,7 @@ void TakeCubeRobot::Execute()
   case State::Lowered:
     if (m_pElevator->GetEncoder() < 0.40) // temps à réduire
     {
-      m_pGripper->Close();
+      m_pGripper->Take(0.5);
       m_count = 0;
       m_State = State::Taken;
     }

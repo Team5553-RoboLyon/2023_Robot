@@ -9,50 +9,49 @@ Copiloter::Copiloter() = default;
 void Copiloter::TakeCubeRobot()
 {
 
-    switch (m_State)
+    switch (m_StateTakeCubeRobot)
     {
         m_count++;
-    case State::Init:
+    case StateTakeCubeRobot::Init:
         m_count = 0;
         m_Elevator.SetSetpoint(0.80);
-        m_Gripper.Open();
         m_Arm.SetSetpoint(NDEGtoRAD(-35.0)); // valeur théorique à vérifier
-        m_State = State::High;
+        m_StateTakeCubeRobot = StateTakeCubeRobot::High;
         break;
 
-    case State::High:
+    case StateTakeCubeRobot::High:
         if (m_Arm.GetEncoder() < -30.0) // temps à réduire
         {
             m_Elevator.SetSetpoint(0.35); // valeur théorique à vérifier
             m_count = 0;
-            m_State = State::Lowered;
+            m_StateTakeCubeRobot = StateTakeCubeRobot::Lowered;
         }
         break;
-    case State::Lowered:
+    case StateTakeCubeRobot::Lowered:
         if (m_Elevator.GetEncoder() < 0.40) // temps à réduire
         {
-            m_Gripper.Close();
+            m_Gripper.Take(0.5);
             m_count = 0;
-            m_State = State::Taken;
+            m_StateTakeCubeRobot = StateTakeCubeRobot::Taken;
         }
         break;
-    case State::Taken:
+    case StateTakeCubeRobot::Taken:
         if (m_count > 50) // temps à réduire
         {
             m_Elevator.SetSetpoint(0.95);
             m_count = 0;
-            m_State = State::GoDown;
+            m_StateTakeCubeRobot = StateTakeCubeRobot::GoDown;
         }
         break;
-    case State::GoDown:
+    case StateTakeCubeRobot::GoDown:
         if (m_Elevator.GetEncoder() > 0.90) // temps à réduire
         {
             m_Arm.SetSetpoint(NDEGtoRAD(90.0));
             m_count = 0;
-            m_State = State::Finish;
+            m_StateTakeCubeRobot = StateTakeCubeRobot::Finish;
         }
         break;
-    case State::Finish:
+    case StateTakeCubeRobot::Finish:
         if (m_Arm.GetEncoder() > NDEGtoRAD(60.0)) // temps à réduire
         {
             m_Elevator.SetSetpoint(0.0);
@@ -61,4 +60,34 @@ void Copiloter::TakeCubeRobot()
     default:
         break;
     };
+}
+
+void Copiloter::TakeCone()
+{
+    switch (m_StateTakeCone)
+    {
+    case StateTakeCone::Init:
+        m_Elevator.SetSetpoint(0.98);
+        m_Arm.SetSetpoint(NDEGtoRAD(98.0)); // valeur théorique à vérifier
+        if (!m_Gripper.m_gripperTake)
+        {
+            m_StateTakeCone = StateTakeCone::Taked;
+        }
+        break;
+    case StateTakeCone::Taked:
+        m_countCone++;
+        if (m_countCone > 20)
+        {
+            m_countCone = 0;
+            m_StateTakeCone = StateTakeCone::High;
+        }
+        break;
+    case StateTakeCone::High:
+        m_Arm.SetSetpoint(NDEGtoRAD(129.0));
+        if (m_Gripper.m_gripperTake)
+        {
+            m_StateTakeCone = StateTakeCone::Init;
+        }
+        break;
+    }
 }

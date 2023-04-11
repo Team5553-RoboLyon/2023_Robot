@@ -18,11 +18,12 @@ public:
    * Will be called periodically whenever the CommandScheduler runs.
    */
   void TakeCubeRobot();
-  void Periodic() override;
+  void TakeCone();
 
 private:
   int m_count;
-  enum class State
+  int m_countCone;
+  enum class StateTakeCubeRobot
   {
     Init,
     High,
@@ -31,7 +32,15 @@ private:
     GoDown,
     Finish
   };
-  State m_State;
+  StateTakeCubeRobot m_StateTakeCubeRobot;
+
+  enum class StateTakeCone
+  {
+    Init,
+    Taked,
+    High
+  };
+  StateTakeCone m_StateTakeCone;
 
   Arm m_Arm;
   Elevator m_Elevator;

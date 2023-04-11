@@ -6,30 +6,53 @@
 
 Gripper::Gripper()
 {
-    Open();
+    m_gripperMotor.RestoreFactoryDefaults();
+    m_gripperMotor.SetSmartCurrentLimit(GRIPPER_CURRENT_LIMIT);
+    m_gripperMotor.SetOpenLoopRampRate(GRIPPER_RAMP);
+    m_gripperMotor.SetInverted(GRIPPER_MOTOR_INVERTED);
+    m_gripperMotor.SetIdleMode(rev::CANSparkMax::IdleMode::kBrake);
+    m_gripperMotor.EnableVoltageCompensation(GRIPPER_VOLTAGE_COMPENSATION);
+
+    m_gripperTake = false;
 }
 
-void Gripper::Open()
+void Gripper::Take(double speed)
 {
-    m_gripperSolenoid.Set(frc::DoubleSolenoid::Value::kReverse);
+    m_gripperMotor.Set(speed);
 }
 
-void Gripper::Close()
+void Gripper::Spit(double speed)
 {
-    m_gripperSolenoid.Set(frc::DoubleSolenoid::Value::kForward);
+    m_gripperMotor.Set(-speed);
 }
 
 void Gripper::ChangePosition()
 {
-    (m_gripperSolenoid.Get() == frc::DoubleSolenoid::Value::kReverse) ? Close() : Open();
+    if (m_gripperTake)
+    {
+        Take(0.5);
+    }
+    else
+    {
+        Spit(0.5);
+    }
 }
 
-bool Gripper::GetClose()
+void Gripper::Stop()
 {
-    return m_gripperSolenoid.Get() == frc::DoubleSolenoid::Value::kForward;
+    m_gripperMotor.Set(0.0);
+}
+
+void Gripper::Old(double speed)
+{
+    m_gripperMotor.Set(speed);
 }
 
 void Gripper::Reset()
 {
-    Close();
+    m_gripperTake = false;
+}
+
+void Gripper::Periodic()
+{
 }

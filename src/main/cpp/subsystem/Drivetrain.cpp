@@ -190,8 +190,8 @@ double Drivetrain::Calcul_De_Notre_Brave_JM(double forward, double turn, bool wh
     double m_forward = forward;
     double m_turn = turn;
 
-    double left_wheel = m_forward + m_turn * SIGMA;
-    double right_wheel = m_forward - m_turn * SIGMA;
+    double left_wheel = m_forward + m_turn * m_sigma;
+    double right_wheel = m_forward - m_turn * m_sigma;
 
     double k;
     k = 1.0 / (NMAX(1, NMAX(NABS(left_wheel), NABS(right_wheel))));
@@ -302,6 +302,7 @@ void Drivetrain::ShiftGearDown() // passage de la vitesse en V1
 
 void Drivetrain::Drive(double joystick_V, double joystick_W) //
 {
+    m_sigma = NLERP(0.7, 0.1, NABS(joystick_V));
     frc::SmartDashboard::PutNumber("joyV", joystick_V);
     frc::SmartDashboard::PutNumber("joyW", joystick_W);
     m_U = GetGearShiftingVoltage();
