@@ -4,17 +4,16 @@
 
 #include "command/LoadingStation/TakeCones.h"
 
-TakeCones::TakeCones(Elevator *pElevator, Arm *pArm, Gripper *pGripper) : m_pElevator(pElevator), m_pArm(pArm), m_pGripper(pGripper)
+TakeCones::TakeCones(Elevator *pElevator, Arm *pArm) : m_pElevator(pElevator), m_pArm(pArm)
 {
   AddRequirements(m_pElevator);
   AddRequirements(m_pArm);
-  AddRequirements(m_pGripper);
 }
 
 // Called when the command is initially scheduled.
 void TakeCones::Initialize()
 {
-  m_pElevator->SetSetpoint(1.0);
+  m_pElevator->SetSetpoint(0.90);
   m_count = 0;
   m_State = State::open;
 }
@@ -26,12 +25,8 @@ void TakeCones::Execute()
   switch (m_State)
   {
   case State::open:
-    m_pArm->SetSetpoint(NDEGtoRAD(98.0));
+    m_pArm->SetSetpoint(NDEGtoRAD(90.0));
 
-    if (!m_pGripper->m_gripperTake)
-    {
-      m_State = State::close;
-    }
     break;
   case State::close:
     m_count++;
@@ -44,10 +39,7 @@ void TakeCones::Execute()
     break;
   case State::high:
     m_pArm->SetSetpoint(NDEGtoRAD(129.0));
-    if (m_pGripper->m_gripperTake)
-    {
-      m_State = State::open;
-    }
+
     break;
   }
 

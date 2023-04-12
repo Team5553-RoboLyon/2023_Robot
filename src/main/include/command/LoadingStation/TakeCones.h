@@ -22,7 +22,7 @@ class TakeCones
     : public frc2::CommandHelper<frc2::CommandBase, TakeCones>
 {
 public:
-  TakeCones(Elevator *pElevator, Arm *pArm, Gripper *pGripper);
+  TakeCones(Elevator *pElevator, Arm *pArm);
 
   void Initialize() override;
 
@@ -43,5 +43,4 @@ private:
   State m_State;
   Elevator *m_pElevator;
   Arm *m_pArm;
-  Gripper *m_pGripper;
 };

@@ -3,6 +3,7 @@
 // the WPILib BSD license file in the root directory of this project.
 
 #include "subsystem/Gripper.h"
+#include <iostream>
 
 Gripper::Gripper()
 {
@@ -13,12 +14,13 @@ Gripper::Gripper()
     m_gripperMotor.SetIdleMode(rev::CANSparkMax::IdleMode::kBrake);
     m_gripperMotor.EnableVoltageCompensation(GRIPPER_VOLTAGE_COMPENSATION);
 
-    m_gripperTake = false;
+    m_gripperTake = true;
 }
 
 void Gripper::Take(double speed)
 {
     m_gripperMotor.Set(speed);
+    std::cout << "take" << std::endl;
 }
 
 void Gripper::Spit(double speed)
@@ -30,11 +32,11 @@ void Gripper::ChangePosition()
 {
     if (m_gripperTake)
     {
-        Take(0.5);
+        Take(0.3);
     }
     else
     {
-        Spit(0.5);
+        Spit(0.1);
     }
 }
 

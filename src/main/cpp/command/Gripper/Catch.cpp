@@ -27,7 +27,7 @@ void Catch::End(bool interrupted)
   if (m_pGripper->m_gripperTake)
   {
     m_pGripper->m_gripperTake = false;
-    m_pGripper->Old(0.0);
+    m_pGripper->Old(0.1);
   }
   else
   {
