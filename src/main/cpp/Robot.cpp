@@ -43,24 +43,24 @@ void Robot::AutonomousInit()
   // NLCHARACTERIZATION_TABLE characterization_table(4);
   // characterization_table.importTxt("/home/lvuser/auto/characterization_MultiVarLinearRegression.txt");
 
-  m_CrtzL.m_forwardKv = 2.7768955535857174;
-  m_CrtzL.m_backwardKv = 2.812021660337195;         // = m_kv[1]
-  m_CrtzL.m_forwardKa = 0.43399905394521276;        // = m_ka[0]
-  m_CrtzL.m_backwardKa = 0.3692375083754934;        // = m_ka[1]
-  m_CrtzL.m_forwardIntercept = 0.17348065329638107; // = m_intercept[0]
-  m_CrtzL.m_backwardIntercept = -0.1536673881482158;
+  m_CrtzL.m_forwardKv = 2.6412869101570307;
+  m_CrtzL.m_backwardKv = 2.6248036368134255;        // = m_kv[1]
+  m_CrtzL.m_forwardKa = 0.41029013114711876;        // = m_ka[0]
+  m_CrtzL.m_backwardKa = 0.3713930975997702;        // = m_ka[1]
+  m_CrtzL.m_forwardIntercept = 0.39281383839084655; // = m_intercept[0]
+  m_CrtzL.m_backwardIntercept = -0.47477756289709444;
 
-  m_CrtzR.m_forwardKv = 2.779743232558036;
-  m_CrtzR.m_backwardKv = 2.775883010820141;         // = m_kv[1]
-  m_CrtzR.m_forwardKa = 0.4248692255119551;         // = m_ka[0]
-  m_CrtzR.m_backwardKa = 0.39095781941614804;       // = m_ka[1]
-  m_CrtzR.m_forwardIntercept = 0.18380021592124685; // = m_intercept[0]
-  m_CrtzR.m_backwardIntercept = -0.1990197738348809;
+  m_CrtzR.m_forwardKv = 2.643306157356795;
+  m_CrtzR.m_backwardKv = 2.632469106333122;        // = m_kv[1]
+  m_CrtzR.m_forwardKa = 0.36456683427794917;       // = m_ka[0]
+  m_CrtzR.m_backwardKa = 0.3257845553734638;       // = m_ka[1]
+  m_CrtzR.m_forwardIntercept = 0.4218986448873328; // = m_intercept[0]
+  m_CrtzR.m_backwardIntercept = -0.49001485320659466;
 
   // characterization_table.get(&m_CrtzL, "L1", NFALSE);
   // characterization_table.get(&m_CrtzR, "R1", NFALSE);
 
-  m_TrajectoryPack.load("/home/lvuser/auto/packtest111.trk");
+  m_TrajectoryPack.load("/home/lvuser/auto/loop.trk");
   m_follower.initialize(&m_TrajectoryPack);
   m_state = Robot::STATE::PATH_FOLLOWING;
 }
