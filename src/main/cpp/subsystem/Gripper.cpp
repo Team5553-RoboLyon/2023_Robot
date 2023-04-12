@@ -23,9 +23,16 @@ void Gripper::Take(double speed)
     std::cout << "take" << std::endl;
 }
 
-void Gripper::Spit(double speed)
+void Gripper::Spit()
 {
-    m_gripperMotor.Set(-speed);
+    if (DropHighCube)
+    {
+        m_gripperMotor.Set(-0.3);
+    }
+    else
+    {
+        m_gripperMotor.Set(-0.1);
+    }
 }
 
 void Gripper::ChangePosition()
@@ -36,7 +43,7 @@ void Gripper::ChangePosition()
     }
     else
     {
-        Spit(0.1);
+        Spit();
     }
 }
 

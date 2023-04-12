@@ -52,7 +52,7 @@ void TakeCubeRobot::Execute()
     }
     break;
   case State::Taken:
-    if (m_count > 50) // temps à réduire
+    if (m_count > 25) // temps à réduire
     {
       m_pElevator->SetSetpoint(0.95);
       m_count = 0;
@@ -72,6 +72,7 @@ void TakeCubeRobot::Execute()
     {
       m_pElevator->SetSetpoint(0.0);
     }
+    m_pGripper->Old(0.1);
     break;
   default:
     break;
@@ -81,6 +82,7 @@ void TakeCubeRobot::Execute()
 // Called once the command ends or is interrupted.
 void TakeCubeRobot::End(bool interrupted)
 {
+  m_pGripper->m_gripperTake = false;
   switch (m_State)
   {
   case State::High:

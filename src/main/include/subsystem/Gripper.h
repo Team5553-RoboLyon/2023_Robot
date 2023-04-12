@@ -13,13 +13,14 @@ public:
   Gripper();
 
   void Take(double speed);
-  void Spit(double speed);
+  void Spit();
   void ChangePosition();
   void Old(double speed);
   void Stop();
   void Reset();
   void Periodic() override;
   bool m_gripperTake = false;
+  bool DropHighCube = false;
 
 private:
   rev::CANSparkMax m_gripperMotor{ID_MOTOR_GRIPPER, rev::CANSparkMaxLowLevel::MotorType::kBrushless};

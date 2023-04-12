@@ -60,7 +60,7 @@ void RobotContainer::ConfigureButtonBindings()
     m_ButtonDropMiddle.WhileActiveContinous(DropMiddle(&m_elevator, &m_arm));
 
     frc2::JoystickButton m_ButtonCubeDropHigh = frc2::JoystickButton(&m_joystickCopilot, 8);
-    m_ButtonCubeDropHigh.WhileActiveContinous(DropHighCube(&m_elevator, &m_arm));
+    m_ButtonCubeDropHigh.WhileActiveContinous(DropHighCube(&m_elevator, &m_arm, &m_gripper));
 
     frc2::JoystickButton m_ButtonCubeDropMiddle = frc2::JoystickButton(&m_joystickCopilot, 9);
     m_ButtonCubeDropMiddle.WhileActiveContinous(DropMiddleCube(&m_elevator, &m_arm));

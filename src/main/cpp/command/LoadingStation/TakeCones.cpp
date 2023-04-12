@@ -13,7 +13,7 @@ TakeCones::TakeCones(Elevator *pElevator, Arm *pArm) : m_pElevator(pElevator), m
 // Called when the command is initially scheduled.
 void TakeCones::Initialize()
 {
-  m_pElevator->SetSetpoint(0.90);
+  m_pElevator->SetSetpoint(0.80);
   m_count = 0;
   m_State = State::open;
 }
