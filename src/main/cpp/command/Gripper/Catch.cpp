@@ -13,16 +13,28 @@ Catch::Catch(Gripper *pGripper) : m_pGripper(pGripper)
 // Called when the command is initially scheduled.
 void Catch::Initialize()
 {
-  m_pGripper->ChangePosition();
 }
 
 // Called repeatedly when this Command is scheduled to run
 void Catch::Execute()
 {
+  m_pGripper->ChangePosition();
 }
 
 // Called once the command ends or is interrupted.
-void Catch::End(bool interrupted) {}
+void Catch::End(bool interrupted)
+{
+  if (m_pGripper->m_gripperTake)
+  {
+    m_pGripper->m_gripperTake = false;
+    m_pGripper->Old(0.1);
+  }
+  else
+  {
+    m_pGripper->m_gripperTake = true;
+    m_pGripper->Stop();
+  }
+}
 
 // Returns true when the command should end.
 bool Catch::IsFinished()

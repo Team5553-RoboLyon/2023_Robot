@@ -16,6 +16,7 @@
 // ################### SUBSYSTEMS ###################
 
 #include "subsystem/Turret.h"
+#include "subsystem/Camera.h"
 #include "subsystem/Arm.h"
 #include "subsystem/Elevator.h"
 #include "subsystem/Gripper.h"
@@ -46,6 +47,7 @@
 
 // Turret
 #include "command/Turret/TurnTurret.h"
+#include "command/Turret/AutoTurnTurret.h"
 
 // Elevator
 #include "command/Elevator/MoveElevator.h"
@@ -70,9 +72,8 @@ public:
 
   void ConfigureButtonBindings();
 
-  frc2::Command *GetAutonomousCommand();
-
   Turret m_turret;
+  Camera m_camera;
   Drivetrain m_drivetrain;
   Conveyor m_conveyor;
   Gripper m_gripper;
@@ -88,10 +89,4 @@ private:
   cs::UsbCamera m_CameraPilote;
 
   frc::Compressor m_compressor{frc::PneumaticsModuleType::REVPH};
-
-  // autonome
-
-  // frc2::SequentialCommandGroup m_autonomousGroupCommand = frc2::SequentialCommandGroup(CompleteInit(&m_drivetrain, &m_intake, &m_gripper, &m_arm, &m_conveyor, &m_elevator, &m_turret),
-  //                                                                                      frc2::ParallelCommandGroup(ReverseConveyorMotor(&m_conveyor), ReverseIntakeMotor(&m_intake)),
-  //                                                                                      AdvanceAutonomous(&m_drivetrain));
 };

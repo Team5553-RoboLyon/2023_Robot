@@ -42,7 +42,7 @@ void RobotContainer::ConfigureButtonBindings()
     frc2::JoystickButton m_ButtonActiveMotorConveyorIntake = frc2::JoystickButton(&m_joystickRight, 1);
     m_ButtonActiveMotorConveyorIntake.WhileActiveContinous(frc2::ParallelCommandGroup(ActiveConveyorMotor(&m_conveyor), ActiveIntakeMotor(&m_intake)));
 
-    frc2::JoystickButton m_ButtonConveyorIntakeReverseMotor = frc2::JoystickButton(&m_joystickRight, 2);
+    frc2::JoystickButton m_ButtonConveyorIntakeReverseMotor = frc2::JoystickButton(&m_joystickCopilot, 2);
     m_ButtonConveyorIntakeReverseMotor.WhileActiveContinous(frc2::ParallelCommandGroup(ReverseConveyorMotor(&m_conveyor), ReverseIntakeMotor(&m_intake)));
 
     // Gripper
@@ -60,13 +60,13 @@ void RobotContainer::ConfigureButtonBindings()
     m_ButtonDropMiddle.WhileActiveContinous(DropMiddle(&m_elevator, &m_arm));
 
     frc2::JoystickButton m_ButtonCubeDropHigh = frc2::JoystickButton(&m_joystickCopilot, 8);
-    m_ButtonCubeDropHigh.WhileActiveContinous(DropHighCube(&m_elevator, &m_arm));
+    m_ButtonCubeDropHigh.WhileActiveContinous(DropHighCube(&m_elevator, &m_arm, &m_gripper));
 
     frc2::JoystickButton m_ButtonCubeDropMiddle = frc2::JoystickButton(&m_joystickCopilot, 9);
-    m_ButtonCubeDropMiddle.WhileActiveContinous(DropMiddleCube(&m_elevator, &m_arm));
+    m_ButtonCubeDropMiddle.WhileActiveContinous(DropMiddleCube(&m_elevator, &m_arm, &m_gripper));
 
     frc2::JoystickButton m_ButtonCubeRobot = frc2::JoystickButton(&m_joystickCopilot, 10);
-    m_ButtonCubeRobot.WhileActiveContinous(TakeCubeRobot(&m_elevator, &m_arm, &m_gripper));
+    m_ButtonCubeRobot.WhenPressed(TakeCubeRobot(&m_elevator, &m_arm, &m_gripper));
 
     frc2::JoystickButton m_ButtonActiveCompressor = frc2::JoystickButton(&m_joystickCopilot, 11);
     m_ButtonActiveCompressor.WhenActive(frc2::InstantCommand([this]
@@ -79,6 +79,16 @@ void RobotContainer::ConfigureButtonBindings()
         {
             m_compressor.EnableDigital();
         } }));
+
+    //     frc2::JoystickButton m_ButtonAutoRotate = frc2::JoystickButton(&m_joystickCopilot, 12);
+    //     m_ButtonAutoRotate.WhileActiveContinous(
+    //         AutoTurnTurret(
+    // #if TURRET
+    //             &m_turret,
+    // #else
+    //             &m_drivetrain,
+    // #endif
+    //             &m_camera));
 }
 
 // frc2::Command *RobotContainer::GetAutonomousCommand()

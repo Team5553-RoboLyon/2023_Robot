@@ -21,15 +21,18 @@ void MoveElevator::Execute()
 
   // m_pElevator->SetSetpoint(NABS(move));
   m_count++;
-  if (m_pElevator->IsWaiting and m_count > 100)
+  if (!m_pElevator->IsAuto)
   {
-    m_pElevator->SetSetpoint((0.0));
-    m_count = 0;
-    m_pElevator->IsWaiting = false;
-  }
-  if (!m_pElevator->IsWaiting)
-  {
-    m_pElevator->SetSetpoint(NABS(0.0));
+    if (m_pElevator->IsWaiting and m_count > 100)
+    {
+      m_pElevator->SetSetpoint((0.0));
+      m_count = 0;
+      m_pElevator->IsWaiting = false;
+    }
+    if (!m_pElevator->IsWaiting)
+    {
+      m_pElevator->SetSetpoint(NABS(0.0));
+    }
   }
 }
 

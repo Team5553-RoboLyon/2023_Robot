@@ -21,6 +21,7 @@ public:
   void Periodic() override;
   void SetGains(double p, double i, double d);
   double GetEncoder();
+  double GetSetPoint();
   void Reset();
 
   RateLimiter m_TurretPidRate;

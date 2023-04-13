@@ -8,13 +8,12 @@ TakeCones::TakeCones(Elevator *pElevator, Arm *pArm, Gripper *pGripper) : m_pEle
 {
   AddRequirements(m_pElevator);
   AddRequirements(m_pArm);
-  AddRequirements(m_pGripper);
 }
 
 // Called when the command is initially scheduled.
 void TakeCones::Initialize()
 {
-  m_pElevator->SetSetpoint(1.0);
+  m_pElevator->SetSetpoint(0.80);
   m_count = 0;
   m_State = State::open;
 }
@@ -22,16 +21,12 @@ void TakeCones::Initialize()
 // Called repeatedly when this Command is scheduled to run
 void TakeCones::Execute()
 {
-
+  m_pGripper->Take(0.6);
   switch (m_State)
   {
   case State::open:
-    m_pArm->SetSetpoint(NDEGtoRAD(98.0));
+    m_pArm->SetSetpoint(NDEGtoRAD(90.0));
 
-    if (m_pGripper->GetClose())
-    {
-      m_State = State::close;
-    }
     break;
   case State::close:
     m_count++;
@@ -44,10 +39,7 @@ void TakeCones::Execute()
     break;
   case State::high:
     m_pArm->SetSetpoint(NDEGtoRAD(129.0));
-    if (!m_pGripper->GetClose())
-    {
-      m_State = State::open;
-    }
+
     break;
   }
 
@@ -66,6 +58,8 @@ void TakeCones::End(bool interrupted)
 {
   m_pElevator->SetSetpoint(0.0);
   m_pArm->SetSetpoint(NDEGtoRAD(90.0));
+  m_pGripper->Old(0.1);
+  m_pGripper->m_gripperTake = false;
 }
 
 // Returns true when the command should end.

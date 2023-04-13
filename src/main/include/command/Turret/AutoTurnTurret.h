@@ -6,9 +6,15 @@
 
 #include <frc2/command/CommandBase.h>
 #include <frc2/command/CommandHelper.h>
-#include "subsystem/Elevator.h"
-#include "subsystem/Arm.h"
-#include "subsystem/Gripper.h"
+#if TURRET
+#include "subsystem/Turret.h"
+#else
+#include "subsystem/Drivetrain.h"
+
+#endif
+#include "subsystem/Camera.h"
+#include "command/Turret/TurnTurret.h"
+#include "Constants.h"
 
 /**
  * An example command.
@@ -17,11 +23,17 @@
  * directly; this is crucially important, or else the decorator functions in
  * Command will *not* work!
  */
-class DropMiddleCube
-    : public frc2::CommandHelper<frc2::CommandBase, DropMiddleCube>
+class AutoTurnTurret
+    : public frc2::CommandHelper<frc2::CommandBase, AutoTurnTurret>
 {
 public:
-  DropMiddleCube(Elevator *pElevator, Arm *pArm, Gripper *pGripper);
+  AutoTurnTurret(
+#if TURRET
+      Turret *pTurret,
+#else
+      Drivetrain *pDrivetrain,
+#endif
+      Camera *pCamera);
 
   void Initialize() override;
 
@@ -32,7 +44,10 @@ public:
   bool IsFinished() override;
 
 private:
-  Elevator *m_pElevator;
-  Arm *m_pArm;
-  Gripper *m_pGripper;
+#if TURRET
+  Turret *m_pTurret;
+#else
+  Drivetrain *m_pDrivetrain;
+#endif
+  Camera *m_pCamera;
 };

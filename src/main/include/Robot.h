@@ -11,16 +11,6 @@
 #include "frc/SerialPort.h"
 #include "frc/I2C.h"
 
-#include "lib/NL/MotionControl/DriveTrain/Characterization/NLMotorCharacterization.h"
-#include "lib/NL/MotionControl/Trajectory/NLFollowerTank.h"
-#include "lib/NL/MotionControl/Trajectory/NLTrajectoryPack.h"
-#include <AHRS.h>
-#include "frc/I2C.h"
-#include "frc/SerialPort.h"
-#include "lib/NLCsv.h"
-#include "frc/ADXRS450_Gyro.h"
-#include "frc/SPI.h"
-
 class Robot : public frc::TimedRobot
 {
 public:
@@ -42,23 +32,7 @@ public:
   void SimulationInit() override;
   void SimulationPeriodic() override;
 
-  enum STATE
-  {
-    PATH_ERROR = 0, ///< L'initialisation du path following a rencontr� un probl�me ( erreur au chargement tr�s probablement ). Le Robot ne peut-�tre en �tat PATH_FOLLOWING.
-    PATH_FOLLOWING, ///< Le robot est en �tat de suivit de chemin.
-    PATH_END        ///< La Vitesse  est en d�passement.
-  };
-
-  STATE m_state;
-
-  NLMOTOR_CHARACTERIZATION m_CrtzL;
-  NLMOTOR_CHARACTERIZATION m_CrtzR;
-
-  NLTRAJECTORY_PACK m_TrajectoryPack;
-  NLFOLLOWER_TANK m_follower;
-
 private:
-  // frc::ADXRS450_Gyro m_ahrs{frc::SPI::Port::kOnboardCS0};
   RobotContainer m_robotContainer;
   AHRS m_gyro{frc::SerialPort::Port::kUSB};
 
@@ -66,12 +40,4 @@ private:
 
   int m_count;
   bool InAutonomous;
-
-  NLCSV m_csv{5};
-
-  double m_encoderLeft;
-  double m_encoderRight;
-  double m_gyroAngle;
-  double m_VoltageLeft;
-  double m_VoltageRight;
 };

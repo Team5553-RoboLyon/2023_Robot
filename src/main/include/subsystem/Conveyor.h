@@ -5,7 +5,7 @@
 #pragma once
 
 #include <frc2/command/SubsystemBase.h>
-#include "ctre/phoenix/motorcontrol/can/VictorSPX.h"
+#include "ctre/phoenix/motorcontrol/can/TalonSRX.h"
 #include "Constants.h"
 
 class Conveyor : public frc2::SubsystemBase
@@ -16,7 +16,7 @@ public:
   void Reset();
 
 private:
-  ctre::phoenix::motorcontrol::can::VictorSPX m_conveyorMotor{ID_MOTOR_CONVEYOR};
+  ctre::phoenix::motorcontrol::can::TalonSRX m_conveyorMotor{ID_MOTOR_CONVEYOR};
 
   // Components (e.g. motor controllers and sensors) should generally be
   // declared private and exposed only through public methods.

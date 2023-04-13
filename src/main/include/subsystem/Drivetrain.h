@@ -44,7 +44,7 @@
 #define HALF_TRACKWIDTH (AXLETRACK / 2.0)
 
 #define TICK_DT 0.02             // durée d'un tick en seconde
-#define SIGMA 0.7                // sigma pour le rate limiter
+#define SIGMA 0.6                // sigma pour le rate limiter
 #define AVERAGE_SAMPLES_NUMBER 5 // nombre de samples pour la moyenne
 
 class Drivetrain : public frc2::SubsystemBase
@@ -119,6 +119,7 @@ public:
 
   frc::Encoder m_EncoderRight{ID_ENCODER_DRIVE_TRAIN_RIGHT_A, ID_ENCODER_DRIVE_TRAIN_RIGHT_B, true};
   frc::Encoder m_EncoderLeft{ID_ENCODER_DRIVE_TRAIN_LEFT_A, ID_ENCODER_DRIVE_TRAIN_LEFT_B, false};
+  double m_sigma;
 
 private:
   ctre::phoenix::motorcontrol::can::TalonFX m_MotorRight1{ID_MOTOR_DRIVE_TRAIN_RIGHT};

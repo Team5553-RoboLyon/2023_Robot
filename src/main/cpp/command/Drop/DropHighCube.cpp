@@ -4,7 +4,7 @@
 
 #include "command/Drop/DropHighCube.h"
 
-DropHighCube::DropHighCube(Elevator *pElevator, Arm *pArm) : m_pElevator(pElevator), m_pArm(pArm)
+DropHighCube::DropHighCube(Elevator *pElevator, Arm *pArm, Gripper *pGripper) : m_pElevator(pElevator), m_pArm(pArm), m_pGripper(pGripper)
 {
   AddRequirements(m_pElevator);
   AddRequirements(m_pArm);
@@ -14,7 +14,8 @@ DropHighCube::DropHighCube(Elevator *pElevator, Arm *pArm) : m_pElevator(pElevat
 void DropHighCube::Initialize()
 {
   m_pElevator->SetSetpoint(0.98);
-  m_pArm->SetSetpoint(NDEGtoRAD(105.0));
+  m_pArm->SetSetpoint(NDEGtoRAD(85.0));
+  m_pGripper->DropHighCube = true;
 }
 
 // Called repeatedly when this Command is scheduled to run
@@ -25,6 +26,7 @@ void DropHighCube::End(bool interrupted)
 {
   m_pElevator->SetSetpoint(0.0);
   m_pArm->SetSetpoint(NDEGtoRAD(90.0));
+  m_pGripper->DropHighCube = false;
 }
 
 // Returns true when the command should end.

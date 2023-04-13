@@ -91,7 +91,7 @@ Drivetrain::Drivetrain() : m_GearboxLeftOutAveragedRpt(AVERAGE_SAMPLES_NUMBER),
     m_JoystickLimited_V.Reset(0.0, 0.0, 0.04);   // 5
 
     m_JoystickPrelimited_W.Reset(0.0, 0.0, 2.0);
-    m_JoystickLimited_W.Reset(0.0, 0.0, 0.04); // 5
+    m_JoystickLimited_W.Reset(0.0, 0.0, 0.08); // 5
 
     // m_logCSV.setItem(0, "joystick_V", 5, &m_JoystickRaw_V.m_current);
     // m_logCSV.setItem(1, "SpeedRobot", 5, &m_GearboxesOutAdjustedRpm.m_current);
@@ -125,7 +125,7 @@ void Drivetrain::ActiveBallShifterV2() // active ball shifter V2
 
 void Drivetrain::InvertBallShifter() // inverse ball shifter
 {
-    if (m_BallShifterSolenoidLeft.Get() == frc::DoubleSolenoid::Value::kForward)
+    if (m_BallShifterSolenoidLeft.Get() == frc::DoubleSolenoid::Value::kReverse)
     {
         ActiveBallShifterV1();
     }
@@ -190,8 +190,8 @@ double Drivetrain::Calcul_De_Notre_Brave_JM(double forward, double turn, bool wh
     double m_forward = forward;
     double m_turn = turn;
 
-    double left_wheel = m_forward + m_turn * SIGMA;
-    double right_wheel = m_forward - m_turn * SIGMA;
+    double left_wheel = m_forward + m_turn * m_sigma;
+    double right_wheel = m_forward - m_turn * m_sigma;
 
     double k;
     k = 1.0 / (NMAX(1, NMAX(NABS(left_wheel), NABS(right_wheel))));
@@ -302,6 +302,7 @@ void Drivetrain::ShiftGearDown() // passage de la vitesse en V1
 
 void Drivetrain::Drive(double joystick_V, double joystick_W) //
 {
+    m_sigma = NLERP(0.4, 0.1, NABS(joystick_V));
     frc::SmartDashboard::PutNumber("joyV", joystick_V);
     frc::SmartDashboard::PutNumber("joyW", joystick_W);
     m_U = GetGearShiftingVoltage();
