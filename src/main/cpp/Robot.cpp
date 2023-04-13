@@ -49,7 +49,7 @@ void Robot::AutoBalance1()
   break;
   case StateAutobalance1::stop:
   {
-    if (NABS(NRADtoDEG(m_ahrs.GetPitch())) > 5 and m_count > 250)
+    if (NABS(NRADtoDEG(m_gyro.GetPitch())) > 5 and m_count > 250)
       m_robotContainer.m_drivetrain.DriveAuto(0.0, 0.0);
     else
     {
@@ -119,7 +119,7 @@ void Robot::AutoBalance2()
     break;
   case StateAutobalance2::tour:
     m_pidGyro.SetSetpoint(180.0);
-    m_output = m_pidGyro.Calculate(m_ahrs.GetAngle());
+    m_output = m_pidGyro.Calculate(m_gyro.GetAngle());
     m_robotContainer.m_drivetrain.DriveAuto(m_output, -m_output);
     if (NABS(m_pidGyro.m_error) < 1.0)
     {
@@ -371,6 +371,7 @@ void Robot::AutonomousInit()
   // m_StateAutobalanceTout=StateAutoBalanceTout
   m_robotContainer.m_drivetrain.IsAuto = true;
   m_robotContainer.m_elevator.IsAuto = true;
+  m_robotContainer.m_drivetrain.IsAuto = true;
 
   m_robotContainer.m_drivetrain.Reset();
   m_robotContainer.m_elevator.Reset();
@@ -379,7 +380,6 @@ void Robot::AutonomousInit()
   m_robotContainer.m_conveyor.Reset();
   m_robotContainer.m_gripper.Reset();
 
-  m_robotContainer.m_drivetrain.IsAuto = true;
   // m_robotContainer.GetAutonomousCommand()->Schedule();
 
   // ######## NLMOTOR_CHARACTERIZATION ########
@@ -523,9 +523,7 @@ void Robot::AutonomousPeriodic()
   m_robotContainer.m_turret.Reset();
   m_count = 0;
   // std::cout << "on passe en auito" << std::endl;
-}
-void Robot::AutonomousPeriodic()
-{
+
   m_count += 1;
   // AutoBalance1();
   // AutoBalance2();
@@ -544,8 +542,8 @@ void Robot::TeleopInit()
 }
 void Robot::TeleopPeriodic()
 {
-  frc::SmartDashboard::PutNumber("angleGyro", NRADtoDEG(m_ahrs.GetPitch()));
-  std::cout << m_ahrs.GetPitch() << std::endl;
+  frc::SmartDashboard::PutNumber("angleGyro", NRADtoDEG(m_gyro.GetPitch()));
+  std::cout << m_gyro.GetPitch() << std::endl;
   frc::SmartDashboard::PutNumber("elevator", m_robotContainer.m_elevator.GetEncoder());
   frc::SmartDashboard::PutNumber("turret", m_robotContainer.m_turret.GetEncoder());
   frc::SmartDashboard::PutNumber("arm", m_robotContainer.m_arm.GetEncoder());
