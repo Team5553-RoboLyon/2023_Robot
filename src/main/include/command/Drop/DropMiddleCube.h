@@ -8,6 +8,7 @@
 #include <frc2/command/CommandHelper.h>
 #include "subsystem/Elevator.h"
 #include "subsystem/Arm.h"
+#include "subsystem/Gripper.h"
 
 /**
  * An example command.
@@ -20,7 +21,7 @@ class DropMiddleCube
     : public frc2::CommandHelper<frc2::CommandBase, DropMiddleCube>
 {
 public:
-  DropMiddleCube(Elevator *pElevator, Arm *pArm);
+  DropMiddleCube(Elevator *pElevator, Arm *pArm, Gripper *pGripper);
 
   void Initialize() override;
 
@@ -33,4 +34,5 @@ public:
 private:
   Elevator *m_pElevator;
   Arm *m_pArm;
+  Gripper *m_pGripper;
 };

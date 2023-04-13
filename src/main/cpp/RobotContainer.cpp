@@ -51,7 +51,7 @@ void RobotContainer::ConfigureButtonBindings()
     m_ButtonGripperChangePosition.WhileActiveOnce(Catch(&m_gripper));
 
     frc2::JoystickButton m_ButtonTakeCones = frc2::JoystickButton(&m_joystickCopilot, 5);
-    m_ButtonTakeCones.WhileActiveContinous(TakeCones(&m_elevator, &m_arm));
+    m_ButtonTakeCones.WhileActiveContinous(TakeCones(&m_elevator, &m_arm, &m_gripper));
 
     frc2::JoystickButton m_ButtonDropHigh = frc2::JoystickButton(&m_joystickCopilot, 7);
     m_ButtonDropHigh.WhileActiveContinous(DropHigh(&m_elevator, &m_arm));
@@ -63,7 +63,7 @@ void RobotContainer::ConfigureButtonBindings()
     m_ButtonCubeDropHigh.WhileActiveContinous(DropHighCube(&m_elevator, &m_arm, &m_gripper));
 
     frc2::JoystickButton m_ButtonCubeDropMiddle = frc2::JoystickButton(&m_joystickCopilot, 9);
-    m_ButtonCubeDropMiddle.WhileActiveContinous(DropMiddleCube(&m_elevator, &m_arm));
+    m_ButtonCubeDropMiddle.WhileActiveContinous(DropMiddleCube(&m_elevator, &m_arm, &m_gripper));
 
     frc2::JoystickButton m_ButtonCubeRobot = frc2::JoystickButton(&m_joystickCopilot, 10);
     m_ButtonCubeRobot.WhenPressed(TakeCubeRobot(&m_elevator, &m_arm, &m_gripper));

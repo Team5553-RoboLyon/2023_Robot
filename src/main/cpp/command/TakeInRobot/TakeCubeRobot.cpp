@@ -19,7 +19,7 @@ void TakeCubeRobot::Initialize()
 {
   m_count = 0;
   m_pElevator->SetSetpoint(0.80);
-  m_pArm->SetSetpoint(NDEGtoRAD(-25.0)); // valeur théorique à vérifier
+  m_pArm->SetSetpoint(NDEGtoRAD(-15.0)); // valeur théorique à vérifier
   m_State = State::High;
   // descend elevateur
 
@@ -35,9 +35,9 @@ void TakeCubeRobot::Execute()
   switch (m_State)
   {
   case State::High:
-    if (m_pArm->GetEncoder() < NDEGtoRAD(-20.0)) // temps à réduire
+    if (m_pArm->GetEncoder() < NDEGtoRAD(-10.0)) // temps à réduire
     {
-      m_pElevator->SetSetpoint(0.50); // valeur théorique à vérifier
+      m_pElevator->SetSetpoint(0.45); // valeur théorique à vérifier
       m_count = 0;
       m_State = State::Lowered;
     }
@@ -52,7 +52,7 @@ void TakeCubeRobot::Execute()
     }
     break;
   case State::Taken:
-    if (m_count > 25) // temps à réduire
+    if (m_count > 15) // temps à réduire
     {
       m_pElevator->SetSetpoint(0.95);
       m_count = 0;
@@ -60,7 +60,7 @@ void TakeCubeRobot::Execute()
     }
     break;
   case State::GoDown:
-    if (m_pElevator->GetEncoder() > 0.60) // temps à réduire
+    if (m_pElevator->GetEncoder() > 0.50) // temps à réduire
     {
       m_pArm->SetSetpoint(NDEGtoRAD(90.0));
       m_count = 0;
@@ -68,7 +68,7 @@ void TakeCubeRobot::Execute()
     }
     break;
   case State::Finish:
-    if (m_pArm->GetEncoder() > NDEGtoRAD(60.0)) // temps à réduire
+    if (m_pArm->GetEncoder() > NDEGtoRAD(40.0)) // temps à réduire
     {
       m_pElevator->SetSetpoint(0.0);
     }

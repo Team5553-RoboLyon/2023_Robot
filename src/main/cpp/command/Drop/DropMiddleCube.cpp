@@ -4,7 +4,7 @@
 
 #include "command/Drop/DropMiddleCube.h"
 
-DropMiddleCube::DropMiddleCube(Elevator *pElevator, Arm *pArm) : m_pElevator(pElevator), m_pArm(pArm)
+DropMiddleCube::DropMiddleCube(Elevator *pElevator, Arm *pArm, Gripper *pGripper) : m_pElevator(pElevator), m_pArm(pArm), m_pGripper(pGripper)
 {
   AddRequirements(m_pElevator);
   AddRequirements(m_pArm);
@@ -13,8 +13,9 @@ DropMiddleCube::DropMiddleCube(Elevator *pElevator, Arm *pArm) : m_pElevator(pEl
 // Called when the command is initially scheduled.
 void DropMiddleCube::Initialize()
 {
-  m_pElevator->SetSetpoint(0.47);
-  m_pArm->SetSetpoint(NDEGtoRAD(95.0));
+  m_pElevator->SetSetpoint(0.43);
+  m_pArm->SetSetpoint(NDEGtoRAD(97.0));
+  m_pGripper->DropHighCube = true;
 }
 
 // Called repeatedly when this Command is scheduled to run
@@ -25,6 +26,7 @@ void DropMiddleCube::End(bool interrupted)
 {
   m_pElevator->SetSetpoint(0.0);
   m_pArm->SetSetpoint(NDEGtoRAD(90.0));
+  m_pGripper->DropHighCube = false;
 }
 
 // Returns true when the command should end.
