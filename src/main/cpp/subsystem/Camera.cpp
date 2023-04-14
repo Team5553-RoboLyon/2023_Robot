@@ -12,13 +12,11 @@ void Camera::Periodic() {}
 void Camera::DisableLED()
 {
     m_camera.SetDriverMode(true);
-    std::cout << "driver mode : " << m_camera.GetDriverMode() << std::endl;
 }
 
 void Camera::EnableLED()
 {
     m_camera.SetDriverMode(false);
-    std::cout << "driver mode : " << m_camera.GetDriverMode() << std::endl;
 }
 
 void Camera::aprilTagMode()

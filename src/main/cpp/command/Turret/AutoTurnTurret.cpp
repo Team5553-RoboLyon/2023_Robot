@@ -32,7 +32,6 @@ void AutoTurnTurret::Initialize()
 {
   m_pCamera->EnableLED();
   m_pCamera->refletiveTapeMode();
-  std::cout << "initialized" << std::endl;
 }
 
 // Called repeatedly when this Command is scheduled to run
@@ -41,7 +40,6 @@ void AutoTurnTurret::Execute()
   if (m_pCamera->HasTarget())
   {
 #if TURRET
-    std::cout << m_pCamera->GetYaw() << std::endl;
     m_pTurret->SetSetpoint(m_pTurret->GetEncoder() + 1.3 * m_pCamera->GetYaw());
 #else
     m_pDrivetrain->DriveAuto(0, 0.02 * m_pCamera->GetYaw());

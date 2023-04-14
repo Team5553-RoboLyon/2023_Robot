@@ -42,7 +42,7 @@ void RobotContainer::ConfigureButtonBindings()
     frc2::JoystickButton m_ButtonActiveMotorConveyorIntake = frc2::JoystickButton(&m_joystickRight, 1);
     m_ButtonActiveMotorConveyorIntake.WhileActiveContinous(frc2::ParallelCommandGroup(ActiveConveyorMotor(&m_conveyor), ActiveIntakeMotor(&m_intake)));
 
-    frc2::JoystickButton m_ButtonConveyorIntakeReverseMotor = frc2::JoystickButton(&m_joystickCopilot, 2);
+    frc2::JoystickButton m_ButtonConveyorIntakeReverseMotor = frc2::JoystickButton(&m_joystickCopilot, 12);
     m_ButtonConveyorIntakeReverseMotor.WhileActiveContinous(frc2::ParallelCommandGroup(ReverseConveyorMotor(&m_conveyor), ReverseIntakeMotor(&m_intake)));
 
     // Gripper
@@ -80,15 +80,15 @@ void RobotContainer::ConfigureButtonBindings()
             m_compressor.EnableDigital();
         } }));
 
-    //     frc2::JoystickButton m_ButtonAutoRotate = frc2::JoystickButton(&m_joystickCopilot, 12);
-    //     m_ButtonAutoRotate.WhileActiveContinous(
-    //         AutoTurnTurret(
-    // #if TURRET
-    //             &m_turret,
-    // #else
-    //             &m_drivetrain,
-    // #endif
-    //             &m_camera));
+    frc2::JoystickButton m_ButtonAutoRotate = frc2::JoystickButton(&m_joystickCopilot, 2);
+    m_ButtonAutoRotate.WhileActiveContinous(
+        AutoTurnTurret(
+#if TURRET
+            &m_turret,
+#else
+            &m_drivetrain,
+#endif
+            &m_camera));
 }
 
 // frc2::Command *RobotContainer::GetAutonomousCommand()
