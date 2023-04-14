@@ -14,80 +14,116 @@ void Copiloter::TakeCubeRobot()
         m_count++;
     case StateTakeCubeRobot::Init:
         m_count = 0;
-        m_Elevator.SetSetpoint(0.80);
-        m_Arm.SetSetpoint(NDEGtoRAD(-35.0)); // valeur théorique à vérifier
+        m_pElevator->SetSetpoint(0.80);
+        m_pArm->SetSetpoint(NDEGtoRAD(-15.0)); // valeur théorique à vérifier
         m_StateTakeCubeRobot = StateTakeCubeRobot::High;
         break;
 
     case StateTakeCubeRobot::High:
-        if (m_Arm.GetEncoder() < -30.0) // temps à réduire
+        if (m_pArm->GetEncoder() < NDEGtoRAD(-10.0)) // temps à réduire
         {
-            m_Elevator.SetSetpoint(0.35); // valeur théorique à vérifier
+            m_pElevator->SetSetpoint(0.45); // valeur théorique à vérifier
             m_count = 0;
             m_StateTakeCubeRobot = StateTakeCubeRobot::Lowered;
         }
+
         break;
     case StateTakeCubeRobot::Lowered:
-        if (m_Elevator.GetEncoder() < 0.40) // temps à réduire
+        if (m_pElevator->GetEncoder() < 0.60) // temps à réduire
         {
-            m_Gripper.Take(0.5);
+            m_pGripper->Take(0.5);
             m_count = 0;
             m_StateTakeCubeRobot = StateTakeCubeRobot::Taken;
         }
         break;
     case StateTakeCubeRobot::Taken:
-        if (m_count > 50) // temps à réduire
+        if (m_count > 15) // temps à réduire
         {
-            m_Elevator.SetSetpoint(0.95);
+            m_pElevator->SetSetpoint(0.95);
             m_count = 0;
             m_StateTakeCubeRobot = StateTakeCubeRobot::GoDown;
         }
         break;
     case StateTakeCubeRobot::GoDown:
-        if (m_Elevator.GetEncoder() > 0.90) // temps à réduire
+        if (m_pElevator->GetEncoder() > 0.50) // temps à réduire
         {
-            m_Arm.SetSetpoint(NDEGtoRAD(90.0));
+            m_pArm->SetSetpoint(NDEGtoRAD(90.0));
             m_count = 0;
             m_StateTakeCubeRobot = StateTakeCubeRobot::Finish;
         }
         break;
     case StateTakeCubeRobot::Finish:
-        if (m_Arm.GetEncoder() > NDEGtoRAD(60.0)) // temps à réduire
+        if (m_pArm->GetEncoder() > NDEGtoRAD(40.0)) // temps à réduire
         {
-            m_Elevator.SetSetpoint(0.0);
+            m_pElevator->SetSetpoint(0.0);
         }
+        m_pGripper->Old(0.1);
         break;
     default:
         break;
     };
 }
 
+void Copiloter::TakeCubeRobotInit()
+{
+    m_StateTakeCubeRobot = StateTakeCubeRobot::Init;
+}
+
 void Copiloter::TakeCone()
 {
-    switch (m_StateTakeCone)
-    {
-    case StateTakeCone::Init:
-        m_Elevator.SetSetpoint(0.98);
-        m_Arm.SetSetpoint(NDEGtoRAD(98.0)); // valeur théorique à vérifier
-        if (!m_Gripper.m_gripperTake)
-        {
-            m_StateTakeCone = StateTakeCone::Taked;
-        }
-        break;
-    case StateTakeCone::Taked:
-        m_countCone++;
-        if (m_countCone > 20)
-        {
-            m_countCone = 0;
-            m_StateTakeCone = StateTakeCone::High;
-        }
-        break;
-    case StateTakeCone::High:
-        m_Arm.SetSetpoint(NDEGtoRAD(129.0));
-        if (m_Gripper.m_gripperTake)
-        {
-            m_StateTakeCone = StateTakeCone::Init;
-        }
-        break;
-    }
+    m_pGripper->Take(0.6);
+    m_pElevator->SetSetpoint(0.80);
+    m_pArm->SetSetpoint(NDEGtoRAD(90.0));
+}
+
+void Copiloter::DropConeHighExecute()
+{
+    m_pElevator->SetSetpoint(0.97);
+    m_pArm->SetSetpoint(NDEGtoRAD(110.0));
+}
+
+void Copiloter::DropConeMiddleExecute()
+{
+    m_pElevator->SetSetpoint(0.80);
+    m_pArm->SetSetpoint(NDEGtoRAD(90.0));
+}
+
+void Copiloter::DropCubeHighExecute()
+{
+    m_pElevator->SetSetpoint(0.98);
+    m_pArm->SetSetpoint(NDEGtoRAD(85.0));
+    m_pGripper->DropHighCube = true;
+}
+
+void Copiloter::DropCubeMiddleExecute()
+{
+    m_pElevator->SetSetpoint(0.43);
+    m_pArm->SetSetpoint(NDEGtoRAD(97.0));
+    m_pGripper->DropHighCube = true;
+}
+
+void Copiloter::DropConeHighEnd()
+{
+    m_pElevator->SetSetpoint(0.0);
+    m_pArm->SetSetpoint(NDEGtoRAD(90.0));
+}
+
+void Copiloter::DropConeMiddleEnd()
+{
+    m_pElevator->SetSetpoint(0.0);
+    m_pArm->SetSetpoint(NDEGtoRAD(90.0));
+}
+
+void Copiloter::DropCubeHighEnd()
+{
+    m_pElevator->SetSetpoint(0.0);
+    m_pArm->SetSetpoint(NDEGtoRAD(90.0));
+    m_pGripper->DropHighCube = false;
+}
+
+void Copiloter::DropCubeMiddleEnd()
+{
+    m_pElevator->SetSetpoint(0.0);
+    m_pArm->SetSetpoint(NDEGtoRAD(90.0));
+    m_pGripper->DropHighCube = false;
 }

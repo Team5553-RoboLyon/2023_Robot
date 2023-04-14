@@ -23,6 +23,7 @@
 #include "subsystem/Drivetrain.h"
 #include "subsystem/Intake.h"
 #include "subsystem/Conveyor.h"
+// #include "subsystem/Copiloter.h"
 
 // ################### COMMANDS ###################
 // Intake
@@ -81,6 +82,7 @@ public:
   Arm m_arm;
   Elevator m_elevator;
   Intake m_intake;
+  // Copiloter m_copiloter;
 
   frc::Joystick m_joystickRight{ID_JOYSTICK_RIGHT};
   frc::Joystick m_joystickLeft{ID_JOYSTICK_LEFT};

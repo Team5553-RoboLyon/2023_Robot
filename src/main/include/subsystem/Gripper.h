@@ -21,6 +21,7 @@ public:
   void Periodic() override;
   bool m_gripperTake = false;
   bool DropHighCube = false;
+  bool DropMidleCone=false;
 
 private:
   rev::CANSparkMax m_gripperMotor{ID_MOTOR_GRIPPER, rev::CANSparkMaxLowLevel::MotorType::kBrushless};

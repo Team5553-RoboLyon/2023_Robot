@@ -13,35 +13,36 @@ TakeCones::TakeCones(Elevator *pElevator, Arm *pArm, Gripper *pGripper) : m_pEle
 // Called when the command is initially scheduled.
 void TakeCones::Initialize()
 {
-  m_pElevator->SetSetpoint(0.80);
-  m_count = 0;
-  m_State = State::open;
+  m_pGripper->Take(0.6);
+  m_pElevator->SetSetpoint(0.90);
+  m_pArm->SetSetpoint(NDEGtoRAD(90.0));
 }
 
 // Called repeatedly when this Command is scheduled to run
 void TakeCones::Execute()
 {
-  m_pGripper->Take(0.6);
-  switch (m_State)
-  {
-  case State::open:
-    m_pArm->SetSetpoint(NDEGtoRAD(90.0));
+  // m_pCopiloter->TakeCone();
+  // m_pGripper->Take(0.6);
+  // switch (m_State)
+  // {
+  // case State::open:
+  //   m_pArm->SetSetpoint(NDEGtoRAD(90.0));
 
-    break;
-  case State::close:
-    m_count++;
-    if (m_count > 10)
-    {
-      m_count = 0;
-      m_State = State::high;
-    }
+  //   break;
+  // case State::close:
+  //   m_count++;
+  //   if (m_count > 10)
+  //   {
+  //     m_count = 0;
+  //     m_State = State::high;
+  //   }
 
-    break;
-  case State::high:
-    m_pArm->SetSetpoint(NDEGtoRAD(129.0));
+  //   break;
+  // case State::high:
+  //   m_pArm->SetSetpoint(NDEGtoRAD(129.0));
 
-    break;
-  }
+  //   break;
+  // }
 
   // if (m_pGripper->GetState())
   // {

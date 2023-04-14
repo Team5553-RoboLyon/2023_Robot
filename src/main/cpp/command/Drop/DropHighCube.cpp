@@ -19,11 +19,16 @@ void DropHighCube::Initialize()
 }
 
 // Called repeatedly when this Command is scheduled to run
-void DropHighCube::Execute() {}
+void DropHighCube::Execute()
+{
+  // m_pCopiloter->DropCubeHighExecute();
+}
 
 // Called once the command ends or is interrupted.
 void DropHighCube::End(bool interrupted)
 {
+  // m_pCopiloter->DropCubeHighEnd();
+
   m_pElevator->SetSetpoint(0.0);
   m_pArm->SetSetpoint(NDEGtoRAD(90.0));
   m_pGripper->DropHighCube = false;

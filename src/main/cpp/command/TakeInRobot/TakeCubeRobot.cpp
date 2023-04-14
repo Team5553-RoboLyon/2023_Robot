@@ -19,13 +19,14 @@ void TakeCubeRobot::Initialize()
 {
   m_count = 0;
   m_pElevator->SetSetpoint(0.80);
-  m_pArm->SetSetpoint(NDEGtoRAD(-15.0)); // valeur théorique à vérifier
+  m_pArm->SetSetpoint(NDEGtoRAD(-25.0)); // valeur théorique à vérifier
   m_State = State::High;
   // descend elevateur
 
   // ferme pince
 
   // remonte elevateur
+  // m_pCopiloter->TakeCubeRobotInit();
 }
 
 // Called repeatedly when this Command is scheduled to run
@@ -35,7 +36,7 @@ void TakeCubeRobot::Execute()
   switch (m_State)
   {
   case State::High:
-    if (m_pArm->GetEncoder() < NDEGtoRAD(-10.0)) // temps à réduire
+    if (m_pArm->GetEncoder() < NDEGtoRAD(-20.0)) // temps à réduire
     {
       m_pElevator->SetSetpoint(0.45); // valeur théorique à vérifier
       m_count = 0;
@@ -55,6 +56,7 @@ void TakeCubeRobot::Execute()
     if (m_count > 15) // temps à réduire
     {
       m_pElevator->SetSetpoint(0.95);
+      m_pArm->SetSetpoint(-35.0);
       m_count = 0;
       m_State = State::GoDown;
     }
@@ -83,6 +85,7 @@ void TakeCubeRobot::Execute()
 void TakeCubeRobot::End(bool interrupted)
 {
   m_pGripper->m_gripperTake = false;
+  // m_pCopiloter->TakeCubeRobotInit();
   switch (m_State)
   {
   case State::High:
