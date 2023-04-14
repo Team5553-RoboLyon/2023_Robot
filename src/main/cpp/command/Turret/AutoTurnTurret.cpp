@@ -33,27 +33,40 @@ void AutoTurnTurret::Initialize()
 {
   m_pCamera->EnableLED();
   m_pCamera->refletiveTapeMode();
+  if (m_height() < 0)
+  {
+    lastHorizontalError = m_pCamera->GetHorizontalError(true);
+  }
+  else
+  {
+    lastHorizontalError = m_pCamera->GetHorizontalError(false);
+  }
 }
 
 // Called repeatedly when this Command is scheduled to run
 void AutoTurnTurret::Execute()
 {
   bool top;
-  if (m_height() > 0)
-  {
-    top = false;
-  }
-  else
+  if (m_height() < 0)
   {
     top = true;
   }
+  else
+  {
+    top = false;
+  }
   if (m_pCamera->HasTarget(top))
   {
+    double error = m_pCamera->GetHorizontalError(top);
+    if (NABS(error) - lastHorizontalError < CAMERA_MAX_ERROR_DIFFERENCE)
+    {
 #if TURRET
-    m_pTurret->SetSetpoint(m_pTurret->GetEncoder() + 1.3 * m_pCamera->GetHorizontalError(top));
+      m_pTurret->SetSetpoint(m_pTurret->GetEncoder() + 1.3 * error);
 #else
-    m_pDrivetrain->DriveAuto(0, 0.02 * m_pCamera->GetHorizontalError(top));
+      m_pDrivetrain->DriveAuto(0, 0.02 * error);
 #endif
+      lastHorizontalError = NABS(error);
+    }
   }
 }
 

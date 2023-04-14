@@ -126,3 +126,4 @@
 
 #define TURRET true
 #define CAMERA_HIGH_LOW_DELIMITER 150 // TODO change this to real value
+#define CAMERA_MAX_ERROR_DIFFERENCE 20

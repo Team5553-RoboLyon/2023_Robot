@@ -52,4 +52,5 @@ private:
 #endif
   Camera *m_pCamera;
   std::function<double()> m_height;
+  double lastHorizontalError = 0.0;
 };
