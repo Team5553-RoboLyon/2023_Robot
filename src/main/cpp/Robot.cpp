@@ -481,22 +481,21 @@ void Robot::AutonomousPeriodic()
       case TURRET_HOME:
         m_robotContainer.m_turret.SetSetpoint(0.0);
         break;
-        /*case CONE_HIGH_BACK_DROPOFF:
-          case ACTIVATE_CONVEYOR:
-            m_allMechanisms.Command("activate conveyor");
-            break;
-          case DEACTIVATE_CONVEYOR:
-            m_allMechanisms.Command("deactivate intake wheels");
-            break;
+      case CONE_HIGH_BACK_DROPOFF:
+        m_robotContainer.m_turret.SetSetpoint(180.0);
+        break;
+        /*case DEACTIVATE_CONVEYOR:
+          m_allMechanisms.Command("deactivate intake wheels");
+          break;
 
-          case ACTIVATE_AIM:
-            break;
-          case DEACTIVATE_AIM:
-            break;
-          case ACTIVATE_SHOOTER:
-            break;
-          case DEACTIVATE_SHOOTER:
-            break;*/
+        case ACTIVATE_AIM:
+          break;
+        case DEACTIVATE_AIM:
+          break;
+        case ACTIVATE_SHOOTER:
+          break;
+        case DEACTIVATE_SHOOTER:
+          break;*/
 
       default:
         break;
