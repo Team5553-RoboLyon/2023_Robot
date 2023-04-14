@@ -124,4 +124,5 @@
 #define ID_SUBSYSTEM_ARM 4
 #define ID_SUBSYSTEM_INTAKE 5
 
-#define TURRET TRUE
+#define TURRET true
+#define CAMERA_HIGH_LOW_DELIMITER 150 // TODO change this to real value

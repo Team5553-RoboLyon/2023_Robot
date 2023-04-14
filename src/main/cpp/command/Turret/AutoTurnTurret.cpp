@@ -10,11 +10,12 @@ AutoTurnTurret::AutoTurnTurret(
 #else
     Drivetrain *pDrivetrain,
 #endif
-    Camera *pCamera) : m_pCamera(pCamera),
+    Camera *pCamera,
+    std::function<double()> height) : m_height(height), m_pCamera(pCamera),
 #if TURRET
-                       m_pTurret(pTurret)
+                                      m_pTurret(pTurret)
 #else
-                       m_pDrivetrain(pDrivetrain)
+                                      m_pDrivetrain(pDrivetrain)
 #endif
 
 {
@@ -37,12 +38,21 @@ void AutoTurnTurret::Initialize()
 // Called repeatedly when this Command is scheduled to run
 void AutoTurnTurret::Execute()
 {
-  if (m_pCamera->HasTarget())
+  bool top;
+  if (m_height() > 0)
+  {
+    top = false;
+  }
+  else
+  {
+    top = true;
+  }
+  if (m_pCamera->HasTarget(top))
   {
 #if TURRET
-    m_pTurret->SetSetpoint(m_pTurret->GetEncoder() + 1.3 * m_pCamera->GetYaw());
+    m_pTurret->SetSetpoint(m_pTurret->GetEncoder() + 1.3 * m_pCamera->GetHorizontalError(top));
 #else
-    m_pDrivetrain->DriveAuto(0, 0.02 * m_pCamera->GetYaw());
+    m_pDrivetrain->DriveAuto(0, 0.02 * m_pCamera->GetHorizontalError(top));
 #endif
   }
 }

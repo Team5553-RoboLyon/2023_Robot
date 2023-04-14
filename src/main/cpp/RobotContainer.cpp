@@ -88,7 +88,9 @@ void RobotContainer::ConfigureButtonBindings()
 #else
             &m_drivetrain,
 #endif
-            &m_camera));
+            &m_camera,
+            [=]
+            { return m_joystickCopilot.GetY(); }));
 }
 
 // frc2::Command *RobotContainer::GetAutonomousCommand()

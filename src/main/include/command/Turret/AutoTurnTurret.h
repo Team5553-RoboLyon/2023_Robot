@@ -33,7 +33,8 @@ public:
 #else
       Drivetrain *pDrivetrain,
 #endif
-      Camera *pCamera);
+      Camera *pCamera,
+      std::function<double()> height);
 
   void Initialize() override;
 
@@ -50,4 +51,5 @@ private:
   Drivetrain *m_pDrivetrain;
 #endif
   Camera *m_pCamera;
+  std::function<double()> m_height;
 };
