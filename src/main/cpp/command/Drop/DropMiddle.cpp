@@ -13,7 +13,7 @@ DropMiddle::DropMiddle(Elevator *pElevator, Arm *pArm) : m_pElevator(pElevator),
 // Called when the command is initially scheduled.
 void DropMiddle::Initialize()
 {
-  m_pElevator->SetSetpoint(0.80);
+  m_pElevator->SetSetpoint(ELEVATOR_MIDDLE_CONE);
   m_pArm->SetSetpoint(NDEGtoRAD(90.0));
 }
 

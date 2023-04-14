@@ -13,7 +13,7 @@ DropHigh::DropHigh(Elevator *pElevator, Arm *pArm) : m_pElevator(pElevator), m_p
 // Called when the command is initially scheduled.
 void DropHigh::Initialize()
 {
-  m_pElevator->SetSetpoint(0.97);
+  m_pElevator->SetSetpoint(ELEVATOR_HIGH_CONE);
   m_pArm->SetSetpoint(NDEGtoRAD(110.0));
 }
 

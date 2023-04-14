@@ -51,6 +51,7 @@
 
 // Elevator
 #include "command/Elevator/MoveElevator.h"
+#include "command/Elevator/AutoAdjustElevator.h"
 #include "command/LoadingStation/TakeCones.h"
 #include "command/TakeInRobot/TakeCubeRobot.h"
 

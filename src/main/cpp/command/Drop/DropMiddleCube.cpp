@@ -13,7 +13,7 @@ DropMiddleCube::DropMiddleCube(Elevator *pElevator, Arm *pArm, Gripper *pGripper
 // Called when the command is initially scheduled.
 void DropMiddleCube::Initialize()
 {
-  m_pElevator->SetSetpoint(0.43);
+  m_pElevator->SetSetpoint(ELEVATOR_MIDDLE_CUBE);
   m_pArm->SetSetpoint(NDEGtoRAD(97.0));
   m_pGripper->DropHighCube = true;
 }

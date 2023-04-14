@@ -21,7 +21,10 @@ Elevator::Elevator()
 
 void Elevator::SetSetpoint(double setpoint)
 {
-    m_elevatorPid.SetSetpoint(setpoint);
+    if (setpoint >= 0)
+    {
+        m_elevatorPid.SetSetpoint(setpoint);
+    }
 }
 
 void Elevator::SetGains(double p, double i, double d)

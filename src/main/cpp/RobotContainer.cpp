@@ -91,6 +91,14 @@ void RobotContainer::ConfigureButtonBindings()
             &m_camera,
             [=]
             { return m_joystickCopilot.GetY(); }));
+
+    frc2::JoystickButton m_ButtonAutoHeight = frc2::JoystickButton(&m_joystickCopilot, 3);
+    m_ButtonAutoHeight.WhileActiveContinous(
+        AutoAdjustElevator(
+            &m_camera,
+            &m_elevator,
+            [=]
+            { return m_joystickCopilot.GetY(); }));
 }
 
 // frc2::Command *RobotContainer::GetAutonomousCommand()
