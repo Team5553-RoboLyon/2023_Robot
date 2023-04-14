@@ -11,12 +11,14 @@ void Camera::Periodic() {}
 
 void Camera::DisableLED()
 {
-    m_camera.SetDriverMode(false);
+    m_camera.SetDriverMode(true);
+    std::cout << "driver mode : " << m_camera.GetDriverMode() << std::endl;
 }
 
 void Camera::EnableLED()
 {
-    m_camera.SetDriverMode(true);
+    m_camera.SetDriverMode(false);
+    std::cout << "driver mode : " << m_camera.GetDriverMode() << std::endl;
 }
 
 void Camera::aprilTagMode()
@@ -47,11 +49,22 @@ bool Camera::isReflectiveMode()
     return !m_camera.GetDriverMode() && (m_camera.GetPipelineIndex() == 1);
 }
 
-double Camera::GetPitch()
+double Camera::GetYaw()
 {
     if (HasTarget())
     {
-        return m_camera.GetLatestResult().GetBestTarget().GetPitch();
+        double smallestYaw;
+        std::span<const photonlib::PhotonTrackedTarget> targets = m_camera.GetLatestResult().GetTargets();
+        smallestYaw = targets[0].GetYaw();
+        for (int i = 1; i < targets.size(); i++)
+        {
+            if (NABS(targets[i].GetYaw()) < NABS(smallestYaw))
+            {
+                smallestYaw = targets[i].GetYaw();
+            }
+        }
+
+        return smallestYaw;
     }
     else
     {
