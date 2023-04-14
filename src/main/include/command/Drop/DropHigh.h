@@ -8,6 +8,7 @@
 #include <frc2/command/CommandHelper.h>
 #include "subsystem/Elevator.h"
 #include "subsystem/Arm.h"
+#include "subsystem/Copiloter.h"
 #include "lib/RblUtils.h"
 
 /**

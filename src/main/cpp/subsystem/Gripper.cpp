@@ -27,11 +27,15 @@ void Gripper::Spit()
 {
     if (DropHighCube)
     {
-        m_gripperMotor.Set(-0.3);
+        m_gripperMotor.Set(-0.6);
+    }
+    else if (DropMidleCone)
+    {
+        m_gripperMotor.Set(-0.2);
     }
     else
     {
-        m_gripperMotor.Set(-0.1);
+        m_gripperMotor.Set(-0.2);
     }
 }
 
