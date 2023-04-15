@@ -29,7 +29,7 @@ void ActiveArmMotor::Execute()
   //   move = m_Move() * 123.0 + 90.0;
   // }
 
-  m_pArm->SetSetpoint(NDEGtoRAD(90.0));
+  m_pArm->SetSetpoint(NDEGtoRAD(100.0));
 }
 
 // Called once the command ends or is interrupted.

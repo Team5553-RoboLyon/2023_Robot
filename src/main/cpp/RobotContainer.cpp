@@ -100,7 +100,7 @@ void RobotContainer::ConfigureButtonBindings()
     //         [=]
     //         { return m_joystickCopilot.GetY(); }));
 
-    frc2::JoystickButton m_ButtonBrake = frc2::JoystickButton(&m_joystickLeft, 2);
+    frc2::JoystickButton m_ButtonBrake = frc2::JoystickButton(&m_joystickLeft, 1);
     m_ButtonBrake.WhileActiveContinous(Brake(&m_drivetrain));
 }
 
