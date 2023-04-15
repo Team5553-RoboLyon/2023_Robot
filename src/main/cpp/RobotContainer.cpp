@@ -47,8 +47,11 @@ void RobotContainer::ConfigureButtonBindings()
 
     // Gripper
 
-    frc2::JoystickButton m_ButtonGripperChangePosition = frc2::JoystickButton(&m_joystickCopilot, 1);
-    m_ButtonGripperChangePosition.WhileActiveOnce(Catch(&m_gripper));
+    frc2::JoystickButton m_ButtonGripperCatch = frc2::JoystickButton(&m_joystickCopilot, 1);
+    m_ButtonGripperCatch.WhileActiveOnce(Catch(&m_gripper));
+
+    frc2::JoystickButton m_ButtonGripperEject = frc2::JoystickButton(&m_joystickCopilot, 3);
+    m_ButtonGripperEject.WhileActiveOnce(Eject(&m_gripper));
 
     frc2::JoystickButton m_ButtonTakeCones = frc2::JoystickButton(&m_joystickCopilot, 5);
     m_ButtonTakeCones.WhileActiveContinous(TakeCones(&m_elevator, &m_arm, &m_gripper));

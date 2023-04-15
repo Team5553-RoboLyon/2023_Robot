@@ -22,6 +22,7 @@ public:
   bool m_gripperTake = false;
   bool DropHighCube = false;
   bool DropMidleCone=false;
+  int count = 0;
 
 private:
   rev::CANSparkMax m_gripperMotor{ID_MOTOR_GRIPPER, rev::CANSparkMaxLowLevel::MotorType::kBrushless};

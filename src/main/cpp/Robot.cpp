@@ -401,6 +401,7 @@ void Robot::TeleopPeriodic()
   {
     m_robotContainer.m_drivetrain.InvertBallShifter();
   }
+  m_robotContainer.m_elevator.m_joystickValue = m_robotContainer.m_joystickCopilot.GetY() * 0.1;
 }
 
 void Robot::DisabledInit()

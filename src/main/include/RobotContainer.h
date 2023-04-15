@@ -36,6 +36,7 @@
 
 // Gripper
 #include "command/Gripper/Catch.h"
+#include "command/Gripper/Eject.h"
 
 // Drop
 #include "command/Drop/DropHigh.h"
