@@ -52,6 +52,7 @@ class Drivetrain : public frc2::SubsystemBase
 public:
   Drivetrain();
   void Set(double speed); // faire autre chose y a moyen
+  void SetRaw(double left, double right);
 
   void InvertBallShifter();
   void ActiveBallShifterV1(); // ok
@@ -71,6 +72,9 @@ public:
   void ShiftGearUp();
   void ShiftGearDown();
   void Reset();
+
+  double getLeftDistance();
+  double getRightDistance();
 
   // Côté gauche
   Dynamic m_GearboxLeftOutRawRpt;                    // Vitesse instantanée de sortie de boite ( mesurée par le TroughBore Encoder )

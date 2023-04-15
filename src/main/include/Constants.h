@@ -130,8 +130,8 @@
 
 #define TURRET true
 #define CAMERA_MAX_ERROR_DIFFERENCE 20
-#define CAMERA_WIDTH 960 // TODO change to real values
-#define CAMERA_HEIGHT 320
-#define CAMERA_TARGET_HIGH_PITCH 220                              // TODO real value
-#define CAMERA_TARGET_LOW_PITCH 180                               // TODO real value
-#define CAMERA_HIGH_LOW_DELIMITER (CAMERA_TARGET_HIGH_PITCH - 50) // TODO change this to real value
+#define CAMERA_WIDTH 320
+#define CAMERA_HEIGHT 240
+#define CAMERA_TARGET_HIGH_PITCH 220 // TODO real value
+#define CAMERA_TARGET_LOW_PITCH 180  // TODO real value
+#define CAMERA_HIGH_LOW_DELIMITER 0

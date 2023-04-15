@@ -45,6 +45,7 @@
 
 // Drivetrain
 #include "command/Drivetrain/Drive.h"
+#include "command/Drivetrain/Brake.h"
 
 // Turret
 #include "command/Turret/TurnTurret.h"
