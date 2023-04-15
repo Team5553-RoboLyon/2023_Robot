@@ -552,7 +552,8 @@ void Robot::TeleopInit()
 }
 void Robot::TeleopPeriodic()
 {
-  if (m_robotContainer.m_joystickLeft.GetRawButtonPressed(1))
+
+  if (m_robotContainer.m_joystickLeft.GetRawButtonPressed(2))
   {
     m_robotContainer.m_drivetrain.InvertBallShifter();
   }

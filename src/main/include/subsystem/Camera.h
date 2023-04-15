@@ -21,9 +21,10 @@ public:
     void GetDistance();
     void setDistance(double distance);
     void Periodic() override;
-    double GetYaw();
-    double GetHorizontalError();
-    bool HasTarget();
+    double GetHorizontalError(bool top);
+    double GetVerticalError(bool top);
+    std::optional<photonlib::PhotonTrackedTarget> GetNearestTarget(bool top);
+    bool HasTarget(bool top);
     void aprilTagMode();
     void refletiveTapeMode();
     int getAprilId();
