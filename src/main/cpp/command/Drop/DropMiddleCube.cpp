@@ -19,7 +19,10 @@ void DropMiddleCube::Initialize()
 }
 
 // Called repeatedly when this Command is scheduled to run
-void DropMiddleCube::Execute() {}
+void DropMiddleCube::Execute()
+{
+  // m_pCopiloter->DropCubeMiddleExecute();
+}
 
 // Called once the command ends or is interrupted.
 void DropMiddleCube::End(bool interrupted)
@@ -27,6 +30,7 @@ void DropMiddleCube::End(bool interrupted)
   m_pElevator->SetSetpoint(0.0);
   m_pArm->SetSetpoint(NDEGtoRAD(90.0));
   m_pGripper->DropHighCube = false;
+  // m_pCopiloter->DropCubeMiddleEnd();
 }
 
 // Returns true when the command should end.

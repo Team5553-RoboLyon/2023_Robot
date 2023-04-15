@@ -2,34 +2,37 @@
 // Open Source Software; you can modify and/or share it under the terms of
 // the WPILib BSD license file in the root directory of this project.
 
-#include "command/Gripper/Catch.h"
-#include <iostream>
+#include "command/Gripper/Eject.h"
 
-Catch::Catch(Gripper *pGripper) : m_pGripper(pGripper)
+Eject::Eject(Gripper *pGripper) : m_pGripper(pGripper)
 {
   AddRequirements(m_pGripper);
 }
 
 // Called when the command is initially scheduled.
-void Catch::Initialize()
+void Eject::Initialize()
 {
+  m_pGripper->count = 0;
 }
 
 // Called repeatedly when this Command is scheduled to run
-void Catch::Execute()
+void Eject::Execute()
 {
-  m_pGripper->Take(0.6);
+  m_pGripper->count++;
+
+  m_pGripper->Spit();
 }
 
 // Called once the command ends or is interrupted.
-void Catch::End(bool interrupted)
+void Eject::End(bool interrupted)
 {
-  m_pGripper->m_gripperTake = false;
-  m_pGripper->Old(0.1);
+  m_pGripper->m_gripperTake = true;
+  m_pGripper->Stop();
+  m_pGripper->count = 0;
 }
 
 // Returns true when the command should end.
-bool Catch::IsFinished()
+bool Eject::IsFinished()
 {
   return false;
 }

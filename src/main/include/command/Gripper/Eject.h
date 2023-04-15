@@ -6,9 +6,8 @@
 
 #include <frc2/command/CommandBase.h>
 #include <frc2/command/CommandHelper.h>
-#include "subsystem/Elevator.h"
-#include "subsystem/Arm.h"
 #include "subsystem/Gripper.h"
+
 /**
  * An example command.
  *
@@ -16,11 +15,11 @@
  * directly; this is crucially important, or else the decorator functions in
  * Command will *not* work!
  */
-class DropMiddle
-    : public frc2::CommandHelper<frc2::CommandBase, DropMiddle>
+class Eject
+    : public frc2::CommandHelper<frc2::CommandBase, Eject>
 {
 public:
-  DropMiddle(Elevator *pElevator, Arm *pArm, Gripper *pGripper);
+  Eject(Gripper *pGripper);
 
   void Initialize() override;
 
@@ -31,7 +30,5 @@ public:
   bool IsFinished() override;
 
 private:
-  Elevator *m_pElevator;
-  Arm *m_pArm;
   Gripper *m_pGripper;
 };

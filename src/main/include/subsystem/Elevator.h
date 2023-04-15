@@ -27,6 +27,7 @@ public:
   Pid m_elevatorPid{0, P_ELEVATOR, I_ELEVATOR, D_ELEVATOR};
   RateLimiter m_ElevatorPidRate;
   bool IsAuto;
+  double m_joystickValue;
 
 private:
   rev::CANSparkMax m_elevatorMotor{ID_MOTOR_ELEVATOR, rev::CANSparkMaxLowLevel::MotorType::kBrushless};

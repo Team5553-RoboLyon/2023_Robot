@@ -40,10 +40,9 @@ void AutoTurnTurret::Execute()
   if (m_pCamera->HasTarget())
   {
 #if TURRET
-    // version avec tourelle
-    m_pTurret->SetSetpoint(m_pTurret->GetSetPoint() + m_pCamera->GetPitch());
+    m_pTurret->SetSetpoint(m_pTurret->GetEncoder() + 1.3 * m_pCamera->GetYaw());
 #else
-    m_pDrivetrain->DriveAuto(0, m_pCamera->GetPitch());
+    m_pDrivetrain->DriveAuto(0, 0.02 * m_pCamera->GetYaw());
 #endif
   }
 }
@@ -52,6 +51,9 @@ void AutoTurnTurret::Execute()
 void AutoTurnTurret::End(bool interrupted)
 {
   m_pCamera->DisableLED();
+#if TURRET
+  m_pTurret->SetSetpoint(0.0);
+#endif
 }
 
 // Returns true when the command should end.

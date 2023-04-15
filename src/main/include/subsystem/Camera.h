@@ -10,6 +10,7 @@
 #include <photonlib/PhotonUtils.h>
 #include <units/length.h>
 #include "Constants.h"
+#include "lib/RblUtils.h"
 
 class Camera : public frc2::SubsystemBase
 {
@@ -20,7 +21,7 @@ public:
     void GetDistance();
     void setDistance(double distance);
     void Periodic() override;
-    double GetPitch();
+    double GetYaw();
     double GetHorizontalError();
     bool HasTarget();
     void aprilTagMode();

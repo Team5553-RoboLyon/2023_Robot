@@ -18,11 +18,18 @@ public:
    * Will be called periodically whenever the CommandScheduler runs.
    */
   void TakeCubeRobot();
+  void TakeCubeRobotInit();
   void TakeCone();
+  void DropConeHighExecute();
+  void DropConeMiddleExecute();
+  void DropCubeHighExecute();
+  void DropCubeMiddleExecute();
 
-private:
-  int m_count;
-  int m_countCone;
+  void DropConeHighEnd();
+  void DropConeMiddleEnd();
+  void DropCubeHighEnd();
+  void DropCubeMiddleEnd();
+
   enum class StateTakeCubeRobot
   {
     Init,
@@ -42,9 +49,13 @@ private:
   };
   StateTakeCone m_StateTakeCone;
 
-  Arm m_Arm;
-  Elevator m_Elevator;
-  Gripper m_Gripper;
+private:
+  int m_count;
+  int m_countCone;
+
+  Arm *m_pArm;
+  Elevator *m_pElevator;
+  Gripper *m_pGripper;
 
   // Components (e.g. motor controllers and sensors) should generally be
   // declared private and exposed only through public methods.
