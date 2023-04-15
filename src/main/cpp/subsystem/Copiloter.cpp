@@ -105,25 +105,25 @@ void Copiloter::DropCubeMiddleExecute()
 void Copiloter::DropConeHighEnd()
 {
     m_pElevator->SetSetpoint(0.0);
-    m_pArm->SetSetpoint(NDEGtoRAD(90.0));
+    m_pArm->SetSetpoint(NDEGtoRAD(115.0));
 }
 
 void Copiloter::DropConeMiddleEnd()
 {
     m_pElevator->SetSetpoint(0.0);
-    m_pArm->SetSetpoint(NDEGtoRAD(90.0));
+    m_pArm->SetSetpoint(NDEGtoRAD(115.0));
 }
 
 void Copiloter::DropCubeHighEnd()
 {
     m_pElevator->SetSetpoint(0.0);
-    m_pArm->SetSetpoint(NDEGtoRAD(90.0));
+    m_pArm->SetSetpoint(NDEGtoRAD(115.0));
     m_pGripper->DropHighCube = false;
 }
 
 void Copiloter::DropCubeMiddleEnd()
 {
     m_pElevator->SetSetpoint(0.0);
-    m_pArm->SetSetpoint(NDEGtoRAD(90.0));
+    m_pArm->SetSetpoint(NDEGtoRAD(115.0));
     m_pGripper->DropHighCube = false;
 }

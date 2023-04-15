@@ -33,7 +33,8 @@ public:
 #else
       Drivetrain *pDrivetrain,
 #endif
-      Camera *pCamera);
+      Camera *pCamera,
+      std::function<bool()> top);
 
   void Initialize() override;
 
@@ -50,4 +51,6 @@ private:
   Drivetrain *m_pDrivetrain;
 #endif
   Camera *m_pCamera;
+  std::function<double()> m_top;
+  double lastHorizontalError = 0.0;
 };
