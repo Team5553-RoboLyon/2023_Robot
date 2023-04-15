@@ -371,12 +371,12 @@ void Robot::AutonomousInit()
   m_robotContainer.m_elevator.IsAuto = true;
   m_robotContainer.m_turret.IsAuto = true;
 
-  // m_robotContainer.m_drivetrain.Reset();
-  // m_robotContainer.m_elevator.Reset();
-  // m_robotContainer.m_intake.Reset();
-  // m_robotContainer.m_arm.Reset();
-  // m_robotContainer.m_conveyor.Reset();
-  // m_robotContainer.m_gripper.Reset();
+  m_robotContainer.m_drivetrain.Reset();
+  m_robotContainer.m_elevator.Reset();
+  m_robotContainer.m_intake.Reset();
+  m_robotContainer.m_arm.Reset();
+  m_robotContainer.m_conveyor.Reset();
+  m_robotContainer.m_gripper.Reset();
 
   // ######## NLMOTOR_CHARACTERIZATION ########
   // NLCHARACTERIZATION_TABLE characterization_table(4);
@@ -399,7 +399,7 @@ void Robot::AutonomousInit()
   // characterization_table.get(&m_CrtzL, "L1", NFALSE);
   // characterization_table.get(&m_CrtzR, "R1", NFALSE);
 
-  m_TrajectoryPack.load("/home/lvuser/auto/left_dconl2_tcub.trk");
+  m_TrajectoryPack.load("/home/lvuser/auto/left_dl2cub_tcub_db2cub_tcub (1).trk");
   m_follower.initialize(&m_TrajectoryPack);
   m_state = Robot::STATE::PATH_FOLLOWING;
   m_robotContainer.m_elevator.SetSetpoint(0.0);
@@ -508,6 +508,10 @@ void Robot::AutonomousPeriodic()
         m_robotContainer.m_arm.SetSetpoint(NDEGtoRAD(85.0));
         m_robotContainer.m_gripper.DropHighCube = true;
         break;
+      case ARM_HOME:
+        m_robotContainer.m_elevator.SetSetpoint(0.0);
+        m_robotContainer.m_arm.SetSetpoint(NDEGtoRAD(100.0));
+        break;
       case TAKE_CUBE_IN_ROBOT:
         TakeCubeRobot();
         break;
@@ -553,11 +557,16 @@ void Robot::TeleopInit()
 void Robot::TeleopPeriodic()
 {
 
+  // if (m_robotContainer.m_joystickLeft.GetRawButtonPressed(2))
+  // {
+  //   m_robotContainer.m_drivetrain.InvertBallShifter();
+  // }
+  m_robotContainer.m_elevator.m_joystickValue = m_robotContainer.m_joystickCopilot.GetY() * 0.2;
+
   if (m_robotContainer.m_joystickLeft.GetRawButtonPressed(2))
   {
-    m_robotContainer.m_drivetrain.InvertBallShifter();
+    m_robotContainer.m_arm.SetSetpoint(NDEGtoRAD(90.0));
   }
-  m_robotContainer.m_elevator.m_joystickValue = m_robotContainer.m_joystickCopilot.GetY() * 0.1;
 }
 
 void Robot::DisabledInit()
