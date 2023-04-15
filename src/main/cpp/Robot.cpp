@@ -365,7 +365,7 @@ void Robot::AutonomousInit()
   // m_StateAutobalance1 = StateAutobalance1::forward;
   // m_StateAutobalance2 = StateAutobalance2::open;
   // m_StateAutoCubeHaut = StateAutoCubeHaut::Init;
-  m_StateAutobalanceTout = StateAutoBalanceTout::forward;
+  // m_StateAutobalanceTout = StateAutoBalanceTout::forward;
 
   // m_StateAutoCube1 = StateAutoCube1::open;
   // m_StateAutobalanceTout=StateAutoBalanceTout
@@ -403,7 +403,7 @@ void Robot::AutonomousInit()
   // characterization_table.get(&m_CrtzL, "L1", NFALSE);
   // characterization_table.get(&m_CrtzR, "R1", NFALSE);
 
-  m_TrajectoryPack.load("/home/lvuser/auto/loop.trk");
+  m_TrajectoryPack.load("/home/lvuser/auto/left_dcon2_tcub.trk");
   m_follower.initialize(&m_TrajectoryPack);
   m_state = Robot::STATE::PATH_FOLLOWING;
 }
@@ -529,7 +529,7 @@ void Robot::AutonomousPeriodic()
 
   // AutoCube1();
   // AutoCubeHaut();
-  AutoBalanceTout();
+  // AutoBalanceTout();
 }
 
 void Robot::TeleopInit()
