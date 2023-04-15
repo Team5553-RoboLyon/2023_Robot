@@ -541,7 +541,7 @@ void Robot::TeleopInit()
 }
 void Robot::TeleopPeriodic()
 {
-  frc::SmartDashboard::PutNumber("angleGyro", NRADtoDEG(m_ahrs.GetPitch()));
+  frc::SmartDashboard::PutNumber("angleGyro", NRADtoDEG(m_gyro.GetPitch()));
   // std::cout << m_ahrs.GetPitch() << std::endl;
   frc::SmartDashboard::PutNumber("elevator", m_robotContainer.m_elevator.GetEncoder());
   frc::SmartDashboard::PutNumber("turret", m_robotContainer.m_turret.GetEncoder());
