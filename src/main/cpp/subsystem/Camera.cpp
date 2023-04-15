@@ -29,7 +29,7 @@ void Camera::refletiveTapeMode()
 }
 int Camera::getAprilId()
 {
-    if (HasTarget())
+    if (m_camera.GetLatestResult().HasTargets())
     {
         return m_camera.GetLatestResult().GetBestTarget().GetFiducialId();
     }
@@ -47,42 +47,108 @@ bool Camera::isReflectiveMode()
     return !m_camera.GetDriverMode() && (m_camera.GetPipelineIndex() == 1);
 }
 
-double Camera::GetYaw()
+double Camera::GetHorizontalError(bool top)
 {
-    if (HasTarget())
+    std::optional<photonlib::PhotonTrackedTarget> nearestTarget = GetNearestTarget(top);
+    if (nearestTarget)
     {
-        double smallestYaw;
-        std::span<const photonlib::PhotonTrackedTarget> targets = m_camera.GetLatestResult().GetTargets();
-        smallestYaw = targets[0].GetYaw();
-        for (int i = 1; i < targets.size(); i++)
+        return (*nearestTarget).GetYaw();
+    }
+    else
+    {
+        return 0.0;
+    }
+}
+
+double Camera::GetVerticalError(bool top)
+{
+    std::optional<photonlib::PhotonTrackedTarget> nearestTarget = GetNearestTarget(top);
+    if (nearestTarget)
+    {
+        return (*nearestTarget).GetPitch();
+    }
+    else
+    {
+        return 0.0;
+    }
+}
+
+std::optional<photonlib::PhotonTrackedTarget> Camera::GetNearestTarget(bool top)
+{
+    if (!m_camera.HasTargets())
+    {
+        return std::nullopt;
+    }
+    std::optional<photonlib::PhotonTrackedTarget> nearestTarget; // TODO if optional is working
+    std::span<const photonlib::PhotonTrackedTarget> targets = m_camera.GetLatestResult().GetTargets();
+    // int startIndex = 0;
+    // for (int i = 0; i < targets.size(); i++)
+    // {
+    //     if (top)
+    //     {
+    //         if (targets[i].GetPitch() > CAMERA_HIGH_LOW_DELIMITER)
+    //         {
+    //             nearestTarget = targets[i];
+    //             startIndex = i;
+    //             break;
+    //         }
+    //     }
+    //     else
+    //     {
+    //         nearestTarget = targets[i];
+    //         startIndex = i;
+    //         break;
+    //     }
+    // }
+
+    for (int i = 0 /*startIndex*/; i < targets.size(); i++)
+    {
+        if (top)
         {
-            if (NABS(targets[i].GetYaw()) < NABS(smallestYaw))
+            if (targets[i].GetPitch() > CAMERA_HIGH_LOW_DELIMITER)
             {
-                smallestYaw = targets[i].GetYaw();
+                if (nearestTarget && (NABS(targets[i].GetYaw()) < NABS((*nearestTarget).GetYaw())))
+                {
+                    nearestTarget = targets[i];
+                }
+                else
+                {
+                    nearestTarget = targets[i];
+                }
             }
         }
-
-        return smallestYaw;
+        else
+        {
+            if (nearestTarget && (NABS(targets[i].GetYaw()) < NABS((*nearestTarget).GetYaw())))
+            {
+                nearestTarget = targets[i];
+            }
+            else
+            {
+                nearestTarget = targets[i];
+            }
+        }
     }
-    else
-    {
-        return 0.0;
-    }
+    return nearestTarget;
 }
 
-double Camera::GetHorizontalError()
+bool Camera::HasTarget(bool top)
 {
-    if (HasTarget())
+    if (!m_camera.HasTargets())
     {
-        return m_horizontalErrorMovingAverage.Calculate(m_camera.GetLatestResult().GetBestTarget().GetYaw());
+        return false;
     }
-    else
+    if (!top)
     {
-        return 0.0;
+        return true;
     }
-}
-
-bool Camera::HasTarget()
-{
-    return m_camera.GetLatestResult().HasTargets();
+    std::span<const photonlib::PhotonTrackedTarget> targets = m_camera.GetLatestResult().GetTargets();
+    for (int i = 0 /*startIndex*/; i < targets.size(); i++)
+    {
+        if (targets[i].GetPitch() > CAMERA_HIGH_LOW_DELIMITER)
+        {
+            return true;
+        }
+    }
+    return false;
 }

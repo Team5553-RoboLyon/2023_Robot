@@ -46,6 +46,7 @@
 
 // Drivetrain
 #include "command/Drivetrain/Drive.h"
+#include "command/Drivetrain/Brake.h"
 
 // Turret
 #include "command/Turret/TurnTurret.h"
@@ -53,6 +54,7 @@
 
 // Elevator
 #include "command/Elevator/MoveElevator.h"
+#include "command/Elevator/AutoAdjustElevator.h"
 #include "command/LoadingStation/TakeCones.h"
 #include "command/TakeInRobot/TakeCubeRobot.h"
 

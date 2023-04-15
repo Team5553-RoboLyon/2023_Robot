@@ -397,7 +397,7 @@ void Robot::TeleopPeriodic()
   frc::SmartDashboard::PutNumber("armOutput", m_robotContainer.m_arm.m_armPid.m_output);
   frc::SmartDashboard::PutNumber("armerror", m_robotContainer.m_arm.m_armPid.m_error);
 
-  if (m_robotContainer.m_joystickLeft.GetRawButtonPressed(1))
+  if (m_robotContainer.m_joystickLeft.GetRawButtonPressed(2))
   {
     m_robotContainer.m_drivetrain.InvertBallShifter();
   }
