@@ -29,7 +29,6 @@ Intake::Intake()
 
 void Intake::Open()
 {
-    std::cout << "open" << std::endl;
     m_IntakeOpen = true;
     m_intakeSolenoid.Set(frc::DoubleSolenoid::Value::kReverse);
 }

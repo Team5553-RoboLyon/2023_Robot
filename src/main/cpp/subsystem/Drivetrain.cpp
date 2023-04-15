@@ -450,3 +450,16 @@ void Drivetrain::SetVoltage(double voltageR, double voltageL)
     m_MotorLeft1.Set(ctre::phoenix::motorcontrol::ControlMode::PercentOutput, voltageL);
     m_MotorRight1.Set(ctre::phoenix::motorcontrol::ControlMode::PercentOutput, voltageR);
 }
+double Drivetrain::getLeftDistance()
+{
+    return m_EncoderLeft.GetDistance();
+}
+double Drivetrain::getRightDistance()
+{
+    return m_EncoderRight.GetDistance();
+}
+void Drivetrain::SetRaw(double left, double right)
+{
+    m_MotorRight1.Set(ctre::phoenix::motorcontrol::ControlMode::PercentOutput, right);
+    m_MotorLeft1.Set(ctre::phoenix::motorcontrol::ControlMode::PercentOutput, left);
+}

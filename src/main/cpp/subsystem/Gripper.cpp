@@ -31,11 +31,25 @@ void Gripper::Spit()
     }
     else if (DropMidleCone)
     {
-        m_gripperMotor.Set(-0.2);
+        if (count < 10)
+        {
+            m_gripperMotor.Set(-0.6);
+        }
+        else
+        {
+            m_gripperMotor.Set(-0.2);
+        }
     }
     else
     {
-        m_gripperMotor.Set(-0.2);
+        if (count < 10)
+        {
+            m_gripperMotor.Set(-0.6);
+        }
+        else
+        {
+            m_gripperMotor.Set(-0.2);
+        }
     }
 }
 

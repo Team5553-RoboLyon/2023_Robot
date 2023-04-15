@@ -6,15 +6,9 @@
 
 #include <frc2/command/CommandBase.h>
 #include <frc2/command/CommandHelper.h>
-#if TURRET
-#include "subsystem/Turret.h"
-#else
-#include "subsystem/Drivetrain.h"
 
-#endif
 #include "subsystem/Camera.h"
-#include "command/Turret/TurnTurret.h"
-#include "Constants.h"
+#include "subsystem/Elevator.h"
 
 /**
  * An example command.
@@ -23,18 +17,11 @@
  * directly; this is crucially important, or else the decorator functions in
  * Command will *not* work!
  */
-class AutoTurnTurret
-    : public frc2::CommandHelper<frc2::CommandBase, AutoTurnTurret>
+class AutoAdjustElevator
+    : public frc2::CommandHelper<frc2::CommandBase, AutoAdjustElevator>
 {
 public:
-  AutoTurnTurret(
-#if TURRET
-      Turret *pTurret,
-#else
-      Drivetrain *pDrivetrain,
-#endif
-      Camera *pCamera,
-      std::function<bool()> top);
+  AutoAdjustElevator(Camera *camera, Elevator *elevator, std::function<double()> height);
 
   void Initialize() override;
 
@@ -45,12 +32,8 @@ public:
   bool IsFinished() override;
 
 private:
-#if TURRET
-  Turret *m_pTurret;
-#else
-  Drivetrain *m_pDrivetrain;
-#endif
   Camera *m_pCamera;
-  std::function<bool()> m_top;
+  Elevator *m_pElevator;
+  std::function<double()> m_height;
   double lastHorizontalError = 0.0;
 };
