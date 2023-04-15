@@ -373,12 +373,12 @@ void Robot::AutonomousInit()
   m_robotContainer.m_elevator.IsAuto = true;
   m_robotContainer.m_drivetrain.IsAuto = true;
 
-  m_robotContainer.m_drivetrain.Reset();
-  m_robotContainer.m_elevator.Reset();
-  m_robotContainer.m_intake.Reset();
-  m_robotContainer.m_arm.Reset();
-  m_robotContainer.m_conveyor.Reset();
-  m_robotContainer.m_gripper.Reset();
+  // m_robotContainer.m_drivetrain.Reset();
+  // m_robotContainer.m_elevator.Reset();
+  // m_robotContainer.m_intake.Reset();
+  // m_robotContainer.m_arm.Reset();
+  // m_robotContainer.m_conveyor.Reset();
+  // m_robotContainer.m_gripper.Reset();
 
   // m_robotContainer.GetAutonomousCommand()->Schedule();
 
@@ -484,6 +484,9 @@ void Robot::AutonomousPeriodic()
       case CONE_HIGH_BACK_DROPOFF:
         m_robotContainer.m_turret.SetSetpoint(180.0);
         break;
+      case CONE_LEFT_BACK_DROPOFF:
+
+        m_robotContainer.m_turret.SetSetpoint(90.0);
         /*case DEACTIVATE_CONVEYOR:
           m_allMechanisms.Command("deactivate intake wheels");
           break;
