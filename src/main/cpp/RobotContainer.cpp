@@ -23,10 +23,6 @@ RobotContainer::RobotContainer()
                                               { return m_joystickCopilot.GetY(); },
                                               &m_elevator));
 
-    // m_arm.SetDefaultCommand(MoveArm([=]
-    //                                 { return m_joystickCopilot.GetX(); },
-    //                                 &m_arm));
-
     m_CameraPilote = frc::CameraServer::StartAutomaticCapture();
     m_CameraPilote.SetResolution(320, 240);
     m_CameraPilote.SetFPS(12);
@@ -95,9 +91,3 @@ void RobotContainer::ConfigureButtonBindings()
 #endif
             &m_camera));
 }
-
-// frc2::Command *RobotContainer::GetAutonomousCommand()
-// {
-
-//     return &m_autonomousGroupCommand;
-// }

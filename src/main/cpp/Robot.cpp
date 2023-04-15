@@ -340,15 +340,12 @@ void Robot::AutoCubeHaut()
 
 void Robot::RobotInit()
 {
-  // m_ahrs.Reset();
-  // m_ahrs.Calibrate();
 }
 
 void Robot::RobotPeriodic()
 {
   frc2::CommandScheduler::GetInstance().Run();
 }
-// on fait
 
 void Robot::AutonomousInit()
 {
@@ -381,8 +378,6 @@ void Robot::AutonomousInit()
   // m_robotContainer.m_conveyor.Reset();
   // m_robotContainer.m_gripper.Reset();
 
-  // m_robotContainer.GetAutonomousCommand()->Schedule();
-
   // ######## NLMOTOR_CHARACTERIZATION ########
   // NLCHARACTERIZATION_TABLE characterization_table(4);
   // characterization_table.importTxt("/home/lvuser/auto/characterization_MultiVarLinearRegression.txt");
@@ -411,10 +406,6 @@ void Robot::AutonomousInit()
 }
 void Robot::AutonomousPeriodic()
 {
-  frc::SmartDashboard::PutNumber("setpoint turret", m_robotContainer.m_turret.m_turretPid.m_setpoint);
-  // std::cout << "encoderL" << m_robotContainer.m_drivetrain.m_EncoderLeft.GetDistance() << std::endl;
-  // std::cout << "encoderR" << m_robotContainer.m_drivetrain.m_EncoderRight.GetDistance() << std::endl;
-  std::cout << "gyro" << m_gyro.GetAngle() << std::endl;
 
   NLRAMSETEOUTPUT output;
   NLFOLLOWER_TANK_OUTPUT *pout = nullptr;
@@ -480,30 +471,46 @@ void Robot::AutonomousPeriodic()
       case TURRET_R90:
         m_robotContainer.m_turret.SetSetpoint(90.0);
         break;
-      case TURRET_HOME:
-        m_robotContainer.m_turret.SetSetpoint(0.0);
+      case TURRET_L180:
+        m_robotContainer.m_turret.SetSetpoint(-180.0);
         break;
-      case CONE_HIGH_BACK_DROPOFF:
+      case TURRET_R180:
         m_robotContainer.m_turret.SetSetpoint(180.0);
         break;
-      case CONE_HIGH_LEFT_DROPOFF:
-        m_robotContainer.m_turret.m_turretPid.m_setpoint = -90.0;
-        // m_robotContainer.m_elevator.m_elevatorPid.m_setpoint = 0.50;
-        // m_robotContainer.m_arm.m_armPid.m_setpoint = NDEGtoRAD(100);
-
+      case GRIPPER_TAKE_CUBE:
+        m_robotContainer.m_gripper.Take(0.6);
         break;
-        /*case DEACTIVATE_CONVEYOR:
-          m_allMechanisms.Command("deactivate intake wheels");
-          break;
-
-        case ACTIVATE_AIM:
-          break;
-        case DEACTIVATE_AIM:
-          break;
-        case ACTIVATE_SHOOTER:
-          break;
-        case DEACTIVATE_SHOOTER:
-          break;*/
+      case GRIPPER_TAKE_CONE:
+        m_robotContainer.m_gripper.Take(0.6);
+        break;
+      case GRIPPER_DROP_CUBE_OFF:
+        m_robotContainer.m_gripper.Spit();
+        break;
+      case GRIPPER_DROP_CONE_OFF:
+        m_robotContainer.m_gripper.Spit();
+        break;
+      case ARM_TO_LEVEL_CONE_1:
+        m_robotContainer.m_elevator.SetSetpoint(0.72);
+        m_robotContainer.m_arm.SetSetpoint(NDEGtoRAD(105.0));
+        m_robotContainer.m_gripper.DropMidleCone = true;
+        break;
+      case ARM_TO_LEVEL_CONE_2:
+        m_robotContainer.m_elevator.SetSetpoint(0.97);
+        m_robotContainer.m_arm.SetSetpoint(NDEGtoRAD(120.0));
+        break;
+      case ARM_TO_LEVEL_CUBE_1:
+        m_robotContainer.m_elevator.SetSetpoint(0.43);
+        m_robotContainer.m_arm.SetSetpoint(NDEGtoRAD(97.0));
+        m_robotContainer.m_gripper.DropHighCube = true;
+        break;
+      case ARM_TO_LEVEL_CUBE_2:
+        m_robotContainer.m_elevator.SetSetpoint(0.98);
+        m_robotContainer.m_arm.SetSetpoint(NDEGtoRAD(85.0));
+        m_robotContainer.m_gripper.DropHighCube = true;
+        break;
+      case TAKE_CUBE_IN_ROBOT:
+        TakeCubeRobot();
+        break;
 
       default:
         break;
@@ -526,8 +533,6 @@ void Robot::AutonomousPeriodic()
   m_VoltageRight = m_CrtzL.getVoltage(pout->m_leftVelocity, pout->m_leftAcceleration);
 
   m_csv.write();
-  m_count = 0;
-  // std::cout << "on passe en auito" << std::endl;
 
   m_count += 1;
   // AutoBalance1();
@@ -547,49 +552,6 @@ void Robot::TeleopInit()
 }
 void Robot::TeleopPeriodic()
 {
-  frc::SmartDashboard::PutNumber("angleGyro", NRADtoDEG(m_gyro.GetPitch()));
-  // std::cout << m_ahrs.GetPitch() << std::endl;
-  frc::SmartDashboard::PutNumber("elevator", m_robotContainer.m_elevator.GetEncoder());
-  frc::SmartDashboard::PutNumber("turret", m_robotContainer.m_turret.GetEncoder());
-  frc::SmartDashboard::PutNumber("arm", m_robotContainer.m_arm.GetEncoder());
-  frc::SmartDashboard::PutNumber("armOutput", m_robotContainer.m_arm.m_armPid.m_output);
-  frc::SmartDashboard::PutNumber("armerror", m_robotContainer.m_arm.m_armPid.m_error);
-
-  std::cout << "navX" << m_gyro.GetAngle() << std::endl;
-  frc::SmartDashboard::PutNumber("navX", m_gyro.GetAngle());
-  // m_robotContainer.m_arm.m_speed = m_robotContainer.m_joystickRight.GetY();
-
-  // if (m_robotContainer.m_joystickLeft.GetRawButtonPressed(1))
-  // {
-  //   m_robotContainer.m_gripper.ChangePosition();
-  // }
-  // frc::SmartDashboard::PutNumber("x", m_robotContainer.m_copiloter.m_x);
-  // frc::SmartDashboard::PutNumber("h", m_robotContainer.m_copiloter.m_h);
-  // frc::SmartDashboard::PutNumber("tetha", m_robotContainer.m_copiloter.m_theta);
-  // frc::SmartDashboard::PutNumber("encoderElevator", m_robotContainer.m_copiloter.m_elevator.GetEncoder());
-  // frc::SmartDashboard::PutNumber("encoderArm", m_robotContainer.m_copiloter.m_arm.GetEncoder());
-  frc::SmartDashboard::PutNumber("encoderArm", m_robotContainer.m_arm.GetEncoder());
-  frc::SmartDashboard::PutNumber("outputArm", m_robotContainer.m_arm.m_armPid.m_output);
-
-  // frc::SmartDashboard::PutNumber("outputelevateur", m_robotContainer.m_copiloter.m_elevator.m_elevatorPid.m_output);
-  // frc::SmartDashboard::PutNumber("setpoint", m_robotContainer.m_copiloter.m_elevator.m_elevatorPid.m_setpoint);
-  // m_robotContainer.m_copiloter.m_elevator.SetGains(frc::SmartDashboard::GetNumber("Pelevator", 0),
-  //                                                  frc::SmartDashboard::GetNumber("Ielevator", 0),
-  //                                                  frc::SmartDashboard::GetNumber("Delevator", 0));
-
-  // m_robotContainer.m_copiloter.m_arm.SetGains(frc::SmartDashboard::GetNumber("Parm", 0),
-  //                                             frc::SmartDashboard::GetNumber("Iarm", 0),
-  //                                             frc::SmartDashboard::GetNumber("Darm", 0));
-
-  // m_robotContainer.m_turret.SetGains(frc::SmartDashboard::GetNumber("Pturret", 0),
-  //                                    frc::SmartDashboard::GetNumber("Iturret", 0),
-  //                                    frc::SmartDashboard::GetNumber("Dturret", 0));
-
-  // m_robotContainer.m_copiloter.m_elevator.SetSetpoint(frc::SmartDashboard::GetNumber("Setpointelevator", 0));
-  // m_robotContainer.m_copiloter.m_arm.SetSetpoint(frc::SmartDashboard::GetNumber("Setpointarm", 0));
-  // m_robotContainer.m_turret.SetSetpoint(frc::SmartDashboard::GetNumber("Setpointturret", 0));
-
-  // m_robotContainer.m_copiloter.m_elevator.Set(frc::SmartDashboard::GetNumber("voltage", 0.0));
   if (m_robotContainer.m_joystickLeft.GetRawButtonPressed(1))
   {
     m_robotContainer.m_drivetrain.InvertBallShifter();
@@ -608,6 +570,64 @@ void Robot::TestPeriodic() {}
 
 void Robot::SimulationInit() {}
 void Robot::SimulationPeriodic() {}
+
+void Robot::TakeCubeRobot()
+{
+
+  switch (m_StateTakeCubeRobot)
+  {
+    m_countTakeCube++;
+  case StateTakeCubeRobot::Init:
+    m_countTakeCube = 0;
+    m_robotContainer.m_elevator.SetSetpoint(0.80);
+    m_robotContainer.m_arm.SetSetpoint(NDEGtoRAD(-15.0)); // valeur théorique à vérifier
+    m_StateTakeCubeRobot = StateTakeCubeRobot::High;
+    break;
+
+  case StateTakeCubeRobot::High:
+    if (m_robotContainer.m_arm.GetEncoder() < NDEGtoRAD(-10.0)) // temps à réduire
+    {
+      m_robotContainer.m_elevator.SetSetpoint(0.45); // valeur théorique à vérifier
+      m_countTakeCube = 0;
+      m_StateTakeCubeRobot = StateTakeCubeRobot::Lowered;
+    }
+
+    break;
+  case StateTakeCubeRobot::Lowered:
+    if (m_robotContainer.m_elevator.GetEncoder() < 0.60) // temps à réduire
+    {
+      m_robotContainer.m_gripper.Take(0.5);
+      m_countTakeCube = 0;
+      m_StateTakeCubeRobot = StateTakeCubeRobot::Taken;
+    }
+    break;
+  case StateTakeCubeRobot::Taken:
+    if (m_countTakeCube > 15) // temps à réduire
+    {
+      m_robotContainer.m_elevator.SetSetpoint(0.95);
+      m_countTakeCube = 0;
+      m_StateTakeCubeRobot = StateTakeCubeRobot::GoDown;
+    }
+    break;
+  case StateTakeCubeRobot::GoDown:
+    if (m_robotContainer.m_elevator.GetEncoder() > 0.50) // temps à réduire
+    {
+      m_robotContainer.m_arm.SetSetpoint(NDEGtoRAD(90.0));
+      m_countTakeCube = 0;
+      m_StateTakeCubeRobot = StateTakeCubeRobot::Finish;
+    }
+    break;
+  case StateTakeCubeRobot::Finish:
+    if (m_robotContainer.m_arm.GetEncoder() > NDEGtoRAD(40.0)) // temps à réduire
+    {
+      m_robotContainer.m_elevator.SetSetpoint(0.0);
+    }
+    m_robotContainer.m_gripper.Old(0.1);
+    break;
+  default:
+    break;
+  };
+}
 
 #ifndef RUNNING_FRC_TESTS
 int main()

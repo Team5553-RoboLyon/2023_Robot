@@ -39,6 +39,8 @@ public:
   void SimulationInit() override;
   void SimulationPeriodic() override;
 
+  void TakeCubeRobot();
+
   void AutoCube1();
   void AutoCube2();
   void AutoBalance1();
@@ -127,6 +129,19 @@ private:
   StateAutobalance2 m_StateAutobalance2;
   StateAutoCubeHaut m_StateAutoCubeHaut;
   StateAutoBalanceTout m_StateAutobalanceTout;
+
+  enum class StateTakeCubeRobot
+  {
+    Init,
+    High,
+    Lowered,
+    Taken,
+    GoDown,
+    Finish
+  };
+  StateTakeCubeRobot m_StateTakeCubeRobot;
+
+  int m_countTakeCube;
 
   Pid m_pidGyro{
       0.0, 0.0011, 0.0, 0.0};
