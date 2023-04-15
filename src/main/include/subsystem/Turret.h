@@ -24,6 +24,7 @@ public:
   double GetSetPoint();
   void Reset();
 
+  bool IsAuto;
   RateLimiter m_TurretPidRate;
   Pid m_turretPid{0, P_TURRET, I_TURRET, D_TURRET};
 

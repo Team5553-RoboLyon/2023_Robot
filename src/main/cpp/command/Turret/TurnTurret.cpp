@@ -19,7 +19,10 @@ void TurnTurret::Initialize()
 void TurnTurret::Execute()
 {
   double turn = m_turn() * 90.0;
-  m_pTurret->SetSetpoint(turn);
+  if (!m_pTurret->IsAuto)
+  {
+    m_pTurret->SetSetpoint(turn);
+  }
   std::cout << turn << std::endl;
 
   // if (!m_ChekMachine.AuthorisationToRun(ID_SUBSYSTEM_TURRET))

@@ -352,6 +352,7 @@ void Robot::RobotPeriodic()
 
 void Robot::AutonomousInit()
 {
+
   m_gyro.Reset();
   m_gyro.Calibrate();
   m_csv.open("/home/lvuser/", true); // ouverture du fichier de log
@@ -371,7 +372,7 @@ void Robot::AutonomousInit()
   // m_StateAutobalanceTout=StateAutoBalanceTout
   m_robotContainer.m_drivetrain.IsAuto = true;
   m_robotContainer.m_elevator.IsAuto = true;
-  m_robotContainer.m_drivetrain.IsAuto = true;
+  m_robotContainer.m_turret.IsAuto = true;
 
   // m_robotContainer.m_drivetrain.Reset();
   // m_robotContainer.m_elevator.Reset();
@@ -403,13 +404,14 @@ void Robot::AutonomousInit()
   // characterization_table.get(&m_CrtzL, "L1", NFALSE);
   // characterization_table.get(&m_CrtzR, "R1", NFALSE);
 
-  m_TrajectoryPack.load("/home/lvuser/auto/left_dcon2_tcub.trk");
+  m_TrajectoryPack.load("/home/lvuser/auto/left_dconl2_tcub.trk");
   m_follower.initialize(&m_TrajectoryPack);
   m_state = Robot::STATE::PATH_FOLLOWING;
+  m_robotContainer.m_elevator.SetSetpoint(0.0);
 }
 void Robot::AutonomousPeriodic()
 {
-
+  frc::SmartDashboard::PutNumber("setpoint turret", m_robotContainer.m_turret.m_turretPid.m_setpoint);
   // std::cout << "encoderL" << m_robotContainer.m_drivetrain.m_EncoderLeft.GetDistance() << std::endl;
   // std::cout << "encoderR" << m_robotContainer.m_drivetrain.m_EncoderRight.GetDistance() << std::endl;
   std::cout << "gyro" << m_gyro.GetAngle() << std::endl;
@@ -473,10 +475,10 @@ void Robot::AutonomousPeriodic()
         m_robotContainer.m_turret.SetSetpoint(0.0);
         break;
       case TURRET_L90:
-        m_robotContainer.m_turret.SetSetpoint(90.0);
+        m_robotContainer.m_turret.SetSetpoint(-90.0);
         break;
       case TURRET_R90:
-        m_robotContainer.m_turret.SetSetpoint(-90.0);
+        m_robotContainer.m_turret.SetSetpoint(90.0);
         break;
       case TURRET_HOME:
         m_robotContainer.m_turret.SetSetpoint(0.0);
@@ -484,9 +486,12 @@ void Robot::AutonomousPeriodic()
       case CONE_HIGH_BACK_DROPOFF:
         m_robotContainer.m_turret.SetSetpoint(180.0);
         break;
-      case CONE_LEFT_BACK_DROPOFF:
+      case CONE_HIGH_LEFT_DROPOFF:
+        m_robotContainer.m_turret.m_turretPid.m_setpoint = -90.0;
+        // m_robotContainer.m_elevator.m_elevatorPid.m_setpoint = 0.50;
+        // m_robotContainer.m_arm.m_armPid.m_setpoint = NDEGtoRAD(100);
 
-        m_robotContainer.m_turret.SetSetpoint(90.0);
+        break;
         /*case DEACTIVATE_CONVEYOR:
           m_allMechanisms.Command("deactivate intake wheels");
           break;
@@ -521,8 +526,6 @@ void Robot::AutonomousPeriodic()
   m_VoltageRight = m_CrtzL.getVoltage(pout->m_leftVelocity, pout->m_leftAcceleration);
 
   m_csv.write();
-  m_robotContainer.m_elevator.Reset();
-  m_robotContainer.m_turret.Reset();
   m_count = 0;
   // std::cout << "on passe en auito" << std::endl;
 
@@ -539,7 +542,7 @@ void Robot::TeleopInit()
 {
 
   m_robotContainer.m_drivetrain.IsAuto = false;
-  m_robotContainer.m_drivetrain.IsAuto = false;
+  m_robotContainer.m_turret.IsAuto = false;
   m_robotContainer.m_elevator.IsAuto = false;
 }
 void Robot::TeleopPeriodic()
