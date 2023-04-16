@@ -46,9 +46,9 @@ void AutoTurnTurret::Execute()
     if (NABS(error) - lastHorizontalError < CAMERA_MAX_ERROR_DIFFERENCE)
     {
 #if TURRET
-      // m_pTurret->SetSetpoint(m_pTurret->GetEncoder() + 1.3 * m_pCamera->e());
+      m_pTurret->SetSetpoint(m_pTurret->GetEncoder() + 1.3 * error);
 #else
-      // m_pDrivetrain->DriveAuto(0, 0.02 * m_pCamera->GetYaw());
+      m_pDrivetrain->DriveAuto(0, 0.02 * error);
 #endif
     }
   }
