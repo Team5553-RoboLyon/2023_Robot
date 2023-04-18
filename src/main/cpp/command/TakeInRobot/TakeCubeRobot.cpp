@@ -85,33 +85,9 @@ void TakeCubeRobot::Execute()
 void TakeCubeRobot::End(bool interrupted)
 {
   m_pGripper->m_gripperTake = false;
+  m_pElevator->SetSetpoint(0.80);
+  m_pArm->SetSetpoint(NDEGtoRAD(115.0));
   // m_pCopiloter->TakeCubeRobotInit();
-  switch (m_State)
-  {
-  case State::High:
-    m_pElevator->SetSetpoint(0.80);
-    m_pArm->SetSetpoint(NDEGtoRAD(90.0));
-    m_pElevator->IsWaiting = true;
-    break;
-  case State::Lowered:
-    m_pElevator->SetSetpoint(0.80);
-    m_pArm->SetSetpoint(NDEGtoRAD(90.0));
-    m_pElevator->IsWaiting = true;
-    break;
-  case State::Taken:
-    m_pElevator->SetSetpoint(0.80);
-    m_pArm->SetSetpoint(NDEGtoRAD(90.0));
-    m_pElevator->IsWaiting = true;
-    break;
-  case State::GoDown:
-    // retour défaut
-    break;
-  case State::Finish:
-    // retour défaut
-    break;
-  default:
-    break;
-  }
 }
 
 // Returns true when the command should end.

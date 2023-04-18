@@ -16,6 +16,7 @@ void DropMiddle::Initialize()
   m_pElevator->SetSetpoint(ELEVATOR_MIDDLE_CONE);
   m_pArm->SetSetpoint(NDEGtoRAD(105.0));
   m_pGripper->DropMidleCone = true;
+  m_pArm->m_high = true;
 }
 
 // Called repeatedly when this Command is scheduled to run
@@ -29,7 +30,7 @@ void DropMiddle::End(bool interrupted)
 {
   // m_pCopiloter->DropConeMiddleEnd();
   m_pElevator->SetSetpoint(0.0);
-  m_pArm->SetSetpoint(NDEGtoRAD(90.0));
+  m_pArm->SetSetpoint(NDEGtoRAD(115.0));
   m_pGripper->DropMidleCone = false;
 }
 

@@ -28,7 +28,7 @@ void DropMiddleCube::Execute()
 void DropMiddleCube::End(bool interrupted)
 {
   m_pElevator->SetSetpoint(0.0);
-  m_pArm->SetSetpoint(NDEGtoRAD(90.0));
+  m_pArm->SetSetpoint(NDEGtoRAD(115.0));
   m_pGripper->DropHighCube = false;
   // m_pCopiloter->DropCubeMiddleEnd();
 }

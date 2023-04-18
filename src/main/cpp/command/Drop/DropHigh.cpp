@@ -28,7 +28,7 @@ void DropHigh::End(bool interrupted)
 {
   // m_pCopiloter->DropConeHighEnd();
   m_pElevator->SetSetpoint(0.0);
-  m_pArm->SetSetpoint(NDEGtoRAD(90.0));
+  m_pArm->SetSetpoint(NDEGtoRAD(115.0));
 }
 
 // Returns true when the command should end.

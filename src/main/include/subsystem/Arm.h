@@ -24,6 +24,7 @@ public:
 
   double m_speed;
   Pid m_armPid{0, P_ARM, I_ARM, D_ARM};
+  bool m_high = true;
 
 private:
   rev::CANSparkMax m_armMotor{ID_MOTOR_ARM, rev::CANSparkMaxLowLevel::MotorType::kBrushless};

@@ -63,6 +63,10 @@
 
 #include "command/Arm/ActiveArmMotor.h"
 
+// Pilote
+
+#include "command/pilote/DownCone.h"
+
 // ################### GLOBAL ###################
 #include "command/global/CompleteInit.h"
 

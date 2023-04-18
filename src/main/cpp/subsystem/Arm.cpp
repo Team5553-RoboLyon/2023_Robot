@@ -26,7 +26,7 @@ double Arm::GetEncoder()
 
 void Arm::SetSetpoint(double setpoint)
 {
-    m_armPid.SetSetpoint(NCLAMP(-33.0, setpoint, 133.0));
+    m_armPid.SetSetpoint(NCLAMP(-33.0, setpoint, 132.0));
 }
 
 void Arm::SetGains(double p, double i, double d)
@@ -42,5 +42,6 @@ void Arm::Periodic()
 void Arm::Reset()
 {
     m_armEncoder.Reset();
-    m_armPid.SetSetpoint(NDEGtoRAD(90.0));
+    m_armPid.SetSetpoint(NDEGtoRAD(115.0));
+    m_high = true;
 }

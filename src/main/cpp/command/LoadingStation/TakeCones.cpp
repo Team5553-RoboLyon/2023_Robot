@@ -58,7 +58,7 @@ void TakeCones::Execute()
 void TakeCones::End(bool interrupted)
 {
   m_pElevator->SetSetpoint(0.0);
-  m_pArm->SetSetpoint(NDEGtoRAD(90.0));
+  m_pArm->SetSetpoint(NDEGtoRAD(115.0));
   m_pGripper->Old(0.1);
   m_pGripper->m_gripperTake = false;
 }

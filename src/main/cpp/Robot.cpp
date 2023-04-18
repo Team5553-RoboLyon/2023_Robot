@@ -562,11 +562,6 @@ void Robot::TeleopPeriodic()
   //   m_robotContainer.m_drivetrain.InvertBallShifter();
   // }
   m_robotContainer.m_elevator.m_joystickValue = m_robotContainer.m_joystickCopilot.GetY() * 0.2;
-
-  if (m_robotContainer.m_joystickLeft.GetRawButtonPressed(2))
-  {
-    m_robotContainer.m_arm.SetSetpoint(NDEGtoRAD(90.0));
-  }
 }
 
 void Robot::DisabledInit()

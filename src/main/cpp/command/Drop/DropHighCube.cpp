@@ -16,6 +16,7 @@ void DropHighCube::Initialize()
   m_pElevator->SetSetpoint(ELEVATOR_HIGH_CUBE);
   m_pArm->SetSetpoint(NDEGtoRAD(85.0));
   m_pGripper->DropHighCube = true;
+  m_pArm->m_high = true;
 }
 
 // Called repeatedly when this Command is scheduled to run
@@ -30,7 +31,7 @@ void DropHighCube::End(bool interrupted)
   // m_pCopiloter->DropCubeHighEnd();
 
   m_pElevator->SetSetpoint(0.0);
-  m_pArm->SetSetpoint(NDEGtoRAD(90.0));
+  m_pArm->SetSetpoint(NDEGtoRAD(115.0));
   m_pGripper->DropHighCube = false;
 }
 
