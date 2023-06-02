@@ -31,4 +31,5 @@ public:
 
 private:
   Intake *m_pIntake;
+  int m_count;
 };

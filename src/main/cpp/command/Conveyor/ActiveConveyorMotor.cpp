@@ -10,11 +10,15 @@ ActiveConveyorMotor::ActiveConveyorMotor(Conveyor *pConveyor) : m_pConveyor(pCon
 }
 
 // Called when the command is initially scheduled.
-void ActiveConveyorMotor::Initialize() {}
+void ActiveConveyorMotor::Initialize()
+{
+  m_count = 0;
+}
 
 // Called repeatedly when this Command is scheduled to run
 void ActiveConveyorMotor::Execute()
 {
+  m_count++;
   m_pConveyor->SetSpeed(1.0);
 }
 

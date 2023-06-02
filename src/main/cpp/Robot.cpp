@@ -13,10 +13,10 @@ void Robot::AutoBalanceTout()
   {
   case StateAutobalance1::forward:
   {
-    m_output = NLERP(0.6, 0.4, ((double)m_count / 50.0));
+    m_output = NLERP(1.0, 0.2, ((double)m_count / 62.0));
     m_robotContainer.m_drivetrain.DriveAuto(m_output, 0.0);
     // if (m_count > 300p or (m_ahrs.GetPitch() >= -1.0 and m_count > 50)) // 75
-    if (m_count > 70)
+    if (m_count > 62)
     {
       m_count = 0;
       m_StateAutobalance1 = StateAutobalance1::stop;
@@ -26,6 +26,7 @@ void Robot::AutoBalanceTout()
   case StateAutobalance1::stop:
   {
     m_robotContainer.m_drivetrain.DriveAuto(0.0, 0.0);
+    m_autoCube = false;
   }
   break;
   default:
@@ -366,7 +367,7 @@ void Robot::AutonomousInit()
   // m_StateAutobalanceTout = StateAutoBalanceTout::forward;
 
   // m_StateAutoCube1 = StateAutoCube1::open;
-  // m_StateAutobalanceTout=StateAutoBalanceTout
+  // m_StateAutobalanceTout = StateAutoBalanceTout::forward;
   m_robotContainer.m_drivetrain.IsAuto = true;
   m_robotContainer.m_elevator.IsAuto = true;
   m_robotContainer.m_turret.IsAuto = true;
@@ -399,14 +400,17 @@ void Robot::AutonomousInit()
   // characterization_table.get(&m_CrtzL, "L1", NFALSE);
   // characterization_table.get(&m_CrtzR, "R1", NFALSE);
 
-  m_TrajectoryPack.load("/home/lvuser/auto/left_dl2cub_tcub_db2cub_tcub (1).trk");
+  // m_TrajectoryPack.load("/home/lvuser/auto/blue_right_db2cub_tcub_lightX.trk");
+  // m_TrajectoryPack.load("/home/lvuser/auto/blue_left_db2cub_tcub.trk");
+  m_TrajectoryPack.load("/home/lvuser/auto/red_right_db2cub_tcub_lightX.trk");
+  // m_TrajectoryPack.load("/home/lvuser/auto/red_left_db2cub_tcub.trk");
+
   m_follower.initialize(&m_TrajectoryPack);
   m_state = Robot::STATE::PATH_FOLLOWING;
   m_robotContainer.m_elevator.SetSetpoint(0.0);
 }
 void Robot::AutonomousPeriodic()
 {
-
   NLRAMSETEOUTPUT output;
   NLFOLLOWER_TANK_OUTPUT *pout = nullptr;
 
@@ -478,42 +482,52 @@ void Robot::AutonomousPeriodic()
         m_robotContainer.m_turret.SetSetpoint(180.0);
         break;
       case GRIPPER_TAKE_CUBE:
+        m_takeCubeInRobot = false;
         m_robotContainer.m_gripper.Take(0.6);
         break;
       case GRIPPER_TAKE_CONE:
+        m_takeCubeInRobot = false;
         m_robotContainer.m_gripper.Take(0.6);
         break;
       case GRIPPER_DROP_CUBE_OFF:
+        m_takeCubeInRobot = false;
         m_robotContainer.m_gripper.Spit();
         break;
       case GRIPPER_DROP_CONE_OFF:
+        m_takeCubeInRobot = false;
         m_robotContainer.m_gripper.Spit();
         break;
       case ARM_TO_LEVEL_CONE_1:
+        m_takeCubeInRobot = false;
         m_robotContainer.m_elevator.SetSetpoint(0.72);
         m_robotContainer.m_arm.SetSetpoint(NDEGtoRAD(105.0));
         m_robotContainer.m_gripper.DropMidleCone = true;
         break;
       case ARM_TO_LEVEL_CONE_2:
+        m_takeCubeInRobot = false;
         m_robotContainer.m_elevator.SetSetpoint(0.97);
         m_robotContainer.m_arm.SetSetpoint(NDEGtoRAD(120.0));
         break;
       case ARM_TO_LEVEL_CUBE_1:
+        m_takeCubeInRobot = false;
         m_robotContainer.m_elevator.SetSetpoint(0.43);
         m_robotContainer.m_arm.SetSetpoint(NDEGtoRAD(97.0));
         m_robotContainer.m_gripper.DropHighCube = true;
         break;
       case ARM_TO_LEVEL_CUBE_2:
+        m_takeCubeInRobot = false;
         m_robotContainer.m_elevator.SetSetpoint(0.98);
-        m_robotContainer.m_arm.SetSetpoint(NDEGtoRAD(85.0));
+        m_robotContainer.m_arm.SetSetpoint(NDEGtoRAD(115.0));
         m_robotContainer.m_gripper.DropHighCube = true;
         break;
       case ARM_HOME:
+        m_takeCubeInRobot = false;
         m_robotContainer.m_elevator.SetSetpoint(0.0);
         m_robotContainer.m_arm.SetSetpoint(NDEGtoRAD(100.0));
         break;
       case TAKE_CUBE_IN_ROBOT:
-        TakeCubeRobot();
+        m_takeCubeInRobot = true;
+        m_StateTakeCubeRobot = StateTakeCubeRobot::Init;
         break;
 
       default:
@@ -524,10 +538,17 @@ void Robot::AutonomousPeriodic()
     break;
 
   case Robot::STATE::PATH_END:
+    m_autoCube = true;
+
     break;
   default:
     NErrorIf(1, NERROR_UNAUTHORIZED_CASE);
     break;
+  }
+
+  if (m_takeCubeInRobot)
+  {
+    m_takeCubeInRobot = TakeCubeRobot();
   }
 
   m_encoderLeft = m_robotContainer.m_drivetrain.m_EncoderLeft.GetDistance();
@@ -539,6 +560,7 @@ void Robot::AutonomousPeriodic()
   m_csv.write();
 
   m_count += 1;
+  // AutoBalanceTout();
   // AutoBalance1();
   // AutoBalance2();
 
@@ -576,7 +598,7 @@ void Robot::TestPeriodic() {}
 void Robot::SimulationInit() {}
 void Robot::SimulationPeriodic() {}
 
-void Robot::TakeCubeRobot()
+bool Robot::TakeCubeRobot()
 {
 
   switch (m_StateTakeCubeRobot)
@@ -585,12 +607,12 @@ void Robot::TakeCubeRobot()
   case StateTakeCubeRobot::Init:
     m_countTakeCube = 0;
     m_robotContainer.m_elevator.SetSetpoint(0.80);
-    m_robotContainer.m_arm.SetSetpoint(NDEGtoRAD(-15.0)); // valeur théorique à vérifier
+    m_robotContainer.m_arm.SetSetpoint(NDEGtoRAD(-25.0)); // valeur théorique à vérifier
     m_StateTakeCubeRobot = StateTakeCubeRobot::High;
     break;
 
   case StateTakeCubeRobot::High:
-    if (m_robotContainer.m_arm.GetEncoder() < NDEGtoRAD(-10.0)) // temps à réduire
+    if (m_robotContainer.m_arm.GetEncoder() < NDEGtoRAD(-20.0)) // temps à réduire
     {
       m_robotContainer.m_elevator.SetSetpoint(0.45); // valeur théorique à vérifier
       m_countTakeCube = 0;
@@ -623,15 +645,18 @@ void Robot::TakeCubeRobot()
     }
     break;
   case StateTakeCubeRobot::Finish:
+    m_robotContainer.m_gripper.Old(0.1);
     if (m_robotContainer.m_arm.GetEncoder() > NDEGtoRAD(40.0)) // temps à réduire
     {
       m_robotContainer.m_elevator.SetSetpoint(0.0);
+      // m_takeCubeInRobot = false;
+      return false;
     }
-    m_robotContainer.m_gripper.Old(0.1);
     break;
   default:
     break;
   };
+  return true;
 }
 
 #ifndef RUNNING_FRC_TESTS

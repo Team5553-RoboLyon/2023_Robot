@@ -206,6 +206,7 @@ double Drivetrain::Calcul_De_Notre_Brave_JM(double forward, double turn, bool wh
 
 bool Drivetrain::isUpshiftingAllowed() // mode up, détermine si on peut passer en V2
 {
+    return false;
     // Le Gear shifting précédent est-il suffisamment "ancien" ?  (m_GearShiftingTimeLock doit être  null )
     // Le robot est-il en train de rouler tout droit, sans tourner ?  (m_GearboxLeftOutAdjustedRpm/m_GearboxRightOutAdjustedRpm doit être proche de 1 )
     // La vérification se fait pour un robot allant en marche avant (m_GearboxesOutAdjustedRpm.m_current > 0.0)
@@ -302,7 +303,8 @@ void Drivetrain::ShiftGearDown() // passage de la vitesse en V1
 
 void Drivetrain::Drive(double joystick_V, double joystick_W) //
 {
-    m_sigma = NLERP(0.4, 0.1, NABS(joystick_V));
+    // m_sigma = NLERP(0.4, 0.1, NABS(joystick_V));
+    m_sigma = 0.4;
     frc::SmartDashboard::PutNumber("joyV", joystick_V);
     frc::SmartDashboard::PutNumber("joyW", joystick_W);
     m_U = GetGearShiftingVoltage();
@@ -432,10 +434,10 @@ void Drivetrain::Reset()
     m_EncoderRight.Reset();
 
     m_JoystickPrelimited_V.Reset(0.0, 0.0, 2.0); // reset des rate limiters
-    m_JoystickLimited_V.Reset(0.0, 0.0, 0.05);
+    m_JoystickLimited_V.Reset(0.0, 0.0, 0.04);
 
     m_JoystickPrelimited_W.Reset(0.0, 0.0, 2.0);
-    m_JoystickLimited_W.Reset(0.0, 0.0, 0.05);
+    m_JoystickLimited_W.Reset(0.0, 0.0, 0.08);
 
     ActiveBallShifterV1();
     m_State = State::lowGear;

@@ -13,6 +13,7 @@ ActiveIntakeMotor::ActiveIntakeMotor(Intake *pIntake) : m_pIntake(pIntake)
 void ActiveIntakeMotor::Initialize()
 {
   m_pIntake->Open();
+  m_count = 0;
 }
 
 // Called repeatedly when this Command is scheduled to run

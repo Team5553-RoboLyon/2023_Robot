@@ -3,6 +3,7 @@
 // the WPILib BSD license file in the root directory of this project.
 
 #include "command/Pilote/DownCone.h"
+#include "lib/RblUtils.h"
 
 DownCone::DownCone(Arm *pArm)
 {
@@ -12,6 +13,18 @@ DownCone::DownCone(Arm *pArm)
 // Called when the command is initially scheduled.
 void DownCone::Initialize()
 {
+  if (m_pArm->m_use)
+  {
+    if (m_pArm->m_high)
+    {
+      m_pArm->SetSetpoint(NDEGtoRAD(80.0));
+    }
+    else
+    {
+      m_pArm->SetSetpoint(NDEGtoRAD(120.0));
+    }
+  }
+
   if (m_pArm->m_high)
   {
     m_pArm->m_high = false;
@@ -19,15 +32,6 @@ void DownCone::Initialize()
   else
   {
     m_pArm->m_high = true;
-  }
-
-  if (m_high)
-  {
-    m_pArm->SetSetpoint(NDEGtoRAD(85.0));
-  }
-  else
-  {
-    m_pArm->SetSetpoint(NDEGtoRAD(120.0));
   }
 }
 

@@ -7,7 +7,7 @@
 DropHigh::DropHigh(Elevator *pElevator, Arm *pArm) : m_pElevator(pElevator), m_pArm(pArm)
 {
   AddRequirements(m_pElevator);
-  AddRequirements(m_pArm);
+  // AddRequirements(m_pArm);
 }
 
 // Called when the command is initially scheduled.
@@ -15,6 +15,8 @@ void DropHigh::Initialize()
 {
   m_pElevator->SetSetpoint(ELEVATOR_HIGH_CONE);
   m_pArm->SetSetpoint(NDEGtoRAD(120.0));
+  m_pArm->m_high = true;
+  m_pArm->m_use = true;
 }
 
 // Called repeatedly when this Command is scheduled to run
@@ -29,6 +31,8 @@ void DropHigh::End(bool interrupted)
   // m_pCopiloter->DropConeHighEnd();
   m_pElevator->SetSetpoint(0.0);
   m_pArm->SetSetpoint(NDEGtoRAD(115.0));
+  m_pArm->m_high = false;
+  m_pArm->m_use = false;
 }
 
 // Returns true when the command should end.

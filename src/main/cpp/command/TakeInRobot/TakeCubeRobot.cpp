@@ -64,7 +64,7 @@ void TakeCubeRobot::Execute()
   case State::GoDown:
     if (m_pElevator->GetEncoder() > 0.50) // temps à réduire
     {
-      m_pArm->SetSetpoint(NDEGtoRAD(90.0));
+      m_pArm->SetSetpoint(NDEGtoRAD(115.0));
       m_count = 0;
       m_State = State::Finish;
     }

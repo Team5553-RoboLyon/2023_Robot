@@ -39,7 +39,7 @@ public:
   void SimulationInit() override;
   void SimulationPeriodic() override;
 
-  void TakeCubeRobot();
+  bool TakeCubeRobot();
 
   void AutoCube1();
   void AutoCube2();
@@ -163,4 +163,8 @@ private:
   double m_gyroAngle;
   double m_VoltageLeft;
   double m_VoltageRight;
+
+  bool m_takeCubeInRobot;
+  bool m_armToLevelCube2;
+  bool m_autoCube;
 };

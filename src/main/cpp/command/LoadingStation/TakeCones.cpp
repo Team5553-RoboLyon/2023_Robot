@@ -14,7 +14,7 @@ TakeCones::TakeCones(Elevator *pElevator, Arm *pArm, Gripper *pGripper) : m_pEle
 void TakeCones::Initialize()
 {
   m_pGripper->Take(0.6);
-  m_pElevator->SetSetpoint(0.90);
+  m_pElevator->SetSetpoint(0.87);
   m_pArm->SetSetpoint(NDEGtoRAD(90.0));
 }
 

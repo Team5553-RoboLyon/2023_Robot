@@ -31,4 +31,6 @@ public:
 
 private:
   Conveyor *m_pConveyor;
+    int m_count;
+
 };

@@ -33,7 +33,7 @@ void Gripper::Spit()
     {
         if (count < 10)
         {
-            m_gripperMotor.Set(-0.6);
+            m_gripperMotor.Set(-0.3);
         }
         else
         {
@@ -44,7 +44,7 @@ void Gripper::Spit()
     {
         if (count < 10)
         {
-            m_gripperMotor.Set(-0.6);
+            m_gripperMotor.Set(-0.3);
         }
         else
         {
